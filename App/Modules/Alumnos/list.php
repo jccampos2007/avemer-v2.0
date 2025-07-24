@@ -34,4 +34,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<script src="<?php echo BASE_URL; ?>../app/Modules/Alumnos/alumnos.js"></script>
+<?php $page_js = '../app/Modules/Alumnos/alumnos.js'; ?>

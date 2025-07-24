@@ -5,7 +5,7 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
 ?>
 <div class="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Usuario' : 'Crear Nuevo Usuario'; ?></h3>
-    <form action="<?php echo BASE_URL; ?>users/<?php echo ($is_edit) ? 'update/' . htmlspecialchars($user_data['usuario_id']) : 'store'; ?>" method="POST">
+    <form id="form_users" action="<?php echo BASE_URL; ?>users/<?php echo ($is_edit) ? 'update/' . htmlspecialchars($user_data['usuario_id']) : 'store'; ?>" method="POST">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
                 <label for="usuario_cedula" class="block text-gray-700 text-sm font-bold mb-2">Cédula:</label>
@@ -32,8 +32,11 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
-                <label for="usuario_estatus_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus ID:</label>
-                <input type="number" id="usuario_estatus_id" name="usuario_estatus_id" value="<?php echo htmlspecialchars($user_data['usuario_estatus_id'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <label for="estatus_activo_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus Activo ID:</label>
+                <select id="estatus_activo_id" name="estatus_activo_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">Seleccione una opción</option>
+                </select>
+                <input type="hidden" name="estatus_activo_current" id="estatus_activo_current" value="<?php echo $alumno_data['estatus_activo_id'] ?? ''; ?>">
             </div>
             <div>
                 <label for="tipo_usuario" class="block text-gray-700 text-sm font-bold mb-2">Tipo de Usuario:</label>
@@ -41,10 +44,6 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
                     <option value="1" <?php echo (isset($user_data['tipo_usuario']) && $user_data['tipo_usuario'] == 1) ? 'selected' : ''; ?>>1: Usuario</option>
                     <option value="2" <?php echo (isset($user_data['tipo_usuario']) && $user_data['tipo_usuario'] == 2) ? 'selected' : ''; ?>>2: Alumno</option>
                 </select>
-            </div>
-            <div>
-                <label for="id_persona" class="block text-gray-700 text-sm font-bold mb-2">ID Persona (Opcional):</label>
-                <input type="number" id="id_persona" name="id_persona" value="<?php echo htmlspecialchars($user_data['id_persona'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
         </div>
 
@@ -59,5 +58,5 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
     </form>
 </div>
 
-<!-- JavaScript específico para este módulo (si el formulario lo necesita, por ejemplo, para validación en cliente) -->
-<script src="users.js"></script>
+<!-- JavaScript específico para este módulo -->
+<?php $page_js = '../app/Modules/Users/users.js'; ?>

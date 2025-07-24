@@ -22,6 +22,65 @@ class UserController extends Controller
         $this->view('Users/list', ['users' => $users]); // Ruta de vista relativa al módulo
     }
 
+    public function getUsersData(): void
+    {
+        Auth::requireLogin(); // Asegura que el usuario esté logueado para acceder a los datos
+
+        // Asegúrate de que la solicitud sea AJAX (opcional, pero buena práctica)
+        if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+            header('HTTP/1.0 403 Forbidden');
+            echo json_encode(['error' => 'Acceso denegado.']);
+            exit();
+        }
+
+        // Obtener parámetros de DataTables
+        $draw = $_POST['draw'] ?? 1;
+        $start = $_POST['start'] ?? 0;
+        $length = $_POST['length'] ?? 10;
+        $searchValue = $_POST['search']['value'] ?? '';
+        $orderColumnIndex = $_POST['order'][0]['column'] ?? 0;
+        $orderDir = $_POST['order'][0]['dir'] ?? 'asc';
+        $columns = $_POST['columns'] ?? [];
+
+        error_log("searchValue: " . $searchValue . " orderColumnIndex: " . $orderColumnIndex . " orderDir: " . $orderDir . " length: " . $length . " start: " . $start);
+
+        $params = [
+            'draw' => $draw,
+            'start' => $start,
+            'length' => $length,
+            'search' => ['value' => $searchValue],
+            'order' => [['column' => $orderColumnIndex, 'dir' => $orderDir]],
+            'columns' => $columns
+        ];
+
+        try {
+            $data = $this->userModel->getPaginatedUsers($params);
+
+            // DataTables espera el formato específico de las acciones en el lado del cliente
+            // Por lo tanto, necesitamos añadir las acciones aquí para cada fila
+            $formattedData = [];
+            foreach ($data['data'] as $row) {
+                $formattedData[] = $row;
+            }
+            $data['data'] = $formattedData;
+
+            header('Content-Type: application/json');
+            echo json_encode($data);
+            exit();
+        } catch (\PDOException $e) {
+            // Return an error response to DataTables
+            header('Content-Type: application/json');
+            echo json_encode([
+                'draw' => (int) $draw,
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => [],
+                'error' => 'Error al cargar los datos: ' . $e->getMessage() // Mensaje de error para depuración
+            ]);
+            exit();
+        }
+    }
+
     public function create(): void
     {
         $this->view('Users/form', ['user_data' => []]); // Ruta de vista relativa al módulo
@@ -36,7 +95,7 @@ class UserController extends Controller
                 'usuario_apellido' => $this->sanitizeInput($_POST['usuario_apellido']),
                 'usuario_user' => $this->sanitizeInput($_POST['usuario_user']),
                 'usuario_pws' => $_POST['usuario_pws'], // Contraseña sin sanitizar aún
-                'usuario_estatus_id' => (int)$this->sanitizeInput($_POST['usuario_estatus_id']),
+                'estatus_activo_id' => (int)$this->sanitizeInput($_POST['estatus_activo_id']),
                 'tipo_usuario' => (int)$this->sanitizeInput($_POST['tipo_usuario']),
                 'id_persona' => !empty($_POST['id_persona']) ? (int)$this->sanitizeInput($_POST['id_persona']) : null,
                 'usuario_idreg' => Auth::user('user_id'), // Usuario que registra
@@ -84,7 +143,7 @@ class UserController extends Controller
                 'usuario_nombre' => $this->sanitizeInput($_POST['usuario_nombre']),
                 'usuario_apellido' => $this->sanitizeInput($_POST['usuario_apellido']),
                 'usuario_user' => $this->sanitizeInput($_POST['usuario_user']),
-                'usuario_estatus_id' => (int)$this->sanitizeInput($_POST['usuario_estatus_id']),
+                'estatus_activo_id' => (int)$this->sanitizeInput($_POST['estatus_activo_id']),
                 'tipo_usuario' => (int)$this->sanitizeInput($_POST['tipo_usuario']),
                 'id_persona' => !empty($_POST['id_persona']) ? (int)$this->sanitizeInput($_POST['id_persona']) : null,
             ];

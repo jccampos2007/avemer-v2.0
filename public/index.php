@@ -32,6 +32,7 @@ $router->add('POST', '/users/store', UserController::class . '@store');
 $router->add('GET', '/users/edit/{id}', UserController::class . '@edit');
 $router->add('POST', '/users/update/{id}', UserController::class . '@update');
 $router->add('GET', '/users/delete/{id}', UserController::class . '@delete');
+$router->add('POST', '/users/data', UserController::class . '@getUsersData');
 
 // Rutas de Alumnos (CRUD)
 $router->add('GET', '/alumnos', AlumnoController::class . '@index');
