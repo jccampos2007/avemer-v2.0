@@ -21,8 +21,9 @@ class ApiController
     {
         header('Content-Type: application/json');
 
-        // Lista blanca de tablas permitidas para evitar inyecciones SQL
-        $allowedTables = ['profesion_oficio', 'estado', 'nacionalidad', 'estatus_activo'];
+        $displayColumn = $_GET['displayColumn'] ?? 'nombre';
+
+        $allowedTables = ['profesion_oficio', 'estado', 'nacionalidad', 'estatus_activo', 'docente', 'curso', 'sede', 'estatus'];
 
         if (!in_array($tableName, $allowedTables)) {
             echo json_encode(['success' => false, 'message' => 'Tabla no permitida.']);
@@ -30,18 +31,14 @@ class ApiController
         }
 
         try {
-            // Ajusta el nombre de la columna de visualización si es necesario
-            // Algunas tablas pueden usar 'nombre', otras 'descripcion', etc.
-            $displayColumn = 'nombre'; // Asume 'nombre' por defecto
-
             $stmt = $this->pdo->prepare("SELECT id, {$displayColumn} AS text FROM {$tableName} ORDER BY {$displayColumn} ASC");
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             echo json_encode(['success' => true, 'data' => $data]);
         } catch (PDOException $e) {
-            // En un entorno de producción, loguea el error, no lo muestres directamente
-            echo json_encode(['success' => false, 'message' => 'Error de base de datos: ' . $e->getMessage()]);
+            error_log('Database Error: ' . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Error de base de datos. Por favor, intente más tarde.']);
         }
     }
 

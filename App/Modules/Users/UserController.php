@@ -86,45 +86,6 @@ class UserController extends Controller
         $this->view('Users/form', ['user_data' => []]); // Ruta de vista relativa al módulo
     }
 
-    public function store(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'usuario_cedula' => $this->sanitizeInput($_POST['usuario_cedula']),
-                'usuario_nombre' => $this->sanitizeInput($_POST['usuario_nombre']),
-                'usuario_apellido' => $this->sanitizeInput($_POST['usuario_apellido']),
-                'usuario_user' => $this->sanitizeInput($_POST['usuario_user']),
-                'usuario_pws' => $_POST['usuario_pws'], // Contraseña sin sanitizar aún
-                'estatus_activo_id' => (int)$this->sanitizeInput($_POST['estatus_activo_id']),
-                'tipo_usuario' => (int)$this->sanitizeInput($_POST['tipo_usuario']),
-                'id_persona' => !empty($_POST['id_persona']) ? (int)$this->sanitizeInput($_POST['id_persona']) : null,
-                'usuario_idreg' => Auth::user('user_id'), // Usuario que registra
-                'usuario_fechareg' => date('Y-m-d H:i:s')
-            ];
-
-            if (empty($data['usuario_pws'])) {
-                Auth::setFlashMessage('error', 'La contraseña no puede estar vacía al crear un usuario.');
-                $this->redirect('users/create');
-            }
-            $data['usuario_pws'] = password_hash($data['usuario_pws'], PASSWORD_DEFAULT);
-
-            try {
-                if ($this->userModel->create($data)) {
-                    Auth::setFlashMessage('success', 'Usuario creado correctamente.');
-                    $this->redirect('users');
-                } else {
-                    Auth::setFlashMessage('error', 'Error al crear el usuario.');
-                    $this->redirect('users/create');
-                }
-            } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al crear usuario: ' . $e->getMessage());
-                $this->redirect('users/create');
-            }
-        } else {
-            $this->redirect('users');
-        }
-    }
-
     public function edit(int $id): void
     {
         $user_data = $this->userModel->findById($id);

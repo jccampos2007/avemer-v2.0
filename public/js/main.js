@@ -14,7 +14,7 @@ $(document).ready(function () {
 });
 
 // Función reusable para llenar un select
-function fillSelect(selectId, tableName, currentValueId = null) {
+function fillSelect(selectId, tableName, currentValueId = null, displayColumn = 'nombre') {
     const $select = $(`#${selectId}`);
     // Limpiar opciones existentes, excepto la primera "Seleccione..."
     $select.find('option:not(:first)').remove();
@@ -22,19 +22,28 @@ function fillSelect(selectId, tableName, currentValueId = null) {
     // Obtener el valor actual si estamos en modo edición
     const currentValue = currentValueId ? $(`#${currentValueId}`).val() : null;
 
-    // Asume que BASE_URL está definida en el ámbito global de JS
-    // Puedes definirla en tu layout PHP si no lo está: <script>const BASE_URL = '<?php echo BASE_URL; ?>';</script>
-    const apiUrl = `${BASE_URL_JS}api/data/${tableName}`; // Ajusta esta URL si tu ruta es diferente
+    // Construir la URL con el parámetro displayColumn
+    // Asume que BASE_URL_JS está definida en el ámbito global de JS
+    // Puedes definirla en tu layout PHP si no lo está: <script>const BASE_URL_JS = '<?php echo BASE_URL; ?>';</script>
+    const apiUrl = `${BASE_URL_JS}api/data/${tableName}?displayColumn=${displayColumn}`;
+
     $.ajax({
         url: apiUrl,
         method: 'GET',
         dataType: 'json',
         success: function (response) {
+            console.log(`Datos cargados para ${tableName} (columna: ${displayColumn}):`, response);
             if (response.success && response.data) {
                 $.each(response.data, function (index, item) {
+                    let displayText = item.text;
+
+                    if (displayText && typeof displayText === 'string' && displayText.startsWith(', ')) {
+                        displayText = displayText.substring(2);
+                    }
+
                     $select.append($('<option>', {
                         value: item.id,
-                        text: item.text // Usamos 'text' porque PHP lo aliased como AS text
+                        text: displayText
                     }));
                 });
 
@@ -43,14 +52,13 @@ function fillSelect(selectId, tableName, currentValueId = null) {
                     $select.val(currentValue);
                 }
             } else {
-                console.error(`Error al cargar datos de ${tableName}:`, response.message);
+                console.error(`Error al cargar datos de ${tableName} (columna: ${displayColumn}):`, response.message);
                 // Opcional: mostrar un mensaje de error al usuario
             }
         },
         error: function (xhr, status, error) {
-            console.error(`Error AJAX al cargar datos de ${tableName}:`, status, error);
+            console.error(`Error AJAX al cargar datos de ${tableName} (columna: ${displayColumn}):`, status, error);
             // Opcional: mostrar un mensaje de error al usuario
         }
     });
 }
-

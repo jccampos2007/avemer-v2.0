@@ -1,27 +1,27 @@
 <?php
-// php_mvc_app/app/Modules/Alumnos/Controllers/AlumnoController.php
-namespace App\Modules\Alumnos;
+// php_mvc_app/app/Modules/Coordinadores/CoordinadorController.php
+namespace App\Modules\Coordinadores; // Nuevo namespace
 
 use App\Core\Controller;
 use App\Core\Auth;
-use App\Modules\Alumnos\AlumnoModel; // Asegúrate de que el namespace sea correcto
+use App\Modules\Coordinadores\CoordinadorModel; // Asegúrate de que el namespace sea correcto
 
-class AlumnoController extends Controller
+class CoordinadorController extends Controller
 {
-    private $alumnoModel;
+    private $coordinadoresModel;
 
     public function __construct()
     {
         Auth::requireLogin();
-        $this->alumnoModel = new AlumnoModel(); // Ruta del modelo dentro del patrón
+        $this->coordinadoresModel = new CoordinadorModel(); // Ruta del modelo dentro del patrón
     }
 
     public function index(): void
     {
-        $this->view('Alumnos/list'); // Ruta de vista relativa al módulo
+        $this->view('Coordinadores/list'); // Ruta de vista relativa al módulo
     }
 
-    public function getAlumnosData(): void
+    public function getCoordinadoresData(): void
     {
         Auth::requireLogin(); // Asegura que el usuario esté logueado para acceder a los datos
 
@@ -53,7 +53,7 @@ class AlumnoController extends Controller
         ];
 
         try {
-            $data = $this->alumnoModel->getPaginatedAlumnos($params);
+            $data = $this->coordinadoresModel->getPaginatedCoordinadores($params);
 
             // DataTables espera el formato específico de las acciones en el lado del cliente
             // Por lo tanto, necesitamos añadir las acciones aquí para cada fila
@@ -82,17 +82,17 @@ class AlumnoController extends Controller
 
     public function create(): void
     {
-        $this->view('Alumnos/form', ['alumno_data' => []]); // Ruta de vista relativa al módulo
+        $this->view('Coordinadores/form', ['coordinador_data' => []]); // Ruta de vista relativa al módulo
     }
 
     public function edit(int $id): void
     {
-        $alumno_data = $this->alumnoModel->findById($id);
-        if (!$alumno_data) {
-            Auth::setFlashMessage('error', 'Alumno no encontrado.');
-            $this->redirect('alumnos');
+        $coordinador_data = $this->coordinadoresModel->findById($id);
+        if (!$coordinador_data) {
+            Auth::setFlashMessage('error', 'Coordinador no encontrado.');
+            $this->redirect('coordinadores');
         }
-        $this->view('Alumnos/form', ['alumno_data' => $alumno_data]); // Ruta de vista relativa al módulo
+        $this->view('Coordinadores/form', ['coordinador_data' => $coordinador_data]); // Ruta de vista relativa al módulo
     }
 
     public function update(int $id): void
@@ -137,19 +137,19 @@ class AlumnoController extends Controller
             }
 
             try {
-                if ($this->alumnoModel->update($id, $data)) {
-                    Auth::setFlashMessage('success', 'Alumno actualizado correctamente.');
-                    $this->redirect('alumnos');
+                if ($this->coordinadoresModel->update($id, $data)) {
+                    Auth::setFlashMessage('success', 'Coordinador actualizado correctamente.');
+                    $this->redirect('coordinadores');
                 } else {
-                    Auth::setFlashMessage('error', 'Error al actualizar el alumno.');
-                    $this->redirect('alumnos/edit/' . $id);
+                    Auth::setFlashMessage('error', 'Error al actualizar el coordinador.');
+                    $this->redirect('coordinadores/edit/' . $id);
                 }
             } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al actualizar alumno: ' . $e->getMessage());
-                $this->redirect('alumnos/edit/' . $id);
+                Auth::setFlashMessage('error', 'Error de base de datos al actualizar coordinador: ' . $e->getMessage());
+                $this->redirect('coordinadores/edit/' . $id);
             }
         } else {
-            $this->redirect('alumnos');
+            $this->redirect('coordinadores');
         }
     }
 
@@ -158,28 +158,28 @@ class AlumnoController extends Controller
         // Para solicitudes AJAX de eliminación, responder con JSON
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
             try {
-                if ($this->alumnoModel->delete($id)) {
-                    echo json_encode(['success' => true, 'message' => 'Alumno eliminado correctamente.']);
+                if ($this->coordinadoresModel->delete($id)) {
+                    echo json_encode(['success' => true, 'message' => 'Coordinador eliminado correctamente.']);
                 } else {
-                    echo json_encode(['success' => false, 'message' => 'Error al eliminar el alumno.']);
+                    echo json_encode(['success' => false, 'message' => 'Error al eliminar el coordinador.']);
                 }
             } catch (\PDOException $e) {
-                error_log("Error deleting Alumno: " . $e->getMessage());
-                echo json_encode(['success' => false, 'message' => 'Error de base de datos al eliminar alumno: ' . $e->getMessage()]);
+                error_log("Error deleting coordinador: " . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'Error de base de datos al eliminar coordinador: ' . $e->getMessage()]);
             }
             exit(); // Terminar la ejecución para la solicitud AJAX
         } else {
             // Comportamiento original para solicitudes no-AJAX (redirección)
             try {
-                if ($this->alumnoModel->delete($id)) {
-                    Auth::setFlashMessage('success', 'Alumno eliminado correctamente.');
+                if ($this->coordinadoresModel->delete($id)) {
+                    Auth::setFlashMessage('success', 'Coordinador eliminado correctamente.');
                 } else {
-                    Auth::setFlashMessage('error', 'Error al eliminar el alumno.');
+                    Auth::setFlashMessage('error', 'Error al eliminar el coordinador.');
                 }
             } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al eliminar alumno: ' . $e->getMessage());
+                Auth::setFlashMessage('error', 'Error de base de datos al eliminar coordinador: ' . $e->getMessage());
             }
-            $this->redirect('alumnos');
+            $this->redirect('coordinadores');
         }
     }
 }

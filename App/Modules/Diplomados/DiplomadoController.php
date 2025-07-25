@@ -27,35 +27,6 @@ class DiplomadoController extends Controller
         $this->view('Diplomados/form', ['diplomado_data' => []]); // Ruta de vista relativa al módulo
     }
 
-    public function store(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'duracion_id' => (int)$this->sanitizeInput($_POST['duracion_id']),
-                'nombre' => $this->sanitizeInput($_POST['nombre']),
-                'descripcion' => $this->sanitizeInput($_POST['descripcion']),
-                'siglas' => $this->sanitizeInput($_POST['siglas']),
-                'costo' => (float)$this->sanitizeInput($_POST['costo']),
-                'inicial' => (float)$this->sanitizeInput($_POST['inicial'])
-            ];
-
-            try {
-                if ($this->diplomadoModel->create($data)) {
-                    Auth::setFlashMessage('success', 'Diplomado creado correctamente.');
-                    $this->redirect('diplomados');
-                } else {
-                    Auth::setFlashMessage('error', 'Error al crear el diplomado.');
-                    $this->redirect('diplomados/create');
-                }
-            } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al crear diplomado: ' . $e->getMessage());
-                $this->redirect('diplomados/create');
-            }
-        } else {
-            $this->redirect('diplomados');
-        }
-    }
-
     public function edit(int $id): void
     {
         $diplomado_data = $this->diplomadoModel->findById($id);

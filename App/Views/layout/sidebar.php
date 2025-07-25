@@ -2,7 +2,7 @@
 // php_mvc_app/app/Views/layout/sidebar.php
 use App\Core\Auth;
 ?>
-<aside class="w-64 bg-gray-800 text-white min-h-screen p-4 flex flex-col justify-between rounded-r-lg shadow-lg">
+<aside class="w-64 bg-gray-800 text-white h-auto min-h-screen max-h-screen overflow-y-auto p-4 flex flex-col justify-between rounded-r-lg shadow-lg">
     <div>
         <h1 class="mb-8 bg-sky-50 rounded-md">
             <img src="<?php echo BASE_URL; ?>../assets/images/logo.png" alt="">
@@ -28,8 +28,8 @@ use App\Core\Auth;
                     </button>
                     <ul x-show="registroOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <li><a href="<?php echo BASE_URL; ?>alumnos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa-regular fa-user mr-2"></i> Alumnos</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>docente" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-user mr-2"></i> Instructores</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>coordinador" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-user-tie mr-2"></i> Coordinadores</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>docentes" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-user mr-2"></i> Instructores</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>coordinadores" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-user-tie mr-2"></i> Coordinadores</a></li>
                     </ul>
                 </li>
 
@@ -44,7 +44,8 @@ use App\Core\Auth;
                         </svg>
                     </button>
                     <ul x-show="talleresOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
-                        <li><a href="<?php echo BASE_URL; ?>curso_abierto" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura Curso</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>cursos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Talleres</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>cursos_abiertos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura Talleres</a></li>
                         <li><a href="<?php echo BASE_URL; ?>curso_control" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-exchange mr-2"></i> Detalle Talleres</a></li>
                         <li><a href="<?php echo BASE_URL; ?>inscripcion_curso" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Inscripción Curso</a></li>
                     </ul>
@@ -173,7 +174,6 @@ use App\Core\Auth;
                     <ul x-show="mantenimientoOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <li><a href="<?php echo BASE_URL; ?>diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Diplomados</a></li>
                         <li><a href="<?php echo BASE_URL; ?>capitulo" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-list-alt mr-2"></i> Capítulos</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>curso" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Talleres</a></li>
                         <li><a href="<?php echo BASE_URL; ?>maestria" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Maestrías</a></li>
                         <li><a href="<?php echo BASE_URL; ?>sede" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-building mr-2"></i> Sedes</a></li>
                         <li><a href="<?php echo BASE_URL; ?>banco" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-institution mr-2"></i> Bancos</a></li>
