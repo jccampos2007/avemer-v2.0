@@ -85,36 +85,36 @@ class CursoAbiertoController extends Controller
         $this->view('CursoAbierto/form', ['curso_abierto_data' => []]); // Ruta de vista relativa al módulo
     }
 
-    // public function store(): void
-    // {
-    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //         $data = [
-    //             'numero' => $this->sanitizeInput($_POST['numero']),
-    //             'curso_id' => !empty($_POST['curso_id']) ? (int)$this->sanitizeInput($_POST['curso_id']) : null,
-    //             'sede_id' => !empty($_POST['sede_id']) ? (int)$this->sanitizeInput($_POST['sede_id']) : null,
-    //             'estatus_id' => !empty($_POST['estatus_id']) ? (int)$this->sanitizeInput($_POST['estatus_id']) : null,
-    //             'docente_id' => !empty($_POST['docente_id']) ? (int)$this->sanitizeInput($_POST['docente_id']) : null,
-    //             'fecha' => $this->sanitizeInput($_POST['fecha']),
-    //             'nombre_carta' => $this->sanitizeInput($_POST['nombre_carta']),
-    //             'convenio' => $this->sanitizeInput($_POST['convenio']),
-    //         ];
+    public function store(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'numero' => $this->sanitizeInput($_POST['numero']),
+                'curso_id' => !empty($_POST['curso_id']) ? (int)$this->sanitizeInput($_POST['curso_id']) : null,
+                'sede_id' => !empty($_POST['sede_id']) ? (int)$this->sanitizeInput($_POST['sede_id']) : null,
+                'estatus_id' => !empty($_POST['estatus_id']) ? (int)$this->sanitizeInput($_POST['estatus_id']) : null,
+                'docente_id' => !empty($_POST['docente_id']) ? (int)$this->sanitizeInput($_POST['docente_id']) : null,
+                'fecha' => $this->sanitizeInput($_POST['fecha']),
+                'nombre_carta' => $_POST['nombre_carta'] ?? '',
+                'convenio' => $this->sanitizeInput($_POST['convenio']),
+            ];
 
-    //         try {
-    //             if ($this->cursoAbiertoModel->create($data)) {
-    //                 Auth::setFlashMessage('success', 'Curso Abierto creado correctamente.');
-    //                 $this->redirect('cursos_abiertos');
-    //             } else {
-    //                 Auth::setFlashMessage('error', 'Error al crear el Curso Abierto.');
-    //                 $this->redirect('cursos_abiertos/create');
-    //             }
-    //         } catch (\PDOException $e) {
-    //             Auth::setFlashMessage('error', 'Error de base de datos al crear Curso Abierto: ' . $e->getMessage());
-    //             $this->redirect('cursos_abiertos/create');
-    //         }
-    //     } else {
-    //         $this->redirect('cursos_abiertos');
-    //     }
-    // }
+            try {
+                if ($this->cursoAbiertoModel->create($data)) {
+                    Auth::setFlashMessage('success', 'Curso Abierto creado correctamente.');
+                    $this->redirect('cursos_abiertos');
+                } else {
+                    Auth::setFlashMessage('error', 'Error al crear el Curso Abierto.');
+                    $this->redirect('cursos_abiertos/create');
+                }
+            } catch (\PDOException $e) {
+                Auth::setFlashMessage('error', 'Error de base de datos al crear Curso Abierto: ' . $e->getMessage());
+                $this->redirect('cursos_abiertos/create');
+            }
+        } else {
+            $this->redirect('cursos_abiertos');
+        }
+    }
 
     public function edit(int $id): void
     {

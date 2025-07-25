@@ -51,7 +51,7 @@ $is_edit = isset($curso_abierto_data['id']) && !empty($curso_abierto_data['id'])
 
         <div class="mb-4">
             <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
-            <textarea id="nombre_carta" name="nombre_carta" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required><?php echo htmlspecialchars($curso_abierto_data['nombre_carta'] ?? ''); ?></textarea>
+            <textarea id="nombre_carta" name="nombre_carta" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3"><?php echo htmlspecialchars($curso_abierto_data['nombre_carta'] ?? ''); ?></textarea>
         </div>
 
         <div class="flex items-center justify-between">

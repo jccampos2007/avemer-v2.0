@@ -30,11 +30,22 @@ $(document).ready(function () {
                 language: 'es'
             })
             .then(editor => {
-                console.log('Editor de nombre_carta inicializado', editor);
+                window.nombreCartaEditor = editor;
             })
             .catch(error => {
                 console.error('Error al inicializar el editor de nombre_carta:', error);
             });
+
+        formCursosAbiertos.on('submit', function (event) {
+            const nombreCartaContent = window.nombreCartaEditor ? window.nombreCartaEditor.getData() : '';
+
+            if (nombreCartaContent.trim() === '') {
+                event.preventDefault();
+            }
+
+
+
+        });
 
     } else {
         console.log(BASE_URL_JS + "cursos_abiertos/data");
@@ -61,8 +72,6 @@ $(document).ready(function () {
                 { "data": 4 }, // Columna 4: Estatus ID (debería ser el nombre del estatus)
                 { "data": 5 }, // Columna 5: Docente ID (debería ser el nombre del docente/coordinador)
                 { "data": 6 }, // Columna 6: Fecha
-                { "data": 7 }, // Columna 7: Nombre Carta
-                { "data": 8 }, // Columna 8: Convenio
                 {
                     data: null,
                     orderable: false,
@@ -80,4 +89,6 @@ $(document).ready(function () {
             }
         });
     }
+
+
 });

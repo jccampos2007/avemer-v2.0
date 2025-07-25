@@ -39,30 +39,62 @@ class CursoAbiertoModel
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
             0 => 'id',
-            1 => 'numero',
-            2 => 'curso_id',
-            3 => 'sede_id',
-            4 => 'estatus_id',
-            5 => 'docente_id',
+            1 => 'ca.numero',
+            2 => 'curso_nombre',
+            3 => 'sede_nombre',
+            4 => 'estatus_nombre',
+            5 => 'docente_nombre',
             6 => 'fecha',
             7 => 'nombre_carta',
-            8 => 'convenio',
+            8 => 'ca.convenio',
         ];
 
         // Construir la consulta base
-        $sql = "SELECT id, numero, curso_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio FROM curso_abierto";
-        $countSql = "SELECT COUNT(*) FROM curso_abierto";
+        $sql = "SELECT 
+            ca.id,
+            ca.numero,
+            ca.fecha,
+            c.nombre AS curso_nombre,
+            s.nombre AS sede_nombre,
+            e.nombre AS estatus_nombre,
+            CONCAT(d.primer_apellido, ', ', d.primer_nombre) AS docente_nombre
+        FROM
+            curso_abierto ca
+                LEFT JOIN
+            curso c ON ca.curso_id = c.id
+                LEFT JOIN
+            sede s ON ca.sede_id = s.id
+                LEFT JOIN
+            estatus e ON ca.estatus_id = e.id
+                LEFT JOIN
+            docente d ON ca.docente_id = d.id";
+        $countSql = "SELECT COUNT(*) FROM
+            curso_abierto ca
+                LEFT JOIN
+            curso c ON ca.curso_id = c.id
+                LEFT JOIN
+            sede s ON ca.sede_id = s.id
+                LEFT JOIN
+            estatus e ON ca.estatus_id = e.id
+                LEFT JOIN
+            docente d ON ca.docente_id = d.id";
         $where = [];
         $queryParams = [];
 
         // Búsqueda global
         if (!empty($searchValue)) {
-            $where[] = "(numero LIKE :numero "
-                . "OR nombre_carta LIKE :nombre_carta "
-                . "OR convenio LIKE :convenio)";
+            $where[] = "(ca.numero LIKE :numero "
+                . "OR c.nombre LIKE :curso_nombre "
+                . "OR s.nombre LIKE :sede_nombre "
+                . "OR e.nombre LIKE :estatus_nombre "
+                . "OR CONCAT(d.primer_apellido, ', ', d.primer_nombre) LIKE :docente_nombre "
+                . "OR ca.convenio LIKE :convenio)";
             $like = '%' . $searchValue . '%';
             $queryParams[':numero'] = $like;
-            $queryParams[':nombre_carta'] = $like;
+            $queryParams[':curso_nombre'] = $like;
+            $queryParams[':sede_nombre'] = $like;
+            $queryParams[':estatus_nombre'] = $like;
+            $queryParams[':docente_nombre'] = $like;
             $queryParams[':convenio'] = $like;
         }
 
@@ -78,7 +110,7 @@ class CursoAbiertoModel
 
         // Ordenación
         $orderColumnName = $columnMap[$orderColumnIndex] ?? 'id'; // Columna por defecto si no se encuentra
-        $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
+        $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'desc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
         // Paginación
@@ -97,14 +129,12 @@ class CursoAbiertoModel
             $formattedData[] = [
                 $row['id'],
                 htmlspecialchars($row['numero']),
-                htmlspecialchars($row['curso_id']), // Estos IDs deberían ser nombres en una aplicación real
-                htmlspecialchars($row['sede_id']),
-                htmlspecialchars($row['estatus_id']),
-                htmlspecialchars($row['docente_id']),
+                htmlspecialchars($row['curso_nombre'] ?? ''),
+                htmlspecialchars($row['sede_nombre'] ?? ''),
+                htmlspecialchars($row['estatus_nombre'] ?? ''),
+                htmlspecialchars($row['docente_nombre'] ?? ''),
                 htmlspecialchars($row['fecha']),
-                htmlspecialchars($row['nombre_carta']),
-                htmlspecialchars($row['convenio']),
-                '' // Columna para acciones (editar/eliminar)
+                ''
             ];
         }
 
