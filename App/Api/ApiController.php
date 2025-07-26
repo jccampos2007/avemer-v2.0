@@ -22,16 +22,17 @@ class ApiController
         header('Content-Type: application/json');
 
         $displayColumn = $_GET['displayColumn'] ?? 'nombre';
+        $where = $_GET['statusFilter'] ? "WHERE {$_GET['statusFilter']} = '1'" : '';
 
-        $allowedTables = ['profesion_oficio', 'estado', 'nacionalidad', 'estatus_activo', 'docente', 'curso', 'sede', 'estatus'];
+        $allowedTables = ['profesion_oficio', 'estado', 'nacionalidad', 'estatus_activo', 'docente', 'curso', 'sede', 'estatus', 'curso_abierto', 'alumno', 'estatus_inscripcion'];
 
         if (!in_array($tableName, $allowedTables)) {
-            echo json_encode(['success' => false, 'message' => 'Tabla no permitida.']);
+            echo json_encode(['success' => false, 'message' => "Tabla no permitida {$tableName} {$displayColumn} {$where}."]);
             exit;
         }
 
         try {
-            $stmt = $this->pdo->prepare("SELECT id, {$displayColumn} AS text FROM {$tableName} ORDER BY {$displayColumn} ASC");
+            $stmt = $this->pdo->prepare("SELECT id, {$displayColumn} AS text FROM {$tableName} {$where} ORDER BY {$displayColumn} ASC");
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -42,46 +43,112 @@ class ApiController
         }
     }
 
-    public function searchUsers()
+    /**
+     * Método genérico para obtener datos para autocompletado desde cualquier tabla.
+     * Permite especificar la columna a mostrar, las columnas a buscar y el filtro de estatus activo.
+     *
+     * @param string $tableName El nombre de la tabla de la que se desean obtener los datos.
+     * @return void Envía una respuesta JSON.
+     */
+    public function getAutocompleteData(string $tableName): void
     {
         header('Content-Type: application/json');
 
-        // El término de búsqueda viene en el parámetro 'term' por defecto con jQuery UI Autocomplete
         $searchTerm = $_GET['term'] ?? '';
+        $displayColumn = $_GET['displayColumn'] ?? 'nombre'; // Columna para mostrar en 'label' y 'value'
 
-        // Asegúrate de que el término de búsqueda tenga al menos 3 caracteres
+        // Configuración de tablas permitidas para autocompletado.
+        // Incluye:
+        // - 'display_columns': Columnas válidas para mostrar en el autocomplete.
+        // - 'search_columns': Columnas en las que se realizará la búsqueda LIKE.
+        // - 'status_column': (Opcional) Columna para filtrar por estado activo (ej. 'estatus_activo_id').
+        // Las tablas que son "tablas de estatus" (ej. estatus_activo) no se filtran por sí mismas.
+        $allowedTablesConfig = [
+            'docente' => [
+                'display_columns' => ['primer_nombre', 'primer_apellido', 'CONCAT(primer_apellido, ", ", primer_nombre)'],
+                'search_columns' => ['primer_nombre', 'primer_apellido'],
+                'status_column' => 'estatus_activo_id'
+            ],
+            'alumno' => [
+                'display_columns' => ['primer_nombre', 'primer_apellido', 'CONCAT(primer_apellido, ", ", primer_nombre)'],
+                'search_columns' => ['primer_nombre', 'primer_apellido', 'ci_pasapote'], // Puedes añadir más columnas de búsqueda
+                'status_column' => 'estatus_activo_id'
+            ],
+        ];
+
+        // 1. Validar que la tabla solicitada esté permitida y configurada para autocompletado
+        if (!isset($allowedTablesConfig[$tableName])) {
+            echo json_encode(['success' => false, 'message' => 'Tabla no configurada para autocompletado.']);
+            exit;
+        }
+
+        $tableConfig = $allowedTablesConfig[$tableName];
+        $searchColumns = $tableConfig['search_columns'];
+        $statusColumn = $tableConfig['status_column'] ?? null;
+
+        // 2. Validar que la columna de visualización solicitada sea permitida para esta tabla.
+        //    Si no es válida, se intenta usar la primera columna de visualización definida.
+        if (!in_array($displayColumn, $tableConfig['display_columns'])) {
+            $displayColumn = $tableConfig['display_columns'][0] ?? 'id'; // Fallback
+            error_log("Advertencia: Columna de visualización inválida solicitada para {$tableName}. Usando por defecto: {$displayColumn}");
+        }
+
+        // 3. Requerir un término de búsqueda mínimo
         if (strlen($searchTerm) < 3) {
-            echo json_encode([]); // Devolver un array vacío si el término es muy corto
+            echo json_encode([]);
             exit;
         }
 
         try {
-            // Ajusta esta consulta SQL según la estructura de tu tabla 'usuarios'
-            // Asumo que tienes 'id', 'primer_nombre', 'primer_apellido'
-            $stmt = $this->pdo->prepare("
-                SELECT id, primer_nombre, primer_apellido
-                FROM usuarios
-                WHERE primer_nombre LIKE :searchTerm1 OR primer_apellido LIKE :searchTerm2
-                LIMIT 10
-            ");
+            $sql = "SELECT id, {$displayColumn} AS text FROM {$tableName}";
+            $whereClauses = [];
+            $queryParams = [];
             $likeTerm = '%' . $searchTerm . '%';
-            $stmt->bindParam(':searchTerm1', $likeTerm);
-            $stmt->bindParam(':searchTerm2', $likeTerm);
-            $stmt->execute();
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $paramIndex = 0; // Contador para nombres de parámetros únicos
+
+            // Construir cláusulas de búsqueda dinámica
+            $searchConditions = [];
+            foreach ($searchColumns as $col) {
+                $paramName = ":search_param{$paramIndex}"; // Generar un nombre de parámetro único
+                $searchConditions[] = "{$col} LIKE {$paramName}";
+                $queryParams[$paramName] = $likeTerm;
+                $paramIndex++;
+            }
+            if (!empty($searchConditions)) {
+                $whereClauses[] = "(" . implode(' OR ', $searchConditions) . ")";
+            }
+
+            // Aplicar filtro por estatus activo si la tabla tiene una columna de estado definida
+            // y si la tabla no es una de las tablas que *definen* estados
+            if ($statusColumn && !in_array($tableName, ['estatus_activo', 'estatus', 'estatus_inscripcion'])) {
+                $whereClauses[] = "{$statusColumn} = :status_id";
+                $queryParams[':status_id'] = 1; // Asumimos que '1' significa activo
+            }
+
+            // Construir la cláusula WHERE final
+            if (!empty($whereClauses)) {
+                $sql .= " WHERE " . implode(' AND ', $whereClauses);
+            }
+
+            $sql .= " LIMIT 10"; // Limitar resultados para autocompletado
+
+            // Preparar y ejecutar la consulta
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($queryParams);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             $results = [];
-            foreach ($users as $user) {
+            foreach ($data as $item) {
                 $results[] = [
-                    'label' => htmlspecialchars($user['primer_nombre'] . ' ' . $user['primer_apellido']), // Texto a mostrar en la lista
-                    'value' => htmlspecialchars($user['primer_nombre'] . ' ' . $user['primer_apellido']), // Valor que se pone en el input text
-                    'id'    => $user['id'] // El ID real del usuario
+                    'label' => htmlspecialchars($item['text']), // Texto a mostrar en la lista
+                    'value' => htmlspecialchars($item['text']), // Valor que se pone en el input text
+                    'id'    => $item['id'] // El ID real del item
                 ];
             }
 
             echo json_encode($results);
         } catch (PDOException $e) {
-            error_log("Error de base de datos al buscar usuarios: " . $e->getMessage());
+            error_log("Error de base de datos en getAutocompleteData para {$tableName}: " . $e->getMessage());
             echo json_encode([]); // Devolver vacío en caso de error
         }
     }

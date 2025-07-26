@@ -101,14 +101,14 @@ class CursoAbiertoController extends Controller
 
             try {
                 if ($this->cursoAbiertoModel->create($data)) {
-                    Auth::setFlashMessage('success', 'Curso Abierto creado correctamente.');
+                    Auth::setFlashMessage('success', 'Taller Abierto creado correctamente.');
                     $this->redirect('cursos_abiertos');
                 } else {
-                    Auth::setFlashMessage('error', 'Error al crear el Curso Abierto.');
+                    Auth::setFlashMessage('error', 'Error al crear el Taller Abierto.');
                     $this->redirect('cursos_abiertos/create');
                 }
             } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al crear Curso Abierto: ' . $e->getMessage());
+                Auth::setFlashMessage('error', 'Error de base de datos al crear Taller Abierto: ' . $e->getMessage());
                 $this->redirect('cursos_abiertos/create');
             }
         } else {
@@ -120,7 +120,7 @@ class CursoAbiertoController extends Controller
     {
         $curso_abierto_data = $this->cursoAbiertoModel->findById($id);
         if (!$curso_abierto_data) {
-            Auth::setFlashMessage('error', 'Curso Abierto no encontrado.');
+            Auth::setFlashMessage('error', 'Taller Abierto no encontrado.');
             $this->redirect('cursos_abiertos');
         }
         $this->view('CursoAbierto/form', ['curso_abierto_data' => $curso_abierto_data]); // Ruta de vista relativa al módulo
@@ -142,14 +142,14 @@ class CursoAbiertoController extends Controller
 
             try {
                 if ($this->cursoAbiertoModel->update($id, $data)) {
-                    Auth::setFlashMessage('success', 'Curso Abierto actualizado correctamente.');
+                    Auth::setFlashMessage('success', 'Taller Abierto actualizado correctamente.');
                     $this->redirect('cursos_abiertos');
                 } else {
-                    Auth::setFlashMessage('error', 'Error al actualizar el Curso Abierto.');
+                    Auth::setFlashMessage('error', 'Error al actualizar el Taller Abierto.');
                     $this->redirect('cursos_abiertos/edit/' . $id);
                 }
             } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al actualizar Curso Abierto: ' . $e->getMessage());
+                Auth::setFlashMessage('error', 'Error de base de datos al actualizar Taller Abierto: ' . $e->getMessage());
                 $this->redirect('cursos_abiertos/edit/' . $id);
             }
         } else {
@@ -163,25 +163,25 @@ class CursoAbiertoController extends Controller
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
             try {
                 if ($this->cursoAbiertoModel->delete($id)) {
-                    echo json_encode(['success' => true, 'message' => 'Curso Abierto eliminado correctamente.']);
+                    echo json_encode(['success' => true, 'message' => 'Taller Abierto eliminado correctamente.']);
                 } else {
-                    echo json_encode(['success' => false, 'message' => 'Error al eliminar el Curso Abierto.']);
+                    echo json_encode(['success' => false, 'message' => 'Error al eliminar el Taller Abierto.']);
                 }
             } catch (\PDOException $e) {
-                error_log("Error deleting curso abierto: " . $e->getMessage());
-                echo json_encode(['success' => false, 'message' => 'Error de base de datos al eliminar Curso Abierto: ' . $e->getMessage()]);
+                error_log("Error deleting Taller Abierto: " . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'Error de base de datos al eliminar Taller Abierto: ' . $e->getMessage()]);
             }
             exit(); // Terminar la ejecución para la solicitud AJAX
         } else {
             // Comportamiento original para solicitudes no-AJAX (redirección)
             try {
                 if ($this->cursoAbiertoModel->delete($id)) {
-                    Auth::setFlashMessage('success', 'Curso Abierto eliminado correctamente.');
+                    Auth::setFlashMessage('success', 'Taller Abierto eliminado correctamente.');
                 } else {
-                    Auth::setFlashMessage('error', 'Error al eliminar el Curso Abierto.');
+                    Auth::setFlashMessage('error', 'Error al eliminar el Taller Abierto.');
                 }
             } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al eliminar Curso Abierto: ' . $e->getMessage());
+                Auth::setFlashMessage('error', 'Error de base de datos al eliminar Taller Abierto: ' . $e->getMessage());
             }
             $this->redirect('cursos_abiertos');
         }

@@ -4,15 +4,15 @@
 $is_edit = isset($curso_abierto_data['id']) && !empty($curso_abierto_data['id']);
 ?>
 <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
-    <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Curso Abierto' : 'Crear Nuevo Curso Abierto'; ?></h3>
-    <form id="form_cursos_abiertos" action="<?php echo BASE_URL; ?>cursos_abiertos/<?php echo ($is_edit) ? 'update/' . htmlspecialchars($curso_abierto_data['id']) : 'store'; ?>" method="POST">
+    <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Taller Abierto' : 'Crear Nuevo Taller Abierto'; ?></h3>
+    <form id="form_cursos_abiertos" action="<?php echo BASE_URL; ?>cursos_abiertos/<?php echo ($is_edit) ? 'update/' . $curso_abierto_data['id'] : 'store'; ?>" method="POST">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
                 <label for="numero" class="block text-gray-700 text-sm font-bold mb-2">Número:</label>
                 <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($curso_abierto_data['numero'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
             <div>
-                <label for="curso_id" class="block text-gray-700 text-sm font-bold mb-2">Curso:</label>
+                <label for="curso_id" class="block text-gray-700 text-sm font-bold mb-2">Taller:</label>
                 <select id="curso_id" name="curso_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                     <option value="">Seleccione un Curso</option>
                 </select>
@@ -56,7 +56,7 @@ $is_edit = isset($curso_abierto_data['id']) && !empty($curso_abierto_data['id'])
 
         <div class="flex items-center justify-between">
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Guardar Curso Abierto
+                Guardar Taller Abierto
             </button>
             <a href="<?php echo BASE_URL; ?>cursos_abiertos" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
                 Cancelar

@@ -45,16 +45,16 @@ use App\Core\Auth;
                     </button>
                     <ul x-show="talleresOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <li><a href="<?php echo BASE_URL; ?>cursos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Talleres</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>cursos_abiertos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura Talleres</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>curso_control" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-exchange mr-2"></i> Detalle Talleres</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>inscripcion_curso" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Inscripción Curso</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>cursos_abiertos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura</a></li>
+                        <!-- <li><a href="<?php echo BASE_URL; ?>curso_control" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-exchange mr-2"></i> Detalle</a></li> -->
+                        <li><a href="<?php echo BASE_URL; ?>inscripcion_curso" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa-solid fa-pen-to-square mr-2"></i> Inscripción</a></li>
                     </ul>
                 </li>
 
                 <li x-data="{ eventosOpen: false }">
                     <button @click="eventosOpen = !eventosOpen"
                         class="w-full flex justify-between items-center py-2 px-4 rounded hover:bg-gray-700 transition duration-200">
-                        <span><i class="fa fa-money-bill mr-2"></i> Eventos</span>
+                        <span><i class="fas fa-calendar-day mr-2"></i> Eventos</span>
                         <svg :class="{'rotate-180': eventosOpen}" class="w-4 h-4 transform transition-transform duration-200"
                             fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -62,9 +62,9 @@ use App\Core\Auth;
                         </svg>
                     </button>
                     <ul x-show="eventosOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
-                        <li><a href="<?php echo BASE_URL; ?>eventos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-newspaper-o mr-2"></i> Eventos</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>eventos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-calendar-day mr-2"></i> Eventos</a></li>
                         <li><a href="<?php echo BASE_URL; ?>evento_abierto" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura Evento</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>inscripcion_evento" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Inscripción Evento</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>inscripcion_evento" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa-solid fa-pen-to-square mr-2"></i> Inscripción Evento</a></li>
                     </ul>
                 </li>
 

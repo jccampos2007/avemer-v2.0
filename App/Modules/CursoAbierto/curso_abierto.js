@@ -21,7 +21,7 @@ $(document).ready(function () {
             fillSelect('curso_id', 'curso', 'curso_current');
             fillSelect('sede_id', 'sede', 'sede_current');
             fillSelect('estatus_id', 'estatus', 'estatus_current');
-            fillSelect('docente_id', 'docente', 'docente_current', 'CONCAT(primer_apellido, \', \', primer_nombre)');
+            fillSelect('docente_id', 'docente', 'docente_current', 'CONCAT(primer_apellido, \', \', primer_nombre)', 'estatus_activo_id');
         }
 
         // Inicializar CKEditor para el campo nombre_carta
@@ -42,9 +42,6 @@ $(document).ready(function () {
             if (nombreCartaContent.trim() === '') {
                 event.preventDefault();
             }
-
-
-
         });
 
     } else {

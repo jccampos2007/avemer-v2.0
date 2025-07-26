@@ -13,13 +13,15 @@ use App\Modules\Docentes\DocenteController;
 use App\Modules\Coordinadores\CoordinadorController;
 use App\Modules\Cursos\CursoController;
 use App\Modules\CursoAbierto\CursoAbiertoController;
+use App\Modules\CursoControl\CursoControlController;
+use App\Modules\InscripcionCurso\InscripcionCursoController;
 use App\Modules\Diplomados\DiplomadoController;
 
 $router = new Router();
 
 // Rutas Api
 $router->add('GET', '/api/data/{table_name}', ApiController::class . '@getTableData');
-$router->add('GET', '/api/users/search', ApiController::class . '@searchUsers');
+$router->add('GET', '/api/search/{table_name}', ApiController::class . '@getAutocompleteData');
 
 // Rutas de autenticación
 $router->add('GET', '/login', AuthController::class . '@showLogin');
@@ -77,6 +79,26 @@ $router->add('GET', '/cursos_abiertos/edit/{id}', CursoAbiertoController::class 
 $router->add('POST', '/cursos_abiertos/update/{id}', CursoAbiertoController::class . '@update');
 $router->add('GET', '/cursos_abiertos/delete/{id}', CursoAbiertoController::class . '@delete');
 $router->add('POST', '/cursos_abiertos/data', CursoAbiertoController::class . '@getCursoAbiertoData');
+
+// Rutas para CursoControl
+$router->add('GET', '/curso_control', CursoControlController::class . '@index');
+$router->add('GET', '/curso_control/create', CursoControlController::class . '@create');
+$router->add('POST', '/curso_control/create', CursoControlController::class . '@create');
+$router->add('GET', '/curso_control/edit/{id}', CursoControlController::class . '@edit');
+$router->add('POST', '/curso_control/edit/{id}', CursoControlController::class . '@edit');
+$router->add('POST', '/curso_control/delete/{id}', CursoControlController::class . '@delete');
+$router->add('POST', '/curso_control/data', CursoControlController::class . '@getCursoControlData');
+
+// Rutas para InscripcionCurso
+$router->add('GET', '/inscripcion_curso', InscripcionCursoController::class . '@index');
+$router->add('GET', '/inscripcion_curso/create', InscripcionCursoController::class . '@create');
+$router->add('POST', '/inscripcion_curso/create', InscripcionCursoController::class . '@create');
+$router->add('GET', '/inscripcion_curso/edit/{id}', InscripcionCursoController::class . '@edit');
+$router->add('POST', '/inscripcion_curso/edit/{id}', InscripcionCursoController::class . '@edit');
+$router->add('POST', '/inscripcion_curso/delete/{id}', InscripcionCursoController::class . '@delete');
+
+// Ruta para el AJAX de DataTables (server-side processing)
+$router->add('POST', '/api/inscripcion_curso_data', InscripcionCursoController::class . '@getInscripcionCursoData');
 
 // Rutas de Diplomados (CRUD)
 $router->add('GET', '/diplomados', DiplomadoController::class . '@index');

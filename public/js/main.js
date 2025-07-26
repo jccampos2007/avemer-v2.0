@@ -14,18 +14,13 @@ $(document).ready(function () {
 });
 
 // Función reusable para llenar un select
-function fillSelect(selectId, tableName, currentValueId = null, displayColumn = 'nombre') {
+function fillSelect(selectId, tableName, currentValueId = null, displayColumn = 'nombre', status = '') {
     const $select = $(`#${selectId}`);
-    // Limpiar opciones existentes, excepto la primera "Seleccione..."
-    $select.find('option:not(:first)').remove();
-
-    // Obtener el valor actual si estamos en modo edición
     const currentValue = currentValueId ? $(`#${currentValueId}`).val() : null;
+    const statusFilter = status !== '' ? `&statusFilter=${status}` : '';
+    const apiUrl = `${BASE_URL_JS}api/data/${tableName}?displayColumn=${displayColumn}${statusFilter}`;
 
-    // Construir la URL con el parámetro displayColumn
-    // Asume que BASE_URL_JS está definida en el ámbito global de JS
-    // Puedes definirla en tu layout PHP si no lo está: <script>const BASE_URL_JS = '<?php echo BASE_URL; ?>';</script>
-    const apiUrl = `${BASE_URL_JS}api/data/${tableName}?displayColumn=${displayColumn}`;
+    $select.find('option:not(:first)').remove();
 
     $.ajax({
         url: apiUrl,
