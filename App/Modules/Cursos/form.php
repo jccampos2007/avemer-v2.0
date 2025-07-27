@@ -5,26 +5,26 @@ $is_edit = isset($curso_data['id']) && !empty($curso_data['id']);
 ?>
 <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Taller' : 'Crear Nuevo Taller'; ?></h3>
-    <form id="formCurso" action="<?php echo BASE_URL; ?>curso/<?php echo ($is_edit) ? 'update/' . $curso_data['id'] : 'store'; ?>" method="POST">
+    <form id="formCurso" action="<?php echo BASE_URL; ?>cursos/<?php echo ($is_edit) ? 'edit/' . $curso_data['id'] : 'create'; ?>" method="POST">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-                <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($curso_data['nombre'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="128">
+                <label for="nombre" class="label-form">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($curso_data['nombre'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="128">
             </div>
             <div>
-                <label for="numero" class="block text-gray-700 text-sm font-bold mb-2">Número:</label>
-                <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($curso_data['numero'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="16">
+                <label for="numero" class="label-form">Número:</label>
+                <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($curso_data['numero'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" maxlength="16">
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
-                <label for="horas" class="block text-gray-700 text-sm font-bold mb-2">Horas:</label>
-                <input type="number" id="horas" name="horas" value="<?php echo $curso_data['horas'] ?? '0'; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
+                <label for="horas" class="label-form">Horas:</label>
+                <input type="number" id="horas" name="horas" value="<?php echo $curso_data['horas'] ?? '0'; ?>" class="input-form focus:outline-none focus:shadow-outline" required min="0">
             </div>
             <div>
-                <label for="convenio" class="block text-gray-700 text-sm font-bold mb-2">Convenio:</label>
-                <input type="text" id="convenio" name="convenio" value="<?php echo htmlspecialchars($curso_data['convenio'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="16">
+                <label for="convenio" class="label-form">Convenio:</label>
+                <input type="text" id="convenio" name="convenio" value="<?php echo htmlspecialchars($curso_data['convenio'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" maxlength="16">
             </div>
         </div>
 

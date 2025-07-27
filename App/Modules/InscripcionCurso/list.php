@@ -32,4 +32,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/InscripcionCurso/inscripcion_curso.js'; ?>
+<?php $page_js = '../app/Modules/InscripcionCurso/inscripcion_curso.js?1'; ?>

@@ -62,7 +62,7 @@ use App\Core\Auth;
                         </svg>
                     </button>
                     <ul x-show="eventosOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
-                        <li><a href="<?php echo BASE_URL; ?>eventos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-calendar-day mr-2"></i> Eventos</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>evento" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-calendar-day mr-2"></i> Eventos</a></li>
                         <li><a href="<?php echo BASE_URL; ?>evento_abierto" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura Evento</a></li>
                         <li><a href="<?php echo BASE_URL; ?>inscripcion_evento" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa-solid fa-pen-to-square mr-2"></i> Inscripción Evento</a></li>
                     </ul>

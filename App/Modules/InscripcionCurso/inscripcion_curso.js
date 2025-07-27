@@ -12,7 +12,7 @@ $(document).ready(function () {
             "serverSide": true, // Habilitar procesamiento del lado del servidor
             "responsive": true, // Habilitar diseño responsivo
             "ajax": {
-                "url": `${BASE_URL_JS}api/inscripcion_curso_data`, // Ruta para obtener los datos
+                "url": `${BASE_URL_JS}inscripcion_curso/data`, // Ruta para obtener los datos
                 "type": "POST", // Usar POST para DataTables server-side
                 "error": function (xhr, error, thrown) {
                     console.error("Error en la solicitud AJAX de DataTables:", error, thrown);

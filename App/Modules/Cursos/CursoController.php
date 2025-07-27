@@ -18,7 +18,30 @@ class CursoController extends Controller
 
     public function index(): void
     {
-        $this->view('Cursos/list'); // Ruta de vista relativa al módulo
+        $this->view('Cursos/list');
+    }
+
+    public function create(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->processForm();
+        } else {
+            $this->view('Cursos/form', ['curso_data' => []]);
+        }
+    }
+
+    public function edit(int $id): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->processForm($id);
+        } else {
+            $curso_data = $this->cursosModel->findById($id);
+            if (!$curso_data) {
+                Auth::setFlashMessage('error', 'Curso no encontrado.');
+                $this->redirect('cursos');
+            }
+            $this->view('Cursos/form', ['curso_data' => $curso_data]);
+        }
     }
 
     public function getCursosData(): void
@@ -80,72 +103,38 @@ class CursoController extends Controller
         }
     }
 
-    public function create(): void
+    public function processForm(?int $id = null): void
     {
-        $this->view('Cursos/form', ['curso_data' => []]); // Ruta de vista relativa al módulo
-    }
+        $data = [
+            'nombre' => $this->sanitizeInput($_POST['nombre']),
+            'numero' => $this->sanitizeInput($_POST['numero']),
+            'horas' => (int)$this->sanitizeInput($_POST['horas']),
+            'convenio' => $this->sanitizeInput($_POST['convenio']),
+        ];
 
-    // public function store(): void
-    // {
-    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //         $data = [
-    //             'nombre' => $this->sanitizeInput($_POST['nombre']),
-    //             'numero' => $this->sanitizeInput($_POST['numero']),
-    //             'horas' => (int)$this->sanitizeInput($_POST['horas']),
-    //             'convenio' => $this->sanitizeInput($_POST['convenio']),
-    //         ];
-
-    //         try {
-    //             if ($this->cursosModel->create($data)) {
-    //                 Auth::setFlashMessage('success', 'Curso creado correctamente.');
-    //                 $this->redirect('cursos');
-    //             } else {
-    //                 Auth::setFlashMessage('error', 'Error al crear el curso.');
-    //                 $this->redirect('cursos/create');
-    //             }
-    //         } catch (\PDOException $e) {
-    //             Auth::setFlashMessage('error', 'Error de base de datos al crear curso: ' . $e->getMessage());
-    //             $this->redirect('cursos/create');
-    //         }
-    //     } else {
-    //         $this->redirect('cursos');
-    //     }
-    // }
-
-    public function edit(int $id): void
-    {
-        $curso_data = $this->cursosModel->findById($id);
-        if (!$curso_data) {
-            Auth::setFlashMessage('error', 'Curso no encontrado.');
-            $this->redirect('cursos');
-        }
-        $this->view('Cursos/form', ['curso_data' => $curso_data]); // Ruta de vista relativa al módulo
-    }
-
-    public function update(int $id): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'nombre' => $this->sanitizeInput($_POST['nombre']),
-                'numero' => $this->sanitizeInput($_POST['numero']),
-                'horas' => (int)$this->sanitizeInput($_POST['horas']),
-                'convenio' => $this->sanitizeInput($_POST['convenio']),
-            ];
-
-            try {
-                if ($this->cursosModel->update($id, $data)) {
-                    Auth::setFlashMessage('success', 'Curso actualizado correctamente.');
-                    $this->redirect('cursos');
-                } else {
-                    Auth::setFlashMessage('error', 'Error al actualizar el curso.');
-                    $this->redirect('cursos/edit/' . $id);
-                }
-            } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al actualizar curso: ' . $e->getMessage());
-                $this->redirect('cursos/edit/' . $id);
+        try {
+            $success = false;
+            if ($id) {
+                // Actualizar
+                $success = $this->cursosModel->update($id, $data);
+                $message = $success ? 'Taller actualizado correctamente.' : 'Error al actualizar el Taller.';
+            } else {
+                // Crear
+                $success = $this->cursosModel->create($data);
+                $message = $success ? 'Registro de Taller creado con éxito.' : 'Error al crear el Registro de Taller.';
             }
-        } else {
-            $this->redirect('cursos');
+
+            if ($success) {
+                Auth::setFlashMessage('success', $message);
+                $this->redirect('cursos');
+            } else {
+                Auth::setFlashMessage('error', $message);
+                $redirectPath = $id ? 'cursos/edit/' . $id : 'cursos/create';
+                $this->redirect($redirectPath);
+            }
+        } catch (\PDOException $e) {
+            Auth::setFlashMessage('error', 'Error de base de datos al actualizar curso: ' . $e->getMessage());
+            $this->redirect('cursos/edit/' . $id);
         }
     }
 

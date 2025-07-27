@@ -18,7 +18,30 @@ class CoordinadorController extends Controller
 
     public function index(): void
     {
-        $this->view('Coordinadores/list'); // Ruta de vista relativa al módulo
+        $this->view('Coordinadores/list');
+    }
+
+    public function create(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->processForm();
+        } else {
+            $this->view('Coordinadores/form', ['coordinador_data' => []]);
+        }
+    }
+
+    public function edit(int $id): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->processForm($id);
+        } else {
+            $coordinador_data = $this->coordinadoresModel->findById($id);
+            if (!$coordinador_data) {
+                Auth::setFlashMessage('error', 'Coordinador no encontrado.');
+                $this->redirect('coordinadores');
+            }
+            $this->view('Coordinadores/form', ['coordinador_data' => $coordinador_data]);
+        }
     }
 
     public function getCoordinadoresData(): void
@@ -80,76 +103,59 @@ class CoordinadorController extends Controller
         }
     }
 
-    public function create(): void
+    public function processForm(?int $id = null): void
     {
-        $this->view('Coordinadores/form', ['coordinador_data' => []]); // Ruta de vista relativa al módulo
-    }
+        $data = [
+            'profesion_oficio_id' => !empty($_POST['profesion_oficio_id']) ? (int)$this->sanitizeInput($_POST['profesion_oficio_id']) : null,
+            'estado_id' => !empty($_POST['estado_id']) ? (int)$this->sanitizeInput($_POST['estado_id']) : null,
+            'nacionalidad_id' => !empty($_POST['nacionalidad_id']) ? (int)$this->sanitizeInput($_POST['nacionalidad_id']) : null,
+            'ci_pasapote' => $this->sanitizeInput($_POST['ci_pasapote']),
+            'primer_nombre' => $this->sanitizeInput($_POST['primer_nombre']),
+            'segundo_nombre' => $this->sanitizeInput($_POST['segundo_nombre']),
+            'primer_apellido' => $this->sanitizeInput($_POST['primer_apellido']),
+            'segundo_apellido' => $this->sanitizeInput($_POST['segundo_apellido']),
+            'correo' => $this->sanitizeInput($_POST['correo']),
+            'tlf_habitacion' => $this->sanitizeInput($_POST['tlf_habitacion']),
+            'tlf_trabajo' => $this->sanitizeInput($_POST['tlf_trabajo']),
+            'tlf_celular' => $this->sanitizeInput($_POST['tlf_celular']),
+            'fecha_nacimiento' => $this->sanitizeInput($_POST['fecha_nacimiento']),
+            'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : null,
+            'direccion' => $this->sanitizeInput($_POST['direccion']),
+            'foto' => null,
+            'imagen' => null
+        ];
 
-    public function edit(int $id): void
-    {
-        $coordinador_data = $this->coordinadoresModel->findById($id);
-        if (!$coordinador_data) {
-            Auth::setFlashMessage('error', 'Coordinador no encontrado.');
-            $this->redirect('coordinadores');
+        // Manejo de archivos BLOB (foto, imagen) para actualización
+        if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+            $data['foto'] = file_get_contents($_FILES['foto']['tmp_name']);
         }
-        $this->view('Coordinadores/form', ['coordinador_data' => $coordinador_data]); // Ruta de vista relativa al módulo
-    }
+        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+            $data['imagen'] = file_get_contents($_FILES['imagen']['tmp_name']);
+        }
 
-    public function update(int $id): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'profesion_oficio_id' => !empty($_POST['profesion_oficio_id']) ? (int)$this->sanitizeInput($_POST['profesion_oficio_id']) : null,
-                'estado_id' => !empty($_POST['estado_id']) ? (int)$this->sanitizeInput($_POST['estado_id']) : null,
-                'nacionalidad_id' => !empty($_POST['nacionalidad_id']) ? (int)$this->sanitizeInput($_POST['nacionalidad_id']) : null,
-                'usuario_id' => !empty($_POST['usuario_id']) ? (int)$this->sanitizeInput($_POST['usuario_id']) : null,
-                'ci_pasapote' => $this->sanitizeInput($_POST['ci_pasapote']),
-                'primer_nombre' => $this->sanitizeInput($_POST['primer_nombre']),
-                'segundo_nombre' => $this->sanitizeInput($_POST['segundo_nombre']),
-                'primer_apellido' => $this->sanitizeInput($_POST['primer_apellido']),
-                'segundo_apellido' => $this->sanitizeInput($_POST['segundo_apellido']),
-                'correo' => $this->sanitizeInput($_POST['correo']),
-                'tlf_habitacion' => $this->sanitizeInput($_POST['tlf_habitacion']),
-                'tlf_trabajo' => $this->sanitizeInput($_POST['tlf_trabajo']),
-                'tlf_celular' => $this->sanitizeInput($_POST['tlf_celular']),
-                'calle_avenida' => $this->sanitizeInput($_POST['calle_avenida']),
-                'casa_apartamento' => $this->sanitizeInput($_POST['casa_apartamento']),
-                'fecha_nacimiento' => $this->sanitizeInput($_POST['fecha_nacimiento']),
-                'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : null,
-                'direccion' => $this->sanitizeInput($_POST['direccion']),
-                'chk_planilla' => isset($_POST['chk_planilla']) ? 1 : 0,
-                'chk_cedula' => isset($_POST['chk_cedula']) ? 1 : 0,
-                'chk_notas' => isset($_POST['chk_notas']) ? 1 : 0,
-                'chk_titulo' => isset($_POST['chk_titulo']) ? 1 : 0,
-                'chk_partida' => isset($_POST['chk_partida']) ? 1 : 0,
-                'nombre_universidad' => $this->sanitizeInput($_POST['nombre_universidad']),
-                'nombre_especialidad' => $this->sanitizeInput($_POST['nombre_especialidad']),
-                'foto' => null, // Por defecto null, se actualiza si se sube nuevo archivo
-                'imagen' => null // Por defecto null, se actualiza si se sube nuevo archivo
-            ];
-
-            // Manejo de archivos BLOB (foto, imagen) para actualización
-            if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-                $data['foto'] = file_get_contents($_FILES['foto']['tmp_name']);
-            }
-            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                $data['imagen'] = file_get_contents($_FILES['imagen']['tmp_name']);
+        try {
+            $success = false;
+            if ($id) {
+                // Actualizar
+                $success = $this->coordinadoresModel->update($id, $data);
+                $message = $success ? 'Coordinador actualizado correctamente.' : 'Error al actualizar el Coordinador.';
+            } else {
+                // Crear
+                $success = $this->coordinadoresModel->create($data);
+                $message = $success ? 'Registro de Coordinador creado con éxito.' : 'Error al crear el Registro de Coordinador.';
             }
 
-            try {
-                if ($this->coordinadoresModel->update($id, $data)) {
-                    Auth::setFlashMessage('success', 'Coordinador actualizado correctamente.');
-                    $this->redirect('coordinadores');
-                } else {
-                    Auth::setFlashMessage('error', 'Error al actualizar el coordinador.');
-                    $this->redirect('coordinadores/edit/' . $id);
-                }
-            } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al actualizar coordinador: ' . $e->getMessage());
-                $this->redirect('coordinadores/edit/' . $id);
+            if ($success) {
+                Auth::setFlashMessage('success', $message);
+                $this->redirect('coordinadores');
+            } else {
+                Auth::setFlashMessage('error', $message);
+                $redirectPath = $id ? 'coordinadores/edit/' . $id : 'coordinadores/create';
+                $this->redirect($redirectPath);
             }
-        } else {
-            $this->redirect('coordinadores');
+        } catch (\PDOException $e) {
+            Auth::setFlashMessage('error', 'Error de base de datos al actualizar coordinador: ' . $e->getMessage());
+            $this->redirect('coordinadores/edit/' . $id);
         }
     }
 

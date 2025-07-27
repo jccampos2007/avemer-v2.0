@@ -21,6 +21,29 @@ class CursoAbiertoController extends Controller
         $this->view('CursoAbierto/list'); // Ruta de vista relativa al módulo
     }
 
+    public function create(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->processForm();
+        } else {
+            $this->view('CursoAbierto/form', ['curso_abierto_data' => []]); // Ruta de vista relativa al módulo
+        }
+    }
+
+    public function edit(int $id): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->processForm($id);
+        } else {
+            $curso_abierto_data = $this->cursoAbiertoModel->findById($id);
+            if (!$curso_abierto_data) {
+                Auth::setFlashMessage('error', 'Taller Abierto no encontrado.');
+                $this->redirect('cursos_abiertos');
+            }
+            $this->view('CursoAbierto/form', ['curso_abierto_data' => $curso_abierto_data]); // Ruta de vista relativa al módulo
+        }
+    }
+
     public function getCursoAbiertoData(): void
     {
         Auth::requireLogin(); // Asegura que el usuario esté logueado para acceder a los datos
@@ -80,80 +103,42 @@ class CursoAbiertoController extends Controller
         }
     }
 
-    public function create(): void
+    public function processForm(?int $id = null): void
     {
-        $this->view('CursoAbierto/form', ['curso_abierto_data' => []]); // Ruta de vista relativa al módulo
-    }
+        $data = [
+            'numero' => $this->sanitizeInput($_POST['numero']),
+            'curso_id' => !empty($_POST['curso_id']) ? (int)$this->sanitizeInput($_POST['curso_id']) : null,
+            'sede_id' => !empty($_POST['sede_id']) ? (int)$this->sanitizeInput($_POST['sede_id']) : null,
+            'estatus_id' => !empty($_POST['estatus_id']) ? (int)$this->sanitizeInput($_POST['estatus_id']) : null,
+            'docente_id' => !empty($_POST['docente_id']) ? (int)$this->sanitizeInput($_POST['docente_id']) : null,
+            'fecha' => $this->sanitizeInput($_POST['fecha']),
+            'nombre_carta' => $_POST['nombre_carta'],
+            'convenio' => $this->sanitizeInput($_POST['convenio']),
+        ];
 
-    public function store(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'numero' => $this->sanitizeInput($_POST['numero']),
-                'curso_id' => !empty($_POST['curso_id']) ? (int)$this->sanitizeInput($_POST['curso_id']) : null,
-                'sede_id' => !empty($_POST['sede_id']) ? (int)$this->sanitizeInput($_POST['sede_id']) : null,
-                'estatus_id' => !empty($_POST['estatus_id']) ? (int)$this->sanitizeInput($_POST['estatus_id']) : null,
-                'docente_id' => !empty($_POST['docente_id']) ? (int)$this->sanitizeInput($_POST['docente_id']) : null,
-                'fecha' => $this->sanitizeInput($_POST['fecha']),
-                'nombre_carta' => $_POST['nombre_carta'] ?? '',
-                'convenio' => $this->sanitizeInput($_POST['convenio']),
-            ];
-
-            try {
-                if ($this->cursoAbiertoModel->create($data)) {
-                    Auth::setFlashMessage('success', 'Taller Abierto creado correctamente.');
-                    $this->redirect('cursos_abiertos');
-                } else {
-                    Auth::setFlashMessage('error', 'Error al crear el Taller Abierto.');
-                    $this->redirect('cursos_abiertos/create');
-                }
-            } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al crear Taller Abierto: ' . $e->getMessage());
-                $this->redirect('cursos_abiertos/create');
+        try {
+            $success = false;
+            if ($id) {
+                // Actualizar
+                $success = $this->cursoAbiertoModel->update($id, $data);
+                $message = $success ? 'Taller Abierto actualizado correctamente.' : 'Error al actualizar el Taller Abierto.';
+            } else {
+                // Crear
+                $success = $this->cursoAbiertoModel->create($data);
+                $message = $success ? 'Registro de Taller Abierto creado con éxito.' : 'Error al crear el Registro de Taller Abierto.';
             }
-        } else {
-            $this->redirect('cursos_abiertos');
-        }
-    }
 
-    public function edit(int $id): void
-    {
-        $curso_abierto_data = $this->cursoAbiertoModel->findById($id);
-        if (!$curso_abierto_data) {
-            Auth::setFlashMessage('error', 'Taller Abierto no encontrado.');
-            $this->redirect('cursos_abiertos');
-        }
-        $this->view('CursoAbierto/form', ['curso_abierto_data' => $curso_abierto_data]); // Ruta de vista relativa al módulo
-    }
-
-    public function update(int $id): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'numero' => $this->sanitizeInput($_POST['numero']),
-                'curso_id' => !empty($_POST['curso_id']) ? (int)$this->sanitizeInput($_POST['curso_id']) : null,
-                'sede_id' => !empty($_POST['sede_id']) ? (int)$this->sanitizeInput($_POST['sede_id']) : null,
-                'estatus_id' => !empty($_POST['estatus_id']) ? (int)$this->sanitizeInput($_POST['estatus_id']) : null,
-                'docente_id' => !empty($_POST['docente_id']) ? (int)$this->sanitizeInput($_POST['docente_id']) : null,
-                'fecha' => $this->sanitizeInput($_POST['fecha']),
-                'nombre_carta' => $this->sanitizeInput($_POST['nombre_carta']),
-                'convenio' => $this->sanitizeInput($_POST['convenio']),
-            ];
-
-            try {
-                if ($this->cursoAbiertoModel->update($id, $data)) {
-                    Auth::setFlashMessage('success', 'Taller Abierto actualizado correctamente.');
-                    $this->redirect('cursos_abiertos');
-                } else {
-                    Auth::setFlashMessage('error', 'Error al actualizar el Taller Abierto.');
-                    $this->redirect('cursos_abiertos/edit/' . $id);
-                }
-            } catch (\PDOException $e) {
-                Auth::setFlashMessage('error', 'Error de base de datos al actualizar Taller Abierto: ' . $e->getMessage());
+            if ($this->cursoAbiertoModel->update($id, $data)) {
+                Auth::setFlashMessage('success', $message);
+                $this->redirect('cursos_abiertos');
+            } else {
+                Auth::setFlashMessage('error', $message);
                 $this->redirect('cursos_abiertos/edit/' . $id);
             }
-        } else {
-            $this->redirect('cursos_abiertos');
+        } catch (\PDOException $e) {
+            Auth::setFlashMessage('error', 'Error de base de datos al actualizar Taller Abierto: ' . $e->getMessage());
+            $redirectPath = $id ? 'cursos_abiertos/edit/' . $id : 'cursos_abiertos/create';
+            $this->redirect($redirectPath);
         }
     }
 

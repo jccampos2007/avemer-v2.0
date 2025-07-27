@@ -22,9 +22,10 @@ class ApiController
         header('Content-Type: application/json');
 
         $displayColumn = $_GET['displayColumn'] ?? 'nombre';
-        $where = $_GET['statusFilter'] ? "WHERE {$_GET['statusFilter']} = '1'" : '';
+        $requestedStatusFilterColumn = $_GET['statusFilter'] ?? null;
+        $where = $requestedStatusFilterColumn ? "WHERE {$_GET['statusFilter']} = '1'" : '';
 
-        $allowedTables = ['profesion_oficio', 'estado', 'nacionalidad', 'estatus_activo', 'docente', 'curso', 'sede', 'estatus', 'curso_abierto', 'alumno', 'estatus_inscripcion'];
+        $allowedTables = ['profesion_oficio', 'estado', 'nacionalidad', 'estatus_activo', 'docente', 'curso', 'sede', 'estatus', 'curso_abierto', 'alumno', 'estatus_inscripcion', 'duracion'];
 
         if (!in_array($tableName, $allowedTables)) {
             echo json_encode(['success' => false, 'message' => "Tabla no permitida {$tableName} {$displayColumn} {$where}."]);
