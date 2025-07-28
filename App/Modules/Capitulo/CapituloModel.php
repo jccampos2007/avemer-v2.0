@@ -1,14 +1,14 @@
 <?php
-// app/Modules/Diplomado/DiplomadoModel.php
-namespace App\Modules\Diplomado;
+// app/Modules/Capitulo/CapituloModel.php
+namespace App\Modules\Capitulo;
 
-use App\Core\Database; // Assumindo que você tem uma classe Database
+use App\Core\Database;
 use PDO;
 
-class DiplomadoModel
+class CapituloModel
 {
     private $pdo;
-    private $table = 'diplomado';
+    private $table = 'capitulo';
 
     public function __construct()
     {
@@ -16,12 +16,13 @@ class DiplomadoModel
     }
 
     /**
-     * Obtiene datos de Diplomado para DataTables con paginación, búsqueda y ordenación.
+     * Obtiene datos de Capítulo para DataTables con paginación, búsqueda y ordenación.
+     * Filtra por diplomado_id.
      *
-     * @param array $params Parámetros de DataTables (start, length, search, order, columns).
+     * @param array $params Parámetros de DataTables (start, length, search, order, columns, diplomado_id).
      * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
      */
-    public function getPaginatedDiplomados(array $params): array
+    public function getPaginatedCapitulos(array $params): array
     {
         $draw = $params['draw'] ?? 1;
         $start = $params['start'] ?? 0;
@@ -30,60 +31,62 @@ class DiplomadoModel
         $orderColumnIndex = $params['order'][0]['column'] ?? 0;
         $orderDir = $params['order'][0]['dir'] ?? 'asc';
         $columns = $params['columns'] ?? [];
+        $diplomadoId = $params['diplomado_id'] ?? null; // ¡CRUCIAL! Recibir el diplomado_id
 
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
-            0 => 'd.id',
-            1 => 'duracion_nombre', // Alias de la columna unida
-            2 => 'd.nombre',
-            3 => 'd.descripcion',
-            4 => 'd.siglas',
-            5 => 'd.costo',
-            6 => 'd.inicial',
+            0 => 'c.id',
+            1 => 'c.numero',
+            2 => 'c.nombre',
+            3 => 'c.descripcion',
+            4 => 'c.activo',
         ];
 
         // Construir la consulta base
         $sql = "
             SELECT
-                d.id,
-                d.duracion_id,
-                dr.nombre AS duracion_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'duracion'
-                d.nombre,
-                d.descripcion,
-                d.siglas,
-                d.costo,
-                d.inicial
+                c.id,
+                c.diplomado_id,
+                c.numero,
+                c.nombre,
+                c.descripcion,
+                c.activo,
+                c.orden
             FROM
-                {$this->table} d
-            LEFT JOIN
-                duracion dr ON d.duracion_id = dr.id -- Asumimos una tabla 'duracion'
+                {$this->table} c
         ";
         $countSql = "
             SELECT COUNT(*)
             FROM
-                {$this->table} d
-            LEFT JOIN
-                duracion dr ON d.duracion_id = dr.id
+                {$this->table} c
         ";
 
         $where = [];
         $queryParams = [];
 
+        // Filtro obligatorio por diplomado_id
+        if ($diplomadoId !== null) {
+            $where[] = "c.diplomado_id = :diplomado_id";
+            $queryParams[':diplomado_id'] = (int) $diplomadoId;
+        } else {
+            // Si no hay diplomado_id, no se devuelve nada
+            return [
+                'draw' => (int) $draw,
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => [],
+            ];
+        }
+
         // Búsqueda global
         if (!empty($searchValue)) {
-            $where[] = "(d.nombre LIKE :search_nombre "
-                . "OR d.descripcion LIKE :search_descripcion "
-                . "OR d.siglas LIKE :search_siglas "
-                . "OR d.costo LIKE :search_costo " // Cuidado con buscar float como string
-                . "OR d.inicial LIKE :search_inicial " // Cuidado con buscar float como string
-                . "OR dr.nombre LIKE :search_duracion_nombre)";
+            $where[] = "(c.numero LIKE :search_numero "
+                . "OR c.nombre LIKE :search_nombre "
+                . "OR c.descripcion LIKE :search_descripcion)";
             $like = '%' . $searchValue . '%';
+            $queryParams[':search_numero'] = $like;
             $queryParams[':search_nombre'] = $like;
             $queryParams[':search_descripcion'] = $like;
-            $queryParams[':search_siglas'] = $like;
-            $queryParams[':search_costo'] = $like;
-            $queryParams[':search_inicial'] = $like;
-            $queryParams[':search_duracion_nombre'] = $like;
         }
 
         if (!empty($where)) {
@@ -91,13 +94,13 @@ class DiplomadoModel
             $countSql .= " WHERE " . implode(' AND ', $where);
         }
 
-        // Obtener el total de registros filtrados (después de la búsqueda)
+        // Obtener el total de registros filtrados (después de la búsqueda y el filtro de diplomado)
         $stmt = $this->pdo->prepare($countSql);
         $stmt->execute($queryParams);
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'd.id'; // Columna por defecto si no se encuentra
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'c.orden'; // Ordenar por 'orden' por defecto
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
@@ -110,20 +113,23 @@ class DiplomadoModel
         $stmt->execute($queryParams);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Obtener el total de registros sin filtrar (para 'recordsTotal')
-        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table}");
+        // Obtener el total de registros sin filtrar (pero con el filtro de diplomado)
+        $totalRecordsSql = "SELECT COUNT(*) FROM {$this->table} WHERE diplomado_id = :diplomado_id_total";
+        $totalRecordsStmt = $this->pdo->prepare($totalRecordsSql);
+        $totalRecordsStmt->bindParam(':diplomado_id_total', $diplomadoId, PDO::PARAM_INT);
+        $totalRecordsStmt->execute();
         $recordsTotal = $totalRecordsStmt->fetchColumn();
 
         return [
             'draw' => (int) $draw,
             'recordsTotal' => (int) $recordsTotal,
             'recordsFiltered' => (int) $recordsFiltered,
-            'data' => $data, // Devolvemos los datos tal cual, el controlador los formateará para DataTables
+            'data' => $data,
         ];
     }
 
     /**
-     * Obtiene un registro de diplomado por su ID.
+     * Obtiene un registro de capitulo por su ID.
      * @param int $id El ID del registro.
      * @return array|false El registro o false si no se encuentra.
      */
@@ -137,47 +143,47 @@ class DiplomadoModel
     }
 
     /**
-     * Crea un nuevo registro en diplomado.
+     * Crea un nuevo registro en capitulo.
      * @param array $data Los datos del nuevo registro.
      * @return bool True si se creó correctamente, false en caso contrario.
      */
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (duracion_id, nombre, descripcion, siglas, costo, inicial) VALUES (:duracion_id, :nombre, :descripcion, :siglas, :costo, :inicial)";
+        $sql = "INSERT INTO {$this->table} (diplomado_id, numero, nombre, descripcion, activo, orden) VALUES (:diplomado_id, :numero, :nombre, :descripcion, :activo, :orden)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            ':duracion_id' => $data['duracion_id'],
+            ':diplomado_id' => $data['diplomado_id'],
+            ':numero' => $data['numero'],
             ':nombre' => $data['nombre'],
             ':descripcion' => $data['descripcion'],
-            ':siglas' => $data['siglas'],
-            ':costo' => $data['costo'],
-            ':inicial' => $data['inicial']
+            ':activo' => $data['activo'],
+            ':orden' => $data['orden']
         ]);
     }
 
     /**
-     * Actualiza un registro existente en diplomado.
+     * Actualiza un registro existente en capitulo.
      * @param int $id El ID del registro a actualizar.
      * @param array $data Los nuevos datos del registro.
      * @return bool True si se actualizó correctamente, false en caso contrario.
      */
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE {$this->table} SET duracion_id = :duracion_id, nombre = :nombre, descripcion = :descripcion, siglas = :siglas, costo = :costo, inicial = :inicial WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET diplomado_id = :diplomado_id, numero = :numero, nombre = :nombre, descripcion = :descripcion, activo = :activo, orden = :orden WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            ':duracion_id' => $data['duracion_id'],
+            ':diplomado_id' => $data['diplomado_id'],
+            ':numero' => $data['numero'],
             ':nombre' => $data['nombre'],
             ':descripcion' => $data['descripcion'],
-            ':siglas' => $data['siglas'],
-            ':costo' => $data['costo'],
-            ':inicial' => $data['inicial'],
+            ':activo' => $data['activo'],
+            ':orden' => $data['orden'],
             ':id' => $id
         ]);
     }
 
     /**
-     * Elimina un registro de diplomado.
+     * Elimina un registro de capitulo.
      * @param int $id El ID del registro a eliminar.
      * @return bool True si se eliminó correctamente, false en caso contrario.
      */

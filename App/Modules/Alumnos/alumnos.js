@@ -24,44 +24,6 @@ $(document).ready(function () {
             fillSelect('estatus_activo_id', 'estatus_activo', 'estatus_activo_current');
         }
 
-        $("#usuario_autocomplete").autocomplete({
-            minLength: 3, // Iniciar la búsqueda después de 3 caracteres
-            source: function (request, response) {
-                // Realizar la solicitud AJAX al endpoint de búsqueda de usuarios
-                $.ajax({
-                    url: `${BASE_URL_JS}api/users/search`, // La URL de tu nuevo endpoint PHP
-                    dataType: "json",
-                    data: {
-                        term: request.term // El término de búsqueda que el usuario ha escrito
-                    },
-                    success: function (data) {
-                        response(data); // Pasar los datos al autocompletado de jQuery UI
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error en la búsqueda de usuarios:", status, error);
-                        response([]); // Devolver un array vacío en caso de error
-                    }
-                });
-            },
-            select: function (event, ui) {
-                // Cuando se selecciona un elemento de la lista
-                // ui.item.id contiene el ID real del usuario
-                // ui.item.value contiene el texto que se muestra en el input (nombre completo)
-                $("#usuario_id").val(ui.item.id); // Guardar el ID en el campo oculto
-                // El campo visible ya se actualiza automáticamente con ui.item.value
-                console.log("Usuario seleccionado:", ui.item.label, "ID:", ui.item.id);
-            },
-            change: function (event, ui) {
-                // Este evento se dispara cuando el valor del input cambia y no se selecciona un item de la lista.
-                // Si el usuario borra el texto o escribe algo que no coincide con un item,
-                // debemos limpiar el campo oculto para evitar enviar un ID incorrecto.
-                if (ui.item === null) { // No se seleccionó ningún item de la lista
-                    $("#usuario_id").val(""); // Limpiar el ID oculto
-                    console.log("Campo de usuario limpiado o valor no válido.");
-                }
-            }
-        });
-
     } else {
 
         console.log(BASE_URL_JS + "alumnos/data");

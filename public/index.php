@@ -132,6 +132,16 @@ $router->add('POST', '/diplomado/edit/{id}', DiplomadoController::class . '@edit
 $router->add('GET', '/diplomado/delete/{id}', DiplomadoController::class . '@delete');
 $router->add('POST', '/diplomado/data', DiplomadoController::class . '@getDiplomadoData');
 
+// Rutas para Capítulo
+$router->add('GET', '/capitulo', App\Modules\Capitulo\CapituloController::class . '@index');
+$router->add('GET', '/capitulo/create/{diplomadoId}', App\Modules\Capitulo\CapituloController::class . '@create');
+$router->add('POST', '/capitulo/create', App\Modules\Capitulo\CapituloController::class . '@create');
+$router->add('GET', '/capitulo/edit/{id}', App\Modules\Capitulo\CapituloController::class . '@edit');
+$router->add('POST', '/capitulo/edit/{id}', App\Modules\Capitulo\CapituloController::class . '@edit');
+$router->add('GET', '/capitulo/delete/{id}', App\Modules\Capitulo\CapituloController::class . '@delete');
+$router->add('POST', '/capitulo/data', App\Modules\Capitulo\CapituloController::class . '@getCapituloData');
+
+
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];
 $base_path = '/php_mvc_app/public';

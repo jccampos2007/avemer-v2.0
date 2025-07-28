@@ -25,7 +25,22 @@ class ApiController
         $requestedStatusFilterColumn = $_GET['statusFilter'] ?? null;
         $where = $requestedStatusFilterColumn ? "WHERE {$_GET['statusFilter']} = '1'" : '';
 
-        $allowedTables = ['profesion_oficio', 'estado', 'nacionalidad', 'estatus_activo', 'docente', 'curso', 'sede', 'estatus', 'curso_abierto', 'alumno', 'estatus_inscripcion', 'duracion', 'evento'];
+        $allowedTables = [
+            'profesion_oficio',
+            'estado',
+            'nacionalidad',
+            'estatus_activo',
+            'docente',
+            'curso',
+            'sede',
+            'estatus',
+            'curso_abierto',
+            'alumno',
+            'estatus_inscripcion',
+            'duracion',
+            'evento',
+            'diplomado'
+        ];
 
         if (!in_array($tableName, $allowedTables)) {
             echo json_encode(['success' => false, 'message' => "Tabla no permitida {$tableName} {$displayColumn} {$where}."]);
@@ -36,6 +51,14 @@ class ApiController
             $stmt = $this->pdo->prepare("SELECT id, {$displayColumn} AS text FROM {$tableName} {$where} ORDER BY {$displayColumn} ASC");
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($data as &$row) {
+                $text = $row['text'];
+                $maxLength = 80;
+                if (mb_strlen($text, 'UTF-8') > $maxLength) {
+                    $row['text'] = mb_substr($text, 0, $maxLength, 'UTF-8') . '...';
+                }
+            }
 
             echo json_encode(['success' => true, 'data' => $data]);
         } catch (PDOException $e) {
