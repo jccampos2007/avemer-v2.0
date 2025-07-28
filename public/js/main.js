@@ -1,5 +1,27 @@
 // php_mvc_app/public/js/main.js
 // Archivo JavaScript general
+const CKEDITOR_TOOLBAR_OPTIONS = {
+    items: [
+        'heading', // Títulos (H1, H2, etc.)
+        '|',
+        'bold', // Negrita
+        'italic', // Cursiva
+        'link', // Enlaces
+        'bulletedList', // Lista con viñetas
+        'numberedList', // Lista numerada
+        '|',
+        'outdent', // Disminuir sangría
+        'indent', // Aumentar sangría
+        '|',
+        'blockQuote', // Cita en bloque
+        'undo', // Deshacer
+        'redo', // Rehacer
+        '|',
+        'insertTable', // Insertar tabla
+        'mediaEmbed', // Insertar medios (videos, etc.)
+    ]
+};
+
 $(document).ready(function () {
     // Código JavaScript/jQuery general para la aplicación
     console.log("main.js cargado.");

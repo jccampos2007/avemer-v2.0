@@ -25,7 +25,7 @@ class ApiController
         $requestedStatusFilterColumn = $_GET['statusFilter'] ?? null;
         $where = $requestedStatusFilterColumn ? "WHERE {$_GET['statusFilter']} = '1'" : '';
 
-        $allowedTables = ['profesion_oficio', 'estado', 'nacionalidad', 'estatus_activo', 'docente', 'curso', 'sede', 'estatus', 'curso_abierto', 'alumno', 'estatus_inscripcion', 'duracion'];
+        $allowedTables = ['profesion_oficio', 'estado', 'nacionalidad', 'estatus_activo', 'docente', 'curso', 'sede', 'estatus', 'curso_abierto', 'alumno', 'estatus_inscripcion', 'duracion', 'evento'];
 
         if (!in_array($tableName, $allowedTables)) {
             echo json_encode(['success' => false, 'message' => "Tabla no permitida {$tableName} {$displayColumn} {$where}."]);

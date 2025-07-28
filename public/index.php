@@ -15,6 +15,7 @@ use App\Modules\Cursos\CursoController;
 use App\Modules\CursoAbierto\CursoAbiertoController;
 use App\Modules\CursoControl\CursoControlController;
 use App\Modules\Evento\EventoController;
+use App\Modules\EventoAbierto\EventoAbiertoController;
 use App\Modules\InscripcionCurso\InscripcionCursoController;
 use App\Modules\Diplomados\DiplomadoController;
 
@@ -112,6 +113,16 @@ $router->add('GET', '/evento/edit/{id}', EventoController::class . '@edit');
 $router->add('POST', '/evento/edit/{id}', EventoController::class . '@edit');
 $router->add('GET', '/evento/delete/{id}', EventoController::class . '@delete');
 $router->add('POST', '/evento/list', EventoController::class . '@getEventoData');
+
+// Rutas para EventoAbierto
+$router->add('GET', '/evento_abierto', EventoAbiertoController::class . '@index');
+$router->add('GET', '/evento_abierto/create', EventoAbiertoController::class . '@create');
+$router->add('POST', '/evento_abierto/create', EventoAbiertoController::class . '@create');
+$router->add('GET', '/evento_abierto/edit/{id}', EventoAbiertoController::class . '@edit');
+$router->add('POST', '/evento_abierto/edit/{id}', EventoAbiertoController::class . '@edit');
+$router->add('POST', '/evento_abierto/delete/{id}', EventoAbiertoController::class . '@delete');
+$router->add('POST', '/evento_abierto/data', EventoAbiertoController::class . '@getEventoAbiertoData');
+
 
 // Rutas de Diplomados (CRUD)
 $router->add('GET', '/diplomados', DiplomadoController::class . '@index');

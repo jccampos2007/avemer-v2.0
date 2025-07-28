@@ -79,6 +79,8 @@ use App\Core\Auth;
                         </svg>
                     </button>
                     <ul x-show="diplomadosOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
+                        <li><a href="<?php echo BASE_URL; ?>diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Diplomados</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>capitulo" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-list-alt mr-2"></i> Capítulos</a></li>
                         <li><a href="<?php echo BASE_URL; ?>diplomado_abierto" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura Diplomado</a></li>
                         <li><a href="<?php echo BASE_URL; ?>diplomado_control" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-exchange mr-2"></i> Detalle Diplomado</a></li>
                         <li><a href="<?php echo BASE_URL; ?>inscripcion_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Inscripción Diplomado</a></li>
@@ -172,8 +174,6 @@ use App\Core\Auth;
                         </svg>
                     </button>
                     <ul x-show="mantenimientoOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
-                        <li><a href="<?php echo BASE_URL; ?>diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Diplomados</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>capitulo" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-list-alt mr-2"></i> Capítulos</a></li>
                         <li><a href="<?php echo BASE_URL; ?>maestria" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Maestrías</a></li>
                         <li><a href="<?php echo BASE_URL; ?>sede" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-building mr-2"></i> Sedes</a></li>
                         <li><a href="<?php echo BASE_URL; ?>banco" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-institution mr-2"></i> Bancos</a></li>

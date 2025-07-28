@@ -24,7 +24,7 @@
     </style>
     <!-- jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="<?php echo BASE_URL; ?>js/main.js?3"></script>
+    <script src="<?php echo BASE_URL; ?>js/main.js"></script>
 </head>
 
 <body class="h-screen bg-gray-100 <?php echo ($isLogin ?? " flex"); ?>">
