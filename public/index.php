@@ -16,8 +16,8 @@ use App\Modules\CursoAbierto\CursoAbiertoController;
 use App\Modules\CursoControl\CursoControlController;
 use App\Modules\Evento\EventoController;
 use App\Modules\EventoAbierto\EventoAbiertoController;
+use App\Modules\Diplomado\DiplomadoController;
 use App\Modules\InscripcionCurso\InscripcionCursoController;
-use App\Modules\Diplomados\DiplomadoController;
 
 $router = new Router();
 
@@ -120,16 +120,17 @@ $router->add('GET', '/evento_abierto/create', EventoAbiertoController::class . '
 $router->add('POST', '/evento_abierto/create', EventoAbiertoController::class . '@create');
 $router->add('GET', '/evento_abierto/edit/{id}', EventoAbiertoController::class . '@edit');
 $router->add('POST', '/evento_abierto/edit/{id}', EventoAbiertoController::class . '@edit');
-$router->add('POST', '/evento_abierto/delete/{id}', EventoAbiertoController::class . '@delete');
+$router->add('GET', '/evento_abierto/delete/{id}', EventoAbiertoController::class . '@delete');
 $router->add('POST', '/evento_abierto/data', EventoAbiertoController::class . '@getEventoAbiertoData');
 
-
 // Rutas de Diplomados (CRUD)
-$router->add('GET', '/diplomados', DiplomadoController::class . '@index');
-$router->add('GET', '/diplomados/create', DiplomadoController::class . '@create');
-$router->add('GET', '/diplomados/edit/{id}', DiplomadoController::class . '@edit');
-$router->add('POST', '/diplomados/update/{id}', DiplomadoController::class . '@update');
-$router->add('GET', '/diplomados/delete/{id}', DiplomadoController::class . '@delete');
+$router->add('GET', '/diplomado', DiplomadoController::class . '@index');
+$router->add('GET', '/diplomado/create', DiplomadoController::class . '@create');
+$router->add('POST', '/diplomado/create', DiplomadoController::class . '@create');
+$router->add('GET', '/diplomado/edit/{id}', DiplomadoController::class . '@edit');
+$router->add('POST', '/diplomado/edit/{id}', DiplomadoController::class . '@edit');
+$router->add('GET', '/diplomado/delete/{id}', DiplomadoController::class . '@delete');
+$router->add('POST', '/diplomado/data', DiplomadoController::class . '@getDiplomadoData');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];
