@@ -17,6 +17,7 @@ use App\Modules\CursoControl\CursoControlController;
 use App\Modules\Evento\EventoController;
 use App\Modules\EventoAbierto\EventoAbiertoController;
 use App\Modules\Diplomado\DiplomadoController;
+use App\Modules\InscripcionDiplomado\InscripcionDiplomadoController;
 use App\Modules\InscripcionCurso\InscripcionCursoController;
 
 $router = new Router();
@@ -149,6 +150,15 @@ $router->add('GET', '/diplomado_abierto/edit/{id}', App\Modules\DiplomadoAbierto
 $router->add('POST', '/diplomado_abierto/edit/{id}', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@edit');
 $router->add('GET', '/diplomado_abierto/delete/{id}', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@delete');
 $router->add('POST', '/diplomado_abierto/data', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@getDiplomadoAbiertoData');
+
+// Rutas para InscripcionDiplomado
+$router->add('GET', '/inscripcion_diplomado', InscripcionDiplomadoController::class . '@index');
+$router->add('GET', '/inscripcion_diplomado/create', InscripcionDiplomadoController::class . '@create');
+$router->add('POST', '/inscripcion_diplomado/create', InscripcionDiplomadoController::class . '@create');
+$router->add('GET', '/inscripcion_diplomado/edit/{id}', InscripcionDiplomadoController::class . '@edit');
+$router->add('POST', '/inscripcion_diplomado/edit/{id}', InscripcionDiplomadoController::class . '@edit');
+$router->add('GET', '/inscripcion_diplomado/delete/{id}', InscripcionDiplomadoController::class . '@delete');
+$router->add('POST', '/inscripcion_diplomado/data', InscripcionDiplomadoController::class . '@getInscripcionDiplomadoData');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];
