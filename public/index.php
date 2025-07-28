@@ -141,6 +141,14 @@ $router->add('POST', '/capitulo/edit/{id}', App\Modules\Capitulo\CapituloControl
 $router->add('GET', '/capitulo/delete/{id}', App\Modules\Capitulo\CapituloController::class . '@delete');
 $router->add('POST', '/capitulo/data', App\Modules\Capitulo\CapituloController::class . '@getCapituloData');
 
+// Rutas para DiplomadoAbierto
+$router->add('GET', '/diplomado_abierto', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@index');
+$router->add('GET', '/diplomado_abierto/create', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@create');
+$router->add('POST', '/diplomado_abierto/create', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@create');
+$router->add('GET', '/diplomado_abierto/edit/{id}', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@edit');
+$router->add('POST', '/diplomado_abierto/edit/{id}', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@edit');
+$router->add('GET', '/diplomado_abierto/delete/{id}', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@delete');
+$router->add('POST', '/diplomado_abierto/data', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@getDiplomadoAbiertoData');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];

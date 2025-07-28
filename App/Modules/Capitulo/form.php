@@ -16,7 +16,7 @@ $activo_val = $capitulo_data['activo'] ?? 1; // Por defecto activo
 $orden_val = htmlspecialchars($capitulo_data['orden'] ?? '');
 ?>
 <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
-    <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Coordinador' : 'Crear Nuevo Coordinador'; ?></h3>
+    <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title ?></h3>
     <form id="formCapitulo" action="<?php echo $form_action; ?>" method="POST">
 
         <?php if ($is_edit): ?>

@@ -5,7 +5,6 @@ namespace App\Modules\Diplomado;
 use App\Core\Controller;
 use App\Core\Auth;
 use App\Modules\Diplomado\DiplomadoModel;
-use PDO; // Asegúrate de que PDO esté disponible
 
 class DiplomadoController extends Controller
 {
@@ -14,8 +13,7 @@ class DiplomadoController extends Controller
     public function __construct()
     {
         Auth::requireLogin();
-        // Asumiendo que App\Core\Database::getInstance()->getConnection() retorna una instancia PDO
-        $this->diplomadoModel = new DiplomadoModel(\App\Core\Database::getInstance()->getConnection());
+        $this->diplomadoModel = new DiplomadoModel();
     }
 
     /**
