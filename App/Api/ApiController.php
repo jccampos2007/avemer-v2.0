@@ -39,7 +39,8 @@ class ApiController
             'estatus_inscripcion',
             'duracion',
             'evento',
-            'diplomado'
+            'diplomado',
+            'diplomado_abierto'
         ];
 
         if (!in_array($tableName, $allowedTables)) {
