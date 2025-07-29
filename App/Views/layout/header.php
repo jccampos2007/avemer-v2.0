@@ -1,5 +1,6 @@
 <?php
 // php_mvc_app/app/Views/layout/header.php
+$randomValue = rand(1000, 9999);
 ?>
 <!DOCTYPE html>
 <html lang="es" class="h-full">
@@ -24,7 +25,7 @@
     </style>
     <!-- jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="<?php echo BASE_URL; ?>js/main.js"></script>
+    <script src="<?php echo BASE_URL . 'js/main.js?' . $randomValue; ?>"></script>
 </head>
 
 <body class="h-screen bg-gray-100 <?php echo ($isLogin ?? " flex"); ?>">

@@ -8,6 +8,7 @@ use PDO;
 class AlumnoModel
 {
     private $pdo;
+    private $table = 'alumno';
 
     public function __construct()
     {
@@ -45,7 +46,7 @@ class AlumnoModel
         ];
 
         // Construir la consulta base
-        $sql = "SELECT id, foto, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM alumno";
+        $sql = "SELECT id, foto, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM {$this->table}";
         $countSql = "SELECT COUNT(*) FROM alumno";
         $where = [];
         $queryParams = [];
@@ -138,17 +139,31 @@ class AlumnoModel
 
     public function findById(int $id): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM alumno WHERE id = :id");
+        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $alumno = $stmt->fetch();
         return $alumno ?: null;
     }
 
-    public function create(array $data): bool
+    /**
+     * Obtiene un alumno por su CI/Pasaporte.
+     * @param string $ciPasaporte
+     * @return array|false
+     */
+    public function findByCiPasaporte(string $ciPasaporte)
     {
-        $sql = "INSERT INTO alumno (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, calle_avenida, casa_apartamento, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida, nombre_universidad, nombre_especialidad) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :calle_avenida, :casa_apartamento, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen, :chk_planilla, :chk_cedula, :chk_notas, :chk_titulo, :chk_partida, :nombre_universidad, :nombre_especialidad)";
+        $sql = "SELECT * FROM {$this->table} WHERE ci_pasapote = :ci_pasapote";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
+        $stmt->bindParam(':ci_pasapote', $ciPasaporte, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function create(array $data) // : bool
+    {
+        $sql = "INSERT INTO {$this->table} (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, calle_avenida, casa_apartamento, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida, nombre_universidad, nombre_especialidad) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :calle_avenida, :casa_apartamento, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen, :chk_planilla, :chk_cedula, :chk_notas, :chk_titulo, :chk_partida, :nombre_universidad, :nombre_especialidad)";
+        $stmt = $this->pdo->prepare($sql);
+        $success = $stmt->execute([
             'profesion_oficio_id' => $data['profesion_oficio_id'],
             'estado_id' => $data['estado_id'],
             'nacionalidad_id' => $data['nacionalidad_id'],
@@ -177,11 +192,16 @@ class AlumnoModel
             'nombre_universidad' => $data['nombre_universidad'],
             'nombre_especialidad' => $data['nombre_especialidad']
         ]);
+
+        if ($success) {
+            return (int)$this->pdo->lastInsertId(); // Devuelve el ID
+        }
+        return false;
     }
 
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE alumno SET profesion_oficio_id = :profesion_oficio_id, estado_id = :estado_id, nacionalidad_id = :nacionalidad_id, usuario_id = :usuario_id, ci_pasapote = :ci_pasapote, primer_nombre = :primer_nombre, segundo_nombre = :segundo_nombre, primer_apellido = :primer_apellido, segundo_apellido = :segundo_apellido, correo = :correo, tlf_habitacion = :tlf_habitacion, tlf_trabajo = :tlf_trabajo, tlf_celular = :tlf_celular, calle_avenida = :calle_avenida, casa_apartamento = :casa_apartamento, fecha_nacimiento = :fecha_nacimiento, estatus_activo_id = :estatus_activo_id, direccion = :direccion, chk_planilla = :chk_planilla, chk_cedula = :chk_cedula, chk_notas = :chk_notas, chk_titulo = :chk_titulo, chk_partida = :chk_partida, nombre_universidad = :nombre_universidad, nombre_especialidad = :nombre_especialidad";
+        $sql = "UPDATE {$this->table} SET profesion_oficio_id = :profesion_oficio_id, estado_id = :estado_id, nacionalidad_id = :nacionalidad_id, usuario_id = :usuario_id, ci_pasapote = :ci_pasapote, primer_nombre = :primer_nombre, segundo_nombre = :segundo_nombre, primer_apellido = :primer_apellido, segundo_apellido = :segundo_apellido, correo = :correo, tlf_habitacion = :tlf_habitacion, tlf_trabajo = :tlf_trabajo, tlf_celular = :tlf_celular, calle_avenida = :calle_avenida, casa_apartamento = :casa_apartamento, fecha_nacimiento = :fecha_nacimiento, estatus_activo_id = :estatus_activo_id, direccion = :direccion, chk_planilla = :chk_planilla, chk_cedula = :chk_cedula, chk_notas = :chk_notas, chk_titulo = :chk_titulo, chk_partida = :chk_partida, nombre_universidad = :nombre_universidad, nombre_especialidad = :nombre_especialidad";
 
         // Solo actualiza BLOBs si se envió un nuevo archivo
         if ($data['foto'] !== null) $sql .= ", foto = :foto";
@@ -227,7 +247,7 @@ class AlumnoModel
 
     public function delete(int $id): bool
     {
-        $stmt = $this->pdo->prepare("DELETE FROM alumno WHERE id = :id");
+        $stmt = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = :id");
         return $stmt->execute(['id' => $id]);
     }
 }

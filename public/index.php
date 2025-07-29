@@ -18,6 +18,7 @@ use App\Modules\Evento\EventoController;
 use App\Modules\EventoAbierto\EventoAbiertoController;
 use App\Modules\Diplomado\DiplomadoController;
 use App\Modules\InscripcionDiplomado\InscripcionDiplomadoController;
+use App\Modules\PreinscripcionDiplomado\PreinscripcionDiplomadoController;
 use App\Modules\InscripcionCurso\InscripcionCursoController;
 
 $router = new Router();
@@ -159,6 +160,14 @@ $router->add('GET', '/inscripcion_diplomado/edit/{id}', InscripcionDiplomadoCont
 $router->add('POST', '/inscripcion_diplomado/edit/{id}', InscripcionDiplomadoController::class . '@edit');
 $router->add('GET', '/inscripcion_diplomado/delete/{id}', InscripcionDiplomadoController::class . '@delete');
 $router->add('POST', '/inscripcion_diplomado/data', InscripcionDiplomadoController::class . '@getInscripcionDiplomadoData');
+
+// Rutas para PreinscripcionDiplomado
+$router->add('GET', '/preinscripcion_diplomado', PreinscripcionDiplomadoController::class . '@index');
+$router->add('GET', '/preinscripcion_diplomado/create', PreinscripcionDiplomadoController::class . '@create');
+$router->add('POST', '/preinscripcion_diplomado/create', PreinscripcionDiplomadoController::class . '@create');
+$router->add('POST', '/preinscripcion_diplomado/search_alumno', PreinscripcionDiplomadoController::class . '@searchAlumno');
+$router->add('POST', '/preinscripcion_diplomado/create_alumno', PreinscripcionDiplomadoController::class . '@createAlumno');
+$router->add('POST', '/preinscripcion_diplomado/get_diplomados_abiertos', PreinscripcionDiplomadoController::class . '@getDiplomadosAbiertosForPreinscripcion');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];

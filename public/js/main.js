@@ -79,3 +79,57 @@ function fillSelect(selectId, tableName, currentValueId = null, displayColumn = 
         }
     });
 }
+
+/**
+ * Muestra un mensaje flash de éxito o error en la interfaz.
+ * @param {string} type El tipo de mensaje ('success' o 'error').
+ * @param {string} text El texto del mensaje a mostrar.
+ */
+function showFlashMessage(type, text) {
+    // Eliminar cualquier mensaje flash existente para evitar duplicados
+    const existingMsg = document.getElementById('flash-message');
+    if (existingMsg) {
+        existingMsg.remove();
+    }
+
+    // Crear el elemento del mensaje
+    const msgDiv = document.createElement('div');
+    msgDiv.id = 'flash-message';
+
+    // Clases base para posicionamiento y estilo
+    let classList = [
+        'fixed', 'top-4', 'right-4', 'z-50', 'p-4', 'rounded-lg',
+        'shadow-lg', 'text-white', 'transition-opacity', 'duration-300', 'ease-out', 'opacity-100'
+    ];
+
+    // Clases de color según el tipo de mensaje
+    if (type === 'success') {
+        classList.push('bg-green-500');
+    } else if (type === 'error') {
+        classList.push('bg-red-500');
+    } else {
+        // Por defecto, o si se pasa un tipo desconocido
+        classList.push('bg-gray-700');
+    }
+
+    msgDiv.classList.add(...classList);
+    msgDiv.textContent = text; // Usar textContent para seguridad (escapa HTML)
+
+    // Añadir evento click para cerrar el mensaje manualmente
+    msgDiv.onclick = function () {
+        this.style.opacity = '0';
+        setTimeout(() => this.remove(), 300); // Eliminar después de la transición de desvanecimiento
+    };
+
+    // Añadir el mensaje al cuerpo del documento
+    document.body.appendChild(msgDiv);
+
+    // Desaparecer el mensaje automáticamente después de 5 segundos
+    setTimeout(function () {
+        const currentMsg = document.getElementById('flash-message');
+        if (currentMsg && currentMsg === msgDiv) { // Asegurarse de que es el mismo mensaje
+            currentMsg.style.opacity = '0';
+            setTimeout(() => currentMsg.remove(), 500); // Eliminar después de la transición
+        }
+    }, 5000); // 5 segundos
+}

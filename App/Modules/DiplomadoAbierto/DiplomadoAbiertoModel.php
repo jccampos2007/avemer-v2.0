@@ -150,6 +150,36 @@ class DiplomadoAbiertoModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getAllWithRelatedNames()
+    {
+        $sql = "
+            SELECT
+                da.id,
+                da.numero,
+                da.diplomado_id,
+                d.nombre AS diplomado_nombre,
+                da.sede_id,
+                s.nombre AS sede_nombre,
+                da.estatus_id,
+                st.nombre AS estatus_nombre,
+                da.fecha_inicio,
+                da.fecha_fin
+            FROM
+                {$this->table} da
+            LEFT JOIN
+                diplomado d ON da.diplomado_id = d.id
+            LEFT JOIN
+                sede s ON da.sede_id = s.id
+            LEFT JOIN
+                estatus st ON da.estatus_id = st.id
+            WHERE da.estatus_id = 1";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
+    }
+
     /**
      * Crea un nuevo registro en diplomado_abierto.
      * @param array $data Los datos del nuevo registro.

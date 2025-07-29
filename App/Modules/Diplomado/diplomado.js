@@ -17,7 +17,6 @@ $(document).ready(function () {
                 "error": function (xhr, error, thrown) {
                     console.error("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.error("Respuesta del servidor:", xhr.responseText);
-                    alert('Error al cargar los datos de diplomados. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [
@@ -42,30 +41,6 @@ $(document).ready(function () {
                 "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json" // Idioma español
             },
             "autoWidth": false
-        });
-
-        // Manejador para el botón de eliminar
-        diplomadoTable.on('click', '.delete-btn', function () {
-            const id = $(this).data('id');
-            if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
-                $.ajax({
-                    url: `${BASE_URL_JS}diplomado/delete/${id}`,
-                    method: 'POST', // Usar POST para la eliminación AJAX
-                    success: function (response) {
-                        // Asume que la respuesta es JSON con {success: true, message: "..."}
-                        if (response.success) {
-                            alert(response.message);
-                            diplomadoTable.DataTable().ajax.reload(); // Recargar la tabla
-                        } else {
-                            alert(response.message || 'Error desconocido al eliminar el registro.');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error al eliminar el registro:', status, error);
-                        alert('Error al eliminar el registro.');
-                    }
-                });
-            }
         });
     }
 

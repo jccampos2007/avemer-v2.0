@@ -144,7 +144,7 @@ class DiplomadoAbiertoController extends Controller
             ];
 
             // Validación de campos obligatorios
-            if (empty($data['numero']) || empty($data['diplomado_id']) || empty($data['sede_id']) || empty($data['estatus_id']) || empty($data['fecha_inicio']) || empty($data['fecha_fin']) || empty($data['nombre_carta'])) {
+            if (empty($data['numero']) || empty($data['diplomado_id']) || empty($data['sede_id']) || empty($data['estatus_id']) || empty($data['fecha_inicio']) || empty($data['fecha_fin'])) {
                 Auth::setFlashMessage('error', 'Todos los campos son obligatorios.');
                 $redirectPath = $id ? 'diplomado_abierto/edit/' . $id : 'diplomado_abierto/create';
                 $this->redirect($redirectPath);
