@@ -1,14 +1,14 @@
 <?php
-// app/Modules/EventoAbierto/EventoAbiertoModel.php
-namespace App\Modules\EventoAbierto;
+// app/Modules/MaestriaAbierto/MaestriaAbiertoModel.php
+namespace App\Modules\MaestriaAbierto;
 
-use App\Core\Database; // Assumindo que você tem uma classe Database
+use App\Core\Database; // Asumiendo que tienes una clase Database
 use PDO;
 
-class EventoAbiertoModel
+class MaestriaAbiertoModel
 {
     private $pdo;
-    private $table = 'evento_abierto';
+    private $table = 'maestria_abierto';
 
     public function __construct()
     {
@@ -16,12 +16,12 @@ class EventoAbiertoModel
     }
 
     /**
-     * Obtiene datos de EventoAbierto para DataTables con paginación, búsqueda y ordenación.
+     * Obtiene datos de Maestría Abierta para DataTables con paginación, búsqueda y ordenación.
      *
      * @param array $params Parámetros de DataTables (start, length, search, order, columns).
      * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
      */
-    public function getPaginatedEventoAbierto(array $params): array
+    public function getPaginatedMaestriaAbierto(array $params): array
     {
         $draw = $params['draw'] ?? 1;
         $start = $params['start'] ?? 0;
@@ -33,49 +33,54 @@ class EventoAbiertoModel
 
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
-            0 => 'ea.id',
-            1 => 'ea.numero',
-            2 => 'evento_nombre', // Alias de la columna unida
-            3 => 'sede_nombre',   // Alias de la columna unida
-            4 => 'estatus_nombre', // Alias de la columna unida
-            5 => 'ea.fecha_inicio',
-            6 => 'ea.fecha_fin',
-            7 => 'ea.nombre_carta',
+            0 => 'ma.id',
+            1 => 'ma.numero',
+            2 => 'maestria_nombre',   // Alias de la columna unida
+            3 => 'sede_nombre',       // Alias de la columna unida
+            4 => 'estatus_nombre',    // Alias de la columna unida
+            5 => 'docente_nombre_completo', // Alias de la columna unida
+            6 => 'ma.fecha',
+            7 => 'ma.convenio',
+            8 => 'ma.nombre_carta',
         ];
 
         // Construir la consulta base
         $sql = "
             SELECT
-                ea.id,
-                ea.numero,
-                ea.evento_id,
-                e.nombre AS evento_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'evento'
-                ea.sede_id,
+                ma.id,
+                ma.numero,
+                ma.maestria_id,
+                m.nombre AS maestria_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'maestria'
+                ma.sede_id,
                 s.nombre AS sede_nombre,   -- Asumimos 'nombre' es el campo a mostrar de la tabla 'sede'
-                ea.estatus_id,
-                st.nombre AS estatus_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'estatus'
-                ea.fecha_inicio,
-                ea.fecha_fin,
-                ea.nombre_carta
+                ma.estatus_id,
+                e.nombre AS estatus_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'estatus'
+                ma.docente_id,
+                CONCAT(d.primer_nombre, ' ', d.primer_apellido) AS docente_nombre_completo, -- Asumimos campos en tabla 'docente'
+                ma.fecha
             FROM
-                {$this->table} ea
+                {$this->table} ma
             LEFT JOIN
-                evento e ON ea.evento_id = e.id
+                maestria m ON ma.maestria_id = m.id
             LEFT JOIN
-                sede s ON ea.sede_id = s.id
+                sede s ON ma.sede_id = s.id
             LEFT JOIN
-                estatus st ON ea.estatus_id = st.id -- Usamos 'st' como alias para evitar conflicto con 'e' de evento
+                estatus e ON ma.estatus_id = e.id
+            LEFT JOIN
+                docente d ON ma.docente_id = d.id
         ";
         $countSql = "
             SELECT COUNT(*)
             FROM
-                {$this->table} ea
+                {$this->table} ma
             LEFT JOIN
-                evento e ON ea.evento_id = e.id
+                maestria m ON ma.maestria_id = m.id
             LEFT JOIN
-                sede s ON ea.sede_id = s.id
+                sede s ON ma.sede_id = s.id
             LEFT JOIN
-                estatus st ON ea.estatus_id = st.id
+                estatus e ON ma.estatus_id = e.id
+            LEFT JOIN
+                docente d ON ma.docente_id = d.id
         ";
 
         $where = [];
@@ -83,21 +88,19 @@ class EventoAbiertoModel
 
         // Búsqueda global
         if (!empty($searchValue)) {
-            $where[] = "(ea.numero LIKE :search_numero "
-                . "OR e.nombre LIKE :search_evento_nombre "
+            $where[] = "(ma.numero LIKE :search_numero "
+                . "OR m.nombre LIKE :search_maestria_nombre "
                 . "OR s.nombre LIKE :search_sede_nombre "
-                . "OR st.nombre LIKE :search_estatus_nombre "
-                . "OR ea.fecha_inicio LIKE :search_fecha_inicio "
-                . "OR ea.fecha_fin LIKE :search_fecha_fin "
-                . "OR ea.nombre_carta LIKE :search_nombre_carta)";
+                . "OR e.nombre LIKE :search_estatus_nombre "
+                . "OR CONCAT(d.primer_nombre, ' ', d.primer_apellido) LIKE :search_docente_nombre "
+                . "OR ma.fecha LIKE :search_fecha)";
             $like = '%' . $searchValue . '%';
             $queryParams[':search_numero'] = $like;
-            $queryParams[':search_evento_nombre'] = $like;
+            $queryParams[':search_maestria_nombre'] = $like;
             $queryParams[':search_sede_nombre'] = $like;
             $queryParams[':search_estatus_nombre'] = $like;
-            $queryParams[':search_fecha_inicio'] = $like;
-            $queryParams[':search_fecha_fin'] = $like;
-            $queryParams[':search_nombre_carta'] = $like;
+            $queryParams[':search_docente_nombre'] = $like;
+            $queryParams[':search_fecha'] = $like;
         }
 
         if (!empty($where)) {
@@ -111,7 +114,7 @@ class EventoAbiertoModel
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'ea.id'; // Columna por defecto si no se encuentra
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'ma.id'; // Columna por defecto si no se encuentra
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
@@ -137,7 +140,7 @@ class EventoAbiertoModel
     }
 
     /**
-     * Obtiene un registro de evento_abierto por su ID.
+     * Obtiene un registro de maestria_abierto por su ID.
      * @param int $id El ID del registro.
      * @return array|false El registro o false si no se encuentra.
      */
@@ -151,49 +154,51 @@ class EventoAbiertoModel
     }
 
     /**
-     * Crea un nuevo registro en evento_abierto.
+     * Crea un nuevo registro en maestria_abierto.
      * @param array $data Los datos del nuevo registro.
      * @return bool True si se creó correctamente, false en caso contrario.
      */
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (numero, evento_id, sede_id, estatus_id, fecha_inicio, fecha_fin, nombre_carta) VALUES (:numero, :evento_id, :sede_id, :estatus_id, :fecha_inicio, :fecha_fin, :nombre_carta)";
+        $sql = "INSERT INTO {$this->table} (numero, maestria_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio) VALUES (:numero, :maestria_id, :sede_id, :estatus_id, :docente_id, :fecha, :nombre_carta, :convenio)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':numero' => $data['numero'],
-            ':evento_id' => $data['evento_id'],
+            ':maestria_id' => $data['maestria_id'],
             ':sede_id' => $data['sede_id'],
             ':estatus_id' => $data['estatus_id'],
-            ':fecha_inicio' => $data['fecha_inicio'],
-            ':fecha_fin' => $data['fecha_fin'],
-            ':nombre_carta' => $data['nombre_carta']
+            ':docente_id' => $data['docente_id'],
+            ':fecha' => $data['fecha'],
+            ':nombre_carta' => $data['nombre_carta'],
+            ':convenio' => $data['convenio'] ?? null
         ]);
     }
 
     /**
-     * Actualiza un registro existente en evento_abierto.
+     * Actualiza un registro existente en maestria_abierto.
      * @param int $id El ID del registro a actualizar.
      * @param array $data Los nuevos datos del registro.
      * @return bool True si se actualizó correctamente, false en caso contrario.
      */
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE {$this->table} SET numero = :numero, evento_id = :evento_id, sede_id = :sede_id, estatus_id = :estatus_id, fecha_inicio = :fecha_inicio, fecha_fin = :fecha_fin, nombre_carta = :nombre_carta WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET numero = :numero, maestria_id = :maestria_id, sede_id = :sede_id, estatus_id = :estatus_id, docente_id = :docente_id, fecha = :fecha, nombre_carta = :nombre_carta, convenio = :convenio WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':numero' => $data['numero'],
-            ':evento_id' => $data['evento_id'],
+            ':maestria_id' => $data['maestria_id'],
             ':sede_id' => $data['sede_id'],
             ':estatus_id' => $data['estatus_id'],
-            ':fecha_inicio' => $data['fecha_inicio'],
-            ':fecha_fin' => $data['fecha_fin'],
+            ':docente_id' => $data['docente_id'],
+            ':fecha' => $data['fecha'],
             ':nombre_carta' => $data['nombre_carta'],
+            ':convenio' => $data['convenio'] ?? null,
             ':id' => $id
         ]);
     }
 
     /**
-     * Elimina un registro de evento_abierto.
+     * Elimina un registro de maestria_abierto.
      * @param int $id El ID del registro a eliminar.
      * @return bool True si se eliminó correctamente, false en caso contrario.
      */

@@ -14,7 +14,7 @@
     </a>
 </div>
 
-<div class="bg-white shadow-md rounded-lg overflow-hidden">
+<div class="bg-white shadow-md rounded-lg overflow-hidden p-4">
 
     <table id="eventoAbiertoTable" class="min-w-full leading-normal display responsive nowrap" style="width:100%">
         <thead>

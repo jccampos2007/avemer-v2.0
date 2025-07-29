@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<div class="bg-white shadow-md rounded-lg overflow-hidden">
+<div class="bg-white shadow-md rounded-lg overflow-hidden p-4">
     <table id="capituloTable" class="min-w-full leading-normal display responsive nowrap" style="width:100%">
         <thead>
             <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
