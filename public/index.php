@@ -17,9 +17,12 @@ use App\Modules\CursoControl\CursoControlController;
 use App\Modules\Evento\EventoController;
 use App\Modules\EventoAbierto\EventoAbiertoController;
 use App\Modules\Diplomado\DiplomadoController;
+use App\Modules\Capitulo\CapituloController;
+use App\Modules\DiplomadoAbierto\DiplomadoAbiertoController;
 use App\Modules\InscripcionDiplomado\InscripcionDiplomadoController;
 use App\Modules\PreinscripcionDiplomado\PreinscripcionDiplomadoController;
 use App\Modules\Maestria\MaestriaController;
+use App\Modules\MaestriaAbierto\MaestriaAbiertoController;
 use App\Modules\InscripcionCurso\InscripcionCursoController;
 
 $router = new Router();
@@ -136,22 +139,22 @@ $router->add('GET', '/diplomado/delete/{id}', DiplomadoController::class . '@del
 $router->add('POST', '/diplomado/data', DiplomadoController::class . '@getDiplomadoData');
 
 // Rutas para Capítulo
-$router->add('GET', '/capitulo', App\Modules\Capitulo\CapituloController::class . '@index');
-$router->add('GET', '/capitulo/create/{diplomadoId}', App\Modules\Capitulo\CapituloController::class . '@create');
-$router->add('POST', '/capitulo/create', App\Modules\Capitulo\CapituloController::class . '@create');
-$router->add('GET', '/capitulo/edit/{id}', App\Modules\Capitulo\CapituloController::class . '@edit');
-$router->add('POST', '/capitulo/edit/{id}', App\Modules\Capitulo\CapituloController::class . '@edit');
-$router->add('GET', '/capitulo/delete/{id}', App\Modules\Capitulo\CapituloController::class . '@delete');
-$router->add('POST', '/capitulo/data', App\Modules\Capitulo\CapituloController::class . '@getCapituloData');
+$router->add('GET', '/capitulo', CapituloController::class . '@index');
+$router->add('GET', '/capitulo/create/{diplomadoId}', CapituloController::class . '@create');
+$router->add('POST', '/capitulo/create', CapituloController::class . '@create');
+$router->add('GET', '/capitulo/edit/{id}', CapituloController::class . '@edit');
+$router->add('POST', '/capitulo/edit/{id}', CapituloController::class . '@edit');
+$router->add('GET', '/capitulo/delete/{id}', CapituloController::class . '@delete');
+$router->add('POST', '/capitulo/data', CapituloController::class . '@getCapituloData');
 
 // Rutas para DiplomadoAbierto
-$router->add('GET', '/diplomado_abierto', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@index');
-$router->add('GET', '/diplomado_abierto/create', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@create');
-$router->add('POST', '/diplomado_abierto/create', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@create');
-$router->add('GET', '/diplomado_abierto/edit/{id}', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@edit');
-$router->add('POST', '/diplomado_abierto/edit/{id}', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@edit');
-$router->add('GET', '/diplomado_abierto/delete/{id}', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@delete');
-$router->add('POST', '/diplomado_abierto/data', App\Modules\DiplomadoAbierto\DiplomadoAbiertoController::class . '@getDiplomadoAbiertoData');
+$router->add('GET', '/diplomado_abierto', DiplomadoAbiertoController::class . '@index');
+$router->add('GET', '/diplomado_abierto/create', DiplomadoAbiertoController::class . '@create');
+$router->add('POST', '/diplomado_abierto/create', DiplomadoAbiertoController::class . '@create');
+$router->add('GET', '/diplomado_abierto/edit/{id}', DiplomadoAbiertoController::class . '@edit');
+$router->add('POST', '/diplomado_abierto/edit/{id}', DiplomadoAbiertoController::class . '@edit');
+$router->add('GET', '/diplomado_abierto/delete/{id}', DiplomadoAbiertoController::class . '@delete');
+$router->add('POST', '/diplomado_abierto/data', DiplomadoAbiertoController::class . '@getDiplomadoAbiertoData');
 
 // Rutas para InscripcionDiplomado
 $router->add('GET', '/inscripcion_diplomado', InscripcionDiplomadoController::class . '@index');
@@ -178,6 +181,15 @@ $router->add('GET', '/maestria/edit/{id}', MaestriaController::class . '@edit');
 $router->add('POST', '/maestria/edit/{id}', MaestriaController::class . '@edit');
 $router->add('POST', '/maestria/delete/{id}', MaestriaController::class . '@delete');
 $router->add('POST', '/maestria/data', MaestriaController::class . '@getMaestriaData');
+
+// Rutas para MaestriaAbierto
+$router->add('GET', '/maestria_abierto', MaestriaAbiertoController::class . '@index');
+$router->add('GET', '/maestria_abierto/create', MaestriaAbiertoController::class . '@create');
+$router->add('POST', '/maestria_abierto/create', MaestriaAbiertoController::class . '@create');
+$router->add('GET', '/maestria_abierto/edit/{id}', MaestriaAbiertoController::class . '@edit');
+$router->add('POST', '/maestria_abierto/edit/{id}', MaestriaAbiertoController::class . '@edit');
+$router->add('POST', '/maestria_abierto/delete/{id}', MaestriaAbiertoController::class . '@delete');
+$router->add('POST', '/maestria_abierto/data', MaestriaAbiertoController::class . '@getMaestriaAbiertoData');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];

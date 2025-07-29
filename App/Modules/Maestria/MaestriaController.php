@@ -4,9 +4,7 @@ namespace App\Modules\Maestria;
 
 use App\Core\Controller; // Asume que Controller provee los helpers (sanitizeInput, redirect, view)
 use App\Core\Auth;
-use App\Core\Database; // Necesario para obtener la conexión PDO
 use App\Modules\Maestria\MaestriaModel;
-use PDO;
 
 class MaestriaController extends Controller
 {
@@ -15,7 +13,7 @@ class MaestriaController extends Controller
     public function __construct()
     {
         Auth::requireLogin(); // Requiere que el usuario esté logueado para usar este módulo
-        $this->maestriaModel = new MaestriaModel(Database::getInstance()->getConnection());
+        $this->maestriaModel = new MaestriaModel();
     }
 
     /**
