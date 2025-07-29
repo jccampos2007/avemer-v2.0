@@ -19,6 +19,7 @@ use App\Modules\EventoAbierto\EventoAbiertoController;
 use App\Modules\Diplomado\DiplomadoController;
 use App\Modules\InscripcionDiplomado\InscripcionDiplomadoController;
 use App\Modules\PreinscripcionDiplomado\PreinscripcionDiplomadoController;
+use App\Modules\Maestria\MaestriaController;
 use App\Modules\InscripcionCurso\InscripcionCursoController;
 
 $router = new Router();
@@ -168,6 +169,15 @@ $router->add('POST', '/preinscripcion_diplomado/create', PreinscripcionDiplomado
 $router->add('POST', '/preinscripcion_diplomado/search_alumno', PreinscripcionDiplomadoController::class . '@searchAlumno');
 $router->add('POST', '/preinscripcion_diplomado/create_alumno', PreinscripcionDiplomadoController::class . '@createAlumno');
 $router->add('POST', '/preinscripcion_diplomado/get_diplomados_abiertos', PreinscripcionDiplomadoController::class . '@getDiplomadosAbiertosForPreinscripcion');
+
+// Rutas para Maestria
+$router->add('GET', '/maestria', MaestriaController::class . '@index');
+$router->add('GET', '/maestria/create', MaestriaController::class . '@create');
+$router->add('POST', '/maestria/create', MaestriaController::class . '@create');
+$router->add('GET', '/maestria/edit/{id}', MaestriaController::class . '@edit');
+$router->add('POST', '/maestria/edit/{id}', MaestriaController::class . '@edit');
+$router->add('POST', '/maestria/delete/{id}', MaestriaController::class . '@delete');
+$router->add('POST', '/maestria/data', MaestriaController::class . '@getMaestriaData');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];

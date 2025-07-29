@@ -32,9 +32,9 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                        <a href="inscripcion_curso/edit/${row[0]}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="inscripcion_curso/delete/${row[0]}" class="btn btn-default"><i class="fas fa-trash-alt fs-5"></i></a>
-                    `;
+                            <a href="inscripcion_curso/edit/${row[0]}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
+                            <a href="inscripcion_curso/delete/${row[0]}" class="btn btn-default"><i class="fas fa-trash-alt fs-5"></i></a>
+                        `;
                     }
                 }
             ],

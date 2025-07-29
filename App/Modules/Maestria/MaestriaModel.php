@@ -1,27 +1,27 @@
 <?php
-// app/Modules/Diplomado/DiplomadoModel.php
-namespace App\Modules\Diplomado;
+// app/Modules/Maestria/MaestriaModel.php
+namespace App\Modules\Maestria;
 
-use App\Core\Database; // Assumindo que você tem uma classe Database
+use App\Core\Database; // Asumiendo que tienes una clase Database
 use PDO;
 
-class DiplomadoModel
+class MaestriaModel
 {
     private $pdo;
-    private $table = 'diplomado';
+    private $table = 'maestria';
 
-    public function __construct()
+    public function __construct(PDO $pdo)
     {
-        $this->pdo = Database::getInstance()->getConnection();
+        $this->pdo = $pdo;
     }
 
     /**
-     * Obtiene datos de Diplomado para DataTables con paginación, búsqueda y ordenación.
+     * Obtiene datos de Maestría para DataTables con paginación, búsqueda y ordenación.
      *
      * @param array $params Parámetros de DataTables (start, length, search, order, columns).
      * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
      */
-    public function getPaginatedDiplomados(array $params): array
+    public function getPaginatedMaestria(array $params): array
     {
         $draw = $params['draw'] ?? 1;
         $start = $params['start'] ?? 0;
@@ -32,52 +32,33 @@ class DiplomadoModel
         $columns = $params['columns'] ?? [];
 
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
+        // Asegúrate de que estos índices coincidan con el orden de las columnas en tu DataTables JS
         $columnMap = [
-            0 => 'd.id',
-            1 => 'duracion_nombre', // Alias de la columna unida
-            2 => 'd.nombre',
-            3 => 'd.descripcion',
-            4 => 'd.siglas',
-            5 => 'd.costo',
-            6 => 'd.inicial',
+            0 => 'ma.id',
+            1 => 'ma.nombre',
+            2 => 'ma.numero',
+            3 => 'dr.duracion_nombre',
+            4 => 'ma.convenio',
         ];
 
         // Construir la consulta base
-        $sql = "
-            SELECT
-                d.id,
-                d.duracion_id,
-                dr.nombre AS duracion_nombre,
-                d.nombre,
-                d.descripcion,
-                d.siglas,
-                d.costo,
-                d.inicial
-            FROM
-                {$this->table} d
-            LEFT JOIN
-                duracion dr ON d.duracion_id = dr.id -- Asumimos una tabla 'duracion'
-        ";
-        $countSql = "
-            SELECT COUNT(*)
-            FROM
-                {$this->table} d
-            LEFT JOIN
-                duracion dr ON d.duracion_id = dr.id
-        ";
+        $sql = "SELECT ma.*, dr.nombre AS duracion_nombre
+            FROM {$this->table} ma 
+            JOIN duracion dr ON ma.duracion_id = dr.id";
+        $countSql = "SELECT COUNT(*) FROM {$this->table}";
 
         $where = [];
         $queryParams = [];
 
         // Búsqueda global
         if (!empty($searchValue)) {
-            $where[] = "(d.nombre LIKE :search_nombre "
-                . "OR d.descripcion LIKE :search_descripcion "
-                . "OR d.siglas LIKE :search_siglas)";
+            $where[] = "(ma.nombre LIKE :search_nombre "
+                . "OR ma.numero LIKE :search_numero "
+                . "OR ma.convenio LIKE :search_convenio)";
             $like = '%' . $searchValue . '%';
             $queryParams[':search_nombre'] = $like;
-            $queryParams[':search_descripcion'] = $like;
-            $queryParams[':search_siglas'] = $like;
+            $queryParams[':search_numero'] = $like;
+            $queryParams[':search_convenio'] = $like;
         }
 
         if (!empty($where)) {
@@ -91,7 +72,7 @@ class DiplomadoModel
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'd.id'; // Columna por defecto si no se encuentra
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'ma.id'; // Columna por defecto si no se encuentra
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
@@ -99,6 +80,8 @@ class DiplomadoModel
         $sql .= " LIMIT :start, :length";
         $queryParams[':start'] = (int) $start;
         $queryParams[':length'] = (int) $length;
+
+        error_log($sql);
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($queryParams);
@@ -117,7 +100,7 @@ class DiplomadoModel
     }
 
     /**
-     * Obtiene un registro de diplomado por su ID.
+     * Obtiene un registro de maestría por su ID.
      * @param int $id El ID del registro.
      * @return array|false El registro o false si no se encuentra.
      */
@@ -131,47 +114,43 @@ class DiplomadoModel
     }
 
     /**
-     * Crea un nuevo registro en diplomado.
+     * Crea un nuevo registro en maestría.
      * @param array $data Los datos del nuevo registro.
      * @return bool True si se creó correctamente, false en caso contrario.
      */
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (duracion_id, nombre, descripcion, siglas, costo, inicial) VALUES (:duracion_id, :nombre, :descripcion, :siglas, :costo, :inicial)";
+        $sql = "INSERT INTO {$this->table} (nombre, numero, duracion_id, convenio) VALUES (:nombre, :numero, :duracion_id, :convenio)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            ':duracion_id' => $data['duracion_id'],
             ':nombre' => $data['nombre'],
-            ':descripcion' => $data['descripcion'],
-            ':siglas' => $data['siglas'],
-            ':costo' => $data['costo'],
-            ':inicial' => $data['inicial']
+            ':numero' => $data['numero'] ?? null,
+            ':duracion_id' => $data['duracion_id'] ?? 0,
+            ':convenio' => $data['convenio'] ?? null
         ]);
     }
 
     /**
-     * Actualiza un registro existente en diplomado.
+     * Actualiza un registro existente en maestría.
      * @param int $id El ID del registro a actualizar.
      * @param array $data Los nuevos datos del registro.
      * @return bool True si se actualizó correctamente, false en caso contrario.
      */
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE {$this->table} SET duracion_id = :duracion_id, nombre = :nombre, descripcion = :descripcion, siglas = :siglas, costo = :costo, inicial = :inicial WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET nombre = :nombre, numero = :numero, duracion_id = :duracion_id, convenio = :convenio WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            ':duracion_id' => $data['duracion_id'],
             ':nombre' => $data['nombre'],
-            ':descripcion' => $data['descripcion'],
-            ':siglas' => $data['siglas'],
-            ':costo' => $data['costo'],
-            ':inicial' => $data['inicial'],
+            ':numero' => $data['numero'] ?? null,
+            ':duracion_id' => $data['duracion_id'] ?? 0,
+            ':convenio' => $data['convenio'] ?? null,
             ':id' => $id
         ]);
     }
 
     /**
-     * Elimina un registro de diplomado.
+     * Elimina un registro de maestría.
      * @param int $id El ID del registro a eliminar.
      * @return bool True si se eliminó correctamente, false en caso contrario.
      */
