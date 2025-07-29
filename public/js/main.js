@@ -133,3 +133,92 @@ function showFlashMessage(type, text) {
         }
     }, 5000); // 5 segundos
 }
+
+
+/**
+ * Muestra un cuadro de diálogo de confirmación personalizado.
+ * @param {string} message El mensaje a mostrar en el cuadro de diálogo.
+ * @param {function} onConfirm Callback a ejecutar si el usuario confirma.
+ * @param {function} [onCancel] Callback a ejecutar si el usuario cancela (opcional).
+ */
+function showConfirmationDialog(message, onConfirm, onCancel = null) {
+    // Eliminar cualquier diálogo existente para evitar duplicados
+    const existingDialog = document.getElementById('custom-confirm-dialog');
+    if (existingDialog) {
+        existingDialog.remove();
+    }
+
+    // Crear el overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'custom-confirm-overlay';
+    overlay.classList.add(
+        'fixed', 'inset-0', 'bg-gray-900', 'bg-opacity-50', 'flex', 'items-center', 'justify-center', 'z-[1000]',
+        'transition-opacity', 'duration-300', 'ease-out', 'opacity-0' // Inicialmente oculto
+    );
+
+    // Crear el contenedor del diálogo
+    const dialog = document.createElement('div');
+    dialog.id = 'custom-confirm-dialog';
+    dialog.classList.add(
+        'bg-white', 'p-6', 'rounded-lg', 'shadow-xl', 'max-w-sm', 'w-full', 'mx-4',
+        'transform', 'scale-95', 'opacity-0', 'transition-all', 'duration-300', 'ease-out' // Inicialmente oculto
+    );
+
+    // Contenido del mensaje
+    const messageP = document.createElement('p');
+    messageP.classList.add('text-gray-800', 'text-lg', 'mb-6', 'text-center');
+    messageP.textContent = message;
+
+    // Contenedor de botones
+    const buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('flex', 'justify-end', 'space-x-4');
+
+    // Botón de Confirmar
+    const confirmBtn = document.createElement('button');
+    confirmBtn.classList.add(
+        'bg-blue-600', 'hover:bg-blue-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded',
+        'focus:outline-none', 'focus:shadow-outline', 'transition-colors', 'duration-200'
+    );
+    confirmBtn.textContent = 'Confirmar';
+    confirmBtn.onclick = () => {
+        onConfirm();
+        closeDialog();
+    };
+
+    // Botón de Cancelar
+    const cancelBtn = document.createElement('button');
+    cancelBtn.classList.add(
+        'bg-gray-400', 'hover:bg-gray-500', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded',
+        'focus:outline-none', 'focus:shadow-outline', 'transition-colors', 'duration-200'
+    );
+    cancelBtn.textContent = 'Cancelar';
+    cancelBtn.onclick = () => {
+        if (onCancel) {
+            onCancel();
+        }
+        closeDialog();
+    };
+
+    // Construir el diálogo
+    buttonContainer.appendChild(cancelBtn);
+    buttonContainer.appendChild(confirmBtn);
+    dialog.appendChild(messageP);
+    dialog.appendChild(buttonContainer);
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
+
+    // Función para cerrar el diálogo
+    function closeDialog() {
+        overlay.style.opacity = '0';
+        dialog.style.transform = 'scale(0.95)';
+        dialog.style.opacity = '0';
+        setTimeout(() => overlay.remove(), 300); // Eliminar después de la transición
+    }
+
+    // Mostrar el diálogo con animación
+    setTimeout(() => {
+        overlay.style.opacity = '1';
+        dialog.style.transform = 'scale(1)';
+        dialog.style.opacity = '1';
+    }, 10); // Pequeño retraso para que la transición se aplique
+}
