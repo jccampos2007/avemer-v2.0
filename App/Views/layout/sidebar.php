@@ -102,9 +102,9 @@ use App\Core\Auth;
                     </button>
                     <ul x-show="maestriasOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <li><a href="<?php echo BASE_URL; ?>maestria" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Maestrías</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>maestria_abierto" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura Maestría</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>maestria_control" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Detalle Maestría</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>maestria_inscripcion" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Inscripción Maestría</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>maestria_abierto" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura</a></li>
+                        <!-- <li><a href="<?php echo BASE_URL; ?>maestria_control" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Detalle Maestría</a></li> -->
+                        <li><a href="<?php echo BASE_URL; ?>inscripcion_maestria" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fas fa-user-check mr-2"></i> Inscripción</a></li>
                     </ul>
                 </li>
 
