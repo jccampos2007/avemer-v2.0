@@ -83,10 +83,10 @@ use App\Core\Auth;
                         <li><a href="<?php echo BASE_URL; ?>capitulo" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-list-alt mr-2"></i> Capítulos</a></li>
                         <li><a href="<?php echo BASE_URL; ?>diplomado_abierto" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura</a></li>
                         <!-- <li><a href="<?php echo BASE_URL; ?>diplomado_control" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-exchange mr-2"></i> Detalle</a></li> -->
-                        <li><a href="<?php echo BASE_URL; ?>inscripcion_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa-solid fa-pen-to-square mr-2"></i> Inscripción</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>preinscripcion_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Pre-Inscripción</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>nota" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Notas</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>asistencia_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Asistencia Diplomado</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>inscripcion_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fas fa-user-check mr-2""></i> Inscripción</a></li>
+                        <li><a href=" <?php echo BASE_URL; ?>preinscripcion_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa-solid fa-pen-to-square mr-2"></i> Pre-Inscripción</a></li>
+                        <!-- <li><a href="<?php echo BASE_URL; ?>nota" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Notas</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>asistencia_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Asistencia Diplomado</a></li> -->
                     </ul>
                 </li>
 
@@ -101,6 +101,7 @@ use App\Core\Auth;
                         </svg>
                     </button>
                     <ul x-show="maestriasOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
+                        <li><a href="<?php echo BASE_URL; ?>maestria" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Maestrías</a></li>
                         <li><a href="<?php echo BASE_URL; ?>maestria_abierto" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura Maestría</a></li>
                         <li><a href="<?php echo BASE_URL; ?>maestria_control" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Detalle Maestría</a></li>
                         <li><a href="<?php echo BASE_URL; ?>maestria_inscripcion" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Inscripción Maestría</a></li>
@@ -174,7 +175,6 @@ use App\Core\Auth;
                         </svg>
                     </button>
                     <ul x-show="mantenimientoOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
-                        <li><a href="<?php echo BASE_URL; ?>maestria" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-graduation-cap mr-2"></i> Maestrías</a></li>
                         <li><a href="<?php echo BASE_URL; ?>sede" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-building mr-2"></i> Sedes</a></li>
                         <li><a href="<?php echo BASE_URL; ?>banco" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-institution mr-2"></i> Bancos</a></li>
                         <li><a href="<?php echo BASE_URL; ?>duracion" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-clock-o mr-2"></i> Duración</a></li>
