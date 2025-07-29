@@ -84,7 +84,7 @@ use App\Core\Auth;
                         <li><a href="<?php echo BASE_URL; ?>diplomado_abierto" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Apertura</a></li>
                         <!-- <li><a href="<?php echo BASE_URL; ?>diplomado_control" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-exchange mr-2"></i> Detalle</a></li> -->
                         <li><a href="<?php echo BASE_URL; ?>inscripcion_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa-solid fa-pen-to-square mr-2"></i> Inscripción</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>preinscripcion" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Pre-Inscripción</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>preinscripcion_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Pre-Inscripción</a></li>
                         <li><a href="<?php echo BASE_URL; ?>nota" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Notas</a></li>
                         <li><a href="<?php echo BASE_URL; ?>asistencia_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-money mr-2"></i> Asistencia Diplomado</a></li>
                     </ul>

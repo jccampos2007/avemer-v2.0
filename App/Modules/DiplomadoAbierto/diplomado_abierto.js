@@ -46,30 +46,6 @@ $(document).ready(function () {
             },
             "autoWidth": false
         });
-
-        // Manejador para el botón de eliminar
-        diplomadoAbiertoTable.on('click', '.delete-btn', function () {
-            const id = $(this).data('id');
-            if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
-                $.ajax({
-                    url: `${BASE_URL_JS}diplomado_abierto/delete/${id}`,
-                    method: 'POST', // Usar POST para la eliminación AJAX
-                    success: function (response) {
-                        // Asume que la respuesta es JSON con {success: true, message: "..."}
-                        if (response.success) {
-                            alert(response.message);
-                            diplomadoAbiertoTable.DataTable().ajax.reload(); // Recargar la tabla
-                        } else {
-                            alert(response.message || 'Error desconocido al eliminar el registro.');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error al eliminar el registro:', status, error);
-                        alert('Error al eliminar el registro.');
-                    }
-                });
-            }
-        });
     }
 
     // ---------------------------------------------------
@@ -125,10 +101,11 @@ $(document).ready(function () {
             const fechaFin = $('#fecha_fin').val().trim();
             const nombreCartaContent = (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances.nombre_carta) ? CKEDITOR.instances.nombre_carta.getData().trim() : '';
 
-            if (numero === '' || !diplomadoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '' || nombreCartaContent === '') {
-                alert('Por favor, complete todos los campos obligatorios.');
-                event.preventDefault(); // Detiene el envío del formulario
-            }
+            // TODO validaciones
+            // if (numero === '' || !diplomadoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '' || nombreCartaContent === '') {
+            //     alert('Por favor, complete todos los campos obligatorios.');
+            //     event.preventDefault(); // Detiene el envío del formulario
+            // }
         });
     }
 });
