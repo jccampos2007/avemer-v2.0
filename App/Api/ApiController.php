@@ -42,7 +42,8 @@ class ApiController
             'diplomado',
             'diplomado_abierto',
             'maestria',
-            'maestria_abierto'
+            'maestria_abierto',
+            'tipo_oferta_academica'
         ];
 
         if (!in_array($tableName, $allowedTables)) {

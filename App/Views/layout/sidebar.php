@@ -119,8 +119,8 @@ use App\Core\Auth;
                         </svg>
                     </button>
                     <ul x-show="pagosOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
-                        <li><a href="<?php echo BASE_URL; ?>cuota" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Cuota</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>pago" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Pagos</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>cuota" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa-solid fa-coins mr-2"></i></i> Cuota</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>pago" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa-solid fa-money-bill-1-wave mr-2"></i> Pagos</a></li>
                         <li><a href="<?php echo BASE_URL; ?>compensar" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-unlock mr-2"></i> Compensar</a></li>
                         <li><a href="<?php echo BASE_URL; ?>cronograma" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition"><i class="fa fa-exchange mr-2"></i> Cronograma</a></li>
                     </ul>

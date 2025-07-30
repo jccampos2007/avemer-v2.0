@@ -25,6 +25,7 @@ use App\Modules\Maestria\MaestriaController;
 use App\Modules\MaestriaAbierto\MaestriaAbiertoController;
 use App\Modules\InscripcionMaestria\InscripcionMaestriaController;
 use App\Modules\InscripcionCurso\InscripcionCursoController;
+use App\Modules\Cuota\CuotaController;
 
 $router = new Router();
 
@@ -200,6 +201,18 @@ $router->add('GET', '/inscripcion_maestria/edit/{id}', InscripcionMaestriaContro
 $router->add('POST', '/inscripcion_maestria/edit/{id}', InscripcionMaestriaController::class . '@edit');
 $router->add('POST', '/inscripcion_maestria/delete/{id}', InscripcionMaestriaController::class . '@delete');
 $router->add('POST', '/inscripcion_maestria/data', InscripcionMaestriaController::class . '@getInscripcionMaestriaData');
+
+// ERutas para Cuota
+$router->add('GET', '/cuota', CuotaController::class . '@index');
+$router->add('GET', '/cuota/create', CuotaController::class . '@create');
+$router->add('POST', '/cuota/create', CuotaController::class . '@create');
+$router->add('GET', '/cuota/edit/{id}', CuotaController::class . '@edit');
+$router->add('POST', '/cuota/edit/{id}', CuotaController::class . '@edit');
+$router->add('POST', '/cuota/delete/{id}', CuotaController::class . '@delete');
+$router->add('POST', '/cuota/generateDebt', CuotaController::class . '@generateDebt');
+$router->add('GET', '/cuota/getCuotasByOfferData', CuotaController::class . '@getCuotasByOfferData');
+$router->add('GET', '/cuota/getAcademicOffersByType', CuotaController::class . '@getAcademicOffersByType');
+$router->add('GET', '/cuota/getStudentsForDebtGeneration', CuotaController::class . '@getStudentsForDebtGeneration');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];
