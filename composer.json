@@ -1,0 +1,14 @@
+{
+    "name": "yourvendor/php-mvc-app",
+    "autoload": {
+        "psr-4": {
+            "App\\": "App/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Smart Data Solutions"
+        }
+    ],
+    "require": {}
+}

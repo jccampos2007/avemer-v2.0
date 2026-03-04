@@ -1,0 +1,9 @@
+[setup]
+pkgs = ["php82", "php82Packages.composer", "nodejs_20"]
+
+[install]
+cmds = ["npm install", "npm run build"]
+
+[start]
+# El truco está en el "-t public" para apuntar a la carpeta correcta
+cmd = "php -S 0.0.0.0:80 -t public"

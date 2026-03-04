@@ -3,6 +3,8 @@
 
 require_once __DIR__ . '/../config/app.php';
 
+require_once __DIR__ . '/../vendor/autoload.php'; 
+
 use App\Core\Router;
 use App\Api\ApiController;
 use App\Modules\Auth\AuthController;
