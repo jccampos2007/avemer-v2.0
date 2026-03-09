@@ -92,11 +92,11 @@ class CursoModel
         foreach ($data as $row) {
             $formattedData[] = [
                 $row['id'],
-                htmlspecialchars($row['nombre']),
-                htmlspecialchars($row['numero']),
-                htmlspecialchars($row['horas']),
-                htmlspecialchars($row['convenio']),
-                '' // Columna para acciones (editar/eliminar)
+                htmlspecialchars($row['nombre'] ?? ''),
+                htmlspecialchars($row['numero'] ?? ''),
+                htmlspecialchars($row['horas'] ?? ''),
+                htmlspecialchars($row['convenio'] ?? ''),
+                '' // Columna para acciones
             ];
         }
 

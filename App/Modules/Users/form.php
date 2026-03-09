@@ -59,4 +59,4 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/Users/users.js'; ?>
+<?php $page_js = 'js/modules/users.js'; ?>

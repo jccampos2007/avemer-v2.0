@@ -32,4 +32,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/InscripcionDiplomado/inscripcion_diplomado.js?2'; ?>
+<?php $page_js = 'js/modules/inscripcion_diplomado.js?2'; ?>

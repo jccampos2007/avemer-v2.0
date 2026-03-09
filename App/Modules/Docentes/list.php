@@ -34,4 +34,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/Docentes/docentes.js'; ?>
+<?php $page_js = 'js/modules/docentes.js'; ?>

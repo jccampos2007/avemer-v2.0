@@ -10,6 +10,20 @@ class CursoController extends Controller
 {
     private $cursosModel;
 
+    // public function script() {
+    //     // __DIR__ obtiene la ruta de la carpeta donde está este controlador
+    //     $file = __DIR__ . '/cursos.js'; 
+
+    //     if (file_exists($file)) {
+    //         header('Content-Type: application/javascript');
+    //         readfile($file);
+    //         exit;
+    //     } else {
+    //         header("HTTP/1.0 404 Not Found");
+    //         echo "/* Error: No se encontro el archivo en $file */";
+    //     }
+    // }
+
     public function __construct()
     {
         Auth::requireLogin();

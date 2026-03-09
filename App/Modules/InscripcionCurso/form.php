@@ -59,4 +59,4 @@ $alumno_nombre_current = $inscripcion_curso_data['alumno_nombre_completo'] ?? ''
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/InscripcionCurso/inscripcion_curso.js'; ?>
+<?php $page_js = 'js/modules/inscripcion_curso.js'; ?>

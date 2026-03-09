@@ -35,4 +35,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/CursoAbierto/curso_abierto.js'; ?>
+<?php $page_js = 'js/modules/curso_abierto.js'; ?>

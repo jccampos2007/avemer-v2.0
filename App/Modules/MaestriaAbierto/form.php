@@ -96,7 +96,7 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/MaestriaAbierto/maestria_abierto.js'; ?>
+<?php $page_js = 'js/modules/maestria_abierto.js'; ?>
 
 <!-- CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>

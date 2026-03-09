@@ -31,4 +31,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/InscripcionMaestria/inscripcion_maestria.js?33'; ?>
+<?php $page_js = 'js/modules/inscripcion_maestria.js?33'; ?>

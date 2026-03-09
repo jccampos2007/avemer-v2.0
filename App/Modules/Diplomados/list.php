@@ -39,4 +39,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<script src="diplomados.js"></script>
+<script src="js/modules/diplomados.js"></script>

@@ -54,4 +54,4 @@ $convenio_val = htmlspecialchars($maestria_data['convenio'] ?? '');
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/Maestria/maestria.js?1'; ?>
+<?php $page_js = 'js/modules/maestria.js?1'; ?>

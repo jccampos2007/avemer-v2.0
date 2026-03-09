@@ -31,4 +31,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/Evento/evento.js?1'; ?>
+<?php $page_js = 'js/modules/evento.js?1'; ?>

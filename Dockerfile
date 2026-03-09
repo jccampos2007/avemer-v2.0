@@ -36,5 +36,8 @@ COPY --from=node-builder /app/node_modules /var/www/html/node_modules
 # 8. Instalar dependencias de PHP y optimizar
 RUN composer install --no-interaction --optimize-autoloader
 
+# Añade esto antes del comando chown en tu Dockerfile
+RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+
 # 9. Ajustar permisos finales
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
