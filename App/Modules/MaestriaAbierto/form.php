@@ -81,7 +81,7 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
 
         <div class="mb-6">
             <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
-            <textarea id="nombre_carta" name="nombre_carta" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5" required><?php echo $nombre_carta_val; ?></textarea>
+            <textarea id="nombre_carta" name="nombre_carta" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5"><?php echo $nombre_carta_val; ?></textarea>
         </div>
 
         <div class="flex items-center justify-between">

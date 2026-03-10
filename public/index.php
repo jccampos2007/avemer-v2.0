@@ -3,7 +3,7 @@
 
 require_once __DIR__ . '/../config/app.php';
 
-require_once __DIR__ . '/../vendor/autoload.php'; 
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Core\Router;
 use App\Api\ApiController;
@@ -183,7 +183,7 @@ $router->add('GET', '/maestria/create', MaestriaController::class . '@create');
 $router->add('POST', '/maestria/create', MaestriaController::class . '@create');
 $router->add('GET', '/maestria/edit/{id}', MaestriaController::class . '@edit');
 $router->add('POST', '/maestria/edit/{id}', MaestriaController::class . '@edit');
-$router->add('POST', '/maestria/delete/{id}', MaestriaController::class . '@delete');
+$router->add('GET', '/maestria/delete/{id}', MaestriaController::class . '@delete');
 $router->add('POST', '/maestria/data', MaestriaController::class . '@getMaestriaData');
 
 // Rutas para MaestriaAbierto
@@ -192,7 +192,7 @@ $router->add('GET', '/maestria_abierto/create', MaestriaAbiertoController::class
 $router->add('POST', '/maestria_abierto/create', MaestriaAbiertoController::class . '@create');
 $router->add('GET', '/maestria_abierto/edit/{id}', MaestriaAbiertoController::class . '@edit');
 $router->add('POST', '/maestria_abierto/edit/{id}', MaestriaAbiertoController::class . '@edit');
-$router->add('POST', '/maestria_abierto/delete/{id}', MaestriaAbiertoController::class . '@delete');
+$router->add('GET', '/maestria_abierto/delete/{id}', MaestriaAbiertoController::class . '@delete');
 $router->add('POST', '/maestria_abierto/data', MaestriaAbiertoController::class . '@getMaestriaAbiertoData');
 
 // Rutas para InscripcionMaestria
@@ -201,7 +201,7 @@ $router->add('GET', '/inscripcion_maestria/create', InscripcionMaestriaControlle
 $router->add('POST', '/inscripcion_maestria/create', InscripcionMaestriaController::class . '@create');
 $router->add('GET', '/inscripcion_maestria/edit/{id}', InscripcionMaestriaController::class . '@edit');
 $router->add('POST', '/inscripcion_maestria/edit/{id}', InscripcionMaestriaController::class . '@edit');
-$router->add('POST', '/inscripcion_maestria/delete/{id}', InscripcionMaestriaController::class . '@delete');
+$router->add('GET', '/inscripcion_maestria/delete/{id}', InscripcionMaestriaController::class . '@delete');
 $router->add('POST', '/inscripcion_maestria/data', InscripcionMaestriaController::class . '@getInscripcionMaestriaData');
 
 // ERutas para Cuota
@@ -210,7 +210,7 @@ $router->add('GET', '/cuota/create', CuotaController::class . '@create');
 $router->add('POST', '/cuota/create', CuotaController::class . '@create');
 $router->add('GET', '/cuota/edit/{id}', CuotaController::class . '@edit');
 $router->add('POST', '/cuota/edit/{id}', CuotaController::class . '@edit');
-$router->add('POST', '/cuota/delete/{id}', CuotaController::class . '@delete');
+$router->add('GET', '/cuota/delete/{id}', CuotaController::class . '@delete');
 $router->add('POST', '/cuota/generateDebt', CuotaController::class . '@generateDebt');
 $router->add('GET', '/cuota/getCuotasByOfferData', CuotaController::class . '@getCuotasByOfferData');
 $router->add('GET', '/cuota/getAcademicOffersByType', CuotaController::class . '@getAcademicOffersByType');

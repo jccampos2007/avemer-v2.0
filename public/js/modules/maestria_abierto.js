@@ -78,17 +78,13 @@ $(document).ready(function () {
         }
 
         // Inicializar CKEditor para el campo nombre_carta
+        // Inicializar CKEditor para el campo nombre_carta
         ClassicEditor
             .create(document.querySelector('#nombre_carta'), {
                 language: 'es'
             })
             .then(editor => {
-                window.nombreCartaEditor = editor; // Guarda la instancia del editor
-                // Si estamos en modo edición, carga el contenido HTML
-                const nombreCartaContent = formMaestriaAbierto.data('nombre-carta');
-                if (nombreCartaContent) {
-                    editor.setData(nombreCartaContent);
-                }
+                window.nombreCartaEditor = editor;
             })
             .catch(error => {
                 console.error('Error al inicializar el editor de nombre_carta:', error);
@@ -110,17 +106,17 @@ $(document).ready(function () {
             const estatusId = $('#estatus_id').val();
             const docenteId = $('#docente_id').val();
             const fecha = $('#fecha').val().trim();
-            const nombreCartaContent = window.nombreCartaEditor ? window.nombreCartaEditor.getData().trim() : ''; // Obtener contenido de CKEditor
+            const nombreCartaContent = (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances.nombre_carta) ? CKEDITOR.instances.nombre_carta.getData().trim() : '';
 
-            if (numero === '' || !maestriaId || !sedeId || !estatusId || !docenteId || fecha === '' || nombreCartaContent === '') {
-                // Usar showFlashMessage si está disponible, de lo contrario alert
-                if (typeof showFlashMessage === 'function') {
-                    showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
-                } else {
-                    alert('Por favor, complete todos los campos obligatorios.');
-                }
-                event.preventDefault(); // Detiene el envío del formulario
-            }
+            // if (numero === '' || !maestriaId || !sedeId || !estatusId || !docenteId || fecha === '') {
+            //     // Usar showFlashMessage si está disponible, de lo contrario alert
+            //     if (typeof showFlashMessage === 'function') {
+            //         showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
+            //     } else {
+            //         alert('Por favor, complete todos los campos obligatorios.');
+            //     }
+            //     event.preventDefault(); // Detiene el envío del formulario
+            // }
         });
     }
 });
