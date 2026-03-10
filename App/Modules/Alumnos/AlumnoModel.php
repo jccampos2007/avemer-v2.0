@@ -105,7 +105,12 @@ class AlumnoModel
         foreach ($data as $row) {
             $raw_blob = $row['foto'];
             $finfo = new \finfo(FILEINFO_MIME_TYPE); // Crea una nueva instancia de finfo
-            $detected_mime_type = $finfo->buffer($raw_blob); // Detecta el MIME type del BLOB
+            if (!is_null($raw_blob)) {
+                $detected_mime_type = $finfo->buffer($raw_blob);
+            } else {
+                $detected_mime_type = null; 
+            }
+            // $detected_mime_type = $finfo->buffer($raw_blob); // Detecta el MIME type del BLOB
 
 
             // Codifica el BLOB en Base64
@@ -164,33 +169,33 @@ class AlumnoModel
         $sql = "INSERT INTO {$this->table} (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, calle_avenida, casa_apartamento, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida, nombre_universidad, nombre_especialidad) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :calle_avenida, :casa_apartamento, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen, :chk_planilla, :chk_cedula, :chk_notas, :chk_titulo, :chk_partida, :nombre_universidad, :nombre_especialidad)";
         $stmt = $this->pdo->prepare($sql);
         $success = $stmt->execute([
-            'profesion_oficio_id' => $data['profesion_oficio_id'],
-            'estado_id' => $data['estado_id'],
-            'nacionalidad_id' => $data['nacionalidad_id'],
-            'usuario_id' => $_SESSION['user_id'],
+            'profesion_oficio_id' => $data['profesion_oficio_id'] ?? '',
+            'estado_id' => $data['estado_id'] ?? '',
+            'nacionalidad_id' => $data['nacionalidad_id'] ?? '',
+            'usuario_id' => $_SESSION['user_id'] ?? 0,
             'ci_pasapote' => $data['ci_pasapote'],
             'primer_nombre' => $data['primer_nombre'],
             'segundo_nombre' => $data['segundo_nombre'],
             'primer_apellido' => $data['primer_apellido'],
             'segundo_apellido' => $data['segundo_apellido'],
             'correo' => $data['correo'],
-            'tlf_habitacion' => $data['tlf_habitacion'],
-            'tlf_trabajo' => $data['tlf_trabajo'],
+            'tlf_habitacion' => $data['tlf_habitacion'] ?? '',
+            'tlf_trabajo' => $data['tlf_trabajo'] ?? '',
             'tlf_celular' => $data['tlf_celular'],
-            'calle_avenida' => $data['calle_avenida'],
-            'casa_apartamento' => $data['casa_apartamento'],
-            'fecha_nacimiento' => $data['fecha_nacimiento'],
-            'estatus_activo_id' => $data['estatus_activo_id'],
-            'direccion' => $data['direccion'],
-            'foto' => $data['foto'],
-            'imagen' => $data['imagen'],
-            'chk_planilla' => $data['chk_planilla'],
-            'chk_cedula' => $data['chk_cedula'],
-            'chk_notas' => $data['chk_notas'],
-            'chk_titulo' => $data['chk_titulo'],
-            'chk_partida' => $data['chk_partida'],
-            'nombre_universidad' => $data['nombre_universidad'],
-            'nombre_especialidad' => $data['nombre_especialidad']
+            'calle_avenida' => $data['calle_avenida'] ?? '',
+            'casa_apartamento' => $data['casa_apartamento'] ?? '',
+            'fecha_nacimiento' => $data['fecha_nacimiento'] ?? '',
+            'estatus_activo_id' => $data['estatus_activo_id'] ?? '',
+            'direccion' => $data['direccion'] ?? '',
+            'foto' => $data['foto'] ?? '',
+            'imagen' => $data['imagen'] ?? '',
+            'chk_planilla' => $data['chk_planilla'] ?? '',
+            'chk_cedula' => $data['chk_cedula'] ?? '',
+            'chk_notas' => $data['chk_notas'] ?? '',
+            'chk_titulo' => $data['chk_titulo'] ?? '',
+            'chk_partida' => $data['chk_partida'] ?? '',
+            'nombre_universidad' => $data['nombre_universidad'] ?? '',
+            'nombre_especialidad' => $data['nombre_especialidad'] ?? ''
         ]);
 
         if ($success) {

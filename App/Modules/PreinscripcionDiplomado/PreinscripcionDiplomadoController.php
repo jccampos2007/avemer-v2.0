@@ -17,7 +17,6 @@ class PreinscripcionDiplomadoController extends Controller
 
     public function __construct()
     {
-        Auth::requireLogin();
         $pdo = \App\Core\Database::getInstance()->getConnection();
         $this->preinscripcionDiplomadoModel = new PreinscripcionDiplomadoModel($pdo);
         $this->diplomadoAbiertoModel = new DiplomadoAbiertoModel($pdo);
@@ -55,7 +54,6 @@ class PreinscripcionDiplomadoController extends Controller
      */
     public function searchAlumno(): void
     {
-        Auth::requireLogin();
         header('Content-Type: application/json');
 
         $ciPasaporte = $this->sanitizeInput($_POST['ci_pasapote'] ?? '');
@@ -87,7 +85,6 @@ class PreinscripcionDiplomadoController extends Controller
      */
     public function createAlumno(): void
     {
-        Auth::requireLogin();
         header('Content-Type: application/json');
 
         $data = [
@@ -137,7 +134,6 @@ class PreinscripcionDiplomadoController extends Controller
      */
     public function getDiplomadosAbiertosForPreinscripcion(): void
     {
-        Auth::requireLogin();
         header('Content-Type: application/json');
 
         try {
@@ -177,7 +173,6 @@ class PreinscripcionDiplomadoController extends Controller
      */
     private function processPreinscripcion(): void
     {
-        Auth::requireLogin();
         header('Content-Type: application/json');
 
         $alumnoId = $_POST['alumno_id'] ?? null;
