@@ -128,7 +128,7 @@ class CursoAbiertoController extends Controller
                 $message = $success ? 'Registro de Taller Abierto creado con éxito.' : 'Error al crear el Registro de Taller Abierto.';
             }
 
-            if ($this->cursoAbiertoModel->update($id, $data)) {
+            if ($success) {
                 Auth::setFlashMessage('success', $message);
                 $this->redirect('cursos_abiertos');
             } else {
