@@ -16,17 +16,18 @@ use App\Modules\Coordinadores\CoordinadorController;
 use App\Modules\Cursos\CursoController;
 use App\Modules\CursoAbierto\CursoAbiertoController;
 use App\Modules\CursoControl\CursoControlController;
+use App\Modules\InscripcionCurso\InscripcionCursoController;
 use App\Modules\Evento\EventoController;
 use App\Modules\EventoAbierto\EventoAbiertoController;
+use App\Modules\InscripcionEvento\InscripcionEventoController;
 use App\Modules\Diplomado\DiplomadoController;
-use App\Modules\Capitulo\CapituloController;
 use App\Modules\DiplomadoAbierto\DiplomadoAbiertoController;
 use App\Modules\InscripcionDiplomado\InscripcionDiplomadoController;
 use App\Modules\PreinscripcionDiplomado\PreinscripcionDiplomadoController;
+use App\Modules\Capitulo\CapituloController;
 use App\Modules\Maestria\MaestriaController;
 use App\Modules\MaestriaAbierto\MaestriaAbiertoController;
 use App\Modules\InscripcionMaestria\InscripcionMaestriaController;
-use App\Modules\InscripcionCurso\InscripcionCursoController;
 use App\Modules\Cuota\CuotaController;
 
 $router = new Router();
@@ -132,6 +133,15 @@ $router->add('GET', '/evento_abierto/edit/{id}', EventoAbiertoController::class 
 $router->add('POST', '/evento_abierto/edit/{id}', EventoAbiertoController::class . '@edit');
 $router->add('GET', '/evento_abierto/delete/{id}', EventoAbiertoController::class . '@delete');
 $router->add('POST', '/evento_abierto/data', EventoAbiertoController::class . '@getEventoAbiertoData');
+
+// Rutas para InscripcionEvento
+$router->add('GET', '/inscripcion_evento', InscripcionEventoController::class . '@index');
+$router->add('GET', '/inscripcion_evento/create', InscripcionEventoController::class . '@create');
+$router->add('POST', '/inscripcion_evento/create', InscripcionEventoController::class . '@create');
+$router->add('GET', '/inscripcion_evento/edit/{id}', InscripcionEventoController::class . '@edit');
+$router->add('POST', '/inscripcion_evento/edit/{id}', InscripcionEventoController::class . '@edit');
+$router->add('GET', '/inscripcion_evento/delete/{id}', InscripcionEventoController::class . '@delete');
+$router->add('POST', '/inscripcion_evento/data', InscripcionEventoController::class . '@getInscripcionEventoData');
 
 // Rutas de Diplomados (CRUD)
 $router->add('GET', '/diplomado', DiplomadoController::class . '@index');

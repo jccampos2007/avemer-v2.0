@@ -128,7 +128,7 @@ $(document).ready(function () {
             const fechaFin = $('#fecha_fin').val().trim();
             const nombreCartaContent = nombreCartaEditor ? nombreCartaEditor.getData().trim() : ''; // Obtener contenido de CKEditor
 
-            if (numero === '' || !eventoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '' || nombreCartaContent === '') {
+            if (numero === '' || !eventoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '') {
                 alert('Por favor, complete todos los campos obligatorios.');
                 event.preventDefault(); // Detiene el envío del formulario
             }
