@@ -3,6 +3,9 @@
 /out-tsc
 /bazel-out
 
+# Node modules
+/node_modules
+
 # Composer
 /vendor
 

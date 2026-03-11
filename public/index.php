@@ -29,6 +29,7 @@ use App\Modules\Maestria\MaestriaController;
 use App\Modules\MaestriaAbierto\MaestriaAbiertoController;
 use App\Modules\InscripcionMaestria\InscripcionMaestriaController;
 use App\Modules\Cuota\CuotaController;
+use App\Modules\Pagos\PagoController;
 
 $router = new Router();
 
@@ -225,6 +226,9 @@ $router->add('POST', '/cuota/generateDebt', CuotaController::class . '@generateD
 $router->add('GET', '/cuota/getCuotasByOfferData', CuotaController::class . '@getCuotasByOfferData');
 $router->add('GET', '/cuota/getAcademicOffersByType', CuotaController::class . '@getAcademicOffersByType');
 $router->add('GET', '/cuota/getStudentsForDebtGeneration', CuotaController::class . '@getStudentsForDebtGeneration');
+
+// Rutas para Pagos
+$router->add('GET', '/pago', PagoController::class . '@index');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];
