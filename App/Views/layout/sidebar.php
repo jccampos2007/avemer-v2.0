@@ -158,7 +158,7 @@ $isSeguridadActive = in_array(explode('/', $relativeUri)[0], ['users']);
                     </button>
                     <ul x-show="mensajesOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <li><a href="<?php echo BASE_URL; ?>listacorreo" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'listacorreo') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-list-ul mr-2"></i> Lista De Correo</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>mensajehtml" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'mensajehtml') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-envelope mr-2"></i> Mensaje</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>mensajes" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'mensajehtml') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-envelope mr-2"></i> Mensaje</a></li>
                         <li><a href="<?php echo BASE_URL; ?>listaenvio" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'listaenvio') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-envelope mr-2"></i> Lista De Envio</a></li>
                     </ul>
                 </li>

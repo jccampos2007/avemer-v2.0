@@ -30,6 +30,7 @@ use App\Modules\MaestriaAbierto\MaestriaAbiertoController;
 use App\Modules\InscripcionMaestria\InscripcionMaestriaController;
 use App\Modules\Cuota\CuotaController;
 use App\Modules\Pagos\PagoController;
+use App\Modules\Mensajes\MensajesController;
 
 $router = new Router();
 
@@ -229,6 +230,15 @@ $router->add('GET', '/cuota/getStudentsForDebtGeneration', CuotaController::clas
 
 // Rutas para Pagos
 $router->add('GET', '/pago', PagoController::class . '@index');
+
+// Rutas para MaestriaAbierto
+$router->add('GET', '/mensajes', MensajesController::class . '@index');
+$router->add('GET', '/mensajes/create', MensajesController::class . '@create');
+$router->add('POST', '/mensajes/create', MensajesController::class . '@create');
+$router->add('GET', '/mensajes/edit/{id}', MensajesController::class . '@edit');
+$router->add('POST', '/mensajes/edit/{id}', MensajesController::class . '@edit');
+$router->add('GET', '/mensajes/delete/{id}', MensajesController::class . '@delete');
+$router->add('POST', '/mensajes/data', MensajesController::class . '@getMensajesData');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];
