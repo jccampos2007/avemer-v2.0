@@ -91,9 +91,7 @@ $(document).ready(function () {
     }
 
         // Función para cargar los mensajes en el select
-    function loadMensajesOffers(selectedId = null) {
-        console.log("paso");
-        
+    function loadMensajesOffers(selectedId = null) {        
         mensajesSelect.empty().append('<option value="">Cargando...</option>');
 
         $.ajax({
@@ -103,6 +101,7 @@ $(document).ready(function () {
             success: function (response) {
                 
                 mensajesSelect.empty();
+                mensajesSelect.append('<option value="">Seleccione un Mensaje</option>');
                 if (response.success && response.data.length > 0) {
                     $.each(response.data, function (index, item) {
                         const isSelected = (selectedId && item.id == selectedId) ? 'selected' : '';
@@ -307,10 +306,6 @@ $(document).ready(function () {
 
         // Cargar las ofertas académicas para la pestaña seleccionada
         loadAcademicOffers(tabId);
-    });
-
-    // Manejador de clic para las los mensajes
-    $('.tab-button-mensajes').on('click', function () {
         loadMensajesOffers();
     });
 

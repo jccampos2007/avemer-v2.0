@@ -43,7 +43,7 @@ $buscar_mensajes_val = $correo_data['buscar_mensajes_id'] ?? '';
  
         <div class="mb-4">
             <label for="buscar_mensajes" class="block text-gray-700 text-sm font-bold mb-2">Mensaje</label>
-            <select id="buscar_mensajes_id" name="buscar_mensajes" class="tab-button-mensajes shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            <select id="buscar_mensajes_id" name="buscar_mensajes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 <option value="">Seleccione</option>
                 <!-- Opciones se llenarán dinámicamente con JS -->
             </select>
@@ -53,7 +53,7 @@ $buscar_mensajes_val = $correo_data['buscar_mensajes_id'] ?? '';
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 <?php echo ($is_edit) ? 'Actualizar Cuota' : 'Guardar Cuota'; ?>
             </button>
-            <a href="<?php echo BASE_URL; ?>cuota" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
+            <a href="<?php echo BASE_URL; ?>correo/create" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
                 Cancelar
             </a>
         </div>
