@@ -1,20 +1,20 @@
 <?php
-// app/Modules/mensajes/Views/form.php
+// app/Modules/envios/Views/form.php
 
-// Se espera la variable $mensajes_data (vacía para crear, con datos para editar)
-$is_edit = isset($mensajes_data['id']) && !empty($mensajes_data['id']);
-$form_action = $is_edit ? BASE_URL . 'mensajes/edit/' . htmlspecialchars($mensajes_data['id']) : BASE_URL . 'mensajes/create';
+// Se espera la variable $envios_data (vacía para crear, con datos para editar)
+$is_edit = isset($envios_data['id']) && !empty($envios_data['id']);
+$form_action = $is_edit ? BASE_URL . 'envios/edit/' . htmlspecialchars($envios_data['id']) : BASE_URL . 'envios/create';
 $page_title = $is_edit ? 'Editar Mensaje' : 'Crear Nuevo Mensaje';
 
 // Datos para pre-llenar los campos
-$titulo_val = htmlspecialchars($mensajes_data['titulo'] ?? '');
-$mensaje_val = htmlspecialchars($mensajes_data['mensaje'] ?? '');
+$titulo_val = htmlspecialchars($envios_data['titulo'] ?? '');
+$mensaje_val = htmlspecialchars($envios_data['mensaje'] ?? '');
 ?>
 <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title; ?></h3>
-    <form id="formmensajes" action="<?php echo $form_action; ?>" method="POST">
+    <form id="formenvios" action="<?php echo $form_action; ?>" method="POST">
         <?php if ($is_edit): ?>
-            <input type="hidden" name="id" value="<?php echo $mensajes_data['id']; ?>">
+            <input type="hidden" name="id" value="<?php echo $envios_data['id']; ?>">
         <?php endif; ?>
 
         <div class="mb-4">
@@ -24,14 +24,15 @@ $mensaje_val = htmlspecialchars($mensajes_data['mensaje'] ?? '');
 
         <div class="mb-4">
             <label for="mensaje" class="block text-gray-700 text-sm font-bold mb-2">Mensaje:</label>
-            <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="256"><?= isset($mensajes_data['mensaje']) ? htmlspecialchars($mensajes_data['mensaje']) : '' ?></textarea>
+            <!-- <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="256" src="../../../index.php"></textarea> -->
+            <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="256"><?= isset($envios_data['mensaje']) ? htmlspecialchars($envios_data['mensaje']) : '' ?></textarea>
         </div>
 
         <div class="flex items-center justify-between">
             <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 <?php echo $is_edit ? 'Actualizar Mensaje' : 'Guardar Mensaje'; ?>
             </button>
-            <a href="<?php echo BASE_URL; ?>mensajes" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
+            <a href="<?php echo BASE_URL; ?>envios" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
                 Cancelar
             </a>
         </div>
@@ -39,7 +40,7 @@ $mensaje_val = htmlspecialchars($mensajes_data['mensaje'] ?? '');
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/mensajes.js'; ?>
+<?php $page_js = 'js/modules/envios.js'; ?>
 
 <!-- CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>

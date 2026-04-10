@@ -47,7 +47,7 @@ $isSeguridadActive = in_array(explode('/', $relativeUri)[0], ['users']);
                     </button>
                     <ul x-show="registroOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <li><a href="<?php echo BASE_URL; ?>alumnos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'alumnos') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-regular fa-user mr-2"></i> Alumnos</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>docentes" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'docentes') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-user mr-2"></i> Instructores</a></li>
+                        <!-- <li><a href="<?php echo BASE_URL; ?>docentes" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'docentes') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-user mr-2"></i> Instructores</a></li> -->
                         <li><a href="<?php echo BASE_URL; ?>coordinadores" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'coordinadores') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-user-tie mr-2"></i> Coordinadores</a></li>
                     </ul>
                 </li>
