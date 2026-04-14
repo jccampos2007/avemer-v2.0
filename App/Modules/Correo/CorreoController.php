@@ -270,4 +270,40 @@ class CorreoController extends Controller
             exit();
         }
     }
+
+    public function sendChecked(): void
+    {
+        Auth::requireLogin();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+            header('HTTP/1.0 403 Forbidden');
+            echo json_encode(['success' => false, 'message' => 'Acceso denegado.']);
+            exit();
+        }
+
+        $correos = $_POST['correos'] ?? [];
+        $mensajeId = (int)($_POST['mensaje_id'] ?? 0);
+
+        if (empty($correos) || $mensajeId <= 0) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Faltan correos o mensaje.']);
+            exit();
+        }
+
+        $mensaje = $this->correoModel->getMensajeById($mensajeId);
+        if (empty($mensaje)) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Mensaje no encontrado.']);
+            exit();
+        }
+
+        require_once __DIR__ . '/enviar.php';
+
+        foreach ($correos as $correo) {
+            correo($mensaje['titulo'], $mensaje['mensaje'], $correo);
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'message' => 'Correos enviados correctamente.']);
+        exit();
+    }
 }

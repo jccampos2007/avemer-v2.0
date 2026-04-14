@@ -255,7 +255,7 @@ $router->add('POST', '/envios/data', EnviosController::class . '@getEnviosData')
 $router->add('GET', '/listacorreo', CorreoController::class . '@index');
 $router->add('GET', '/correo/create', CorreoController::class . '@create');
 $router->add('POST', '/correo/create', CorreoController::class . '@create');
-$router->add('GET', '/correo/delete/{id}', CorreoController::class . '@delete');
+$router->add('POST', '/correo/sendChecked', CorreoController::class . '@sendChecked');
 $router->add('GET', '/correo/getCorreosByOfferData', CorreoController::class . '@getCorreosByOfferData');
 $router->add('GET', '/correo/getAcademicOffersByType', CorreoController::class . '@getAcademicOffersByType');
 $router->add('GET', '/correo/getStudentsForDebtGeneration', CorreoController::class . '@getStudentsForDebtGeneration');

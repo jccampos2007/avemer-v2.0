@@ -158,7 +158,7 @@ $(document).ready(function () {
                                 "orderable": false,
                                 "searchable": false,
                                 "render": function (data, type, row) {
-                                    return `<input type="checkbox" class="correo-checkbox" value="${row.id}">`;
+                                    return `<input type="checkbox" class="correo-checkbox" value="${row.id}" checked>`;
                                 }
                             },
                             { "data": "correo" },
@@ -311,53 +311,40 @@ $(document).ready(function () {
             $('.tab-button[data-tab-id="1"]').trigger('click');
         }
 
-        // Manejador de envío del formulario (AJAX)
-        formCorreo.on('submit', function (event) {
-            event.preventDefault(); // Detener el envío normal del formulario
+        $('#sendCheckedEmailsBtn').on('click', function () {
+            const correosSeleccionados = $('.correo-checkbox:checked').map(function () {
+                return $(this).val();
+            }).get();
 
-            const formData = $(this).serialize(); // Serializar los datos del formulario
-            const actionUrl = $(this).attr('action');
-            const isEdit = $(this).find('input[name="id"]').length > 0; // Verificar si es edición
+            if (correosSeleccionados.length === 0) {
+                showAlert('Por favor selecciona al menos un correo.', 'info');
+                return;
+            }
 
-            // Validaciones básicas del lado del cliente
-            const nombre = $('#nombre').val().trim();
-            const monto = $('#monto').val().trim();
-            const ofertaAcademicaId = $('#oferta_academica_id').val();
-            const tipoOfertaAcademicaId = $('#tipo_oferta_academica_id').val();
-            const fechaVencimiento = $('#fecha_vencimiento').val().trim();
-
-            if (nombre === '' || monto === '' || ofertaAcademicaId === '' || tipoOfertaAcademicaId === '' || fechaVencimiento === '') {
-                showAlert('Por favor, complete todos los campos obligatorios.', 'error');
+            const mensajeId = $('#buscar_mensajes_id').val();
+            if (!mensajeId) {
+                showAlert('Selecciona un mensaje antes de enviar.', 'error');
                 return;
             }
 
             $.ajax({
-                url: actionUrl,
+                url: `${BASE_URL_JS}correo/sendChecked`,
                 type: 'POST',
-                data: formData,
+                data: {
+                    correos: correosSeleccionados,
+                    mensaje_id: mensajeId
+                },
                 dataType: 'json',
                 success: function (response) {
                     if (response.success) {
                         showAlert(response.message, 'success');
-                        // Recargar la lista de correos después de una operación exitosa
-                        loadCorreosList(tipoOfertaAcademicaId, ofertaAcademicaId);
-
-                        // Si es una nueva creación, podrías querer limpiar el formulario o redirigir
-                        if (!isEdit) {
-                            formCorreo[0].reset(); // Limpiar el formulario
-                            // Opcional: redirigir a la edición de la correo recién creada si se devuelve el ID
-                            // if (response.data && response.data.id) {
-                            //     window.location.href = `${BASE_URL_JS}correo/edit/${response.data.id}`;
-                            // }
-                        }
                     } else {
                         showAlert('Error: ' + response.message, 'error');
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error al enviar el formulario:', error);
-                    console.error('Respuesta del servidor:', xhr.responseText);
-                    showAlert('Error al procesar la solicitud. Por favor, intente de nuevo.', 'error');
+                    console.error('Error al enviar correos:', error);
+                    showAlert('Error al enviar los correos. Intenta de nuevo.', 'error');
                 }
             });
         });

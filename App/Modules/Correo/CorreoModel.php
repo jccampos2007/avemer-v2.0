@@ -289,4 +289,13 @@ class CorreoModel
         $stmt->bindParam(':correo_id', $correoId, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    public function getMensajeById(int $id): array
+    {
+        $sql = "SELECT titulo, mensaje FROM mensajehtml WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+    }
 }

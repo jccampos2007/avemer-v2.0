@@ -16,7 +16,7 @@ $buscar_mensajes_val = $correo_data['buscar_mensajes_id'] ?? '';
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" />
 <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title; ?></h3>
-    <form id="formCuota"  method="POST"
+    <form id="formCorreo"  method="POST"
         data-oferta-academica-id="<?php echo $oferta_academica_id_val; ?>"
         data-buscar-mensajes="<?php echo $buscar_mensajes_val; ?>"
         data-tipo-oferta-academica-id="<?php echo $tipo_oferta_academica_id_val; ?>">
@@ -50,8 +50,8 @@ $buscar_mensajes_val = $correo_data['buscar_mensajes_id'] ?? '';
         </div>
 
         <div class="flex items-center justify-between mt-6">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Enviar Correo
+            <button type="button" id="sendCheckedEmailsBtn" class="bg-blue-600 hover:bg-blue-700 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Enviar seleccionados
             </button>
             <a href="<?php echo BASE_URL; ?>correo/create" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
                 Cancelar
