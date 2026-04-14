@@ -148,49 +148,23 @@ $(document).ready(function () {
                     correosListMessage.addClass('hidden'); // Ocultar mensaje si hay datos
                     correosDataTable = correosListTable.DataTable({
                         "data": response.data,
-                        "responsive": true,
+                        "responsive": false,
                         "searching": false, // No se necesita búsqueda en esta tabla específica
                         "paging": false,    // No se necesita paginación
                         "info": false,      // No se necesita información de paginación
                         "columns": [
-                            { "data": "id" },
-                            { "data": "nombre" },
-                            { "data": "monto" },
-                            {
-                                "data": "generado",
-                                "render": function (data, type, row) {
-                                    return data == 1 ? 'Sí' : 'No';
-                                }
-                            },
-                            { "data": "fecha_vencimiento" },
-                            { "data": "fecha" },
-                            { // Columna para Acciones (Editar/Eliminar/Generar Deuda)
+                                {
                                 "data": null,
                                 "orderable": false,
                                 "searchable": false,
                                 "render": function (data, type, row) {
-                                    const generatedStatus = row.generado; // Asume que 'generado' viene en la respuesta
-                                    let generateButton = '';
-                                    if (generatedStatus == 0) { // Si no ha sido generada
-                                        generateButton = `<button class="btn btn-default generate-debt-btn ml-2 text-purple-600 hover:text-purple-800"
-                                            data-id="${row.id}"
-                                            data-monto="${row.monto}"
-                                            data-tipo-oferta-id="${tipoOfertaId}"
-                                            data-oferta-id="${ofertaId}"
-                                            title="Generar Deuda">
-                                            <i class="fas fa-file-invoice-dollar"></i>
-                                        </button>`;
-                                    } else {
-                                        generateButton = `<span class="text-green-500 ml-2" title="Deuda ya generada"><i class="fas fa-check-circle"></i></span>`;
-                                    }
-
-                                    return `
-                                        ${generateButton}
-                                        <a href="correo/edit/${row.id}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
-                                        <a href="correo/delete/${row.id}" class="btn btn-default"><i class="fas fa-trash-alt fs-5"></i></a>
-                                    `;
+                                    return `<input type="checkbox" class="correo-checkbox" value="${row.id}">`;
                                 }
-                            }
+                            },
+                            { "data": "correo" },
+                            { "data": "ci_pasapote" },
+                            { "data": "nombre" },
+                            { "data": "nombre_oferta" }
                         ],
                         "language": {
                             "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json"
@@ -430,18 +404,6 @@ $(document).ready(function () {
         });
 
         // --- Lógica del Modal de Generación de Deuda ---
-
-        // Abrir modal y cargar alumnos
-        // Se adjunta el evento directamente a la tabla correosListTable
-        correosListTable.on('click', '.generate-debt-btn', function () {
-            console.log('Botón Generar Deuda clickeado en la tabla de correos.'); // Log para depuración
-            const correoId = $(this).data('id');
-            const montoCorreo = $(this).data('monto');
-            const tipoOfertaId = $(this).data('tipo-oferta-id');
-            const ofertaId = $(this).data('oferta-id');
-
-            loadStudentsForDebtGeneration(correoId, tipoOfertaId, ofertaId, montoCorreo);
-        });
 
         // Cerrar modal
         closeDebtModalBtn.on('click', function () {

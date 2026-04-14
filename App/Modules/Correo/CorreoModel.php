@@ -160,47 +160,42 @@ class CorreoModel
     public function getCorreosByOffer(int $tipoOfertaId, int $ofertaId): array
     {
         $offerTableName = '';
+        $sqlWhereClause = '';
         switch ($tipoOfertaId) {
             case 1:
-                $offerTableName = 'curso';
+                $offerTableName = 'inscripcion_curso';
+                $sqlWhereClause = 'INNER JOIN curso_abierto ca on tab.curso_abierto_id = ca.id
+                                    INNER JOIN curso ofer on ca.curso_id = ofer.id
+                                    where tab.curso_abierto_id =';
                 break;
             case 2:
-                $offerTableName = 'diplomado';
+                $offerTableName = 'inscripcion_diplomado';
+                $sqlWhereClause = 'INNER JOIN diplomado_abierto da on tab.diplomado_abierto_id = da.id
+                                    INNER JOIN diplomado ofer on da.diplomado_id = ofer.id
+                                    WHERE tab.diplomado_abierto_id =';
                 break;
             case 3:
-                $offerTableName = 'evento';
+                $offerTableName = 'inscripcion_evento';
+                $sqlWhereClause = 'INNER JOIN evento_abierto ea on tab.evento_abierto_id = ea.id 
+                                    INNER JOIN evento ofer on ea.evento_id = ofer.id
+                                    WHERE tab.evento_abierto_id = ';
                 break;
             case 4:
-                $offerTableName = 'maestria';
+                $offerTableName = 'inscripcion_maestria';
+                $sqlWhereClause = 'INNER JOIN maestria_abierto ma on tab.maestria_abierto_id = ma.id
+                    INNER JOIN maestria m on ma.maestria_id = m.id
+                    WHERE tab.maestria_abierto_id =';
                 break;
             default:
                 return [];
         }
 
         $sql = "
-            SELECT
-                c.id,
-                c.nombre,
-                c.monto,
-                c.generado,
-                c.fecha_vencimiento,
-                c.fecha,
-                toa.nombre AS tipo_oferta_nombre,
-                o.nombre AS oferta_nombre
-            FROM
-                {$this->table} c
-            JOIN
-                tipo_oferta_academica toa ON c.tipo_oferta_academica_id = toa.id
-            JOIN
-                {$offerTableName} o ON c.oferta_academica_id = o.id
-            WHERE
-                c.tipo_oferta_academica_id = :tipo_oferta_id AND c.oferta_academica_id = :oferta_id
-            ORDER BY
-                c.fecha DESC
-        ";
-
+            SELECT a.correo, a.ci_pasapote, concat(a.primer_nombre,' - ',a.primer_apellido) as nombre, ofer.nombre as nombre_oferta
+            FROM $offerTableName tab 
+                INNER JOIN alumno a on tab.alumno_id = a.id 
+                $sqlWhereClause :oferta_id";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':tipo_oferta_id', $tipoOfertaId, PDO::PARAM_INT);
         $stmt->bindParam(':oferta_id', $ofertaId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
