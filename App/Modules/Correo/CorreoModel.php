@@ -183,8 +183,8 @@ class CorreoModel
             case 4:
                 $offerTableName = 'inscripcion_maestria';
                 $sqlWhereClause = 'INNER JOIN maestria_abierto ma on tab.maestria_abierto_id = ma.id
-                    INNER JOIN maestria m on ma.maestria_id = m.id
-                    WHERE tab.maestria_abierto_id =';
+                                    INNER JOIN maestria ofer on ma.maestria_id = ofer.id
+                                    WHERE tab.maestria_abierto_id =';
                 break;
             default:
                 return [];
