@@ -3,7 +3,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // Carga el autoloader de Composer
-require '../../../vendor/autoload.php';
+require __DIR__ . '/../../../vendor/autoload.php';
 
 function correo($titulo, $msj, $correo) {
     try {

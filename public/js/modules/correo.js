@@ -189,84 +189,6 @@ $(document).ready(function () {
         });
     }
 
-
-    // Función para cargar los alumnos en el modal
-    function loadStudentsForDebtGeneration(correoId, tipoOfertaId, ofertaId, montoCorreo) {
-        showStudentsListMessage('Cargando alumnos...', 'info');
-        studentsListTable.find('tbody').empty(); // Limpiar tabla de alumnos
-
-        currentCorreoIdForDebt = correoId;
-        currentCorreoMontoForDebt = montoCorreo;
-        currentTipoOfertaIdForDebt = tipoOfertaId;
-        currentOfertaIdForDebt = ofertaId;
-
-        $.ajax({
-            url: `${BASE_URL_JS}correo/getStudentsForDebtGeneration`,
-            type: 'GET',
-            data: {
-                tipo_oferta_id: tipoOfertaId,
-                oferta_id: ofertaId,
-                correo_id: correoId
-            },
-            dataType: 'json',
-            success: function (response) {
-                if (studentsDataTable) {
-                    studentsDataTable.destroy(); // Destruir instancia existente
-                }
-
-                if (response.success && response.data.length > 0) {
-                    studentsListMessage.addClass('hidden');
-                    studentsDataTable = studentsListTable.DataTable({
-                        "data": response.data,
-                        "responsive": true,
-                        "searching": false,
-                        "paging": false,
-                        "info": false,
-                        "columns": [
-                            {
-                                "data": null,
-                                "orderable": false,
-                                "searchable": false,
-                                "render": function (data, type, row) {
-                                    return `<input type="checkbox" class="student-checkbox h-4 w-4 text-blue-600 rounded" data-alumno-id="${row.alumno_id}">`;
-                                }
-                            },
-                            { "data": "alumno_id" },
-                            {
-                                "data": "alumno_nombre",
-                                "render": function (data, type, row) {
-                                    return `${row.alumno_nombre} ${row.alumno_apellido || ''}`; // Combina nombre y apellido
-                                }
-                            }
-                        ],
-                        "language": {
-                            "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json"
-                        },
-                        "autoWidth": false,
-                        "createdRow": function (row, data, dataIndex) {
-                            // Asegura que el checkbox "Seleccionar todos" se desmarque si hay alguna fila no seleccionada
-                            selectAllStudentsCheckbox.prop('checked', false);
-                        }
-                    });
-                    generateDebtModal.removeClass('hidden'); // Mostrar el modal
-                } else {
-                    showStudentsListMessage('No hay alumnos asociados a esta oferta académica.', 'info');
-                    if (studentsDataTable) {
-                        studentsDataTable.clear().draw();
-                    }
-                    generateDebtModal.removeClass('hidden'); // Mostrar el modal aunque no haya alumnos
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error al cargar alumnos para generar deuda:', error);
-                console.error('Respuesta del servidor:', xhr.responseText);
-                showAlert('Error al cargar los alumnos. Por favor, intente de nuevo.', 'error');
-                showStudentsListMessage('Error al cargar los alumnos.', 'error');
-                generateDebtModal.removeClass('hidden'); // Mostrar el modal con el mensaje de error
-            }
-        });
-    }
-
     // Manejador de clic para las pestañas
     $('.tab-button').on('click', function () {
         const tabId = $(this).data('tab-id');
@@ -316,6 +238,8 @@ $(document).ready(function () {
                 return $(this).val();
             }).get();
 
+            console.log(correosSeleccionados);
+            
             if (correosSeleccionados.length === 0) {
                 showAlert('Por favor selecciona al menos un correo.', 'info');
                 return;

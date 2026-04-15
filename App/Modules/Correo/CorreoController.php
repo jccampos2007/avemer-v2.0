@@ -280,7 +280,8 @@ class CorreoController extends Controller
             exit();
         }
 
-        $correos = $_POST['correos'] ?? [];
+        $correos = $_POST['correo'] ?? [];
+        echo 'Correos recibidos: ' . implode(', ', $correos) . "\n"; // Debug: Mostrar correos recibidos
         $mensajeId = (int)($_POST['mensaje_id'] ?? 0);
 
         if (empty($correos) || $mensajeId <= 0) {
