@@ -74,32 +74,8 @@ class CorreoController extends Controller
                     return;
                 }
             }
-
-            $success = false;
-            $success = $this->correoModel->create($data);
-            $message = $success ? 'Correo creada con éxito.' : 'Error al crear la Correo.';
             
 
-            if ($success) {
-                if ($isAjax) {
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => true, 'message' => $message, 'data' => $data]); // Devolver los datos para actualizar la UI
-                    exit();
-                } else {
-                    Auth::setFlashMessage('success', $message);
-                    $this->redirect('correo');
-                }
-            } else {
-                if ($isAjax) {
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => false, 'message' => $message]);
-                    exit();
-                } else {
-                    Auth::setFlashMessage('error', $message);
-                    $redirectPath = $id ? 'correo/edit/' . $id : 'correo/create';
-                    $this->redirect($redirectPath);
-                }
-            }
         } catch (\PDOException $e) {
             error_log('Error de BD en processForm (Correo): ' . $e->getMessage());
             if ($isAjax) {
@@ -280,8 +256,7 @@ class CorreoController extends Controller
             exit();
         }
 
-        $correos = $_POST['correo'] ?? [];
-        echo 'Correos recibidos: ' . implode(', ', $correos) . "\n"; // Debug: Mostrar correos recibidos
+        $correos = $_POST['correos'] ?? [];
         $mensajeId = (int)($_POST['mensaje_id'] ?? 0);
 
         if (empty($correos) || $mensajeId <= 0) {

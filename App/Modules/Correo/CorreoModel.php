@@ -28,66 +28,6 @@ class CorreoModel
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-    /**
-     * Crea un nuevo registro en la tabla correo.
-     * La fecha de creación se establece automáticamente a la fecha actual de la base de datos.
-     * @param array $data Los datos del nuevo registro.
-     * @return bool True si se creó correctamente, false en caso contrario.
-     */
-    public function create(array $data): bool
-    {
-        $sql = "INSERT INTO {$this->table} (nombre, monto, oferta_academica_id, tipo_oferta_academica_id, generado, fecha_vencimiento, fecha)
-                VALUES (:nombre, :monto, :oferta_academica_id, :tipo_oferta_academica_id, :generado, :fecha_vencimiento, CURDATE())"; // Usamos CURDATE() para la fecha
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':nombre' => $data['nombre'],
-            ':monto' => $data['monto'],
-            ':oferta_academica_id' => $data['oferta_academica_id'],
-            ':tipo_oferta_academica_id' => $data['tipo_oferta_academica_id'],
-            ':generado' => $data['generado'] ?? 0, // Valor por defecto
-            ':fecha_vencimiento' => $data['fecha_vencimiento']
-            // ':fecha' ya no se necesita aquí, se genera en la base de datos
-        ]);
-    }
-
-    /**
-     * Actualiza un registro existente en la tabla correo.
-     * La columna 'fecha' (fecha de creación) no se modifica en la actualización.
-     * @param int $id El ID del registro a actualizar.
-     * @param array $data Los nuevos datos del registro.
-     * @return bool True si se actualizó correctamente, false en caso contrario.
-     */
-    public function update(int $id, array $data): bool
-    {
-        $sql = "UPDATE {$this->table} SET nombre = :nombre, monto = :monto, oferta_academica_id = :oferta_academica_id,
-                tipo_oferta_academica_id = :tipo_oferta_academica_id, generado = :generado, fecha_vencimiento = :fecha_vencimiento
-                WHERE id = :id"; // 'fecha' se elimina del SET
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':nombre' => $data['nombre'],
-            ':monto' => $data['monto'],
-            ':oferta_academica_id' => $data['oferta_academica_id'],
-            ':tipo_oferta_academica_id' => $data['tipo_oferta_academica_id'],
-            ':generado' => $data['generado'] ?? 0,
-            ':fecha_vencimiento' => $data['fecha_vencimiento'],
-            ':id' => $id
-        ]);
-    }
-
-    /**
-     * Elimina un registro de correo.
-     * @param int $id El ID del registro a eliminar.
-     * @return bool True si se eliminó correctamente, false en caso contrario.
-     */
-    public function delete(int $id): bool
-    {
-        $sql = "DELETE FROM {$this->table} WHERE id = :id";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
-    }
-
     /**
      * Obtiene una lista de cursos.
      * @return array

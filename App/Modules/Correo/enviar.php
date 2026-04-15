@@ -10,15 +10,19 @@ function correo($titulo, $msj, $correo) {
         $mail = new PHPMailer(true);
         // --- Configuración del Servidor ---
         $mail->isSMTP();                              
-        $mail->Host       = 'smtp.gmail.com';
+        $mail->Host       = 'mail.privateemail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'pruebastesting8@gmail.com';
-        $mail->Password   = 'pqqtgczwvtaoxxwj ';
+        $mail->Username   = 'info@grupoavemer.net';
+        $mail->Password   = 'Avemer*g2026';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
+        // $mail->Host       = 'smtp.gmail.com';
+        // $mail->Username   = 'pruebastesting8@gmail.com';
+        // $mail->Password   = 'pqqtgczwvtaoxxwj ';
+
         // --- Destinatarios ---
-        $mail->setFrom('pruebastesting8@gmail.com', 'Grupo Avemer');
+        $mail->setFrom('info@grupoavemer.net', 'Grupo Avemer');
         $mail->addAddress($correo);
         // $mail->AddBCC('preinscripcion@grupoavemer.com.ve', 'Copia de Correo enviado');
 
@@ -30,14 +34,8 @@ function correo($titulo, $msj, $correo) {
         $mail->AltBody =  $msj;
 
         $mail->send();
-        echo 'El mensaje se envió correctamente';
+        return true;
     } catch (Exception $e) {
-        echo "Error al enviar el mensaje: {$mail->ErrorInfo}";
+         return false;
     }
 }
-
-// correo(
-//     'Asunto por defecto Test',
-//     'testing send smart data',
-//     'cesaralejandrorojas0@gmail.com'
-//     );

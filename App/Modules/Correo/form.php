@@ -8,7 +8,7 @@ $page_title = 'Envio de Correos';
 // Datos para pre-llenar los campos
 $oferta_academica_id_val = $correo_data['oferta_academica_id'] ?? '';
 $tipo_oferta_academica_id_val = $correo_data['tipo_oferta_academica_id'] ?? '1'; // Valor por defecto: Curso
-$buscar_mensajes_val = $correo_data['buscar_mensajes_id'] ?? '';
+$buscar_mensajes_val = $correo_data['mensaje_id'] ?? '';
 // 'fecha' ya no se necesita aquí, se gestiona automáticamente en la DB
 ?>
 <!-- DataTables CSS y JS para la tabla de cuotas -->
@@ -43,7 +43,7 @@ $buscar_mensajes_val = $correo_data['buscar_mensajes_id'] ?? '';
  
         <div class="mb-4">
             <label for="buscar_mensajes" class="block text-gray-700 text-sm font-bold mb-2">Mensaje</label>
-            <select id="buscar_mensajes_id" name="buscar_mensajes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            <select id="mensaje_id" name="buscar_mensajes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 <option value="">Seleccione</option>
                 <!-- Opciones se llenarán dinámicamente con JS -->
             </select>

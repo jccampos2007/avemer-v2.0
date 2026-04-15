@@ -5,7 +5,7 @@ $(document).ready(function () {
     const formCorreo = $('#formCorreo');
     const tipoOfertaAcademicaIdInput = $('#tipo_oferta_academica_id');
     const ofertaAcademicaSelect = $('#oferta_academica_id');
-    const mensajesSelect = $('#buscar_mensajes_id'); // Asegúrate de que este ID sea el correcto
+    const mensajesSelect = $('#mensaje_id'); // Asegúrate de que este ID sea el correcto
     const correosListTable = $('#correosListTable');
     const correosListMessage = $('#correos-list-message');
     const generateDebtModal = $('#generateDebtModal');
@@ -158,7 +158,7 @@ $(document).ready(function () {
                                 "orderable": false,
                                 "searchable": false,
                                 "render": function (data, type, row) {
-                                    return `<input type="checkbox" class="correo-checkbox" value="${row.id}" checked>`;
+                                    return `<input type="checkbox" class="correo-checkbox" value="${row.correo}" checked>`;
                                 }
                             },
                             { "data": "correo" },
@@ -238,14 +238,14 @@ $(document).ready(function () {
                 return $(this).val();
             }).get();
 
-            console.log(correosSeleccionados);
+            // console.log(correosSeleccionados);
             
             if (correosSeleccionados.length === 0) {
                 showAlert('Por favor selecciona al menos un correo.', 'info');
                 return;
             }
 
-            const mensajeId = $('#buscar_mensajes_id').val();
+            const mensajeId = $('#mensaje_id').val();
             if (!mensajeId) {
                 showAlert('Selecciona un mensaje antes de enviar.', 'error');
                 return;
