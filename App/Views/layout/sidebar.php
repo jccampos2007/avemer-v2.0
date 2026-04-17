@@ -164,7 +164,7 @@ $isSeguridadActive = in_array(explode('/', $relativeUri)[0], ['users']);
                 </li>
 
                 <!-- Reportes -->
-                <li x-data="{ reportesOpen: <?php echo $isReportesActive ? 'true' : 'false'; ?> }">
+                <!-- <li x-data="{ reportesOpen: <?php echo $isReportesActive ? 'true' : 'false'; ?> }">
                     <button @click="reportesOpen = !reportesOpen"
                         class="w-full flex justify-between items-center py-2 px-4 rounded hover:bg-gray-700 transition duration-200 <?php echo $isReportesActive ? 'text-blue-300 font-semibold' : ''; ?>">
                         <span><i class="fa fa-list-alt mr-2"></i> Reportes</span>
@@ -183,7 +183,7 @@ $isSeguridadActive = in_array(explode('/', $relativeUri)[0], ['users']);
                         <li><a href="<?php echo BASE_URL; ?>rpt_eventos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'rpt_eventos') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-exchange mr-2"></i> Eventos</a></li>
                         <li><a href="<?php echo BASE_URL; ?>rpt_talleres" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'rpt_talleres') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-exchange mr-2"></i> Talleres</a></li>
                     </ul>
-                </li>
+                </li> -->
 
                 <!-- Mantenimiento -->
                 <li x-data="{ mantenimientoOpen: <?php echo $isMantenimientoActive ? 'true' : 'false'; ?> }">
