@@ -3,7 +3,7 @@
 // --- CONFIGURACIÓN ---
 // ¡IMPORTANTE! DEBES CAMBIAR ESTA URL para que apunte a tu script PHP en el backend
 // que manejará las solicitudes AJAX (ej. 'https://tu-dominio.com/api/preinscripcion.php')
-const BACKEND_API_URL = 'http://localhost/your_app/api/preinscripcion_api.php'; // <--- ¡CAMBIA ESTO!
+const BACKEND_API_URL = '../LandingPage/preinscripcion_api.php'; // <--- ¡CAMBIA ESTO!
 
 // --- FUNCIONES AUXILIARES DE UI ---
 
@@ -156,12 +156,27 @@ $(document).ready(function () {
     const alumnoDetailsSection = $('#alumnoDetails');
     const createAlumnoForm = $('#createAlumnoForm');
     const diplomadosAbiertosSection = $('#diplomadosAbiertosSection');
-    const diplomadosAbiertosList = $('#diplomadosAbiertosList');
+    const ofertasAbiertasList = $('#ofertasAbiertasList');
     const preinscribirBtn = $('#preinscribirBtn');
     const selectedAlumnoIdInput = $('#selectedAlumnoId'); // Campo oculto para el ID del alumno
     const selectedDiplomadoAbiertoIdInput = $('#selectedDiplomadoAbiertoId'); // Campo oculto para el ID del diplomado abierto
+    const tipoOfertaAcademicaIdInput = $('#tipo_oferta_academica_id');
 
     let currentAlumnoId = null; // Almacena el ID del alumno seleccionado/creado
+
+    $('.tab-button').on('click', function () {
+        const tabId = $(this).data('tab-id');
+
+        // Actualizar el valor del input oculto
+        tipoOfertaAcademicaIdInput.val(tabId);
+
+        // Actualizar clases de las pestañas para el estilo activo
+        $('.tab-button').removeClass('bg-blue-600 text-white font-bold').addClass('bg-gray-200 text-gray-700');
+        $(this).addClass('bg-blue-600 text-white font-bold').removeClass('bg-gray-200 text-gray-700');
+
+        // Cargar las ofertas académicas para la pestaña seleccionada
+        loadOfertasAbiertas(tabId);
+    });
 
     // --- Funciones de Visibilidad ---
     function showAlumnoSearch() {
@@ -175,7 +190,7 @@ $(document).ready(function () {
         selectedAlumnoIdInput.val('');
         selectedDiplomadoAbiertoIdInput.val(''); // Limpiar selección de diplomado
         preinscribirBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed'); // Deshabilitar botón
-        diplomadosAbiertosList.empty(); // Limpiar lista de diplomados
+        ofertasAbiertasList.empty(); // Limpiar lista de diplomados
     }
 
     function showAlumnoDetails(alumno) {
@@ -188,7 +203,6 @@ $(document).ready(function () {
         selectedAlumnoIdInput.val(alumno.id);
         searchAlumnoForm.hide();
         createAlumnoForm.hide();
-        loadDiplomadosAbiertos(); // Cargar diplomados una vez que el alumno está listo
         diplomadosAbiertosSection.show();
     }
 
@@ -212,7 +226,7 @@ $(document).ready(function () {
         selectedAlumnoIdInput.val('');
         selectedDiplomadoAbiertoIdInput.val(''); // Limpiar selección de diplomado
         preinscribirBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed'); // Deshabilitar botón
-        diplomadosAbiertosList.empty(); // Limpiar lista de diplomados
+        ofertasAbiertasList.empty(); // Limpiar lista de diplomados
     }
 
     // --- Búsqueda de Alumno ---
@@ -288,44 +302,43 @@ $(document).ready(function () {
         showAlumnoSearch(); // Vuelve a la sección de búsqueda de alumno
     });
 
-    // --- Cargar Diplomados Abiertos ---
-    function loadDiplomadosAbiertos() {
-        diplomadosAbiertosList.empty().append('<p class="text-gray-500">Cargando diplomados abiertos...</p>');
+    // --- Cargar Ofertas Abiertas ---
+    function loadOfertasAbiertas(typeId) {        
+        ofertasAbiertasList.empty().append('<p class="text-gray-500">Cargando ofertas abiertas...</p>');
         preinscribirBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
 
         $.ajax({
             url: BACKEND_API_URL, // Apunta a la URL de tu backend
             method: 'POST',
-            data: { action: 'get_diplomados_abiertos' },
+            data: { action: 'get_ofertas_abiertas', typeId: typeId }, // Enviar el tipo de oferta académica seleccionada
             dataType: 'json',
             success: function (response) {
-                diplomadosAbiertosList.empty();
+                ofertasAbiertasList.empty();
                 if (response.success && response.data.length > 0) {
-                    response.data.forEach(diplomado => {
+                    response.data.forEach(data => {
                         const item = `
-                            <div class="border rounded-lg p-4 mb-2 cursor-pointer hover:bg-blue-50 transition-colors duration-200" data-id="${diplomado.id}">
-                                <h4 class="font-semibold text-lg text-blue-700">${diplomado.numero} - ${diplomado.diplomado_nombre}</h4>
-                                <p class="text-gray-600 text-sm">Sede: ${diplomado.sede_nombre}</p>
-                                <p class="text-gray-600 text-sm">Fechas: ${diplomado.fecha_inicio} al ${diplomado.fecha_fin}</p>
-                                <p class="text-gray-500 text-xs">${diplomado.nombre_carta_truncated}</p>
+                            <div class="border rounded-lg p-4 mb-2 cursor-pointer hover:bg-blue-50 transition-colors duration-200" data-id="${data.id}">
+                                <h4 class="font-semibold text-lg text-blue-700">${data.numero} - ${data.diplomado_nombre}</h4>
+                                <p class="text-gray-600 text-sm">Sede: ${data.sede_nombre}</p>
+                                <p class="text-gray-600 text-sm">Fechas: ${data.fecha_inicio} al ${data.fecha_fin}</p>
                             </div>
                         `;
-                        diplomadosAbiertosList.append(item);
+                        ofertasAbiertasList.append(item);
                     });
                 } else {
-                    diplomadosAbiertosList.append('<p class="text-gray-500">No hay diplomados abiertos disponibles.</p>');
+                    ofertasAbiertasList.append('<p class="text-gray-500">No hay diplomados abiertos disponibles.</p>');
                 }
             },
             error: function (xhr, status, error) {
                 console.error('Error AJAX al cargar diplomados abiertos:', status, error, xhr.responseText);
-                diplomadosAbiertosList.empty().append('<p class="text-red-600">Error al cargar diplomados abiertos.</p>');
+                ofertasAbiertasList.empty().append('<p class="text-red-600">Error al cargar diplomados abiertos.</p>');
             }
         });
     }
 
     // --- Selección de Diplomado Abierto ---
-    diplomadosAbiertosList.on('click', 'div', function () {
-        diplomadosAbiertosList.find('div').removeClass('border-blue-500 bg-blue-100').addClass('border-gray-200');
+    ofertasAbiertasList.on('click', 'div', function () {
+        ofertasAbiertasList.find('div').removeClass('border-blue-500 bg-blue-100').addClass('border-gray-200');
         $(this).addClass('border-blue-500 bg-blue-100');
         selectedDiplomadoAbiertoIdInput.val($(this).data('id'));
         preinscribirBtn.prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
