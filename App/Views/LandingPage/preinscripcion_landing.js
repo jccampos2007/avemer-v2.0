@@ -163,20 +163,23 @@ $(document).ready(function () {
     const tipoOfertaAcademicaIdInput = $('#tipo_oferta_academica_id');
 
     let currentAlumnoId = null; // Almacena el ID del alumno seleccionado/creado
-
-    $('.tab-button').on('click', function () {
-        const tabId = $(this).data('tab-id');
-
-        // Actualizar el valor del input oculto
-        tipoOfertaAcademicaIdInput.val(tabId);
-
-        // Actualizar clases de las pestañas para el estilo activo
-        $('.tab-button').removeClass('bg-blue-600 text-white font-bold').addClass('bg-gray-200 text-gray-700');
-        $(this).addClass('bg-blue-600 text-white font-bold').removeClass('bg-gray-200 text-gray-700');
-
-        // Cargar las ofertas académicas para la pestaña seleccionada
-        loadOfertasAbiertas(tabId);
-    });
+    let params = new URLSearchParams(location.search);
+    var modo = params.get("modo");  
+    let tabId = '';
+    switch (modo) {
+        case 'talleres':
+            tabId = 1;
+            break;
+        case 'diplomados':
+            tabId = 2;
+            break;
+        case 'eventos':
+            tabId = 3;
+            break;
+        case 'maestrias':
+            tabId = 4;
+            break;
+    } 
 
     // --- Funciones de Visibilidad ---
     function showAlumnoSearch() {
@@ -203,6 +206,7 @@ $(document).ready(function () {
         selectedAlumnoIdInput.val(alumno.id);
         searchAlumnoForm.hide();
         createAlumnoForm.hide();
+        loadOfertasAbiertas(tabId);
         diplomadosAbiertosSection.show();
     }
 
@@ -318,9 +322,9 @@ $(document).ready(function () {
                     response.data.forEach(data => {
                         const item = `
                             <div class="border rounded-lg p-4 mb-2 cursor-pointer hover:bg-blue-50 transition-colors duration-200" data-id="${data.id}">
-                                <h4 class="font-semibold text-lg text-blue-700">${data.numero} - ${data.diplomado_nombre}</h4>
+                                <h4 class="font-semibold text-lg text-blue-700">${data.numero} - ${data.diplomado_nombre || data.curso_nombre}</h4>
                                 <p class="text-gray-600 text-sm">Sede: ${data.sede_nombre}</p>
-                                <p class="text-gray-600 text-sm">Fechas: ${data.fecha_inicio} al ${data.fecha_fin}</p>
+                                <p class="text-gray-600 text-sm">Fechas: ${data.fecha_inicio || data.fecha} ${data.fecha_fin ? 'al' : ''} ${data.fecha_fin || ''}</p>
                             </div>
                         `;
                         ofertasAbiertasList.append(item);

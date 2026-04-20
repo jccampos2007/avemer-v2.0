@@ -4,8 +4,6 @@
  * Vista principal de preinscripción.
  * El manejo de la URL de la API y variables de entorno se ha movido al backend o al script JS.
  */
-$data = [];
-$tipo_oferta_academica_id_val = $data['tipo_oferta_academica_id'] ?? '1'; 
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -108,19 +106,9 @@ $tipo_oferta_academica_id_val = $data['tipo_oferta_academica_id'] ?? '1';
         </div>
 
         <!-- Sección 2: Selección de Diplomado Abierto -->
-        <div id="diplomadosAbiertosSection" class="hidden p-6 border rounded-lg bg-gray-50"  data-tipo-oferta-academica-id="<?php echo $tipo_oferta_academica_id_val; ?>">
+        <div id="diplomadosAbiertosSection" class="hidden p-6 border rounded-lg bg-gray-50">
             
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Tipos:</label>
-                <div class="flex border-b border-gray-200">
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="1">Curso</button>
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="2">Diplomado</button>
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="3">Evento</button>
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="4">Maestría</button>
-                </div>
-                <input type="hidden" id="tipo_oferta_academica_id" name="tipo_oferta_academica_id" value="<?php echo $tipo_oferta_academica_id_val; ?>">
-            </div>
-            <h2 class="text-xl font-semibold text-gray-700 mb-4">Paso 2: Seleccionar Diplomado</h2>
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Paso 2: Seleccionar</h2>
             
             <input type="hidden" id="selectedAlumnoId" name="alumno_id">
             <input type="hidden" id="selectedDiplomadoAbiertoId" name="diplomado_abierto_id">

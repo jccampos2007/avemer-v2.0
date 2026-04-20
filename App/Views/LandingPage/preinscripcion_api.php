@@ -95,30 +95,26 @@ switch ($action) {
 
         switch ($typeId) {
             case 1:
+                $sql = "SELECT ca.id, ca.numero, ca.fecha, c.nombre AS curso_nombre, e.nombre AS estado_nombre, s.nombre AS sede_nombre 
+                    FROM curso_abierto ca
+                        INNER JOIN curso c ON ca.curso_id = c.id 
+                        INNER JOIN sede s ON ca.sede_id = s.id
+                        INNER JOIN estado e ON s.estado_id = e.id
+                    WHERE ca.estatus_id = '1' ORDER BY c.nombre";
                 break;
             case 2:
-        }
-            // Asumiendo una tabla 'diplomados_abiertos' con joins para nombres de diplomados y sedes
-            $sql = "SELECT
-                        da.id,
-                        da.numero,
-                        da.diplomado_id,
-                        d.nombre AS diplomado_nombre,
-                        da.sede_id,
-                        s.nombre AS sede_nombre,
-                        da.estatus_id,
-                        st.nombre AS estatus_nombre,
-                        da.fecha_inicio,
-                        da.fecha_fin
-                    FROM
-                        diplomado_abierto da
-                    LEFT JOIN
-                        diplomado d ON da.diplomado_id = d.id
-                    LEFT JOIN
-                        sede s ON da.sede_id = s.id
-                    LEFT JOIN
-                        estatus st ON da.estatus_id = st.id
+                $sql = "SELECT da.id, da.numero, da.diplomado_id, d.nombre AS diplomado_nombre, da.sede_id, s.nombre AS sede_nombre, da.estatus_id, st.nombre AS estatus_nombre, da.fecha_inicio, da.fecha_fin
+                    FROM diplomado_abierto da
+                        LEFT JOIN diplomado d ON da.diplomado_id = d.id
+                        LEFT JOIN sede s ON da.sede_id = s.id
+                        LEFT JOIN estatus st ON da.estatus_id = st.id
                     WHERE da.estatus_id = 1";
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
             
             $stmt = $pdo->query($sql);
             $data = $stmt->fetchAll();
