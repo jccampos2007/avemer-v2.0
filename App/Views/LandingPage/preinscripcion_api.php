@@ -95,7 +95,7 @@ switch ($action) {
 
         switch ($typeId) {
             case 1:
-                $sql = "SELECT ca.id, ca.numero, ca.fecha, c.nombre AS curso_nombre, e.nombre AS estado_nombre, s.nombre AS sede_nombre 
+                $sql = "SELECT ca.id, ca.numero, ca.fecha, c.nombre, e.nombre AS estado_nombre, s.nombre AS sede_nombre 
                     FROM curso_abierto ca
                         INNER JOIN curso c ON ca.curso_id = c.id 
                         INNER JOIN sede s ON ca.sede_id = s.id
@@ -103,7 +103,7 @@ switch ($action) {
                     WHERE ca.estatus_id = '1' ORDER BY c.nombre";
                 break;
             case 2:
-                $sql = "SELECT da.id, da.numero, da.diplomado_id, d.nombre AS diplomado_nombre, da.sede_id, s.nombre AS sede_nombre, da.estatus_id, st.nombre AS estatus_nombre, da.fecha_inicio, da.fecha_fin
+                $sql = "SELECT da.id, da.numero, da.diplomado_id, d.nombre, da.sede_id, s.nombre AS sede_nombre, da.estatus_id, st.nombre AS estatus_nombre, da.fecha_inicio, da.fecha_fin
                     FROM diplomado_abierto da
                         LEFT JOIN diplomado d ON da.diplomado_id = d.id
                         LEFT JOIN sede s ON da.sede_id = s.id
@@ -111,8 +111,20 @@ switch ($action) {
                     WHERE da.estatus_id = 1";
                 break;
             case 3:
+                $sql = "SELECT ea.id, ea.numero, e.nombre, sede.nombre AS sede_nombre, estado.nombre AS estado_nombre, ea.fecha_inicio AS fecha 
+                    FROM evento e 
+                        INNER JOIN evento_abierto ea ON e.id = ea.evento_id 
+                        INNER JOIN sede ON ea.sede_id = sede.id 
+                        INNER JOIN estado ON sede.estado_id = estado.id 
+                    WHERE ea.estatus_id = 1";
                 break;
             case 4:
+                $sql = "SELECT ma.id, ma.numero, m.nombre, sede.nombre AS sede_nombre, estado.nombre AS estado_nombre, ma.fecha 
+                    FROM maestria m 
+                        INNER JOIN maestria_abierto ma ON m.id = ma.maestria_id 
+                        INNER JOIN sede ON ma.sede_id = sede.id 
+                        INNER JOIN estado ON sede.estado_id = estado.id 
+                    WHERE ma.estatus_id = 1";
                 break;
         }
             

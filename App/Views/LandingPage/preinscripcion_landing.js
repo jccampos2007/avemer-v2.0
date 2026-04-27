@@ -322,7 +322,7 @@ $(document).ready(function () {
                     response.data.forEach(data => {
                         const item = `
                             <div class="border rounded-lg p-4 mb-2 cursor-pointer hover:bg-blue-50 transition-colors duration-200" data-id="${data.id}">
-                                <h4 class="font-semibold text-lg text-blue-700">${data.numero} - ${data.diplomado_nombre || data.curso_nombre}</h4>
+                                <h4 class="font-semibold text-lg text-blue-700">${data.numero} - ${data.nombre}</h4>
                                 <p class="text-gray-600 text-sm">Sede: ${data.sede_nombre}</p>
                                 <p class="text-gray-600 text-sm">Fechas: ${data.fecha_inicio || data.fecha} ${data.fecha_fin ? 'al' : ''} ${data.fecha_fin || ''}</p>
                             </div>
