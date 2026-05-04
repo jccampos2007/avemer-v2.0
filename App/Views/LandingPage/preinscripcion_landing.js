@@ -306,7 +306,7 @@ $(document).ready(function () {
     });
 
     // --- Cargar Ofertas Abiertas ---
-    function loadOfertasAbiertas(typeId) {        
+    function loadOfertasAbiertas(typeId) {   
         ofertasAbiertasList.empty().append('<p class="text-gray-500">Cargando ofertas abiertas...</p>');
         preinscribirBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
 
@@ -351,6 +351,7 @@ $(document).ready(function () {
     preinscribirBtn.on('click', function () {
         const alumnoId = selectedAlumnoIdInput.val();
         const ofertaAbiertaId = selectedOfertaAbiertaIdInput.val();
+        const typeId = tabId;
 
         if (!alumnoId || !ofertaAbiertaId) {
             showFlashMessage('error', 'Por favor, seleccione un alumno y un diplomado abierto.');
@@ -367,7 +368,8 @@ $(document).ready(function () {
                     data: {
                         action: 'process_preinscripcion', // Añadir la acción
                         alumno_id: alumnoId,
-                        oferta_abierta_id: ofertaAbiertaId
+                        oferta_abierta_id: ofertaAbiertaId,
+                        typeId: typeId
                     },
                     dataType: 'json',
                     success: function (response) {

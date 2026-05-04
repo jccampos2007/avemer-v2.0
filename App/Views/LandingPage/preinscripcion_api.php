@@ -91,7 +91,7 @@ switch ($action) {
 
     case 'get_ofertas_abiertas':
         try {
-
+        $sql = '';
         switch ($typeId) {
             case 1:
                 $sql = "SELECT ca.id, ca.numero, ca.fecha, c.nombre, e.nombre AS estado_nombre, s.nombre AS sede_nombre 
@@ -165,6 +165,7 @@ switch ($action) {
             }
 
             $check = $pdo->prepare("SELECT id FROM inscripcion_{$table} WHERE alumno_id = ? AND {$table}_abierto_id = ?");
+            // error_log($check->queryString);
             $check->execute([$alumno_id, $oferta_id]);
             if ($check->fetch()) {
                 echo json_encode(['success' => false, 'message' => 'El alumno ya se encuentra pre-inscrito en esta oferta.']);
