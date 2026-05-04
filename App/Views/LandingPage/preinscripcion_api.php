@@ -145,15 +145,31 @@ switch ($action) {
         }
 
         try {
-            
-            // Verificar si ya existe la preinscripción
-            $check = $pdo->prepare("SELECT id FROM preinscripciones WHERE alumno_id = ? AND oferta_abierta_id = ?");
+            $table = '';
+            switch ($typeId) {
+                case 1:
+                    $table = 'curso';
+                    break;
+                case 2:
+                    $table = 'diplomado';
+                    break;
+                case 3:
+                    $table = 'evento';
+                    break;
+                case 4:
+                    $table = 'maestria';
+                    break;
+                default:
+                    echo json_encode(['success' => false, 'message' => 'Tipo de oferta inválido.']);
+                    exit;
+            }
+
+            $check = $pdo->prepare("SELECT id FROM inscripcion_{$table} WHERE alumno_id = ? AND {$table}_abierto_id = ?");
             $check->execute([$alumno_id, $oferta_id]);
-            
             if ($check->fetch()) {
                 echo json_encode(['success' => false, 'message' => 'El alumno ya se encuentra pre-inscrito en esta oferta.']);
             } else {
-                $stmt = $pdo->prepare("INSERT INTO preinscripciones (alumno_id, oferta_abierta_id, fecha_registro) VALUES (?, ?, NOW())");
+                $stmt = $pdo->prepare("INSERT INTO inscripcion_{$table} (alumno_id, {$table}_abierto_id, estatus_inscripcion_id) VALUES (?, ?, 1)");
                 $stmt->execute([$alumno_id, $oferta_id]);
                 echo json_encode(['success' => true, 'message' => '¡Pre-inscripción realizada con éxito!']);
             }
