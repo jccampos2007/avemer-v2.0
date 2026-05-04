@@ -10,5 +10,7 @@
             "name": "Smart Data Solutions"
         }
     ],
-    "require": {}
+    "require": {
+        "phpmailer/phpmailer": "^7.0"
+    }
 }

@@ -3,7 +3,7 @@
 // --- CONFIGURACIÓN ---
 // ¡IMPORTANTE! DEBES CAMBIAR ESTA URL para que apunte a tu script PHP en el backend
 // que manejará las solicitudes AJAX (ej. 'https://tu-dominio.com/api/preinscripcion.php')
-const BACKEND_API_URL = 'http://localhost/your_app/api/preinscripcion_api.php'; // <--- ¡CAMBIA ESTO!
+const BACKEND_API_URL = '../LandingPage/preinscripcion_api.php'; // <--- ¡CAMBIA ESTO!
 
 // --- FUNCIONES AUXILIARES DE UI ---
 
@@ -156,12 +156,35 @@ $(document).ready(function () {
     const alumnoDetailsSection = $('#alumnoDetails');
     const createAlumnoForm = $('#createAlumnoForm');
     const diplomadosAbiertosSection = $('#diplomadosAbiertosSection');
-    const diplomadosAbiertosList = $('#diplomadosAbiertosList');
+    const ofertasAbiertasList = $('#ofertasAbiertasList');
     const preinscribirBtn = $('#preinscribirBtn');
     const selectedAlumnoIdInput = $('#selectedAlumnoId'); // Campo oculto para el ID del alumno
-    const selectedDiplomadoAbiertoIdInput = $('#selectedDiplomadoAbiertoId'); // Campo oculto para el ID del diplomado abierto
+    const selectedOfertaAbiertaIdInput = $('#selectedOfertaAbiertaId'); // Campo oculto para el ID de la oferta abierta
+    const tipoOfertaAcademicaIdInput = $('#tipo_oferta_academica_id');
 
     let currentAlumnoId = null; // Almacena el ID del alumno seleccionado/creado
+    let params = new URLSearchParams(location.search);
+    var modo = params.get("modo");  
+    let tabId = '';
+    switch (modo) {
+        case 'taller':
+            tabId = 1;
+            break;
+        case 'diplomado':
+            tabId = 2;
+            break;
+        case 'evento':
+            tabId = 3;
+            break;
+        case 'maestria':
+            tabId = 4;
+            break;
+        default:
+            alert("El modo seleccionado no es válido.");
+            return; 
+    } 
+    
+    $('#oferta').text("Pre-inscripción: " + modo);
 
     // --- Funciones de Visibilidad ---
     function showAlumnoSearch() {
@@ -173,9 +196,9 @@ $(document).ready(function () {
         $('#search_result_message').text('');
         currentAlumnoId = null;
         selectedAlumnoIdInput.val('');
-        selectedDiplomadoAbiertoIdInput.val(''); // Limpiar selección de diplomado
+        selectedOfertaAbiertaIdInput.val(''); // Limpiar selección de oferta abierta
         preinscribirBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed'); // Deshabilitar botón
-        diplomadosAbiertosList.empty(); // Limpiar lista de diplomados
+        ofertasAbiertasList.empty(); // Limpiar lista de ofertas abiertas
     }
 
     function showAlumnoDetails(alumno) {
@@ -188,7 +211,7 @@ $(document).ready(function () {
         selectedAlumnoIdInput.val(alumno.id);
         searchAlumnoForm.hide();
         createAlumnoForm.hide();
-        loadDiplomadosAbiertos(); // Cargar diplomados una vez que el alumno está listo
+        loadOfertasAbiertas(tabId);
         diplomadosAbiertosSection.show();
     }
 
@@ -202,7 +225,6 @@ $(document).ready(function () {
         $('#new_segundo_apellido').val('');
         $('#new_correo').val('');
         $('#new_tlf_habitacion').val('');
-        $('#new_tlf_trabajo').val('');
         $('#new_tlf_celular').val('');
 
         searchAlumnoForm.hide();
@@ -210,9 +232,9 @@ $(document).ready(function () {
         diplomadosAbiertosSection.hide();
         currentAlumnoId = null;
         selectedAlumnoIdInput.val('');
-        selectedDiplomadoAbiertoIdInput.val(''); // Limpiar selección de diplomado
+        selectedOfertaAbiertaIdInput.val(''); // Limpiar selección de oferta abierta
         preinscribirBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed'); // Deshabilitar botón
-        diplomadosAbiertosList.empty(); // Limpiar lista de diplomados
+        ofertasAbiertasList.empty(); // Limpiar lista de ofertas abiertas
     }
 
     // --- Búsqueda de Alumno ---
@@ -288,61 +310,61 @@ $(document).ready(function () {
         showAlumnoSearch(); // Vuelve a la sección de búsqueda de alumno
     });
 
-    // --- Cargar Diplomados Abiertos ---
-    function loadDiplomadosAbiertos() {
-        diplomadosAbiertosList.empty().append('<p class="text-gray-500">Cargando diplomados abiertos...</p>');
+    // --- Cargar Ofertas Abiertas ---
+    function loadOfertasAbiertas(typeId) {   
+        ofertasAbiertasList.empty().append('<p class="text-gray-500">Cargando ofertas abiertas...</p>');
         preinscribirBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
 
         $.ajax({
             url: BACKEND_API_URL, // Apunta a la URL de tu backend
             method: 'POST',
-            data: { action: 'get_diplomados_abiertos' },
+            data: { action: 'get_ofertas_abiertas', typeId: typeId }, // Enviar el tipo de oferta académica seleccionada
             dataType: 'json',
             success: function (response) {
-                diplomadosAbiertosList.empty();
+                ofertasAbiertasList.empty();
                 if (response.success && response.data.length > 0) {
-                    response.data.forEach(diplomado => {
+                    response.data.forEach(data => {
                         const item = `
-                            <div class="border rounded-lg p-4 mb-2 cursor-pointer hover:bg-blue-50 transition-colors duration-200" data-id="${diplomado.id}">
-                                <h4 class="font-semibold text-lg text-blue-700">${diplomado.numero} - ${diplomado.diplomado_nombre}</h4>
-                                <p class="text-gray-600 text-sm">Sede: ${diplomado.sede_nombre}</p>
-                                <p class="text-gray-600 text-sm">Fechas: ${diplomado.fecha_inicio} al ${diplomado.fecha_fin}</p>
-                                <p class="text-gray-500 text-xs">${diplomado.nombre_carta_truncated}</p>
+                            <div class="border rounded-lg p-4 mb-2 cursor-pointer hover:bg-blue-50 transition-colors duration-200" data-id="${data.id}">
+                                <h4 class="font-semibold text-lg text-blue-700">${data.numero} - ${data.nombre}</h4>
+                                <p class="text-gray-600 text-sm">Sede: ${data.sede_nombre}</p>
+                                <p class="text-gray-600 text-sm">Fechas: ${data.fecha_inicio || data.fecha} ${data.fecha_fin ? 'al' : ''} ${data.fecha_fin || ''}</p>
                             </div>
                         `;
-                        diplomadosAbiertosList.append(item);
+                        ofertasAbiertasList.append(item);
                     });
                 } else {
-                    diplomadosAbiertosList.append('<p class="text-gray-500">No hay diplomados abiertos disponibles.</p>');
+                    ofertasAbiertasList.append('<p class="text-gray-500">No hay diplomados abiertos disponibles.</p>');
                 }
             },
             error: function (xhr, status, error) {
                 console.error('Error AJAX al cargar diplomados abiertos:', status, error, xhr.responseText);
-                diplomadosAbiertosList.empty().append('<p class="text-red-600">Error al cargar diplomados abiertos.</p>');
+                ofertasAbiertasList.empty().append('<p class="text-red-600">Error al cargar diplomados abiertos.</p>');
             }
         });
     }
 
     // --- Selección de Diplomado Abierto ---
-    diplomadosAbiertosList.on('click', 'div', function () {
-        diplomadosAbiertosList.find('div').removeClass('border-blue-500 bg-blue-100').addClass('border-gray-200');
+    ofertasAbiertasList.on('click', 'div', function () {
+        ofertasAbiertasList.find('div').removeClass('border-blue-500 bg-blue-100').addClass('border-gray-200');
         $(this).addClass('border-blue-500 bg-blue-100');
-        selectedDiplomadoAbiertoIdInput.val($(this).data('id'));
+        selectedOfertaAbiertaIdInput.val($(this).data('id'));
         preinscribirBtn.prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
     });
 
     // --- Proceso de Pre-inscripción ---
     preinscribirBtn.on('click', function () {
         const alumnoId = selectedAlumnoIdInput.val();
-        const diplomadoAbiertoId = selectedDiplomadoAbiertoIdInput.val();
+        const ofertaAbiertaId = selectedOfertaAbiertaIdInput.val();
+        const typeId = tabId;
 
-        if (!alumnoId || !diplomadoAbiertoId) {
+        if (!alumnoId || !ofertaAbiertaId) {
             showFlashMessage('error', 'Por favor, seleccione un alumno y un diplomado abierto.');
             return;
         }
 
         showConfirmationDialog(
-            '¿Estás seguro de que quieres pre-inscribir a este alumno en el diplomado seleccionado?',
+            `¿Estás seguro de que quieres pre-inscribir a este alumno en ${modo} seleccionado?`,
             function () {
                 // Código a ejecutar si el usuario hace clic en "Confirmar"
                 $.ajax({
@@ -351,7 +373,8 @@ $(document).ready(function () {
                     data: {
                         action: 'process_preinscripcion', // Añadir la acción
                         alumno_id: alumnoId,
-                        diplomado_abierto_id: diplomadoAbiertoId
+                        oferta_abierta_id: ofertaAbiertaId,
+                        typeId: typeId
                     },
                     dataType: 'json',
                     success: function (response) {

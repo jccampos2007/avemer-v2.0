@@ -158,13 +158,13 @@ $isSeguridadActive = in_array(explode('/', $relativeUri)[0], ['users']);
                     </button>
                     <ul x-show="mensajesOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <li><a href="<?php echo BASE_URL; ?>listacorreo" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'listacorreo') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-list-ul mr-2"></i> Lista De Correo</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>mensajehtml" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'mensajehtml') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-envelope mr-2"></i> Mensaje</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>mensajes" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'mensajehtml') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-envelope mr-2"></i> Mensaje</a></li>
                         <li><a href="<?php echo BASE_URL; ?>listaenvio" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'listaenvio') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-envelope mr-2"></i> Lista De Envio</a></li>
                     </ul>
                 </li>
 
                 <!-- Reportes -->
-                <li x-data="{ reportesOpen: <?php echo $isReportesActive ? 'true' : 'false'; ?> }">
+                <!-- <li x-data="{ reportesOpen: <?php echo $isReportesActive ? 'true' : 'false'; ?> }">
                     <button @click="reportesOpen = !reportesOpen"
                         class="w-full flex justify-between items-center py-2 px-4 rounded hover:bg-gray-700 transition duration-200 <?php echo $isReportesActive ? 'text-blue-300 font-semibold' : ''; ?>">
                         <span><i class="fa fa-list-alt mr-2"></i> Reportes</span>
@@ -183,7 +183,7 @@ $isSeguridadActive = in_array(explode('/', $relativeUri)[0], ['users']);
                         <li><a href="<?php echo BASE_URL; ?>rpt_eventos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'rpt_eventos') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-exchange mr-2"></i> Eventos</a></li>
                         <li><a href="<?php echo BASE_URL; ?>rpt_talleres" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'rpt_talleres') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-exchange mr-2"></i> Talleres</a></li>
                     </ul>
-                </li>
+                </li> -->
 
                 <!-- Mantenimiento -->
                 <li x-data="{ mantenimientoOpen: <?php echo $isMantenimientoActive ? 'true' : 'false'; ?> }">

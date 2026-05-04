@@ -5,7 +5,6 @@ namespace App\Modules\Docentes;
 use App\Core\Controller;
 use App\Core\Auth;
 use App\Modules\Docentes\DocenteModel;
-use PDO; // Asegúrate de que PDO esté disponible
 
 class DocenteController extends Controller
 {

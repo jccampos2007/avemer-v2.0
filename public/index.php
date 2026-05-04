@@ -30,6 +30,9 @@ use App\Modules\MaestriaAbierto\MaestriaAbiertoController;
 use App\Modules\InscripcionMaestria\InscripcionMaestriaController;
 use App\Modules\Cuota\CuotaController;
 use App\Modules\Pagos\PagoController;
+use App\Modules\Mensajes\MensajesController;
+use App\Modules\Envios\EnviosController;
+use App\Modules\Correo\CorreoController;
 
 $router = new Router();
 
@@ -229,6 +232,34 @@ $router->add('GET', '/cuota/getStudentsForDebtGeneration', CuotaController::clas
 
 // Rutas para Pagos
 $router->add('GET', '/pago', PagoController::class . '@index');
+
+// Rutas para mensajes
+$router->add('GET', '/mensajes', MensajesController::class . '@index');
+$router->add('GET', '/mensajes/create', MensajesController::class . '@create');
+$router->add('POST', '/mensajes/create', MensajesController::class . '@create');
+$router->add('GET', '/mensajes/edit/{id}', MensajesController::class . '@edit');
+$router->add('POST', '/mensajes/edit/{id}', MensajesController::class . '@edit');
+$router->add('GET', '/mensajes/delete/{id}', MensajesController::class . '@delete');
+$router->add('POST', '/mensajes/data', MensajesController::class . '@getMensajesData');
+
+// Rutas para envios
+$router->add('GET', '/listaenvio', EnviosController::class . '@index'); 
+$router->add('GET', '/listaenvio/create', EnviosController::class . '@create');
+$router->add('POST', '/listaenvio/create', EnviosController::class . '@create');
+$router->add('GET', '/listaenvio/edit/{id}', EnviosController::class . '@edit');
+$router->add('POST', '/listaenvio/edit/{id}', EnviosController::class . '@edit');
+$router->add('GET', '/listaenvio/delete/{id}', EnviosController::class . '@delete');
+$router->add('POST', '/envios/data', EnviosController::class . '@getEnviosData');
+
+// Rutas para correo
+$router->add('GET', '/listacorreo', CorreoController::class . '@index');
+$router->add('GET', '/correo/create', CorreoController::class . '@create');
+$router->add('POST', '/correo/create', CorreoController::class . '@create');
+$router->add('POST', '/correo/sendChecked', CorreoController::class . '@sendChecked');
+$router->add('GET', '/correo/getCorreosByOfferData', CorreoController::class . '@getCorreosByOfferData');
+$router->add('GET', '/correo/getAcademicOffersByType', CorreoController::class . '@getAcademicOffersByType');
+$router->add('GET', '/correo/getStudentsForDebtGeneration', CorreoController::class . '@getStudentsForDebtGeneration');
+$router->add('GET', '/correo/getMensajes', CorreoController::class . '@getMensajes');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];
