@@ -30,8 +30,7 @@
 
     <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
         <header class="mb-8 border-b pb-4">
-            <h1 class="text-2xl font-bold text-gray-800">
-                Pre-inscripción
+            <h1 id="oferta" class="text-2xl font-bold text-gray-800">
             </h1>
             <p class="text-gray-600"><?php echo date('Y'); ?> - Sistema de Registro</p>
         </header>

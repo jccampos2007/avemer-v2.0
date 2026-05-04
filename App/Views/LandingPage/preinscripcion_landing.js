@@ -179,7 +179,12 @@ $(document).ready(function () {
         case 'maestria':
             tabId = 4;
             break;
+        default:
+            alert("El modo seleccionado no es válido.");
+            return; 
     } 
+    
+    $('#oferta').text("Pre-inscripción: " + modo);
 
     // --- Funciones de Visibilidad ---
     function showAlumnoSearch() {
