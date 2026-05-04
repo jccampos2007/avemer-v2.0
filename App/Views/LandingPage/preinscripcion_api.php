@@ -64,8 +64,8 @@ switch ($action) {
 
     case 'create_alumno':
         try {
-            $sql = "INSERT INTO alumno (ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO alumno (ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_celular) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 $_POST['new_ci_pasapote'],
@@ -75,16 +75,15 @@ switch ($action) {
                 $_POST['new_segundo_apellido'],
                 $_POST['new_correo'],
                 $_POST['new_tlf_habitacion'],
-                $_POST['new_tlf_trabajo'],
                 $_POST['new_tlf_celular']
             ]);
             
             $newId = $pdo->lastInsertId();
-            $stmt = $pdo->prepare("SELECT * FROM alumnos WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT * FROM alumno WHERE id = ?");
             $stmt->execute([$newId]);
             $alumno = $stmt->fetch();
 
-            echo json_encode(['success' => true, 'message' => 'Alumno registrado con éxito.', 'alumno' => $alumno]);
+            echo json_encode(['success' => true, 'message' => 'Alumno registrado con exito.', 'alumno' => $alumno]);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => 'Error al crear alumno: ' . $e->getMessage()]);
         }
@@ -138,23 +137,24 @@ switch ($action) {
 
     case 'process_preinscripcion':
         $alumno_id = $_POST['alumno_id'] ?? null;
-        $diplomado_id = $_POST['diplomado_abierto_id'] ?? null;
+        $oferta_id = $_POST['oferta_abierta_id'] ?? null;
 
-        if (!$alumno_id || !$diplomado_id) {
+        if (!$alumno_id || !$oferta_id) {
             echo json_encode(['success' => false, 'message' => 'Datos incompletos.']);
             break;
         }
 
         try {
+            
             // Verificar si ya existe la preinscripción
-            $check = $pdo->prepare("SELECT id FROM preinscripciones WHERE alumno_id = ? AND diplomado_abierto_id = ?");
-            $check->execute([$alumno_id, $diplomado_id]);
+            $check = $pdo->prepare("SELECT id FROM preinscripciones WHERE alumno_id = ? AND oferta_abierta_id = ?");
+            $check->execute([$alumno_id, $oferta_id]);
             
             if ($check->fetch()) {
-                echo json_encode(['success' => false, 'message' => 'El alumno ya se encuentra pre-inscrito en este diplomado.']);
+                echo json_encode(['success' => false, 'message' => 'El alumno ya se encuentra pre-inscrito en esta oferta.']);
             } else {
-                $stmt = $pdo->prepare("INSERT INTO preinscripciones (alumno_id, diplomado_abierto_id, fecha_registro) VALUES (?, ?, NOW())");
-                $stmt->execute([$alumno_id, $diplomado_id]);
+                $stmt = $pdo->prepare("INSERT INTO preinscripciones (alumno_id, oferta_abierta_id, fecha_registro) VALUES (?, ?, NOW())");
+                $stmt->execute([$alumno_id, $oferta_id]);
                 echo json_encode(['success' => true, 'message' => '¡Pre-inscripción realizada con éxito!']);
             }
         } catch (Exception $e) {

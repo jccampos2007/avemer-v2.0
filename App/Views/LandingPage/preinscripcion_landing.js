@@ -159,7 +159,7 @@ $(document).ready(function () {
     const ofertasAbiertasList = $('#ofertasAbiertasList');
     const preinscribirBtn = $('#preinscribirBtn');
     const selectedAlumnoIdInput = $('#selectedAlumnoId'); // Campo oculto para el ID del alumno
-    const selectedDiplomadoAbiertoIdInput = $('#selectedDiplomadoAbiertoId'); // Campo oculto para el ID del diplomado abierto
+    const selectedOfertaAbiertaIdInput = $('#selectedOfertaAbiertaId'); // Campo oculto para el ID de la oferta abierta
     const tipoOfertaAcademicaIdInput = $('#tipo_oferta_academica_id');
 
     let currentAlumnoId = null; // Almacena el ID del alumno seleccionado/creado
@@ -167,16 +167,16 @@ $(document).ready(function () {
     var modo = params.get("modo");  
     let tabId = '';
     switch (modo) {
-        case 'talleres':
+        case 'taller':
             tabId = 1;
             break;
-        case 'diplomados':
+        case 'diplomado':
             tabId = 2;
             break;
-        case 'eventos':
+        case 'evento':
             tabId = 3;
             break;
-        case 'maestrias':
+        case 'maestria':
             tabId = 4;
             break;
     } 
@@ -191,9 +191,9 @@ $(document).ready(function () {
         $('#search_result_message').text('');
         currentAlumnoId = null;
         selectedAlumnoIdInput.val('');
-        selectedDiplomadoAbiertoIdInput.val(''); // Limpiar selección de diplomado
+        selectedOfertaAbiertaIdInput.val(''); // Limpiar selección de oferta abierta
         preinscribirBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed'); // Deshabilitar botón
-        ofertasAbiertasList.empty(); // Limpiar lista de diplomados
+        ofertasAbiertasList.empty(); // Limpiar lista de ofertas abiertas
     }
 
     function showAlumnoDetails(alumno) {
@@ -220,7 +220,6 @@ $(document).ready(function () {
         $('#new_segundo_apellido').val('');
         $('#new_correo').val('');
         $('#new_tlf_habitacion').val('');
-        $('#new_tlf_trabajo').val('');
         $('#new_tlf_celular').val('');
 
         searchAlumnoForm.hide();
@@ -228,9 +227,9 @@ $(document).ready(function () {
         diplomadosAbiertosSection.hide();
         currentAlumnoId = null;
         selectedAlumnoIdInput.val('');
-        selectedDiplomadoAbiertoIdInput.val(''); // Limpiar selección de diplomado
+        selectedOfertaAbiertaIdInput.val(''); // Limpiar selección de oferta abierta
         preinscribirBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed'); // Deshabilitar botón
-        ofertasAbiertasList.empty(); // Limpiar lista de diplomados
+        ofertasAbiertasList.empty(); // Limpiar lista de ofertas abiertas
     }
 
     // --- Búsqueda de Alumno ---
@@ -344,22 +343,22 @@ $(document).ready(function () {
     ofertasAbiertasList.on('click', 'div', function () {
         ofertasAbiertasList.find('div').removeClass('border-blue-500 bg-blue-100').addClass('border-gray-200');
         $(this).addClass('border-blue-500 bg-blue-100');
-        selectedDiplomadoAbiertoIdInput.val($(this).data('id'));
+        selectedOfertaAbiertaIdInput.val($(this).data('id'));
         preinscribirBtn.prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
     });
 
     // --- Proceso de Pre-inscripción ---
     preinscribirBtn.on('click', function () {
         const alumnoId = selectedAlumnoIdInput.val();
-        const diplomadoAbiertoId = selectedDiplomadoAbiertoIdInput.val();
+        const ofertaAbiertaId = selectedOfertaAbiertaIdInput.val();
 
-        if (!alumnoId || !diplomadoAbiertoId) {
+        if (!alumnoId || !ofertaAbiertaId) {
             showFlashMessage('error', 'Por favor, seleccione un alumno y un diplomado abierto.');
             return;
         }
 
         showConfirmationDialog(
-            '¿Estás seguro de que quieres pre-inscribir a este alumno en el diplomado seleccionado?',
+            `¿Estás seguro de que quieres pre-inscribir a este alumno en ${modo} seleccionado?`,
             function () {
                 // Código a ejecutar si el usuario hace clic en "Confirmar"
                 $.ajax({
@@ -368,7 +367,7 @@ $(document).ready(function () {
                     data: {
                         action: 'process_preinscripcion', // Añadir la acción
                         alumno_id: alumnoId,
-                        diplomado_abierto_id: diplomadoAbiertoId
+                        oferta_abierta_id: ofertaAbiertaId
                     },
                     dataType: 'json',
                     success: function (response) {

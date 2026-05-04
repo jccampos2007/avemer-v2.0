@@ -111,7 +111,7 @@
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Paso 2: Seleccionar</h2>
             
             <input type="hidden" id="selectedAlumnoId" name="alumno_id">
-            <input type="hidden" id="selectedDiplomadoAbiertoId" name="diplomado_abierto_id">
+            <input type="hidden" id="selectedOfertaAbiertaId" name="oferta_abierta_id">
 
             <div id="ofertasAbiertasList" class="space-y-3 max-h-96 overflow-y-auto border p-3 rounded-md bg-white">
                 <!-- Se carga vía AJAX mediante preinscripcion_landing.js -->
