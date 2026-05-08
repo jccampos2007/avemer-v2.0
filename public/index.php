@@ -33,6 +33,7 @@ use App\Modules\Pagos\PagoController;
 use App\Modules\Mensajes\MensajesController;
 use App\Modules\Envios\EnviosController;
 use App\Modules\Correo\CorreoController;
+use App\Views\LandingPage\PreinscripcionLandingController;
 
 $router = new Router();
 
@@ -260,6 +261,8 @@ $router->add('GET', '/correo/getCorreosByOfferData', CorreoController::class . '
 $router->add('GET', '/correo/getAcademicOffersByType', CorreoController::class . '@getAcademicOffersByType');
 $router->add('GET', '/correo/getStudentsForDebtGeneration', CorreoController::class . '@getStudentsForDebtGeneration');
 $router->add('GET', '/correo/getMensajes', CorreoController::class . '@getMensajes');
+
+$router->add('GET', '/preinscripcionlanding', PreinscripcionLandingController::class . '@index');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];
