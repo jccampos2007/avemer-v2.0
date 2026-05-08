@@ -125,6 +125,6 @@
     </div>
 
     <!-- Carga el script con las funcionalidades AJAX -->
-    <script src="preinscripcion_landing.js"></script>
+    <script src="js/modules/preinscripcion_landing.js"></script>
 </body>
 </html>
