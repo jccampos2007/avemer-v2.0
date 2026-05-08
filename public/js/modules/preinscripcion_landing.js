@@ -3,7 +3,7 @@
 // --- CONFIGURACIÓN ---
 // ¡IMPORTANTE! DEBES CAMBIAR ESTA URL para que apunte a tu script PHP en el backend
 // que manejará las solicitudes AJAX (ej. 'https://tu-dominio.com/api/preinscripcion.php')
-const BACKEND_API_URL = './../App/Views/LandingPage/preinscripcion_api.php'; // <--- ¡CAMBIA ESTO!
+const BACKEND_API_URL = './preinscripcion_api.php'; // <--- ¡CAMBIA ESTO!
 
 // --- FUNCIONES AUXILIARES DE UI ---
 
