@@ -115,4 +115,4 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/Docentes/docentes.js'; ?>
+<?php $page_js = 'js/modules/docentes.js'; ?>

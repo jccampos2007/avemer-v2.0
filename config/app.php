@@ -18,7 +18,9 @@ define('TIPO_USUARIO_ADMIN', 1);
 define('TIPO_USUARIO_ALUMNO', 2);
 
 // Base URL de la aplicación (ajusta si es necesario para subdirectorios)
-define('BASE_URL', 'http://localhost/php_mvc_app/public/'); // Si está en un subdirectorio, ej: 'http://localhost/php_mvc_app/public/'
+define('BASE_URL', 'http://localhost/php_mvc_app/public/'); 
+
+// // Si está en un subdirectorio, ej: 'http://localhost/php_mvc_app/public/'
 
 // Rutas de directorios (relativas al archivo que las incluye)
 define('APP_ROOT', dirname(__DIR__)); // Directorio 'php_mvc_app'

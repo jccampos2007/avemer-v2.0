@@ -71,4 +71,4 @@ $inicial_val = htmlspecialchars($evento_data['inicial'] ?? '0.00'); // Valor por
 </div>
 
 <!-- JavaScript específico para este módulo (si es necesario) -->
-<?php $page_js = '../app/Modules/Evento/evento.js?1'; ?>
+<?php $page_js = 'js/modules/evento.js?1'; ?>

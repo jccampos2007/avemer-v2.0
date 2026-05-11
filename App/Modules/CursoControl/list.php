@@ -31,4 +31,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/CursoControl/curso_control.js'; ?>
+<?php $page_js = 'js/modules/curso_control.js'; ?>

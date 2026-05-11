@@ -34,4 +34,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/DiplomadoAbierto/diplomado_abierto.js'; ?>
+<?php $page_js = 'js/modules/diplomado_abierto.js'; ?>

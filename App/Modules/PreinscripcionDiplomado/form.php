@@ -97,4 +97,4 @@ $randomValue = rand(1000, 9999);
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/PreinscripcionDiplomado/preinscripcion_diplomado.js?' . $randomValue; ?>
+<?php $page_js = 'js/modules/preinscripcion_diplomado.js?' . $randomValue; ?>

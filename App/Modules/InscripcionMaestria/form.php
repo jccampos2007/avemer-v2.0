@@ -58,4 +58,4 @@ $estatus_inscripcion_id_val = $inscripcion_maestria_data['estatus_inscripcion_id
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/InscripcionMaestria/inscripcion_maestria.js'; ?>
+<?php $page_js = 'js/modules/inscripcion_maestria.js'; ?>

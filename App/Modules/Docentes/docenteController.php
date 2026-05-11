@@ -5,7 +5,6 @@ namespace App\Modules\Docentes;
 use App\Core\Controller;
 use App\Core\Auth;
 use App\Modules\Docentes\DocenteModel;
-use PDO; // Asegúrate de que PDO esté disponible
 
 class DocenteController extends Controller
 {
@@ -23,7 +22,7 @@ class DocenteController extends Controller
      */
     public function index(): void
     {
-        $this->view('docentes/list'); // Ruta de vista relativa al módulo
+        $this->view('Docentes/list'); // Ruta de vista relativa al módulo
     }
 
     /**
@@ -36,7 +35,7 @@ class DocenteController extends Controller
             $this->processForm();
         } else {
             $docente_data = []; // Datos vacíos para el formulario
-            $this->view('docentes/form', ['docente_data' => $docente_data]);
+            $this->view('Docentes/form', ['docente_data' => $docente_data]);
         }
     }
 
@@ -55,7 +54,7 @@ class DocenteController extends Controller
                 Auth::setFlashMessage('error', 'Registro de Docente no encontrado.');
                 $this->redirect('docentes');
             }
-            $this->view('docentes/form', ['docente_data' => $docente_data]);
+            $this->view('Docentes/form', ['docente_data' => $docente_data]);
         }
     }
 

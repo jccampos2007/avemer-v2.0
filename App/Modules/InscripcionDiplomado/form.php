@@ -59,4 +59,4 @@ $estatus_inscripcion_id_val = $inscripcion_diplomado_data['estatus_inscripcion_i
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/InscripcionDiplomado/inscripcion_diplomado.js?2'; ?>
+<?php $page_js = 'js/modules/inscripcion_diplomado.js?2'; ?>

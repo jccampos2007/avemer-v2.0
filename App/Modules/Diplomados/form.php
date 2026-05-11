@@ -45,4 +45,4 @@ $is_edit = isset($diplomado_data['id']) && !empty($diplomado_data['id']);
 </div>
 
 <!-- JavaScript específico para este módulo (si el formulario lo necesita, por ejemplo, para validación en cliente) -->
-<script src="diplomados.js"></script>
+<script src="js/modules/diplomados.js"></script>

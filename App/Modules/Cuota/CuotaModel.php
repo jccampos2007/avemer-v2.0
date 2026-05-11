@@ -94,9 +94,9 @@ class CuotaModel
      */
     public function getCursos(): array
     {
-        $sql = "SELECT ca.id, CONCAT(ca.numero , ' ', nombre) AS nombre 
+        $sql = "SELECT ca.id, CONCAT(ca.numero , ' ', c.nombre) AS nombre 
             FROM curso_abierto ca 
-            JOIN curso c ON ca.curso_id = c.id BY nombre ASC";
+            JOIN curso c ON ca.curso_id = c.id ORDER BY nombre ASC";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -107,9 +107,9 @@ class CuotaModel
      */
     public function getDiplomados(): array
     {
-        $sql = "SELECT da.id, CONCAT(da.numero , ' ', nombre) AS nombre 
+        $sql = "SELECT da.id, CONCAT(da.numero , ' ', d.nombre) AS nombre 
             FROM diplomado_abierto da 
-            JOIN diplomado d ON da.diplomado_id = d.id BY nombre ASC";
+            JOIN diplomado d ON da.diplomado_id = d.id ORDER BY nombre ASC";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -120,9 +120,9 @@ class CuotaModel
      */
     public function getEventos(): array
     {
-        $sql = "SELECT ea.id, CONCAT(ea.numero , ' ', nombre) AS nombre 
+        $sql = "SELECT ea.id, CONCAT(ea.numero , ' ', e.nombre) AS nombre 
             FROM evento_abierto ea 
-            JOIN evento e ON ea.evento_id = e.id BY nombre ASC";
+            JOIN evento e ON ea.evento_id = e.id ORDER BY nombre ASC";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -3,6 +3,8 @@
 
 require_once __DIR__ . '/../config/app.php';
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use App\Core\Router;
 use App\Api\ApiController;
 use App\Modules\Auth\AuthController;
@@ -14,18 +16,24 @@ use App\Modules\Coordinadores\CoordinadorController;
 use App\Modules\Cursos\CursoController;
 use App\Modules\CursoAbierto\CursoAbiertoController;
 use App\Modules\CursoControl\CursoControlController;
+use App\Modules\InscripcionCurso\InscripcionCursoController;
 use App\Modules\Evento\EventoController;
 use App\Modules\EventoAbierto\EventoAbiertoController;
+use App\Modules\InscripcionEvento\InscripcionEventoController;
 use App\Modules\Diplomado\DiplomadoController;
-use App\Modules\Capitulo\CapituloController;
 use App\Modules\DiplomadoAbierto\DiplomadoAbiertoController;
 use App\Modules\InscripcionDiplomado\InscripcionDiplomadoController;
 use App\Modules\PreinscripcionDiplomado\PreinscripcionDiplomadoController;
+use App\Modules\Capitulo\CapituloController;
 use App\Modules\Maestria\MaestriaController;
 use App\Modules\MaestriaAbierto\MaestriaAbiertoController;
 use App\Modules\InscripcionMaestria\InscripcionMaestriaController;
-use App\Modules\InscripcionCurso\InscripcionCursoController;
 use App\Modules\Cuota\CuotaController;
+use App\Modules\Pagos\PagoController;
+use App\Modules\Mensajes\MensajesController;
+use App\Modules\Envios\EnviosController;
+use App\Modules\Correo\CorreoController;
+use App\Views\LandingPage\PreinscripcionLandingController;
 
 $router = new Router();
 
@@ -131,6 +139,15 @@ $router->add('POST', '/evento_abierto/edit/{id}', EventoAbiertoController::class
 $router->add('GET', '/evento_abierto/delete/{id}', EventoAbiertoController::class . '@delete');
 $router->add('POST', '/evento_abierto/data', EventoAbiertoController::class . '@getEventoAbiertoData');
 
+// Rutas para InscripcionEvento
+$router->add('GET', '/inscripcion_evento', InscripcionEventoController::class . '@index');
+$router->add('GET', '/inscripcion_evento/create', InscripcionEventoController::class . '@create');
+$router->add('POST', '/inscripcion_evento/create', InscripcionEventoController::class . '@create');
+$router->add('GET', '/inscripcion_evento/edit/{id}', InscripcionEventoController::class . '@edit');
+$router->add('POST', '/inscripcion_evento/edit/{id}', InscripcionEventoController::class . '@edit');
+$router->add('GET', '/inscripcion_evento/delete/{id}', InscripcionEventoController::class . '@delete');
+$router->add('POST', '/inscripcion_evento/data', InscripcionEventoController::class . '@getInscripcionEventoData');
+
 // Rutas de Diplomados (CRUD)
 $router->add('GET', '/diplomado', DiplomadoController::class . '@index');
 $router->add('GET', '/diplomado/create', DiplomadoController::class . '@create');
@@ -181,7 +198,7 @@ $router->add('GET', '/maestria/create', MaestriaController::class . '@create');
 $router->add('POST', '/maestria/create', MaestriaController::class . '@create');
 $router->add('GET', '/maestria/edit/{id}', MaestriaController::class . '@edit');
 $router->add('POST', '/maestria/edit/{id}', MaestriaController::class . '@edit');
-$router->add('POST', '/maestria/delete/{id}', MaestriaController::class . '@delete');
+$router->add('GET', '/maestria/delete/{id}', MaestriaController::class . '@delete');
 $router->add('POST', '/maestria/data', MaestriaController::class . '@getMaestriaData');
 
 // Rutas para MaestriaAbierto
@@ -190,7 +207,7 @@ $router->add('GET', '/maestria_abierto/create', MaestriaAbiertoController::class
 $router->add('POST', '/maestria_abierto/create', MaestriaAbiertoController::class . '@create');
 $router->add('GET', '/maestria_abierto/edit/{id}', MaestriaAbiertoController::class . '@edit');
 $router->add('POST', '/maestria_abierto/edit/{id}', MaestriaAbiertoController::class . '@edit');
-$router->add('POST', '/maestria_abierto/delete/{id}', MaestriaAbiertoController::class . '@delete');
+$router->add('GET', '/maestria_abierto/delete/{id}', MaestriaAbiertoController::class . '@delete');
 $router->add('POST', '/maestria_abierto/data', MaestriaAbiertoController::class . '@getMaestriaAbiertoData');
 
 // Rutas para InscripcionMaestria
@@ -199,7 +216,7 @@ $router->add('GET', '/inscripcion_maestria/create', InscripcionMaestriaControlle
 $router->add('POST', '/inscripcion_maestria/create', InscripcionMaestriaController::class . '@create');
 $router->add('GET', '/inscripcion_maestria/edit/{id}', InscripcionMaestriaController::class . '@edit');
 $router->add('POST', '/inscripcion_maestria/edit/{id}', InscripcionMaestriaController::class . '@edit');
-$router->add('POST', '/inscripcion_maestria/delete/{id}', InscripcionMaestriaController::class . '@delete');
+$router->add('GET', '/inscripcion_maestria/delete/{id}', InscripcionMaestriaController::class . '@delete');
 $router->add('POST', '/inscripcion_maestria/data', InscripcionMaestriaController::class . '@getInscripcionMaestriaData');
 
 // ERutas para Cuota
@@ -208,11 +225,44 @@ $router->add('GET', '/cuota/create', CuotaController::class . '@create');
 $router->add('POST', '/cuota/create', CuotaController::class . '@create');
 $router->add('GET', '/cuota/edit/{id}', CuotaController::class . '@edit');
 $router->add('POST', '/cuota/edit/{id}', CuotaController::class . '@edit');
-$router->add('POST', '/cuota/delete/{id}', CuotaController::class . '@delete');
+$router->add('GET', '/cuota/delete/{id}', CuotaController::class . '@delete');
 $router->add('POST', '/cuota/generateDebt', CuotaController::class . '@generateDebt');
 $router->add('GET', '/cuota/getCuotasByOfferData', CuotaController::class . '@getCuotasByOfferData');
 $router->add('GET', '/cuota/getAcademicOffersByType', CuotaController::class . '@getAcademicOffersByType');
 $router->add('GET', '/cuota/getStudentsForDebtGeneration', CuotaController::class . '@getStudentsForDebtGeneration');
+
+// Rutas para Pagos
+$router->add('GET', '/pago', PagoController::class . '@index');
+
+// Rutas para mensajes
+$router->add('GET', '/mensajes', MensajesController::class . '@index');
+$router->add('GET', '/mensajes/create', MensajesController::class . '@create');
+$router->add('POST', '/mensajes/create', MensajesController::class . '@create');
+$router->add('GET', '/mensajes/edit/{id}', MensajesController::class . '@edit');
+$router->add('POST', '/mensajes/edit/{id}', MensajesController::class . '@edit');
+$router->add('GET', '/mensajes/delete/{id}', MensajesController::class . '@delete');
+$router->add('POST', '/mensajes/data', MensajesController::class . '@getMensajesData');
+
+// Rutas para envios
+$router->add('GET', '/listaenvio', EnviosController::class . '@index'); 
+$router->add('GET', '/listaenvio/create', EnviosController::class . '@create');
+$router->add('POST', '/listaenvio/create', EnviosController::class . '@create');
+$router->add('GET', '/listaenvio/edit/{id}', EnviosController::class . '@edit');
+$router->add('POST', '/listaenvio/edit/{id}', EnviosController::class . '@edit');
+$router->add('GET', '/listaenvio/delete/{id}', EnviosController::class . '@delete');
+$router->add('POST', '/envios/data', EnviosController::class . '@getEnviosData');
+
+// Rutas para correo
+$router->add('GET', '/listacorreo', CorreoController::class . '@index');
+$router->add('GET', '/correo/create', CorreoController::class . '@create');
+$router->add('POST', '/correo/create', CorreoController::class . '@create');
+$router->add('POST', '/correo/sendChecked', CorreoController::class . '@sendChecked');
+$router->add('GET', '/correo/getCorreosByOfferData', CorreoController::class . '@getCorreosByOfferData');
+$router->add('GET', '/correo/getAcademicOffersByType', CorreoController::class . '@getAcademicOffersByType');
+$router->add('GET', '/correo/getStudentsForDebtGeneration', CorreoController::class . '@getStudentsForDebtGeneration');
+$router->add('GET', '/correo/getMensajes', CorreoController::class . '@getMensajes');
+
+$router->add('GET', '/preinscripcionlanding', PreinscripcionLandingController::class . '@index');
 
 // Obtener la URI actual
 $request_uri = $_SERVER['REQUEST_URI'];

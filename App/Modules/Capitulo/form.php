@@ -70,4 +70,4 @@ $orden_val = htmlspecialchars($capitulo_data['orden'] ?? '');
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/Capitulo/capitulo.js'; ?>
+<?php $page_js = 'js/modules/capitulo.js'; ?>

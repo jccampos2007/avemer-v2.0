@@ -54,4 +54,16 @@ class Controller
     {
         return htmlspecialchars(strip_tags(trim($data)));
     }
+
+    protected function renderLanding(string $viewPath): void
+    {
+        // Construimos la ruta hacia App/Views/
+        $viewFile = '../App/Views/' . $viewPath . '.php';
+
+        if (file_exists($viewFile)) {
+            require_once $viewFile;
+        } else {
+            die("Error: La vista de la landing no existe en: " . $viewFile);
+        }
+    }
 }

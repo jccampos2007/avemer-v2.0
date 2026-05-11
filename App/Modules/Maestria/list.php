@@ -33,4 +33,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = '../app/Modules/Maestria/maestria.js?4'; ?>
+<?php $page_js = 'js/modules/maestria.js?4'; ?>

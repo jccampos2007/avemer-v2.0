@@ -39,6 +39,7 @@ class ApiController
             'estatus_inscripcion',
             'duracion',
             'evento',
+            'evento_abierto',
             'diplomado',
             'diplomado_abierto',
             'maestria',

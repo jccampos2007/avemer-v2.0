@@ -159,4 +159,4 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
 </div>
 
 <!-- JavaScript específico para este módulo (si el formulario lo necesita, por ejemplo, para validación en cliente) -->
-<?php $page_js = '../app/Modules/Alumnos/alumnos.js'; ?>
+<?php $page_js = 'js/modules/alumnos.js'; ?>
