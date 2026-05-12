@@ -151,13 +151,16 @@ class AlumnoModel
     }
 
     /**
-     * Obtiene un alumno por su CI/Pasaporte.
+     * Obtiene un alumno por su CI/Pasaporte, limpiando puntos y espacios.
      * @param string $ciPasaporte
      * @return array|false
      */
     public function findByCiPasaporte(string $ciPasaporte)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE ci_pasapote = :ci_pasapote";
+        $ciPasaporte = trim($ciPasaporte);
+        $ciPasaporte = str_replace('.', '', $ciPasaporte);
+
+        $sql = "SELECT * FROM {$this->table} WHERE REPLACE(ci_pasapote, '.', '') = :ci_pasapote";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':ci_pasapote', $ciPasaporte, PDO::PARAM_STR);
         $stmt->execute();

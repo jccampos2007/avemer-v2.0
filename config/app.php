@@ -5,6 +5,9 @@
 // Iniciar sesión (necesario para todas las páginas que la usen)
 session_start();
 
+// Desactivar PCRE JIT para evitar errores de asignación de memoria en entornos restringidos
+ini_set('pcre.jit', 0);
+
 // Load .env
 $env = parse_ini_file(__DIR__ . '/../.env');
 

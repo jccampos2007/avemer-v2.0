@@ -22,8 +22,8 @@ $isSeguridadActive = in_array(explode('/', $relativeUri)[0], ['users']);
 ?>
 <aside class="w-64 bg-gray-800 text-white h-auto min-h-screen max-h-screen overflow-y-auto p-4 flex flex-col justify-between rounded-r-lg shadow-lg">
     <div>
-        <h1 class="mb-8 bg-sky-50 rounded-md">
-            <img src="<?php echo BASE_URL; ?>../assets/images/logo.png" alt="">
+        <h1 class="mb-8 bg-sky-50 rounded-md p-2">
+            <img src="<?php echo BASE_URL; ?>image/logo-grupo-avemer.webp" alt="Avemer Logo" class="w-full h-auto">
         </h1>
         <nav>
             <ul class="text-white space-y-2">
@@ -48,7 +48,7 @@ $isSeguridadActive = in_array(explode('/', $relativeUri)[0], ['users']);
                     <ul x-show="registroOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <li><a href="<?php echo BASE_URL; ?>alumnos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'alumnos') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-regular fa-user mr-2"></i> Alumnos</a></li>
                         <li><a href="<?php echo BASE_URL; ?>docentes" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'docentes') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-user mr-2"></i> Instructores</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>coordinadores" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'coordinadores') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-user-tie mr-2"></i> Coordinadores</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>coordinadores" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'coordinadores') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-person-digging mr-2"></i> Coordinadores</a></li>
                     </ul>
                 </li>
 
@@ -199,8 +199,8 @@ $isSeguridadActive = in_array(explode('/', $relativeUri)[0], ['users']);
                     <ul x-show="mantenimientoOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <li><a href="<?php echo BASE_URL; ?>sede" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'sede') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-building mr-2"></i> Sedes</a></li>
                         <li><a href="<?php echo BASE_URL; ?>banco" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'banco') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-institution mr-2"></i> Bancos</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>duracion" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'duracion') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-clock-o mr-2"></i> Duración</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>profesion" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'profesion') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-money mr-2"></i> Profesión u Oficio</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>duracion" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'duracion') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-clock mr-2"></i> Duración</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>profesion_oficio" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($relativeUri == 'profesion_oficio') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-person-digging mr-2"></i> Profesión u Oficio</a></li>
                     </ul>
                 </li>
 

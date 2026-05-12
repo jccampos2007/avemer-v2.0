@@ -33,6 +33,10 @@ use App\Modules\Pagos\PagoController;
 use App\Modules\Mensajes\MensajesController;
 use App\Modules\Envios\EnviosController;
 use App\Modules\Correo\CorreoController;
+use App\Modules\Sede\SedeController;
+use App\Modules\Banco\BancoController;
+use App\Modules\Duracion\DuracionController;
+use App\Modules\ProfesionOficio\ProfesionOficioController;
 use App\Views\LandingPage\PreinscripcionLandingController;
 
 $router = new Router();
@@ -231,7 +235,41 @@ $router->add('GET', '/cuota/getCuotasByOfferData', CuotaController::class . '@ge
 $router->add('GET', '/cuota/getAcademicOffersByType', CuotaController::class . '@getAcademicOffersByType');
 $router->add('GET', '/cuota/getStudentsForDebtGeneration', CuotaController::class . '@getStudentsForDebtGeneration');
 
-// Rutas para Pagos
+// Rutas para Sede
+$router->add('GET', '/sede', SedeController::class . '@index');
+$router->add('GET', '/sede/create', SedeController::class . '@create');
+$router->add('POST', '/sede/store', SedeController::class . '@store');
+$router->add('GET', '/sede/edit/{id}', SedeController::class . '@edit');
+$router->add('POST', '/sede/update/{id}', SedeController::class . '@update');
+$router->add('GET', '/sede/delete/{id}', SedeController::class . '@delete');
+$router->add('POST', '/sede/getSedesData', SedeController::class . '@getSedesData');
+
+// Rutas para Banco
+$router->add('GET', '/banco', BancoController::class . '@index');
+$router->add('GET', '/banco/create', BancoController::class . '@create');
+$router->add('POST', '/banco/store', BancoController::class . '@store');
+$router->add('GET', '/banco/edit/{id}', BancoController::class . '@edit');
+$router->add('POST', '/banco/update/{id}', BancoController::class . '@update');
+$router->add('GET', '/banco/delete/{id}', BancoController::class . '@delete');
+$router->add('POST', '/banco/getBancosData', BancoController::class . '@getBancosData');
+
+// Rutas para Duracion
+$router->add('GET', '/duracion', DuracionController::class . '@index');
+$router->add('GET', '/duracion/create', DuracionController::class . '@create');
+$router->add('POST', '/duracion/store', DuracionController::class . '@store');
+$router->add('GET', '/duracion/edit/{id}', DuracionController::class . '@edit');
+$router->add('POST', '/duracion/update/{id}', DuracionController::class . '@update');
+$router->add('GET', '/duracion/delete/{id}', DuracionController::class . '@delete');
+$router->add('POST', '/duracion/getDuracionesData', DuracionController::class . '@getDuracionesData');
+
+// Rutas para ProfesionOficio
+$router->add('GET', '/profesion_oficio', ProfesionOficioController::class . '@index');
+$router->add('GET', '/profesion_oficio/create', ProfesionOficioController::class . '@create');
+$router->add('POST', '/profesion_oficio/store', ProfesionOficioController::class . '@store');
+$router->add('GET', '/profesion_oficio/edit/{id}', ProfesionOficioController::class . '@edit');
+$router->add('POST', '/profesion_oficio/update/{id}', ProfesionOficioController::class . '@update');
+$router->add('GET', '/profesion_oficio/delete/{id}', ProfesionOficioController::class . '@delete');
+$router->add('POST', '/profesion_oficio/getProfesionesData', ProfesionOficioController::class . '@getProfesionesData');
 $router->add('GET', '/pago', PagoController::class . '@index');
 
 // Rutas para mensajes
