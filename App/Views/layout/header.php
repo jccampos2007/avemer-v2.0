@@ -8,7 +8,7 @@ $randomValue = rand(1000, 9999);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión MVC</title>
+    <title>Sistema de Gestión Academica</title>
     <!-- Tailwind CSS CDN -->
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/output.css">
     <!-- jQuery UI CSS -->
