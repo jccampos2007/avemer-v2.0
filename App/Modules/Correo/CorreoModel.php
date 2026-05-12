@@ -200,18 +200,15 @@ class CorreoModel
      * @param array $data Datos de la transacción (alumno_id, correo_id, monto, tipo, estatus, id_transaccion_origen).
      * @return bool True si se insertó correctamente, false en caso contrario.
      */
-    public function insertTransaction(array $data): bool
+    public function insertLog(array $data): bool
     {
-        $sql = "INSERT INTO transaccion (alumno_id, correo_id, tipo, monto, fecha, estatus, id_transaccion_origen)
-                VALUES (:alumno_id, :correo_id, :tipo, :monto, NOW(), :estatus, :id_transaccion_origen)";
+        $sql = "INSERT INTO buzon (correo, id_mensaje, respose)
+                VALUES (:correo, :id_mensaje, :respose)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            ':alumno_id' => $data['alumno_id'],
-            ':correo_id' => $data['correo_id'],
-            ':tipo' => $data['tipo'] ?? 1, // Por defecto 1: Debito
-            ':monto' => $data['monto'],
-            ':estatus' => $data['estatus'] ?? 1, // Por defecto 1: Deuda generada
-            ':id_transaccion_origen' => $data['id_transaccion_origen'] ?? null
+            ':correo' => $data['correo'],
+            ':id_mensaje' => $data['id_mensaje'],
+            ':respose' => $data['respose']
         ]);
     }
 

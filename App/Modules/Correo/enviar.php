@@ -33,9 +33,18 @@ function correo($titulo, $msj, $correo) {
         $mail->Body    =  $msj;
         $mail->AltBody =  $msj;
 
-        $mail->send();
-        return true;
+        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            return "Correo con formato inválido";
+        }
+
+        // Intentar enviar
+        if (!$mail->send()) {
+            $result = "Error: " . $mail->ErrorInfo;
+        } else {
+            $result = "Enviado exitosamente";
+        }
+        return $result;
     } catch (Exception $e) {
-         return false;
+        return  $result = "no enviado"  . $e;
     }
 }

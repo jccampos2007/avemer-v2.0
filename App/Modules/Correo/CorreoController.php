@@ -275,7 +275,14 @@ class CorreoController extends Controller
         require_once __DIR__ . '/enviar.php';
 
         foreach ($correos as $correo) {
-            correo($mensaje['titulo'], $mensaje['mensaje'], $correo);
+            $result = correo($mensaje['titulo'], $mensaje['mensaje'], $correo);
+            
+            $data = [
+                'correo'    => $correo,
+                'id_mensaje' => $mensajeId,
+                'respose'    => $result
+            ];
+            $this->correoModel-> insertLog($data);
         }
 
         header('Content-Type: application/json');
