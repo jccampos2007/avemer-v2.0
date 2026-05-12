@@ -50,8 +50,10 @@ $typeId = $_POST['typeId'] ?? '1'; // Recibir el tipo de oferta académica (opci
 
 switch ($action) {
     case 'search_alumno':
-        $ci = $_POST['ci_pasapote'] ?? '';
-        $stmt = $pdo->prepare("SELECT * FROM alumno WHERE ci_pasapote = ? LIMIT 1");
+        $ci = trim($_POST['ci_pasapote'] ?? '');
+        $ci = str_replace('.', '', $ci);
+
+        $stmt = $pdo->prepare("SELECT * FROM alumno WHERE REPLACE(ci_pasapote, '.', '') = ? LIMIT 1");
         $stmt->execute([$ci]);
         $alumno = $stmt->fetch();
 
