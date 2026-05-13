@@ -1,5 +1,10 @@
 <?php
 // php_mvc_app/app/Modules/CursoAbierto/Views/list.php
+use App\Core\Auth;
+
+$canCreate = Auth::hasPermission('cursos_abiertos', 'crear');
+$canEdit = Auth::hasPermission('cursos_abiertos', 'modificar');
+$canDelete = Auth::hasPermission('cursos_abiertos', 'eliminar');
 ?>
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
@@ -8,9 +13,11 @@
 <h2 class="text-3xl font-semibold text-gray-800 mb-6">Gestión de Talleres Abiertos</h2>
 
 <div class="flex justify-end mb-4">
+    <?php if ($canCreate): ?>
     <a href="<?php echo BASE_URL; ?>cursos_abiertos/create" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Crear Nuevo Taller Abierto
     </a>
+    <?php endif; ?>
 </div>
 
 <div class="bg-white shadow-md rounded-lg overflow-hidden p-4">
@@ -33,6 +40,14 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    const CURSO_ABIERTO_PERMISSIONS = {
+        crear: <?php echo $canCreate ? 'true' : 'false'; ?>,
+        modificar: <?php echo $canEdit ? 'true' : 'false'; ?>,
+        eliminar: <?php echo $canDelete ? 'true' : 'false'; ?>
+    };
+</script>
 
 <!-- JavaScript específico para este módulo -->
 <?php $page_js = 'js/modules/curso_abierto.js'; ?>

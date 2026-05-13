@@ -1,6 +1,10 @@
 <?php
 // php_mvc_app/app/Modules/Coordinadores/list.php
-// Se espera la variable $coordinadores (ya no se usa directamente para renderizar la tabla)
+use App\Core\Auth;
+
+$canCreate = Auth::hasPermission('coordinadores', 'crear');
+$canEdit = Auth::hasPermission('coordinadores', 'modificar');
+$canDelete = Auth::hasPermission('coordinadores', 'eliminar');
 ?>
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
@@ -9,9 +13,11 @@
 <h2 class="text-3xl font-semibold text-gray-800 mb-6">Gestión de Coordinadores</h2>
 
 <div class="flex justify-end mb-4">
+    <?php if ($canCreate): ?>
     <a href="<?php echo BASE_URL; ?>coordinadores/create" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Crear Nuevo Coordinador
     </a>
+    <?php endif; ?>
 </div>
 
 <div class="bg-white shadow-md rounded-lg overflow-hidden p-4">
@@ -32,6 +38,14 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    const COORDINADOR_PERMISSIONS = {
+        crear: <?php echo $canCreate ? 'true' : 'false'; ?>,
+        modificar: <?php echo $canEdit ? 'true' : 'false'; ?>,
+        eliminar: <?php echo $canDelete ? 'true' : 'false'; ?>
+    };
+</script>
 
 <!-- JavaScript específico para este módulo -->
 <?php $page_js = 'js/modules/coordinadores.js'; ?>

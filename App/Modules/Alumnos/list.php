@@ -1,6 +1,10 @@
 <?php
 // php_mvc_app/app/Modules/Alumnos/Views/list.php
-// Se espera la variable $alumnos (ya no se usa directamente para renderizar la tabla)
+use App\Core\Auth;
+
+$canCreate = Auth::hasPermission('alumnos', 'crear');
+$canEdit = Auth::hasPermission('alumnos', 'modificar');
+$canDelete = Auth::hasPermission('alumnos', 'eliminar');
 ?>
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
@@ -9,9 +13,11 @@
 <h2 class="text-3xl font-semibold text-gray-800 mb-6">Gestión de Alumnos</h2>
 
 <div class="flex justify-end mb-4">
+    <?php if ($canCreate): ?>
     <a href="<?php echo BASE_URL; ?>alumnos/create" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Crear Nuevo Alumno
     </a>
+    <?php endif; ?>
 </div>
 
 <div class="bg-white shadow-md rounded-lg overflow-hidden p-4">
@@ -32,6 +38,14 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    const ALUMNO_PERMISSIONS = {
+        crear: <?php echo $canCreate ? 'true' : 'false'; ?>,
+        modificar: <?php echo $canEdit ? 'true' : 'false'; ?>,
+        eliminar: <?php echo $canDelete ? 'true' : 'false'; ?>
+    };
+</script>
 
 <!-- JavaScript específico para este módulo -->
 <?php $page_js = 'js/modules/alumnos.js'; ?>

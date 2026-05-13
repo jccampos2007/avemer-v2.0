@@ -36,6 +36,7 @@ use App\Modules\Sede\SedeController;
 use App\Modules\Banco\BancoController;
 use App\Modules\Duracion\DuracionController;
 use App\Modules\ProfesionOficio\ProfesionOficioController;
+use App\Modules\Grupo\GrupoController;
 use App\Views\LandingPage\PreinscripcionLandingController;
 
 $router = new Router();
@@ -260,6 +261,18 @@ $router->add('GET', '/profesion_oficio/edit/{id}', ProfesionOficioController::cl
 $router->add('POST', '/profesion_oficio/update/{id}', ProfesionOficioController::class . '@update');
 $router->add('GET', '/profesion_oficio/delete/{id}', ProfesionOficioController::class . '@delete');
 $router->add('POST', '/profesion_oficio/getProfesionesData', ProfesionOficioController::class . '@getProfesionesData');
+
+// Rutas para Grupo y Permisos
+$router->add('GET', '/grupo', GrupoController::class . '@index');
+$router->add('GET', '/grupo/create', GrupoController::class . '@create');
+$router->add('POST', '/grupo/store', GrupoController::class . '@store');
+$router->add('GET', '/grupo/edit/{id}', GrupoController::class . '@edit');
+$router->add('POST', '/grupo/update/{id}', GrupoController::class . '@update');
+$router->add('GET', '/grupo/delete/{id}', GrupoController::class . '@delete');
+$router->add('POST', '/grupo/data', GrupoController::class . '@getGroupsData');
+$router->add('GET', '/grupo/permissions/{id}', GrupoController::class . '@getPermissions');
+$router->add('POST', '/grupo/save_permissions', GrupoController::class . '@savePermissions');
+
 $router->add('GET', '/pago', PagoController::class . '@index');
 
 // Rutas para mensajes

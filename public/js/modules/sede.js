@@ -32,10 +32,24 @@ $(document).ready(function () {
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row) {
-                        return `
-                        <a href="${BASE_URL_JS}sede/edit/${row[0]}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="${BASE_URL_JS}sede/delete/${row[0]}" class="btn btn-default btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
-                    `;
+                        let actions = '<div class="flex gap-2 justify-center">';
+                        
+                        if (typeof SEDE_PERMISSIONS !== 'undefined') {
+                            if (SEDE_PERMISSIONS.modificar) {
+                                actions += `<a href="${BASE_URL_JS}sede/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>`;
+                            }
+                            if (SEDE_PERMISSIONS.eliminar) {
+                                actions += `<a href="${BASE_URL_JS}sede/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
+                            }
+                        } else {
+                            actions += `
+                                <a href="${BASE_URL_JS}sede/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                                <a href="${BASE_URL_JS}sede/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
+                            `;
+                        }
+                        
+                        actions += '</div>';
+                        return actions;
                     }
                 }
             ],
