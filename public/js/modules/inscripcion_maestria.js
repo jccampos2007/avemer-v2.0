@@ -37,8 +37,8 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                            <a href="inscripcion_maestria/edit/${id}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
-                            <a href="inscripcion_maestria/delete/${id}" class="btn btn-default"><i class="fas fa-trash-alt fs-5"></i></a>
+                            <a href="inscripcion_maestria/edit/${id}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
+                            <a href="inscripcion_maestria/delete/${id}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
                         `;
                     }
                 }
@@ -54,6 +54,58 @@ $(document).ready(function () {
                 "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json" // Idioma español
             },
             "autoWidth": false
+        });
+
+        // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
+        inscripcionMaestriaTable.on("click", ".btn-delete", function (e) {
+            e.preventDefault();
+            const urlEliminar = $(this).attr("href");
+
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: urlEliminar,
+                        type: "GET",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        success: function (response) {
+                            let res = typeof response === "string" ? JSON.parse(response) : response;
+                            if (res.success) {
+                                Swal.fire(
+                                    "¡Eliminado!",
+                                    res.message,
+                                    "success"
+                                );
+                                inscripcionMaestriaTable.DataTable().ajax.reload(null, false);
+                            } else {
+                                Swal.fire(
+                                    "Error",
+                                    res.message,
+                                    "error"
+                                );
+                            }
+                        },
+                        error: function (xhr) {
+                            Swal.fire(
+                                "Error",
+                                "Ocurrió un error al procesar la solicitud.",
+                                "error"
+                            );
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+            });
         });
     }
 
@@ -114,7 +166,6 @@ $(document).ready(function () {
                 console.log("alumno seleccionado:", ui.item.label, "ID:", ui.item.id);
             },
             change: function (event, ui) {
-                console.log('ln: 101 >>> ' + event)
                 if (ui.item === null) { // No se seleccionó ningún item de la lista
                     $("#alumno_id").val(""); // Limpiar el ID oculto
                     console.log("Campo de alumno limpiado o valor no válido.");

@@ -129,15 +129,32 @@ class SedeController extends Controller
 
     public function delete(int $id): void
     {
+        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
         try {
             if ($this->sedeModel->delete($id)) {
+                if ($isAjax) {
+                    echo json_encode(['success' => true, 'message' => 'Sede eliminada correctamente.']);
+                    exit;
+                }
                 Auth::setFlashMessage('success', 'Sede eliminada correctamente.');
             } else {
+                if ($isAjax) {
+                    echo json_encode(['success' => false, 'message' => 'Error al eliminar la sede.']);
+                    exit;
+                }
                 Auth::setFlashMessage('error', 'Error al eliminar la sede.');
             }
         } catch (\PDOException $e) {
+            if ($isAjax) {
+                echo json_encode(['success' => false, 'message' => 'Error de base de datos: ' . $e->getMessage()]);
+                exit;
+            }
             Auth::setFlashMessage('error', 'Error de base de datos: ' . $e->getMessage());
         }
-        $this->redirect('sede');
+
+        if (!$isAjax) {
+            $this->redirect('sede');
+        }
     }
 }

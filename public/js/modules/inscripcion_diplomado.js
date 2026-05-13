@@ -32,8 +32,8 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                            <a href="inscripcion_diplomado/edit/${id}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
-                            <a href="inscripcion_diplomado/delete/${id}" class="btn btn-default"><i class="fas fa-trash-alt fs-5"></i></a>
+                            <a href="inscripcion_diplomado/edit/${id}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
+                            <a href="inscripcion_diplomado/delete/${id}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
                         `;
                     }
                 }
@@ -44,28 +44,56 @@ $(document).ready(function () {
             "autoWidth": false
         });
 
-        // Manejador para el botón de eliminar
-        inscripcionDiplomadoTable.on('click', '.delete-btn', function () {
-            const id = $(this).data('id');
-            if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
-                $.ajax({
-                    url: `${BASE_URL_JS}inscripcion_diplomado/delete/${id}`,
-                    method: 'POST', // Usar POST para la eliminación AJAX
-                    success: function (response) {
-                        // Asume que la respuesta es JSON con {success: true, message: "..."}
-                        if (response.success) {
-                            alert(response.message);
-                            inscripcionDiplomadoTable.DataTable().ajax.reload(); // Recargar la tabla
-                        } else {
-                            alert(response.message || 'Error desconocido al eliminar el registro.');
+        // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
+        inscripcionDiplomadoTable.on("click", ".btn-delete", function (e) {
+            e.preventDefault();
+            const urlEliminar = $(this).attr("href");
+
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: urlEliminar,
+                        type: "GET",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        success: function (response) {
+                            let res = typeof response === "string" ? JSON.parse(response) : response;
+                            if (res.success) {
+                                Swal.fire(
+                                    "¡Eliminado!",
+                                    res.message,
+                                    "success"
+                                );
+                                inscripcionDiplomadoTable.DataTable().ajax.reload(null, false);
+                            } else {
+                                Swal.fire(
+                                    "Error",
+                                    res.message,
+                                    "error"
+                                );
+                            }
+                        },
+                        error: function (xhr) {
+                            Swal.fire(
+                                "Error",
+                                "Ocurrió un error al procesar la solicitud.",
+                                "error"
+                            );
+                            console.error(xhr.responseText);
                         }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error al eliminar el registro:', status, error);
-                        alert('Error al eliminar el registro.');
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
     }
 

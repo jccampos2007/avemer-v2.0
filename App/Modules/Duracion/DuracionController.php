@@ -119,15 +119,32 @@ class DuracionController extends Controller
 
     public function delete(int $id): void
     {
+        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
         try {
             if ($this->duracionModel->delete($id)) {
+                if ($isAjax) {
+                    echo json_encode(['success' => true, 'message' => 'Duración eliminada correctamente.']);
+                    exit;
+                }
                 Auth::setFlashMessage('success', 'Duración eliminada correctamente.');
             } else {
+                if ($isAjax) {
+                    echo json_encode(['success' => false, 'message' => 'Error al eliminar la duración.']);
+                    exit;
+                }
                 Auth::setFlashMessage('error', 'Error al eliminar la duración.');
             }
         } catch (\PDOException $e) {
+            if ($isAjax) {
+                echo json_encode(['success' => false, 'message' => 'Error de base de datos: ' . $e->getMessage()]);
+                exit;
+            }
             Auth::setFlashMessage('error', 'Error de base de datos: ' . $e->getMessage());
         }
-        $this->redirect('duracion');
+
+        if (!$isAjax) {
+            $this->redirect('duracion');
+        }
     }
 }

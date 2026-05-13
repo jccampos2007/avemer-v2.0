@@ -119,15 +119,32 @@ class ProfesionOficioController extends Controller
 
     public function delete(int $id): void
     {
+        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
         try {
             if ($this->profesionModel->delete($id)) {
+                if ($isAjax) {
+                    echo json_encode(['success' => true, 'message' => 'Profesión u Oficio eliminado correctamente.']);
+                    exit;
+                }
                 Auth::setFlashMessage('success', 'Profesión u Oficio eliminado correctamente.');
             } else {
+                if ($isAjax) {
+                    echo json_encode(['success' => false, 'message' => 'Error al eliminar la profesión u oficio.']);
+                    exit;
+                }
                 Auth::setFlashMessage('error', 'Error al eliminar la profesión u oficio.');
             }
         } catch (\PDOException $e) {
+            if ($isAjax) {
+                echo json_encode(['success' => false, 'message' => 'Error de base de datos: ' . $e->getMessage()]);
+                exit;
+            }
             Auth::setFlashMessage('error', 'Error de base de datos: ' . $e->getMessage());
         }
-        $this->redirect('profesion_oficio');
+
+        if (!$isAjax) {
+            $this->redirect('profesion_oficio');
+        }
     }
 }
