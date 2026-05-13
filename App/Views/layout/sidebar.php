@@ -19,7 +19,6 @@ $isDiplomadosActive = in_array($module, ['diplomado', 'capitulo', 'diplomado_abi
 $isMaestriasActive = in_array($module, ['maestria', 'maestria_abierto', 'inscripcion_maestria']);
 $isPagosActive = in_array($module, ['cuota', 'pago', 'compensar', 'cronograma']);
 $isMensajesActive = in_array($module, ['listacorreo', 'correo', 'mensajes', 'listaenvio']);
-$isReportesActive = strpos($relativeUri, 'rpt_') === 0;
 $isMantenimientoActive = in_array($module, ['sede', 'banco', 'duracion', 'profesion_oficio']);
 $isSeguridadActive = in_array($module, ['users']);
 ?>
