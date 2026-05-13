@@ -25,38 +25,30 @@ $(document).ready(function () {
         }
 
         $("#usuario_autocomplete").autocomplete({
-            minLength: 3, // Iniciar la búsqueda después de 3 caracteres
+            minLength: 3,
             source: function (request, response) {
-                // Realizar la solicitud AJAX al endpoint de búsqueda de usuarios
                 $.ajax({
-                    url: `${BASE_URL_JS}api/users/search`, // La URL de tu nuevo endpoint PHP
+                    url: `${BASE_URL_JS}api/users/search`,
                     dataType: "json",
                     data: {
-                        term: request.term // El término de búsqueda que el usuario ha escrito
+                        term: request.term
                     },
                     success: function (data) {
-                        response(data); // Pasar los datos al autocompletado de jQuery UI
+                        response(data);
                     },
                     error: function (xhr, status, error) {
                         console.error("Error en la búsqueda de usuarios:", status, error);
-                        response([]); // Devolver un array vacío en caso de error
+                        response([]);
                     }
                 });
             },
             select: function (event, ui) {
-                // Cuando se selecciona un elemento de la lista
-                // ui.item.id contiene el ID real del usuario
-                // ui.item.value contiene el texto que se muestra en el input (nombre completo)
-                $("#usuario_id").val(ui.item.id); // Guardar el ID en el campo oculto
-                // El campo visible ya se actualiza automáticamente con ui.item.value
+                $("#usuario_id").val(ui.item.id);
                 console.log("Usuario seleccionado:", ui.item.label, "ID:", ui.item.id);
             },
             change: function (event, ui) {
-                // Este evento se dispara cuando el valor del input cambia y no se selecciona un item de la lista.
-                // Si el usuario borra el texto o escribe algo que no coincide con un item,
-                // debemos limpiar el campo oculto para evitar enviar un ID incorrecto.
-                if (ui.item === null) { // No se seleccionó ningún item de la lista
-                    $("#usuario_id").val(""); // Limpiar el ID oculto
+                if (ui.item === null) {
+                    $("#usuario_id").val("");
                     console.log("Campo de usuario limpiado o valor no válido.");
                 }
             }
@@ -68,20 +60,13 @@ $(document).ready(function () {
 
         var docentesTable = $('#docentesTable').DataTable({
             "processing": true,
-            "serverSide": true, // Habilitar procesamiento del lado del servidor
-            "responsive": true, // Habilitar diseño responsivo
+            "serverSide": true,
+            "responsive": true,
             "ajax": {
-                "url": BASE_URL_JS + "docentes/data", // Endpoint para obtener los datos
+                "url": BASE_URL_JS + "docentes/data",
                 "type": "POST",
-                "data": function (d) {
-                    // Puedes añadir datos adicionales si es necesario
-                    d.custom_param = 'some_value';
-                },
                 "error": function (xhr, error, thrown) {
                     console.log("Error en la solicitud AJAX de DataTables:", error, thrown);
-                    console.log("Respuesta del servidor:", xhr.responseText);
-                    // Aquí puedes mostrar un mensaje de error al usuario
-                    alert('Error al cargar los datos de docentes. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [
@@ -109,15 +94,29 @@ $(document).ready(function () {
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row) {
-                        return `
-                        <a href="docentes/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="docentes/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
-                    `;
+                        let actions = '<div class="flex gap-2 justify-center">';
+                        
+                        if (typeof DOCENTE_PERMISSIONS !== 'undefined') {
+                            if (DOCENTE_PERMISSIONS.modificar) {
+                                actions += `<a href="docentes/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>`;
+                            }
+                            if (DOCENTE_PERMISSIONS.eliminar) {
+                                actions += `<a href="docentes/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
+                            }
+                        } else {
+                            actions += `
+                                <a href="docentes/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                                <a href="docentes/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
+                            `;
+                        }
+                        
+                        actions += '</div>';
+                        return actions;
                     }
                 }
             ],
             "language": {
-                "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json" // Idioma español
+                "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json"
             }
         });
 
@@ -146,27 +145,14 @@ $(document).ready(function () {
                         success: function (response) {
                             let res = typeof response === 'string' ? JSON.parse(response) : response;
                             if (res.success) {
-                                Swal.fire(
-                                    '¡Eliminado!',
-                                    res.message,
-                                    'success'
-                                );
+                                Swal.fire('¡Eliminado!', res.message, 'success');
                                 docentesTable.ajax.reload(null, false);
                             } else {
-                                Swal.fire(
-                                    'Error',
-                                    res.message,
-                                    'error'
-                                );
+                                Swal.fire('Error', res.message, 'error');
                             }
                         },
                         error: function (xhr) {
-                            Swal.fire(
-                                'Error',
-                                'Ocurrió un error al procesar la solicitud.',
-                                'error'
-                            );
-                            console.error(xhr.responseText);
+                            Swal.fire('Error', 'Ocurrió un error al procesar la solicitud.', 'error');
                         }
                     });
                 }
@@ -176,4 +162,3 @@ $(document).ready(function () {
     }
 
 });
-

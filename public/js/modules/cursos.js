@@ -36,10 +36,24 @@ $(document).ready(function () {
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row) {
-                        return `
-                        <a href="cursos/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="cursos/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
-                    `;
+                        let actions = '<div class="flex gap-2 justify-center">';
+                        
+                        if (typeof CURSOS_PERMISSIONS !== 'undefined') {
+                            if (CURSOS_PERMISSIONS.modificar) {
+                                actions += `<a href="cursos/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>`;
+                            }
+                            if (CURSOS_PERMISSIONS.eliminar) {
+                                actions += `<a href="cursos/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
+                            }
+                        } else {
+                            actions += `
+                                <a href="cursos/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                                <a href="cursos/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
+                            `;
+                        }
+                        
+                        actions += '</div>';
+                        return actions;
                     }
                 }
             ],

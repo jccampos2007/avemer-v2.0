@@ -35,14 +35,8 @@ $(document).ready(function () {
             "ajax": {
                 "url": BASE_URL_JS + "coordinadores/data", // Endpoint para obtener los datos
                 "type": "POST",
-                "data": function (d) {
-                    // Puedes añadir datos adicionales si es necesario
-                    d.custom_param = 'some_value';
-                },
                 "error": function (xhr, error, thrown) {
                     console.log("Error en la solicitud AJAX de DataTables:", error, thrown);
-                    console.log("Respuesta del servidor:", xhr.responseText);
-                    alert('Error al cargar los datos de coordinadores. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [
@@ -70,10 +64,24 @@ $(document).ready(function () {
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row) {
-                        return `
-                        <a href="coordinadores/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="coordinadores/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
-                    `;
+                        let actions = '<div class="flex gap-2 justify-center">';
+                        
+                        if (typeof COORDINADOR_PERMISSIONS !== 'undefined') {
+                            if (COORDINADOR_PERMISSIONS.modificar) {
+                                actions += `<a href="coordinadores/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>`;
+                            }
+                            if (COORDINADOR_PERMISSIONS.eliminar) {
+                                actions += `<a href="coordinadores/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
+                            }
+                        } else {
+                            actions += `
+                                <a href="coordinadores/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                                <a href="coordinadores/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
+                            `;
+                        }
+                        
+                        actions += '</div>';
+                        return actions;
                     }
                 }
             ],
@@ -107,27 +115,14 @@ $(document).ready(function () {
                         success: function (response) {
                             let res = typeof response === 'string' ? JSON.parse(response) : response;
                             if (res.success) {
-                                Swal.fire(
-                                    '¡Eliminado!',
-                                    res.message,
-                                    'success'
-                                );
+                                Swal.fire('¡Eliminado!', res.message, 'success');
                                 coordinadoresTable.ajax.reload(null, false);
                             } else {
-                                Swal.fire(
-                                    'Error',
-                                    res.message,
-                                    'error'
-                                );
+                                Swal.fire('Error', res.message, 'error');
                             }
                         },
                         error: function (xhr) {
-                            Swal.fire(
-                                'Error',
-                                'Ocurrió un error al procesar la solicitud.',
-                                'error'
-                            );
-                            console.error(xhr.responseText);
+                            Swal.fire('Error', 'Ocurrió un error al procesar la solicitud.', 'error');
                         }
                     });
                 }

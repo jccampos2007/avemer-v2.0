@@ -35,15 +35,9 @@ $(document).ready(function () {
             "ajax": {
                 "url": BASE_URL_JS + "alumnos/data", // Endpoint para obtener los datos
                 "type": "POST",
-                "data": function (d) {
-                    // Puedes añadir datos adicionales si es necesario
-                    d.custom_param = 'some_value';
-                },
                 "error": function (xhr, error, thrown) {
                     console.log("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.log("Respuesta del servidor:", xhr.responseText);
-                    // Aquí puedes mostrar un mensaje de error al usuario
-                    alert('Error al cargar los datos de alumnos. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [
@@ -71,10 +65,25 @@ $(document).ready(function () {
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row) {
-                        return `
-                        <a href="alumnos/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="alumnos/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
-                    `;
+                        let actions = '<div class="flex gap-2 justify-center">';
+                        
+                        if (typeof ALUMNO_PERMISSIONS !== 'undefined') {
+                            if (ALUMNO_PERMISSIONS.modificar) {
+                                actions += `<a href="alumnos/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>`;
+                            }
+                            if (ALUMNO_PERMISSIONS.eliminar) {
+                                actions += `<a href="alumnos/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
+                            }
+                        } else {
+                            // Fallback por si la variable no está definida
+                            actions += `
+                                <a href="alumnos/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                                <a href="alumnos/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
+                            `;
+                        }
+                        
+                        actions += '</div>';
+                        return actions;
                     }
                 }
             ],
@@ -101,34 +110,21 @@ $(document).ready(function () {
                 if (result.isConfirmed) {
                     $.ajax({
                         url: urlEliminar,
-                        type: 'GET', // El controlador maneja tanto GET como AJAX
+                        type: 'GET',
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         success: function (response) {
                             let res = typeof response === 'string' ? JSON.parse(response) : response;
                             if (res.success) {
-                                Swal.fire(
-                                    '¡Eliminado!',
-                                    res.message,
-                                    'success'
-                                );
+                                Swal.fire('¡Eliminado!', res.message, 'success');
                                 alumnosTable.ajax.reload(null, false);
                             } else {
-                                Swal.fire(
-                                    'Error',
-                                    res.message,
-                                    'error'
-                                );
+                                Swal.fire('Error', res.message, 'error');
                             }
                         },
                         error: function (xhr) {
-                            Swal.fire(
-                                'Error',
-                                'Ocurrió un error al procesar la solicitud.',
-                                'error'
-                            );
-                            console.error(xhr.responseText);
+                            Swal.fire('Error', 'Ocurrió un error al procesar la solicitud.', 'error');
                         }
                     });
                 }
@@ -138,4 +134,3 @@ $(document).ready(function () {
     }
 
 });
-
