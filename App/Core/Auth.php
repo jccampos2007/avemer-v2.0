@@ -85,12 +85,6 @@ class Auth
             $mapped[$p['key_word']] = $p;
         }
         $_SESSION['permissions'] = $mapped;
-
-        // Log the roles/permissions for debugging
-        $logFile = '/var/www/html/php_mvc_app/logs/permissions.log';
-        $timestamp = date('Y-m-d H:i:s');
-        $logMessage = "[$timestamp] PERMISOS CARGADOS PARA GRUPO ID: " . $grupo_id . "\n" . print_r($mapped, true) . "\n" . str_repeat('-', 50) . "\n";
-        file_put_contents($logFile, $logMessage, FILE_APPEND);
     }
 
     public static function requireLogin(): void
