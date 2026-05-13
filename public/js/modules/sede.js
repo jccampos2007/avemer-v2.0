@@ -34,7 +34,7 @@ $(document).ready(function () {
                     render: function (data, type, row) {
                         return `
                         <a href="${BASE_URL_JS}sede/edit/${row[0]}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="${BASE_URL_JS}sede/delete/${row[0]}" class="btn btn-default delete-btn" data-id="${row[0]}"><i class="fas fa-trash-alt fs-5"></i></a>
+                        <a href="${BASE_URL_JS}sede/delete/${row[0]}" class="btn btn-default btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
                     `;
                     }
                 }
@@ -44,12 +44,56 @@ $(document).ready(function () {
             }
         });
 
-        $(document).on('click', '.delete-btn', function (e) {
+        // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
+        $("#sedeTable").on("click", ".btn-delete", function (e) {
             e.preventDefault();
-            const id = $(this).data('id');
-            if (confirm('¿Está seguro de que desea eliminar esta sede?')) {
-                window.location.href = BASE_URL_JS + 'sede/delete/' + id;
-            }
+            const urlEliminar = $(this).attr("href");
+
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: urlEliminar,
+                        type: "GET",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        success: function (response) {
+                            let res = typeof response === "string" ? JSON.parse(response) : response;
+                            if (res.success) {
+                                Swal.fire(
+                                    "¡Eliminado!",
+                                    res.message,
+                                    "success"
+                                );
+                                sedeTable.ajax.reload(null, false);
+                            } else {
+                                Swal.fire(
+                                    "Error",
+                                    res.message,
+                                    "error"
+                                );
+                            }
+                        },
+                        error: function (xhr) {
+                            Swal.fire(
+                                "Error",
+                                "Ocurrió un error al procesar la solicitud.",
+                                "error"
+                            );
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+            });
         });
     }
 });

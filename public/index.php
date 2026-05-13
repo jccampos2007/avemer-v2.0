@@ -15,7 +15,6 @@ use App\Modules\Docentes\DocenteController;
 use App\Modules\Coordinadores\CoordinadorController;
 use App\Modules\Cursos\CursoController;
 use App\Modules\CursoAbierto\CursoAbiertoController;
-use App\Modules\CursoControl\CursoControlController;
 use App\Modules\InscripcionCurso\InscripcionCursoController;
 use App\Modules\Evento\EventoController;
 use App\Modules\EventoAbierto\EventoAbiertoController;
@@ -106,15 +105,6 @@ $router->add('GET', '/cursos_abiertos/edit/{id}', CursoAbiertoController::class 
 $router->add('POST', '/cursos_abiertos/edit/{id}', CursoAbiertoController::class . '@edit');
 $router->add('GET', '/cursos_abiertos/delete/{id}', CursoAbiertoController::class . '@delete');
 $router->add('POST', '/cursos_abiertos/data', CursoAbiertoController::class . '@getCursoAbiertoData');
-
-// Rutas para CursoControl
-$router->add('GET', '/curso_control', CursoControlController::class . '@index');
-$router->add('GET', '/curso_control/create', CursoControlController::class . '@create');
-$router->add('POST', '/curso_control/create', CursoControlController::class . '@create');
-$router->add('GET', '/curso_control/edit/{id}', CursoControlController::class . '@edit');
-$router->add('POST', '/curso_control/edit/{id}', CursoControlController::class . '@edit');
-$router->add('GET', '/curso_control/delete/{id}', CursoControlController::class . '@delete');
-$router->add('GET', '/curso_control/data', CursoControlController::class . '@getCursoControlData');
 
 // Rutas para InscripcionCurso
 $router->add('GET', '/inscripcion_curso', InscripcionCursoController::class . '@index');

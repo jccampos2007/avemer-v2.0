@@ -40,8 +40,8 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                            <a href="maestria_abierto/edit/${id}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
-                            <a href="maestria_abierto/delete/${id}" class="btn btn-default"><i class="fas fa-trash-alt fs-5"></i></a>
+                            <a href="maestria_abierto/edit/${id}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
+                            <a href="maestria_abierto/delete/${id}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
                         `;
                     }
                 }
@@ -57,6 +57,58 @@ $(document).ready(function () {
                 "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json" // Idioma español
             },
             "autoWidth": false
+        });
+
+        // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
+        maestriaAbiertoTable.on("click", ".btn-delete", function (e) {
+            e.preventDefault();
+            const urlEliminar = $(this).attr("href");
+
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: urlEliminar,
+                        type: "GET",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        success: function (response) {
+                            let res = typeof response === "string" ? JSON.parse(response) : response;
+                            if (res.success) {
+                                Swal.fire(
+                                    "¡Eliminado!",
+                                    res.message,
+                                    "success"
+                                );
+                                maestriaAbiertoTable.DataTable().ajax.reload(null, false);
+                            } else {
+                                Swal.fire(
+                                    "Error",
+                                    res.message,
+                                    "error"
+                                );
+                            }
+                        },
+                        error: function (xhr) {
+                            Swal.fire(
+                                "Error",
+                                "Ocurrió un error al procesar la solicitud.",
+                                "error"
+                            );
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+            });
         });
     }
 
@@ -77,7 +129,6 @@ $(document).ready(function () {
             flatpickr.localize(flatpickr.l10ns.es);
         }
 
-        // Inicializar CKEditor para el campo nombre_carta
         // Inicializar CKEditor para el campo nombre_carta
         ClassicEditor
             .create(document.querySelector('#nombre_carta'), {
@@ -106,17 +157,17 @@ $(document).ready(function () {
             const estatusId = $('#estatus_id').val();
             const docenteId = $('#docente_id').val();
             const fecha = $('#fecha').val().trim();
-            const nombreCartaContent = (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances.nombre_carta) ? CKEDITOR.instances.nombre_carta.getData().trim() : '';
+            const nombreCartaContent = (typeof window.nombreCartaEditor !== 'undefined') ? window.nombreCartaEditor.getData().trim() : '';
 
-            // if (numero === '' || !maestriaId || !sedeId || !estatusId || !docenteId || fecha === '') {
-            //     // Usar showFlashMessage si está disponible, de lo contrario alert
-            //     if (typeof showFlashMessage === 'function') {
-            //         showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
-            //     } else {
-            //         alert('Por favor, complete todos los campos obligatorios.');
-            //     }
-            //     event.preventDefault(); // Detiene el envío del formulario
-            // }
+            if (numero === '' || !maestriaId || !sedeId || !estatusId || !docenteId || fecha === '' || nombreCartaContent === '') {
+                // Usar showFlashMessage si está disponible, de lo contrario alert
+                if (typeof showFlashMessage === 'function') {
+                    showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
+                } else {
+                    alert('Por favor, complete todos los campos obligatorios.');
+                }
+                event.preventDefault(); // Detiene el envío del formulario
+            }
         });
     }
 });

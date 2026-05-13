@@ -123,15 +123,32 @@ class BancoController extends Controller
 
     public function delete(int $id): void
     {
+        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
         try {
             if ($this->bancoModel->delete($id)) {
+                if ($isAjax) {
+                    echo json_encode(['success' => true, 'message' => 'Banco eliminado correctamente.']);
+                    exit;
+                }
                 Auth::setFlashMessage('success', 'Banco eliminado correctamente.');
             } else {
+                if ($isAjax) {
+                    echo json_encode(['success' => false, 'message' => 'Error al eliminar el banco.']);
+                    exit;
+                }
                 Auth::setFlashMessage('error', 'Error al eliminar el banco.');
             }
         } catch (\PDOException $e) {
+            if ($isAjax) {
+                echo json_encode(['success' => false, 'message' => 'Error de base de datos: ' . $e->getMessage()]);
+                exit;
+            }
             Auth::setFlashMessage('error', 'Error de base de datos: ' . $e->getMessage());
         }
-        $this->redirect('banco');
+
+        if (!$isAjax) {
+            $this->redirect('banco');
+        }
     }
 }
