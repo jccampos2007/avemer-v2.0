@@ -56,21 +56,21 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
                 <input type="hidden" name="profesion_oficio_current" id="profesion_oficio_current" value="<?php echo $docente_data['profesion_oficio_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="estado_id" class="label-form">Estado ID:</label>
+                <label for="estado_id" class="label-form">Estado:</label>
                 <select id="estado_id" name="estado_id" class="input-form focus:outline-none focus:shadow-outline">
                     <option value="">Seleccione una opción</option>
                 </select>
                 <input type="hidden" name="estado_current" id="estado_current" value="<?php echo $docente_data['estado_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="nacionalidad_id" class="label-form">Nacionalidad ID:</label>
+                <label for="nacionalidad_id" class="label-form">Nacionalidad:</label>
                 <select id="nacionalidad_id" name="nacionalidad_id" class="input-form focus:outline-none focus:shadow-outline">
                     <option value="">Seleccione una opción</option>
                 </select>
                 <input type="hidden" name="nacionalidad_current" id="nacionalidad_current" value="<?php echo $docente_data['nacionalidad_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="estatus_activo_id" class="label-form">Estatus Activo ID:</label>
+                <label for="estatus_activo_id" class="label-form">Estatus Activo:</label>
                 <select id="estatus_activo_id" name="estatus_activo_id" class="input-form focus:outline-none focus:shadow-outline">
                     <option value="">Seleccione una opción</option>
                 </select>

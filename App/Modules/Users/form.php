@@ -32,7 +32,7 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
-                <label for="estatus_activo_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus Activo ID:</label>
+                <label for="estatus_activo_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus Activo:</label>
                 <select id="estatus_activo_id" name="estatus_activo_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="">Seleccione una opción</option>
                 </select>

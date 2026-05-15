@@ -1,4 +1,4 @@
-[2026-05-13 17:58:49] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 17:58:49] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -274,7 +274,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 17:58:51] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 17:58:51] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -550,7 +550,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 17:59:49] PERMISOS CARGADOS PARA GRUPO ID: 2
+[2026-05-13 17:59:49] PERMISOS CARGADOS PARA GRUPO: 2
 Array
 (
     [alumnos] => Array
@@ -826,7 +826,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:06:54] PERMISOS CARGADOS PARA GRUPO ID: 2
+[2026-05-13 18:06:54] PERMISOS CARGADOS PARA GRUPO: 2
 Array
 (
     [alumnos] => Array
@@ -1102,7 +1102,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:07:48] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 18:07:48] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -1378,7 +1378,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:15:28] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 18:15:28] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -1654,7 +1654,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:15:30] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 18:15:30] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -1930,7 +1930,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:19:20] PERMISOS CARGADOS PARA GRUPO ID: 2
+[2026-05-13 18:19:20] PERMISOS CARGADOS PARA GRUPO: 2
 Array
 (
     [alumnos] => Array
@@ -2206,7 +2206,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:20:21] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 18:20:21] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -2482,7 +2482,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:34:38] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 18:34:38] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -2758,7 +2758,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:35:18] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 18:35:18] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -3034,7 +3034,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:35:27] PERMISOS CARGADOS PARA GRUPO ID: 2
+[2026-05-13 18:35:27] PERMISOS CARGADOS PARA GRUPO: 2
 Array
 (
     [users] => Array
@@ -3310,7 +3310,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:37:11] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 18:37:11] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -3586,7 +3586,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:38:05] PERMISOS CARGADOS PARA GRUPO ID: 2
+[2026-05-13 18:38:05] PERMISOS CARGADOS PARA GRUPO: 2
 Array
 (
     [users] => Array
@@ -3862,7 +3862,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:38:07] PERMISOS CARGADOS PARA GRUPO ID: 2
+[2026-05-13 18:38:07] PERMISOS CARGADOS PARA GRUPO: 2
 Array
 (
     [users] => Array
@@ -4138,7 +4138,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:38:43] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 18:38:43] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -4414,7 +4414,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:39:16] PERMISOS CARGADOS PARA GRUPO ID: 2
+[2026-05-13 18:39:16] PERMISOS CARGADOS PARA GRUPO: 2
 Array
 (
     [users] => Array
@@ -4690,7 +4690,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 18:41:58] PERMISOS CARGADOS PARA GRUPO ID: 1
+[2026-05-13 18:41:58] PERMISOS CARGADOS PARA GRUPO: 1
 Array
 (
     [users] => Array
@@ -4966,7 +4966,7 @@ Array
 )
 
 --------------------------------------------------
-[2026-05-13 19:03:54] PERMISOS CARGADOS PARA GRUPO ID: 2
+[2026-05-13 19:03:54] PERMISOS CARGADOS PARA GRUPO: 2
 Array
 (
     [users] => Array

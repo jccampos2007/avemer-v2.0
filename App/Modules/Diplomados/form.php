@@ -20,7 +20,7 @@ $is_edit = isset($diplomado_data['id']) && !empty($diplomado_data['id']);
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div>
-                <label for="duracion_id" class="block text-gray-700 text-sm font-bold mb-2">Duración ID:</label>
+                <label for="duracion_id" class="block text-gray-700 text-sm font-bold mb-2">Duración:</label>
                 <input type="number" id="duracion_id" name="duracion_id" value="<?php echo htmlspecialchars($diplomado_data['duracion_id'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
             <div>
