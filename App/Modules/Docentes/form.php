@@ -5,7 +5,7 @@ $is_edit = isset($docente_data['id']) && !empty($docente_data['id']);
 $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BASE_URL . 'docentes/create';
 ?>
 <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
-    <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Docente' : 'Crear Nuevo Docente'; ?></h3>
+    <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Instructor' : 'Crear Nuevo Instructor'; ?></h3>
     <form id="form_docentes" action="<?php echo $form_action; ?>" method="POST" enctype="multipart/form-data">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
@@ -105,7 +105,7 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
 
         <div class="flex items-center justify-between">
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Guardar Docente
+                Guardar Instructor
             </button>
             <a href="<?php echo BASE_URL; ?>docentes" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
                 Cancelar
