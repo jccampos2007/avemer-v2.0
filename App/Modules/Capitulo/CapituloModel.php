@@ -17,7 +17,7 @@ class CapituloModel
 
     /**
      * Obtiene datos de Capítulo para DataTables con paginación, búsqueda y ordenación.
-     * Filtra por diplomado_id.
+     * Filtra por diplomado_id y omite los registros eliminados lógicamente.
      *
      * @param array $params Parámetros de DataTables (start, length, search, order, columns, diplomado_id).
      * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
@@ -30,8 +30,7 @@ class CapituloModel
         $searchValue = $params['search']['value'] ?? '';
         $orderColumnIndex = $params['order'][0]['column'] ?? 0;
         $orderDir = $params['order'][0]['dir'] ?? 'asc';
-        $columns = $params['columns'] ?? [];
-        $diplomadoId = $params['diplomado_id'] ?? null; // ¡CRUCIAL! Recibir el diplomado_id
+        $diplomadoId = $params['diplomado_id'] ?? null; 
 
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
@@ -64,12 +63,15 @@ class CapituloModel
         $where = [];
         $queryParams = [];
 
+        // Filtro base: Solo los registros activos lógicamente
+        $where[] = "c.deleted_at IS NULL";
+
         // Filtro obligatorio por diplomado_id
         if ($diplomadoId !== null) {
             $where[] = "c.diplomado_id = :diplomado_id";
             $queryParams[':diplomado_id'] = (int) $diplomadoId;
         } else {
-            // Si no hay diplomado_id, no se devuelve nada
+            // Si no hay diplomado_id, no se devuelve nada por consistencia
             return [
                 'draw' => (int) $draw,
                 'recordsTotal' => 0,
@@ -94,7 +96,7 @@ class CapituloModel
             $countSql .= " WHERE " . implode(' AND ', $where);
         }
 
-        // Obtener el total de registros filtrados (después de la búsqueda y el filtro de diplomado)
+        // Obtener el total de registros filtrados (después de la búsqueda y filtros activos)
         $stmt = $this->pdo->prepare($countSql);
         $stmt->execute($queryParams);
         $recordsFiltered = $stmt->fetchColumn();
@@ -104,19 +106,23 @@ class CapituloModel
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
-        // Paginación
+        // Paginación con parámetros tipados explícitamente como enteros
         $sql .= " LIMIT :start, :length";
-        $queryParams[':start'] = (int) $start;
-        $queryParams[':length'] = (int) $length;
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($queryParams);
+        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+        foreach ($queryParams as $key => $val) {
+            $stmt->bindValue($key, $val);
+        }
+
+        $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Obtener el total de registros sin filtrar (pero con el filtro de diplomado)
-        $totalRecordsSql = "SELECT COUNT(*) FROM {$this->table} WHERE diplomado_id = :diplomado_id_total";
+        // Obtener el total de registros activos (con filtro de diplomado y deleted_at IS NULL)
+        $totalRecordsSql = "SELECT COUNT(*) FROM {$this->table} WHERE diplomado_id = :diplomado_id_total AND deleted_at IS NULL";
         $totalRecordsStmt = $this->pdo->prepare($totalRecordsSql);
-        $totalRecordsStmt->bindParam(':diplomado_id_total', $diplomadoId, PDO::PARAM_INT);
+        $totalRecordsStmt->bindValue(':diplomado_id_total', (int)$diplomadoId, PDO::PARAM_INT);
         $totalRecordsStmt->execute();
         $recordsTotal = $totalRecordsStmt->fetchColumn();
 
@@ -129,13 +135,13 @@ class CapituloModel
     }
 
     /**
-     * Obtiene un registro de capitulo por su ID.
+     * Obtiene un registro de capítulo activo por su ID.
      * @param int $id El ID del registro.
-     * @return array|false El registro o false si no se encuentra.
+     * @return array|false El registro o false si no se encuentra o está borrado lógicamente.
      */
     public function getById(int $id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+        $sql = "SELECT * FROM {$this->table} WHERE id = :id AND deleted_at IS NULL";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -144,8 +150,6 @@ class CapituloModel
 
     /**
      * Crea un nuevo registro en capitulo.
-     * @param array $data Los datos del nuevo registro.
-     * @return bool True si se creó correctamente, false en caso contrario.
      */
     public function create(array $data): bool
     {
@@ -163,9 +167,6 @@ class CapituloModel
 
     /**
      * Actualiza un registro existente en capitulo.
-     * @param int $id El ID del registro a actualizar.
-     * @param array $data Los nuevos datos del registro.
-     * @return bool True si se actualizó correctamente, false en caso contrario.
      */
     public function update(int $id, array $data): bool
     {
@@ -183,13 +184,13 @@ class CapituloModel
     }
 
     /**
-     * Elimina un registro de capitulo.
+     * Realiza un BORRADO LÓGICO del capítulo.
      * @param int $id El ID del registro a eliminar.
-     * @return bool True si se eliminó correctamente, false en caso contrario.
+     * @return bool True si se actualizó correctamente, false en caso contrario.
      */
     public function delete(int $id): bool
     {
-        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();

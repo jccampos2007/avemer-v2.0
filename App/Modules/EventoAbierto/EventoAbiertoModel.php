@@ -2,7 +2,7 @@
 // app/Modules/EventoAbierto/EventoAbiertoModel.php
 namespace App\Modules\EventoAbierto;
 
-use App\Core\Database; // Assumindo que você tem uma classe Database
+use App\Core\Database;
 use PDO;
 
 class EventoAbiertoModel
@@ -16,10 +16,7 @@ class EventoAbiertoModel
     }
 
     /**
-     * Obtiene datos de EventoAbierto para DataTables con paginación, búsqueda y ordenación.
-     *
-     * @param array $params Parámetros de DataTables (start, length, search, order, columns).
-     * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
+     * Obtiene datos de EventoAbierto para DataTables (Solo activos).
      */
     public function getPaginatedEventoAbierto(array $params): array
     {
@@ -29,31 +26,29 @@ class EventoAbiertoModel
         $searchValue = $params['search']['value'] ?? '';
         $orderColumnIndex = $params['order'][0]['column'] ?? 0;
         $orderDir = $params['order'][0]['dir'] ?? 'asc';
-        $columns = $params['columns'] ?? [];
 
-        // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
             0 => 'ea.id',
             1 => 'ea.numero',
-            2 => 'evento_nombre', // Alias de la columna unida
-            3 => 'sede_nombre',   // Alias de la columna unida
-            4 => 'estatus_nombre', // Alias de la columna unida
+            2 => 'evento_nombre',
+            3 => 'sede_nombre',
+            4 => 'estatus_nombre',
             5 => 'ea.fecha_inicio',
             6 => 'ea.fecha_fin',
             7 => 'ea.nombre_carta',
         ];
 
-        // Construir la consulta base
+        // Filtro base: Excluir eliminados de forma lógica
         $sql = "
             SELECT
                 ea.id,
                 ea.numero,
                 ea.evento_id,
-                e.nombre AS evento_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'evento'
+                e.nombre AS evento_nombre,
                 ea.sede_id,
-                s.nombre AS sede_nombre,   -- Asumimos 'nombre' es el campo a mostrar de la tabla 'sede'
+                s.nombre AS sede_nombre,
                 ea.estatus_id,
-                st.nombre AS estatus_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'estatus'
+                st.nombre AS estatus_nombre,
                 ea.fecha_inicio,
                 ea.fecha_fin,
                 ea.nombre_carta
@@ -64,8 +59,11 @@ class EventoAbiertoModel
             LEFT JOIN
                 sede s ON ea.sede_id = s.id
             LEFT JOIN
-                estatus st ON ea.estatus_id = st.id -- Usamos 'st' como alias para evitar conflicto con 'e' de evento
+                estatus st ON ea.estatus_id = st.id
+            WHERE
+                ea.deleted_at IS NULL
         ";
+        
         $countSql = "
             SELECT COUNT(*)
             FROM
@@ -76,12 +74,13 @@ class EventoAbiertoModel
                 sede s ON ea.sede_id = s.id
             LEFT JOIN
                 estatus st ON ea.estatus_id = st.id
+            WHERE
+                ea.deleted_at IS NULL
         ";
 
         $where = [];
         $queryParams = [];
 
-        // Búsqueda global
         if (!empty($searchValue)) {
             $where[] = "(ea.numero LIKE :search_numero "
                 . "OR e.nombre LIKE :search_evento_nombre "
@@ -101,17 +100,17 @@ class EventoAbiertoModel
         }
 
         if (!empty($where)) {
-            $sql .= " WHERE " . implode(' AND ', $where);
-            $countSql .= " WHERE " . implode(' AND ', $where);
+            $sql .= " AND " . implode(' AND ', $where);
+            $countSql .= " AND " . implode(' AND ', $where);
         }
 
-        // Obtener el total de registros filtrados (después de la búsqueda)
+        // Ejecutar conteo de filtrados
         $stmt = $this->pdo->prepare($countSql);
         $stmt->execute($queryParams);
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'ea.id'; // Columna por defecto si no se encuentra
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'ea.id';
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
@@ -121,29 +120,34 @@ class EventoAbiertoModel
         $queryParams[':length'] = (int) $length;
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($queryParams);
+        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+        foreach ($queryParams as $key => $val) {
+            if ($key !== ':start' && $key !== ':length') {
+                $stmt->bindValue($key, $val);
+            }
+        }
+        $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Obtener el total de registros sin filtrar (para 'recordsTotal')
-        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table}");
+        // Conteo total de registros activos
+        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table} WHERE deleted_at IS NULL");
         $recordsTotal = $totalRecordsStmt->fetchColumn();
 
         return [
             'draw' => (int) $draw,
             'recordsTotal' => (int) $recordsTotal,
             'recordsFiltered' => (int) $recordsFiltered,
-            'data' => $data, // Devolvemos los datos tal cual, el controlador los formateará para DataTables
+            'data' => $data,
         ];
     }
 
     /**
-     * Obtiene un registro de evento_abierto por su ID.
-     * @param int $id El ID del registro.
-     * @return array|false El registro o false si no se encuentra.
+     * Obtiene un registro activo por su ID.
      */
     public function getById(int $id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+        $sql = "SELECT * FROM {$this->table} WHERE id = :id AND deleted_at IS NULL";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -151,10 +155,22 @@ class EventoAbiertoModel
     }
 
     /**
-     * Crea un nuevo registro en evento_abierto.
-     * @param array $data Los datos del nuevo registro.
-     * @return bool True si se creó correctamente, false en caso contrario.
+     * Comprueba si una apertura tiene inscritos asociados.
+     * Útil antes de permitir cualquier borrado.
+     *
+     * @param int $eventoAbiertoId ID de la apertura de evento.
+     * @return int Cantidad de inscritos.
      */
+    public function countInscritos(int $eventoAbiertoId): int
+    {
+        // Asumiendo que tu tabla de inscripciones se llama 'inscritos' y se relaciona con 'evento_abierto_id'
+        $sql = "SELECT COUNT(*) FROM inscritos WHERE evento_abierto_id = :evento_abierto_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':evento_abierto_id', $eventoAbiertoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+
     public function create(array $data): bool
     {
         $sql = "INSERT INTO {$this->table} (numero, evento_id, sede_id, estatus_id, fecha_inicio, fecha_fin, nombre_carta) VALUES (:numero, :evento_id, :sede_id, :estatus_id, :fecha_inicio, :fecha_fin, :nombre_carta)";
@@ -170,12 +186,6 @@ class EventoAbiertoModel
         ]);
     }
 
-    /**
-     * Actualiza un registro existente en evento_abierto.
-     * @param int $id El ID del registro a actualizar.
-     * @param array $data Los nuevos datos del registro.
-     * @return bool True si se actualizó correctamente, false en caso contrario.
-     */
     public function update(int $id, array $data): bool
     {
         $sql = "UPDATE {$this->table} SET numero = :numero, evento_id = :evento_id, sede_id = :sede_id, estatus_id = :estatus_id, fecha_inicio = :fecha_inicio, fecha_fin = :fecha_fin, nombre_carta = :nombre_carta WHERE id = :id";
@@ -193,13 +203,12 @@ class EventoAbiertoModel
     }
 
     /**
-     * Elimina un registro de evento_abierto.
-     * @param int $id El ID del registro a eliminar.
-     * @return bool True si se eliminó correctamente, false en caso contrario.
+     * Realiza el borrado lógico de la apertura de evento.
      */
     public function delete(int $id): bool
     {
-        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        // Se realiza un UPDATE en lugar de un DELETE físico
+        $sql = "UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();

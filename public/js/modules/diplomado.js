@@ -23,7 +23,6 @@ $(document).ready(function () {
                 { "data": 0 }, // ID
                 { "data": 4 }, // Siglas
                 { "data": 2 }, // Nombre
-                { "data": 3 }, // Descripción
                 { // Columna para Acciones
                     "data": null,
                     "orderable": false,

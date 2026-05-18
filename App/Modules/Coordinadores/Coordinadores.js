@@ -54,7 +54,7 @@ $(document).ready(function () {
                     render: function (data, type, row) {
                         if (row[1] === null || row[1] === '')
                             return `
-                                <img src="${BASE_URL_JS}../assets/images/NO-IMAGE.jpg" alt="Foto de Coordinador" class="img-thumbnail" style="width: 50px; height: 50px;">
+                                <img src="${BASE_URL_JS}image/default-avatar.png" alt="Foto de Coordinador" class="img-thumbnail" style="width: 50px; height: 50px;">
                             `;
                         else
                             return `

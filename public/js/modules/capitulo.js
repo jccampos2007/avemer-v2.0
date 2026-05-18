@@ -48,7 +48,6 @@ $(document).ready(function () {
                 { "data": 0 }, // ID
                 { "data": 1 }, // Número
                 { "data": 2 }, // Nombre
-                { "data": 3 }, // Descripción
                 { "data": 4 }, // Activo
                 { // Columna para Acciones
                     "data": null,

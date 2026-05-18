@@ -17,6 +17,7 @@ class MaestriaAbiertoModel
 
     /**
      * Obtiene datos de Maestría Abierta para DataTables con paginación, búsqueda y ordenación.
+     * Excluye los registros que han sido borrados de forma lógica.
      *
      * @param array $params Parámetros de DataTables (start, length, search, order, columns).
      * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
@@ -29,34 +30,33 @@ class MaestriaAbiertoModel
         $searchValue = $params['search']['value'] ?? '';
         $orderColumnIndex = $params['order'][0]['column'] ?? 0;
         $orderDir = $params['order'][0]['dir'] ?? 'asc';
-        $columns = $params['columns'] ?? [];
 
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
             0 => 'ma.id',
             1 => 'ma.numero',
-            2 => 'maestria_nombre',   // Alias de la columna unida
-            3 => 'sede_nombre',       // Alias de la columna unida
-            4 => 'estatus_nombre',    // Alias de la columna unida
-            5 => 'docente_nombre_completo', // Alias de la columna unida
+            2 => 'maestria_nombre',   
+            3 => 'sede_nombre',       
+            4 => 'estatus_nombre',    
+            5 => 'docente_nombre_completo', 
             6 => 'ma.fecha',
             7 => 'ma.convenio',
             8 => 'ma.nombre_carta',
         ];
 
-        // Construir la consulta base
+        // Construir la consulta filtrando solo los que no están eliminados (ma.deleted_at IS NULL)
         $sql = "
             SELECT
                 ma.id,
                 ma.numero,
                 ma.maestria_id,
-                m.nombre AS maestria_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'maestria'
+                m.nombre AS maestria_nombre,
                 ma.sede_id,
-                s.nombre AS sede_nombre,   -- Asumimos 'nombre' es el campo a mostrar de la tabla 'sede'
+                s.nombre AS sede_nombre,
                 ma.estatus_id,
-                e.nombre AS estatus_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'estatus'
+                e.nombre AS estatus_nombre,
                 ma.docente_id,
-                CONCAT(d.primer_nombre, ' ', d.primer_apellido) AS docente_nombre_completo, -- Asumimos campos en tabla 'docente'
+                CONCAT(d.primer_nombre, ' ', d.primer_apellido) AS docente_nombre_completo,
                 ma.fecha
             FROM
                 {$this->table} ma
@@ -68,7 +68,10 @@ class MaestriaAbiertoModel
                 estatus e ON ma.estatus_id = e.id
             LEFT JOIN
                 docente d ON ma.docente_id = d.id
+            WHERE
+                ma.deleted_at IS NULL
         ";
+        
         $countSql = "
             SELECT COUNT(*)
             FROM
@@ -81,6 +84,8 @@ class MaestriaAbiertoModel
                 estatus e ON ma.estatus_id = e.id
             LEFT JOIN
                 docente d ON ma.docente_id = d.id
+            WHERE
+                ma.deleted_at IS NULL
         ";
 
         $where = [];
@@ -104,49 +109,51 @@ class MaestriaAbiertoModel
         }
 
         if (!empty($where)) {
-            $sql .= " WHERE " . implode(' AND ', $where);
-            $countSql .= " WHERE " . implode(' AND ', $where);
+            $sql .= " AND " . implode(' AND ', $where);
+            $countSql .= " AND " . implode(' AND ', $where);
         }
 
-        // Obtener el total de registros filtrados (después de la búsqueda)
+        // Obtener el total de registros filtrados
         $stmt = $this->pdo->prepare($countSql);
         $stmt->execute($queryParams);
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'ma.id'; // Columna por defecto si no se encuentra
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'ma.id';
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
-        // Paginación
+        // Paginación con binds manuales por compatibilidad de tipos
         $sql .= " LIMIT :start, :length";
-        $queryParams[':start'] = (int) $start;
-        $queryParams[':length'] = (int) $length;
-
+        
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($queryParams);
+        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+        foreach ($queryParams as $key => $val) {
+            $stmt->bindValue($key, $val);
+        }
+        
+        $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Obtener el total de registros sin filtrar (para 'recordsTotal')
-        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table}");
+        // Obtener el total de registros activos sin filtrar
+        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table} WHERE deleted_at IS NULL");
         $recordsTotal = $totalRecordsStmt->fetchColumn();
 
         return [
             'draw' => (int) $draw,
             'recordsTotal' => (int) $recordsTotal,
             'recordsFiltered' => (int) $recordsFiltered,
-            'data' => $data, // Devolvemos los datos tal cual, el controlador los formateará para DataTables
+            'data' => $data,
         ];
     }
 
     /**
-     * Obtiene un registro de maestria_abierto por su ID.
-     * @param int $id El ID del registro.
-     * @return array|false El registro o false si no se encuentra.
+     * Obtiene un registro activo de maestria_abierto por su ID.
      */
     public function getById(int $id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+        $sql = "SELECT * FROM {$this->table} WHERE id = :id AND deleted_at IS NULL";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -154,9 +161,24 @@ class MaestriaAbiertoModel
     }
 
     /**
+     * Cuenta el número de alumnos inscritos en esta apertura de maestría para evitar su eliminación si ya posee alumnos.
+     * Ajusta el nombre de la tabla de relación (por ejemplo 'inscritos_maestria') según corresponda en tu base de datos.
+     *
+     * @param int $maestriaAbiertoId El ID de la apertura de maestría.
+     * @return int Cantidad de inscripciones.
+     */
+    public function countInscritos(int $maestriaAbiertoId): int
+    {
+        // Cambia 'inscrito_maestria' por el nombre real de tu tabla pivote o de inscripciones
+        $sql = "SELECT COUNT(*) FROM inscrito_maestria WHERE maestria_abierto_id = :maestria_abierto_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':maestria_abierto_id', $maestriaAbiertoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
      * Crea un nuevo registro en maestria_abierto.
-     * @param array $data Los datos del nuevo registro.
-     * @return bool True si se creó correctamente, false en caso contrario.
      */
     public function create(array $data): bool
     {
@@ -176,9 +198,6 @@ class MaestriaAbiertoModel
 
     /**
      * Actualiza un registro existente en maestria_abierto.
-     * @param int $id El ID del registro a actualizar.
-     * @param array $data Los nuevos datos del registro.
-     * @return bool True si se actualizó correctamente, false en caso contrario.
      */
     public function update(int $id, array $data): bool
     {
@@ -198,13 +217,13 @@ class MaestriaAbiertoModel
     }
 
     /**
-     * Elimina un registro de maestria_abierto.
+     * Realiza un BORRADO LÓGICO de la apertura de maestría.
      * @param int $id El ID del registro a eliminar.
-     * @return bool True si se eliminó correctamente, false en caso contrario.
+     * @return bool True si se marcó como eliminado, false en caso contrario.
      */
     public function delete(int $id): bool
     {
-        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
