@@ -39,10 +39,16 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
                 <input type="hidden" name="estatus_activo_current" id="estatus_activo_current" value="<?php echo $alumno_data['estatus_activo_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="tipo_usuario" class="block text-gray-700 text-sm font-bold mb-2">Tipo de Usuario:</label>
-                <select id="tipo_usuario" name="tipo_usuario" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    <option value="1" <?php echo (isset($user_data['tipo_usuario']) && $user_data['tipo_usuario'] == 1) ? 'selected' : ''; ?>>1: Usuario</option>
-                    <option value="2" <?php echo (isset($user_data['tipo_usuario']) && $user_data['tipo_usuario'] == 2) ? 'selected' : ''; ?>>2: Alumno</option>
+                <label for="grupo_id" class="block text-gray-700 text-sm font-bold mb-2">Grupo:</label>
+                <select id="grupo_id" name="grupo_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <option value="">Seleccione un grupo</option>
+                    <?php if (isset($grupos) && is_array($grupos)): ?>
+                        <?php foreach ($grupos as $grupo): ?>
+                            <option value="<?php echo htmlspecialchars($grupo['grupo_id']); ?>" <?php echo (isset($user_data['grupo_id']) && $user_data['grupo_id'] == $grupo['grupo_id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($grupo['nombre_grupo']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </select>
             </div>
         </div>

@@ -5,15 +5,18 @@ namespace App\Modules\Users; // Nuevo namespace
 use App\Core\Controller;
 use App\Core\Auth;
 use App\Modules\Users\UserModel; // Ajustado para la nueva ubicación del modelo
+use App\Modules\Grupo\GrupoModel;
 
 class UserController extends Controller
 {
     private $userModel;
+    private $grupoModel;
 
     public function __construct()
     {
         Auth::requireLogin(); // Asegura que el usuario esté logueado para todas las acciones de usuario
         $this->userModel = $this->model('Modules\Users\UserModel'); // Ruta del modelo dentro del patrón
+        $this->grupoModel = clone $this->model('Modules\Grupo\GrupoModel');
     }
 
     public function index(): void
@@ -83,7 +86,8 @@ class UserController extends Controller
 
     public function create(): void
     {
-        $this->view('Users/form', ['user_data' => []]); // Ruta de vista relativa al módulo
+        $grupos = $this->grupoModel->getAllGroups();
+        $this->view('Users/form', ['user_data' => [], 'grupos' => $grupos]); // Ruta de vista relativa al módulo
     }
 
     public function edit(int $id): void
@@ -93,7 +97,37 @@ class UserController extends Controller
             Auth::setFlashMessage('error', 'Usuario no encontrado.');
             $this->redirect('users');
         }
-        $this->view('Users/form', ['user_data' => $user_data]); // Ruta de vista relativa al módulo
+        $grupos = $this->grupoModel->getAllGroups();
+        $this->view('Users/form', ['user_data' => $user_data, 'grupos' => $grupos]); // Ruta de vista relativa al módulo
+    }
+
+    public function store(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'usuario_cedula' => $this->sanitizeInput($_POST['usuario_cedula']),
+                'usuario_nombre' => $this->sanitizeInput($_POST['usuario_nombre']),
+                'usuario_apellido' => $this->sanitizeInput($_POST['usuario_apellido']),
+                'usuario_user' => $this->sanitizeInput($_POST['usuario_user']),
+                'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : 1,
+                'grupo_id' => (int)$this->sanitizeInput($_POST['grupo_id']),
+                'id_persona' => !empty($_POST['id_persona']) ? (int)$this->sanitizeInput($_POST['id_persona']) : null,
+                'usuario_idreg' => Auth::user('user_id'),
+                'usuario_fechareg' => date('Y-m-d H:i:s'),
+                'usuario_pws' => password_hash($_POST['usuario_pws'] ?? '123456', PASSWORD_DEFAULT)
+            ];
+
+            try {
+                if ($this->userModel->create($data)) {
+                    Auth::setFlashMessage('success', 'Usuario creado correctamente.');
+                } else {
+                    Auth::setFlashMessage('error', 'Error al crear el usuario.');
+                }
+            } catch (\PDOException $e) {
+                Auth::setFlashMessage('error', 'Error de base de datos al crear usuario: ' . $e->getMessage());
+            }
+        }
+        $this->redirect('users');
     }
 
     public function update(int $id): void
@@ -104,8 +138,8 @@ class UserController extends Controller
                 'usuario_nombre' => $this->sanitizeInput($_POST['usuario_nombre']),
                 'usuario_apellido' => $this->sanitizeInput($_POST['usuario_apellido']),
                 'usuario_user' => $this->sanitizeInput($_POST['usuario_user']),
-                'estatus_activo_id' => (int)$this->sanitizeInput($_POST['estatus_activo_id']),
-                'tipo_usuario' => (int)$this->sanitizeInput($_POST['tipo_usuario']),
+                'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : 1,
+                'grupo_id' => (int)$this->sanitizeInput($_POST['grupo_id']),
                 'id_persona' => !empty($_POST['id_persona']) ? (int)$this->sanitizeInput($_POST['id_persona']) : null,
             ];
 

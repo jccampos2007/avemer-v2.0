@@ -34,7 +34,7 @@ $(document).ready(function () {
                 { "data": 1 }, // Columna 2: C.I./Pasaporte
                 { "data": 2 }, // Columna 3: Nombre Completo
                 { "data": 3 }, // Columna 4: Usuario
-                { "data": 4 }, // Columna 4: Tipo
+                { "data": 4 }, // Columna 4: Grupo
                 {
                     data: null,
                     orderable: false,
