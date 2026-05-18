@@ -17,6 +17,7 @@ class DiplomadoAbiertoModel
 
     /**
      * Obtiene datos de DiplomadoAbierto para DataTables con paginación, búsqueda y ordenación.
+     * Excluye los registros que han sido borrados de forma lógica.
      *
      * @param array $params Parámetros de DataTables (start, length, search, order, columns).
      * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
@@ -29,7 +30,6 @@ class DiplomadoAbiertoModel
         $searchValue = $params['search']['value'] ?? '';
         $orderColumnIndex = $params['order'][0]['column'] ?? 0;
         $orderDir = $params['order'][0]['dir'] ?? 'asc';
-        $columns = $params['columns'] ?? [];
 
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
@@ -43,17 +43,17 @@ class DiplomadoAbiertoModel
             7 => 'da.nombre_carta',
         ];
 
-        // Construir la consulta base
+        // Construir la consulta base aplicando el filtro de borrado lógico
         $sql = "
             SELECT
                 da.id,
                 da.numero,
                 da.diplomado_id,
-                d.nombre AS diplomado_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'diplomado'
+                d.nombre AS diplomado_nombre,
                 da.sede_id,
-                s.nombre AS sede_nombre,   -- Asumimos 'nombre' es el campo a mostrar de la tabla 'sede'
+                s.nombre AS sede_nombre,
                 da.estatus_id,
-                st.nombre AS estatus_nombre, -- Asumimos 'nombre' es el campo a mostrar de la tabla 'estatus'
+                st.nombre AS estatus_nombre,
                 da.fecha_inicio,
                 da.fecha_fin,
                 da.nombre_carta
@@ -65,6 +65,8 @@ class DiplomadoAbiertoModel
                 sede s ON da.sede_id = s.id
             LEFT JOIN
                 estatus st ON da.estatus_id = st.id
+            WHERE
+                da.deleted_at IS NULL
         ";
         $countSql = "
             SELECT COUNT(*)
@@ -76,6 +78,8 @@ class DiplomadoAbiertoModel
                 sede s ON da.sede_id = s.id
             LEFT JOIN
                 estatus st ON da.estatus_id = st.id
+            WHERE
+                da.deleted_at IS NULL
         ";
 
         $where = [];
@@ -101,8 +105,8 @@ class DiplomadoAbiertoModel
         }
 
         if (!empty($where)) {
-            $sql .= " WHERE " . implode(' AND ', $where);
-            $countSql .= " WHERE " . implode(' AND ', $where);
+            $sql .= " AND " . implode(' AND ', $where);
+            $countSql .= " AND " . implode(' AND ', $where);
         }
 
         // Obtener el total de registros filtrados (después de la búsqueda)
@@ -111,45 +115,50 @@ class DiplomadoAbiertoModel
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'da.id'; // Columna por defecto si no se encuentra
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'da.id';
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
-        // Paginación
+        // Paginación con binding seguro
         $sql .= " LIMIT :start, :length";
-        $queryParams[':start'] = (int) $start;
-        $queryParams[':length'] = (int) $length;
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($queryParams);
+        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+        foreach ($queryParams as $key => $val) {
+            $stmt->bindValue($key, $val);
+        }
+
+        $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Obtener el total de registros sin filtrar (para 'recordsTotal')
-        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table}");
+        // Obtener el total de registros activos sin filtrar
+        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table} WHERE deleted_at IS NULL");
         $recordsTotal = $totalRecordsStmt->fetchColumn();
 
         return [
             'draw' => (int) $draw,
             'recordsTotal' => (int) $recordsTotal,
             'recordsFiltered' => (int) $recordsFiltered,
-            'data' => $data, // Devolvemos los datos tal cual, el controlador los formateará para DataTables
+            'data' => $data,
         ];
     }
 
     /**
-     * Obtiene un registro de diplomado_abierto por su ID.
-     * @param int $id El ID del registro.
-     * @return array|false El registro o false si no se encuentra.
+     * Obtiene un registro activo de diplomado_abierto por su ID.
      */
     public function getById(int $id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+        $sql = "SELECT * FROM {$this->table} WHERE id = :id AND deleted_at IS NULL";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Obtiene todas las aperturas de diplomado activas y que no hayan sido borradas.
+     */
     public function getAllWithRelatedNames()
     {
         $sql = "
@@ -172,7 +181,7 @@ class DiplomadoAbiertoModel
                 sede s ON da.sede_id = s.id
             LEFT JOIN
                 estatus st ON da.estatus_id = st.id
-            WHERE da.estatus_id = 1";
+            WHERE da.estatus_id = 1 AND da.deleted_at IS NULL";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
@@ -182,8 +191,6 @@ class DiplomadoAbiertoModel
 
     /**
      * Crea un nuevo registro en diplomado_abierto.
-     * @param array $data Los datos del nuevo registro.
-     * @return bool True si se creó correctamente, false en caso contrario.
      */
     public function create(array $data): bool
     {
@@ -202,9 +209,6 @@ class DiplomadoAbiertoModel
 
     /**
      * Actualiza un registro existente en diplomado_abierto.
-     * @param int $id El ID del registro a actualizar.
-     * @param array $data Los nuevos datos del registro.
-     * @return bool True si se actualizó correctamente, false en caso contrario.
      */
     public function update(int $id, array $data): bool
     {
@@ -223,13 +227,13 @@ class DiplomadoAbiertoModel
     }
 
     /**
-     * Elimina un registro de diplomado_abierto.
+     * Realiza un BORRADO LÓGICO de la apertura de diplomado.
      * @param int $id El ID del registro a eliminar.
-     * @return bool True si se eliminó correctamente, false en caso contrario.
+     * @return bool True si se marcó como eliminado, false en caso contrario.
      */
     public function delete(int $id): bool
     {
-        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();

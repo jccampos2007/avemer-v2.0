@@ -17,6 +17,7 @@ class MaestriaModel
 
     /**
      * Obtiene datos de Maestría para DataTables con paginación, búsqueda y ordenación.
+     * Excluye automáticamente los registros que han sido borrados lógicamente.
      *
      * @param array $params Parámetros de DataTables (start, length, search, order, columns).
      * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
@@ -29,10 +30,8 @@ class MaestriaModel
         $searchValue = $params['search']['value'] ?? '';
         $orderColumnIndex = $params['order'][0]['column'] ?? 0;
         $orderDir = $params['order'][0]['dir'] ?? 'asc';
-        $columns = $params['columns'] ?? [];
 
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
-        // Asegúrate de que estos índices coincidan con el orden de las columnas en tu DataTables JS
         $columnMap = [
             0 => 'ma.id',
             1 => 'ma.nombre',
@@ -41,11 +40,15 @@ class MaestriaModel
             4 => 'ma.convenio',
         ];
 
-        // Construir la consulta base
+        // Construir la consulta base filtrando solo las maestrías activas (deleted_at IS NULL)
         $sql = "SELECT ma.*, dr.nombre AS duracion_nombre
             FROM {$this->table} ma 
-            JOIN duracion dr ON ma.duracion_id = dr.id";
-        $countSql = "SELECT COUNT(*) FROM {$this->table}";
+            JOIN duracion dr ON ma.duracion_id = dr.id
+            WHERE ma.deleted_at IS NULL";
+            
+        $countSql = "SELECT COUNT(*) 
+            FROM {$this->table} ma 
+            WHERE ma.deleted_at IS NULL";
 
         $where = [];
         $queryParams = [];
@@ -62,8 +65,8 @@ class MaestriaModel
         }
 
         if (!empty($where)) {
-            $sql .= " WHERE " . implode(' AND ', $where);
-            $countSql .= " WHERE " . implode(' AND ', $where);
+            $sql .= " AND " . implode(' AND ', $where);
+            $countSql .= " AND " . implode(' AND ', $where);
         }
 
         // Obtener el total de registros filtrados (después de la búsqueda)
@@ -72,7 +75,7 @@ class MaestriaModel
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'ma.id'; // Columna por defecto si no se encuentra
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'ma.id';
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
@@ -81,32 +84,39 @@ class MaestriaModel
         $queryParams[':start'] = (int) $start;
         $queryParams[':length'] = (int) $length;
 
-        error_log($sql);
-
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($queryParams);
+        // Vinculación segura de enteros para evitar problemas con LIMIT en ciertos drivers PDO
+        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+        foreach ($queryParams as $key => $val) {
+            if ($key !== ':start' && $key !== ':length') {
+                $stmt->bindValue($key, $val);
+            }
+        }
+        
+        $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Obtener el total de registros sin filtrar (para 'recordsTotal')
-        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table}");
+        // Obtener el total de registros activos sin filtrar (para 'recordsTotal')
+        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table} WHERE deleted_at IS NULL");
         $recordsTotal = $totalRecordsStmt->fetchColumn();
 
         return [
             'draw' => (int) $draw,
             'recordsTotal' => (int) $recordsTotal,
             'recordsFiltered' => (int) $recordsFiltered,
-            'data' => $data, // Devolvemos los datos tal cual, el controlador los formateará para DataTables
+            'data' => $data,
         ];
     }
 
     /**
-     * Obtiene un registro de maestría por su ID.
+     * Obtiene un registro de maestría activo por su ID.
      * @param int $id El ID del registro.
-     * @return array|false El registro o false si no se encuentra.
+     * @return array|false El registro o false si no se encuentra o está borrado lógicamente.
      */
     public function getById(int $id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+        $sql = "SELECT * FROM {$this->table} WHERE id = :id AND deleted_at IS NULL";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -115,8 +125,6 @@ class MaestriaModel
 
     /**
      * Crea un nuevo registro en maestría.
-     * @param array $data Los datos del nuevo registro.
-     * @return bool True si se creó correctamente, false en caso contrario.
      */
     public function create(array $data): bool
     {
@@ -132,9 +140,6 @@ class MaestriaModel
 
     /**
      * Actualiza un registro existente en maestría.
-     * @param int $id El ID del registro a actualizar.
-     * @param array $data Los nuevos datos del registro.
-     * @return bool True si se actualizó correctamente, false en caso contrario.
      */
     public function update(int $id, array $data): bool
     {
@@ -150,13 +155,13 @@ class MaestriaModel
     }
 
     /**
-     * Elimina un registro de maestría.
+     * Realiza un BORRADO LÓGICO de la maestría.
      * @param int $id El ID del registro a eliminar.
-     * @return bool True si se eliminó correctamente, false en caso contrario.
+     * @return bool True si se marcó como eliminado, false en caso contrario.
      */
     public function delete(int $id): bool
     {
-        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
