@@ -103,6 +103,9 @@ class UserController extends Controller
 
     public function store(): void
     {
+        error_log("=== UserController::store() INICIADO ===");
+        error_log("Datos POST recibidos: " . print_r($_POST, true));
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'usuario_cedula' => $this->sanitizeInput($_POST['usuario_cedula']),
@@ -112,20 +115,27 @@ class UserController extends Controller
                 'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : 1,
                 'grupo_id' => (int)$this->sanitizeInput($_POST['grupo_id']),
                 'id_persona' => !empty($_POST['id_persona']) ? (int)$this->sanitizeInput($_POST['id_persona']) : null,
-                'usuario_idreg' => Auth::user('user_id'),
+                'usuario_idreg' => Auth::user('user_id') ?? 1, // Fallback a 1 si no hay usuario en sesión
                 'usuario_fechareg' => date('Y-m-d H:i:s'),
                 'usuario_pws' => password_hash($_POST['usuario_pws'] ?? '123456', PASSWORD_DEFAULT)
             ];
 
+            error_log("Datos procesados para guardar: " . print_r($data, true));
+
             try {
                 if ($this->userModel->create($data)) {
+                    error_log("-> Usuario guardado en BD con éxito.");
                     Auth::setFlashMessage('success', 'Usuario creado correctamente.');
                 } else {
+                    error_log("-> Falla en el modelo userModel->create().");
                     Auth::setFlashMessage('error', 'Error al crear el usuario.');
                 }
             } catch (\PDOException $e) {
+                error_log("-> Excepción PDO: " . $e->getMessage());
                 Auth::setFlashMessage('error', 'Error de base de datos al crear usuario: ' . $e->getMessage());
             }
+        } else {
+            error_log("-> Método no es POST.");
         }
         $this->redirect('users');
     }

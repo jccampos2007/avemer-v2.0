@@ -135,7 +135,11 @@ class UserModel
 
     public function findByUsername(string $username): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM usuario WHERE usuario_user = :username");
+        $sql = "SELECT u.*, g.nombre_grupo 
+                FROM usuario u 
+                LEFT JOIN grupo g ON u.grupo_id = g.grupo_id 
+                WHERE u.usuario_user = :username";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['username' => $username]);
         $user = $stmt->fetch();
         return $user ?: null;

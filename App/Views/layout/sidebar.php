@@ -348,7 +348,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
             
             <div class="mt-2 text-center w-full px-2">
                 <p class="text-sm font-medium text-white truncate"><?php echo Auth::user('user_name'); ?></p>
-                <p class="text-xs text-gray-400 truncate"><?php echo Auth::user('username'); ?></p>
+                <p class="text-xs text-gray-400 truncate"><?php echo Auth::user('nombre_grupo'); ?></p>
             </div>
         </div>
         
