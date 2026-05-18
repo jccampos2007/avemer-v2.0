@@ -334,19 +334,26 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
         </nav>
     </div>
 
-    <!-- Perfil de usuario y Logout al final -->
+    <!-- Perfil de usuario y Logout -->
+    <?php
+    // User profile photo (fallback to default avatar)
+    $profileImg = Auth::user('profile_image') ?? null;
+    $avatarPath = $profileImg ? BASE_URL . 'uploads/avatars/' . $profileImg : BASE_URL . 'image/default-avatar.png';
+    ?>
     <div class="mt-8 pt-4 border-t border-gray-700">
-        <div class="flex items-center mb-4">
-            <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
-                <?php echo strtoupper(substr(Auth::user('user_name') ?? 'U', 0, 1)); ?>
+        <div class="flex flex-col items-center mb-4">
+            <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-600 flex items-center justify-center flex-shrink-0">
+                <img src="<?php echo $avatarPath; ?>" alt="User Avatar" class="w-full h-full object-cover" />
             </div>
-            <div class="ml-3 overflow-hidden">
+            
+            <div class="mt-2 text-center w-full px-2">
                 <p class="text-sm font-medium text-white truncate"><?php echo Auth::user('user_name'); ?></p>
-                <p class="text-xs text-gray-400 truncate"><?php echo Auth::user('username'); ?></p>
+                <p class="text-xs text-gray-400 truncate"><?php echo Auth::user('nombre_grupo'); ?></p>
             </div>
         </div>
+        
         <a href="<?php echo BASE_URL; ?>logout"
-            class="block w-full py-2 px-4 rounded bg-red-600 hover:bg-red-700 text-center transition duration-200">
+            class="block w-full py-2 px-4 rounded bg-red-600 hover:bg-red-700 text-center text-white text-sm transition duration-200">
             <i class="fa fa-sign-out-alt mr-2"></i> Cerrar Sesión
         </a>
     </div>

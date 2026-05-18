@@ -55,21 +55,21 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
                 <input type="hidden" name="profesion_oficio_current" id="profesion_oficio_current" value="<?php echo $alumno_data['profesion_oficio_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="estado_id" class="block text-gray-700 text-sm font-bold mb-2">Estado ID:</label>
+                <label for="estado_id" class="block text-gray-700 text-sm font-bold mb-2">Estado:</label>
                 <select id="estado_id" name="estado_id" class="input-form focus:outline-none focus:shadow-outline">
                     <option value="">Seleccione una opción</option>
                 </select>
                 <input type="hidden" name="estado_current" id="estado_current" value="<?php echo $alumno_data['estado_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="nacionalidad_id" class="block text-gray-700 text-sm font-bold mb-2">Nacionalidad ID:</label>
+                <label for="nacionalidad_id" class="block text-gray-700 text-sm font-bold mb-2">Nacionalidad:</label>
                 <select id="nacionalidad_id" name="nacionalidad_id" class="input-form focus:outline-none focus:shadow-outline">
                     <option value="">Seleccione una opción</option>
                 </select>
                 <input type="hidden" name="nacionalidad_current" id="nacionalidad_current" value="<?php echo $alumno_data['nacionalidad_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="estatus_activo_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus Activo ID:</label>
+                <label for="estatus_activo_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus Activo:</label>
                 <select id="estatus_activo_id" name="estatus_activo_id" class="input-form focus:outline-none focus:shadow-outline">
                     <option value="">Seleccione una opción</option>
                 </select>

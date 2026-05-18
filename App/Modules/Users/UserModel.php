@@ -39,32 +39,33 @@ class UserModel
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         // usuario_cedula, usuario_nombre, usuario_apellido, usuario_user
         $columnMap = [
-            0 => 'usuario_id',
-            1 => 'usuario_cedula',
-            2 => 'usuario_nombre', // Se usará para búsqueda combinada de nombre completo
-            3 => 'usuario_apellido',
-            3 => 'usuario_user',
+            0 => 'u.usuario_id',
+            1 => 'u.usuario_cedula',
+            2 => 'u.usuario_nombre', // Se usará para búsqueda combinada de nombre completo
+            3 => 'u.usuario_apellido',
+            4 => 'u.usuario_user',
+            5 => 'g.nombre_grupo'
         ];
 
         // Construir la consulta base
-        $sql = "SELECT usuario_id, usuario_cedula, usuario_nombre, usuario_apellido, usuario_user, tipo_usuario FROM usuario";
-        $countSql = "SELECT COUNT(*) FROM usuario";
+        $sql = "SELECT u.usuario_id, u.usuario_cedula, u.usuario_nombre, u.usuario_apellido, u.usuario_user, u.grupo_id, g.nombre_grupo FROM usuario u LEFT JOIN grupo g ON u.grupo_id = g.grupo_id";
+        $countSql = "SELECT COUNT(*) FROM usuario u LEFT JOIN grupo g ON u.grupo_id = g.grupo_id";
         $where = [];
         $queryParams = [];
 
         // Búsqueda global
         if (!empty($searchValue)) {
-            $where[] = "(usuario_cedula LIKE :usuario_cedula "
-                . "OR usuario_nombre LIKE :usuario_nombre "
-                . "OR usuario_apellido LIKE :usuario_apellido "
-                . "OR usuario_user LIKE :usuario_user "
-                . "OR tipo_usuario LIKE :tipo_usuario)";
+            $where[] = "(u.usuario_cedula LIKE :usuario_cedula "
+                . "OR u.usuario_nombre LIKE :usuario_nombre "
+                . "OR u.usuario_apellido LIKE :usuario_apellido "
+                . "OR u.usuario_user LIKE :usuario_user "
+                . "OR g.nombre_grupo LIKE :nombre_grupo)";
             $like = '%' . $searchValue . '%';
             $queryParams[':usuario_cedula'] = $like;
             $queryParams[':usuario_nombre'] = $like;
             $queryParams[':usuario_apellido'] = $like;
             $queryParams[':usuario_user'] = $like;
-            $queryParams[':tipo_usuario'] = $like;
+            $queryParams[':nombre_grupo'] = $like;
         }
 
         if (!empty($where)) {
@@ -78,12 +79,12 @@ class UserModel
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'usuario_id'; // Columna por defecto si no se encuentra
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'u.usuario_id'; // Columna por defecto si no se encuentra
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
 
         // Ajuste para ordenar por nombre completo si la columna 2 es seleccionada
-        if ($orderColumnName === 'usuario_nombre') {
-            $sql .= " ORDER BY usuario_nombre {$orderDir}, usuario_user {$orderDir}";
+        if ($orderColumnName === 'u.usuario_nombre') {
+            $sql .= " ORDER BY u.usuario_nombre {$orderDir}, u.usuario_user {$orderDir}";
         } else {
             $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
         }
@@ -107,7 +108,7 @@ class UserModel
                 $row['usuario_cedula'],
                 htmlspecialchars($row['usuario_nombre']  . ' ' . $row['usuario_apellido']),
                 $row['usuario_user'],
-                $row['tipo_usuario'] == 1 ? 'Usuario' : 'Alumno',
+                $row['nombre_grupo'] ?? 'Sin Grupo',
                 ''
             ];
         }
@@ -134,7 +135,11 @@ class UserModel
 
     public function findByUsername(string $username): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM usuario WHERE usuario_user = :username");
+        $sql = "SELECT u.*, g.nombre_grupo 
+                FROM usuario u 
+                LEFT JOIN grupo g ON u.grupo_id = g.grupo_id 
+                WHERE u.usuario_user = :username";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['username' => $username]);
         $user = $stmt->fetch();
         return $user ?: null;
@@ -142,7 +147,7 @@ class UserModel
 
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO usuario (usuario_cedula, usuario_nombre, usuario_apellido, usuario_user, usuario_pws, estatus_activo_id, tipo_usuario, usuario_idreg, usuario_fechareg, id_persona) VALUES (:cedula, :nombre, :apellido, :user, :pws, :estatus_id, :tipo_usuario, :idreg, :fechareg, :id_persona)";
+        $sql = "INSERT INTO usuario (usuario_cedula, usuario_nombre, usuario_apellido, usuario_user, usuario_pws, estatus_activo_id, grupo_id, usuario_idreg, usuario_fechareg, id_persona) VALUES (:cedula, :nombre, :apellido, :user, :pws, :estatus_id, :grupo_id, :idreg, :fechareg, :id_persona)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'cedula' => $data['usuario_cedula'],
@@ -151,7 +156,7 @@ class UserModel
             'user' => $data['usuario_user'],
             'pws' => $data['usuario_pws'], // Ya debe venir hasheada
             'estatus_id' => $data['estatus_activo_id'],
-            'tipo_usuario' => $data['tipo_usuario'],
+            'grupo_id' => $data['grupo_id'],
             'idreg' => $data['usuario_idreg'],
             'fechareg' => $data['usuario_fechareg'],
             'id_persona' => $data['id_persona']
@@ -160,7 +165,7 @@ class UserModel
 
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE usuario SET usuario_cedula = :cedula, usuario_nombre = :nombre, usuario_apellido = :apellido, usuario_user = :user, estatus_activo_id = :estatus_id, tipo_usuario = :tipo_usuario, id_persona = :id_persona WHERE usuario_id = :id";
+        $sql = "UPDATE usuario SET usuario_cedula = :cedula, usuario_nombre = :nombre, usuario_apellido = :apellido, usuario_user = :user, estatus_activo_id = :estatus_id, grupo_id = :grupo_id, id_persona = :id_persona WHERE usuario_id = :id";
         $stmt = $this->pdo->prepare($sql);
         $result = $stmt->execute([
             'cedula' => $data['usuario_cedula'],
@@ -168,7 +173,7 @@ class UserModel
             'apellido' => $data['usuario_apellido'],
             'user' => $data['usuario_user'],
             'estatus_id' => $data['estatus_activo_id'],
-            'tipo_usuario' => $data['tipo_usuario'],
+            'grupo_id' => $data['grupo_id'],
             'id_persona' => $data['id_persona'],
             'id' => $id
         ]);

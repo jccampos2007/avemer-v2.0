@@ -30,11 +30,25 @@ $(document).ready(function () {
                     "orderable": false,
                     "searchable": false,
                     "render": function (data, type, row) {
-                        const id = row[0]; // El ID está en la primera columna (índice 0)
-                        return `
-                            <a href="evento/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
-                            <a href="evento/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
-                        `;
+                        let actions = '<div class="flex gap-2 justify-center">';
+                        
+                        if (typeof EVENTO_PERMISSIONS !== 'undefined') {
+                            if (EVENTO_PERMISSIONS.modificar) {
+                                actions += `<a href="evento/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>`;
+                            }
+                            if (EVENTO_PERMISSIONS.eliminar) {
+                                actions += `<a href="evento/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
+                            }
+                        } else {
+                            // Fallback por si la variable no está definida
+                            actions += `
+                                <a href="evento/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                                <a href="evento/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
+                            `;
+                        }
+                        
+                        actions += '</div>';
+                        return actions;
                     }
                 }
             ],

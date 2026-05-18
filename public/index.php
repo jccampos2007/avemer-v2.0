@@ -56,7 +56,7 @@ $router->add('GET', '/dashboard', DashboardController::class . '@index');
 // Rutas de Usuarios (CRUD)
 $router->add('GET', '/users', UserController::class . '@index');
 $router->add('GET', '/users/create', UserController::class . '@create');
-$router->add('POST', '/users/store', UserController::class . '@create');
+$router->add('POST', '/users/store', UserController::class . '@store');
 $router->add('GET', '/users/edit/{id}', UserController::class . '@edit');
 $router->add('POST', '/users/update/{id}', UserController::class . '@update');
 $router->add('GET', '/users/delete/{id}', UserController::class . '@delete');
