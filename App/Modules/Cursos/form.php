@@ -4,7 +4,7 @@
 $is_edit = isset($curso_data['id']) && !empty($curso_data['id']);
 ?>
 <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
-    <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Taller' : 'Crear Nuevo Taller'; ?></h3>
+    <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Taller / Curso' : 'Crear Nuevo Taller / Curso'; ?></h3>
     <form id="formCurso" action="<?php echo BASE_URL; ?>cursos/<?php echo ($is_edit) ? 'edit/' . $curso_data['id'] : 'create'; ?>" method="POST">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>

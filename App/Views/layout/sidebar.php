@@ -119,7 +119,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                 <li x-data="{ talleresOpen: <?php echo $isTalleresActive ? 'true' : 'false'; ?> }">
                     <button @click="talleresOpen = !talleresOpen"
                         class="w-full flex justify-between items-center py-2 px-4 rounded hover:bg-gray-700 transition duration-200 <?php echo $isTalleresActive ? 'text-blue-300 font-semibold' : ''; ?>">
-                        <span><i class="fa fa-chalkboard-teacher mr-2"></i> Talleres</span>
+                        <span><i class="fa fa-chalkboard-teacher mr-2"></i> Talleres / Cursos</span>
                         <svg :class="{'rotate-180': talleresOpen}" class="w-4 h-4 transform transition-transform duration-200"
                             fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -128,7 +128,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                     </button>
                     <ul x-show="talleresOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <?php if ($canSeeCursos): ?>
-                        <li><a href="<?php echo BASE_URL; ?>cursos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'cursos') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-book mr-2"></i> Talleres</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>cursos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'cursos') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-book mr-2"></i> Talleres / Cursos</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeCursosAbiertos): ?>
                         <li><a href="<?php echo BASE_URL; ?>cursos_abiertos" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'cursos_abiertos') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-unlock mr-2"></i> Apertura</a></li>
