@@ -8,20 +8,25 @@ use PDO;
 class CursoAbiertoModel
 {
     private $pdo;
+    private $table = 'curso_abierto';
 
     public function __construct()
     {
         $this->pdo = Database::getInstance()->getConnection();
     }
 
+    /**
+     * Obtiene todas las aperturas de cursos activas que no han sido borradas.
+     */
     public function getAll(): array
     {
-        $stmt = $this->pdo->query("SELECT id, numero, curso_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio FROM curso_abierto ORDER BY id DESC");
+        $stmt = $this->pdo->query("SELECT id, numero, curso_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio FROM {$this->table} WHERE deleted_at IS NULL ORDER BY id DESC");
         return $stmt->fetchAll();
     }
 
     /**
-     * Obtiene datos de Cursos Abiertos para DataTables con paginación, búsqueda y ordenación.
+     * Obtiene datos de Cursos Abiertos para DataTables con paginación, búsqueda, ordenación 
+     * y filtrado de borrado lógico.
      *
      * @param array $params Parámetros de DataTables (start, length, search, order, columns).
      * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
@@ -34,7 +39,6 @@ class CursoAbiertoModel
         $searchValue = $params['search']['value'] ?? '';
         $orderColumnIndex = $params['order'][0]['column'] ?? 0;
         $orderDir = $params['order'][0]['dir'] ?? 'asc';
-        $columns = $params['columns'] ?? [];
 
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
@@ -59,7 +63,7 @@ class CursoAbiertoModel
             e.nombre AS estatus_nombre,
             CONCAT(d.primer_apellido, ', ', d.primer_nombre) AS docente_nombre
         FROM
-            curso_abierto ca
+            {$this->table} ca
                 LEFT JOIN
             curso c ON ca.curso_id = c.id
                 LEFT JOIN
@@ -68,8 +72,9 @@ class CursoAbiertoModel
             estatus e ON ca.estatus_id = e.id
                 LEFT JOIN
             docente d ON ca.docente_id = d.id";
+
         $countSql = "SELECT COUNT(*) FROM
-            curso_abierto ca
+            {$this->table} ca
                 LEFT JOIN
             curso c ON ca.curso_id = c.id
                 LEFT JOIN
@@ -78,7 +83,9 @@ class CursoAbiertoModel
             estatus e ON ca.estatus_id = e.id
                 LEFT JOIN
             docente d ON ca.docente_id = d.id";
-        $where = [];
+
+        // Filtro base de borrado lógico
+        $where = ["ca.deleted_at IS NULL"];
         $queryParams = [];
 
         // Búsqueda global
@@ -109,18 +116,20 @@ class CursoAbiertoModel
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'id'; // Columna por defecto si no se encuentra
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'id';
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'desc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
-        // Paginación
+        // Paginación con enlace seguro de enteros
         $sql .= " LIMIT :start, :length";
-        $queryParams[':start'] = (int) $start;
-        $queryParams[':length'] = (int) $length;
-
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($queryParams);
+        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+        foreach ($queryParams as $key => $val) {
+            $stmt->bindValue($key, $val);
+        }
+        $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Formatear los datos para DataTables
@@ -138,8 +147,8 @@ class CursoAbiertoModel
             ];
         }
 
-        // Obtener el total de registros sin filtrar (para 'recordsTotal')
-        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM curso_abierto");
+        // Obtener el total de registros activos sin filtrar (para 'recordsTotal')
+        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table} WHERE deleted_at IS NULL");
         $recordsTotal = $totalRecordsStmt->fetchColumn();
 
         return [
@@ -150,17 +159,37 @@ class CursoAbiertoModel
         ];
     }
 
+    /**
+     * Busca una apertura de curso activa por su ID.
+     */
     public function findById(int $id): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM curso_abierto WHERE id = :id");
+        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id AND deleted_at IS NULL");
         $stmt->execute(['id' => $id]);
         $curso_abierto = $stmt->fetch();
         return $curso_abierto ?: null;
     }
 
+    /**
+     * Cuenta si hay alumnos matriculados en esta apertura de curso para evitar su borrado accidental.
+     * Ajustar el nombre de la tabla (por ejemplo, 'inscrito_curso') según corresponda en tu base de datos.
+     *
+     * @param int $cursoAbiertoId ID de la apertura del curso.
+     * @return int Cantidad de inscritos.
+     */
+    public function countInscritos(int $cursoAbiertoId): int
+    {
+        // Ajusta el nombre de la tabla pivote/inscritos si es diferente en tu base de datos
+        $sql = "SELECT COUNT(*) FROM inscrito_curso WHERE curso_abierto_id = :curso_abierto_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':curso_abierto_id', $cursoAbiertoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO curso_abierto (numero, curso_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio) VALUES (:numero, :curso_id, :sede_id, :estatus_id, :docente_id, :fecha, :nombre_carta, :convenio)";
+        $sql = "INSERT INTO {$this->table} (numero, curso_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio) VALUES (:numero, :curso_id, :sede_id, :estatus_id, :docente_id, :fecha, :nombre_carta, :convenio)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'numero' => $data['numero'],
@@ -176,7 +205,7 @@ class CursoAbiertoModel
 
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE curso_abierto SET numero = :numero, curso_id = :curso_id, sede_id = :sede_id, estatus_id = :estatus_id, docente_id = :docente_id, fecha = :fecha, nombre_carta = :nombre_carta, convenio = :convenio WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET numero = :numero, curso_id = :curso_id, sede_id = :sede_id, estatus_id = :estatus_id, docente_id = :docente_id, fecha = :fecha, nombre_carta = :nombre_carta, convenio = :convenio WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $params = [
             'numero' => $data['numero'],
@@ -192,9 +221,12 @@ class CursoAbiertoModel
         return $stmt->execute($params);
     }
 
+    /**
+     * Realiza un BORRADO LÓGICO de la apertura de curso.
+     */
     public function delete(int $id): bool
     {
-        $stmt = $this->pdo->prepare("DELETE FROM curso_abierto WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id");
         return $stmt->execute(['id' => $id]);
     }
 }

@@ -1,7 +1,8 @@
 <?php
+
 /**
- * Vista temporal para el módulo de Pagos (Coming Soon)
- * Ubicación sugerida: app/Modules/Pagos/Views/pago.php
+ * Vista temporal para el módulo de Cronograma (Coming Soon)
+ * Ubicación sugerida: app/Modules/Cronograma/cronograma.php
  */
 ?>
 
@@ -17,13 +18,12 @@
         </svg>
     </div>
 
-    <h2 class="text-4xl font-bold text-gray-800 mb-2 text-center">Módulo de Pagos</h2>
+    <h2 class="text-4xl font-bold text-gray-800 mb-2 text-center">Módulo de Cronograma</h2>
     <p class="text-xl text-gray-500 mb-10 text-center max-w-md">
-        Estamos trabajando para ofrecerte la mejor experiencia en la gestión de tus transacciones. ¡Próximamente disponible!
+        Estamos trabajando para ofrecerte la mejor experiencia en la gestión del cronograma. ¡Próximamente disponible!
     </p>
 
     <div class="flex space-x-4 mt-12">
-        <!-- Botón con el padding exacto de la imagen: py-2 px-4 -->
         <a href="<?php echo BASE_URL; ?>dashboard" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow focus:outline-none focus:shadow-outline transition duration-200">
             Volver al Inicio
         </a>

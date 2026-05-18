@@ -8,20 +8,25 @@ use PDO;
 class CursoModel
 {
     private $pdo;
+    private $table = 'curso';
 
     public function __construct()
     {
         $this->pdo = Database::getInstance()->getConnection();
     }
 
+    /**
+     * Obtiene todos los cursos que no han sido borrados lógicamente.
+     */
     public function getAll(): array
     {
-        $stmt = $this->pdo->query("SELECT id, nombre, numero, horas, convenio FROM curso ORDER BY id DESC");
+        $stmt = $this->pdo->query("SELECT id, nombre, numero, horas, convenio FROM {$this->table} WHERE deleted_at IS NULL ORDER BY id DESC");
         return $stmt->fetchAll();
     }
 
     /**
-     * Obtiene datos de Cursos para DataTables con paginación, búsqueda y ordenación.
+     * Obtiene datos de Cursos para DataTables con paginación, búsqueda, ordenación 
+     * y filtrado de borrado lógico.
      *
      * @param array $params Parámetros de DataTables (start, length, search, order, columns).
      * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
@@ -34,7 +39,6 @@ class CursoModel
         $searchValue = $params['search']['value'] ?? '';
         $orderColumnIndex = $params['order'][0]['column'] ?? 0;
         $orderDir = $params['order'][0]['dir'] ?? 'asc';
-        $columns = $params['columns'] ?? [];
 
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
@@ -46,16 +50,16 @@ class CursoModel
         ];
 
         // Construir la consulta base
-        $sql = "SELECT id, nombre, numero, horas, convenio FROM curso";
-        $countSql = "SELECT COUNT(*) FROM curso";
-        $where = [];
+        $sql = "SELECT id, nombre, numero, horas, convenio FROM {$this->table}";
+        $countSql = "SELECT COUNT(*) FROM {$this->table}";
+        
+        // Filtro base de borrado lógico
+        $where = ["deleted_at IS NULL"];
         $queryParams = [];
 
         // Búsqueda global
         if (!empty($searchValue)) {
-            $where[] = "(nombre LIKE :nombre "
-                . "OR numero LIKE :numero "
-                . "OR convenio LIKE :convenio)";
+            $where[] = "(nombre LIKE :nombre OR numero LIKE :numero OR convenio LIKE :convenio)";
             $like = '%' . $searchValue . '%';
             $queryParams[':nombre'] = $like;
             $queryParams[':numero'] = $like;
@@ -73,18 +77,20 @@ class CursoModel
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'id'; // Columna por defecto si no se encuentra
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'id';
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
-        // Paginación
+        // Paginación con enlace seguro de enteros
         $sql .= " LIMIT :start, :length";
-        $queryParams[':start'] = (int) $start;
-        $queryParams[':length'] = (int) $length;
-
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($queryParams);
+        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+        foreach ($queryParams as $key => $val) {
+            $stmt->bindValue($key, $val);
+        }
+        $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Formatear los datos para DataTables
@@ -100,8 +106,8 @@ class CursoModel
             ];
         }
 
-        // Obtener el total de registros sin filtrar (para 'recordsTotal')
-        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM curso");
+        // Obtener el total de registros activos sin filtrar (para 'recordsTotal')
+        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table} WHERE deleted_at IS NULL");
         $recordsTotal = $totalRecordsStmt->fetchColumn();
 
         return [
@@ -112,9 +118,12 @@ class CursoModel
         ];
     }
 
+    /**
+     * Busca un curso activo por su ID.
+     */
     public function findById(int $id): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM curso WHERE id = :id");
+        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id AND deleted_at IS NULL");
         $stmt->execute(['id' => $id]);
         $curso = $stmt->fetch();
         return $curso ?: null;
@@ -122,7 +131,7 @@ class CursoModel
 
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO curso (nombre, numero, horas, convenio) VALUES (:nombre, :numero, :horas, :convenio)";
+        $sql = "INSERT INTO {$this->table} (nombre, numero, horas, convenio) VALUES (:nombre, :numero, :horas, :convenio)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'nombre' => $data['nombre'],
@@ -134,7 +143,7 @@ class CursoModel
 
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE curso SET nombre = :nombre, numero = :numero, horas = :horas, convenio = :convenio WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET nombre = :nombre, numero = :numero, horas = :horas, convenio = :convenio WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $params = [
             'nombre' => $data['nombre'],
@@ -146,9 +155,12 @@ class CursoModel
         return $stmt->execute($params);
     }
 
+    /**
+     * Realiza un BORRADO LÓGICO del curso.
+     */
     public function delete(int $id): bool
     {
-        $stmt = $this->pdo->prepare("DELETE FROM curso WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id");
         return $stmt->execute(['id' => $id]);
     }
 }
