@@ -10,6 +10,14 @@ class DashboardController extends Controller
     public function index(): void
     {
         Auth::requireLogin(); // Asegura que el usuario esté logueado
-        $this->view('Dashboard/index'); // Ruta de vista relativa al módulo
+        
+        $dashboardModel = new DashboardModel();
+        $stats = $dashboardModel->getInscripcionesStats();
+        $lastMonthStats = $dashboardModel->getInscripcionesLastMonthStats();
+        
+        $this->view('Dashboard/index', [
+            'stats' => $stats,
+            'lastMonthStats' => $lastMonthStats
+        ]); // Ruta de vista relativa al módulo
     }
 }

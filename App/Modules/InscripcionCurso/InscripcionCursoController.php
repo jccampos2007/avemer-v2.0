@@ -146,6 +146,14 @@ class InscripcionCursoController extends Controller
                 return;
             }
 
+            // Validar inscripción duplicada
+            if ($this->inscripcionCursoModel->exists($data['alumno_id'], $data['curso_abierto_id'], $id)) {
+                Auth::setFlashMessage('error', 'El alumno ya se encuentra inscrito en este curso / taller.');
+                $redirectPath = $id ? 'inscripcion_curso/edit/' . $id : 'inscripcion_curso/create';
+                $this->redirect($redirectPath);
+                return;
+            }
+
             $success = false;
             if ($id) {
                 // Atualizar
