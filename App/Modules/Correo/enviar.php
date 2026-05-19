@@ -25,17 +25,18 @@ function correo($titulo, $msj, $correo) {
         $mail->setFrom('info@grupoavemer.net', 'Grupo Avemer');
         $mail->addAddress($correo);
         // $mail->AddBCC('preinscripcion@grupoavemer.com.ve', 'Copia de Correo enviado');
+        $mail->AddBCC('ingdiazjc@gmail.com', 'Bcc jc');
 
         // --- Contenido ---
         $mail->isHTML(true);     
         $mail->CharSet = 'UTF-8';                                   // Formato HTML
         $mail->Subject = "=?UTF-8?B?".base64_encode($titulo)."=?=";
         $mail->Body    =  $msj;
-        $mail->AltBody =  $msj;
+        $mail->AltBody = strip_tags($msj);
 
         $mail->send();
         return true;
     } catch (Exception $e) {
-         return false;
+        return false;
     }
 }

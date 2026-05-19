@@ -4,6 +4,9 @@
  * Backend para manejar las solicitudes de preinscripción.
  */
 
+// Desactivar PCRE JIT para evitar errores de asignación de memoria en entornos restringidos
+ini_set('pcre.jit', 0);
+
 // 1. CARGAR VARIABLES DE ENTORNO DESDE .ENV
 function loadEnv($path) {
     if (!file_exists($path)) return false;
@@ -17,7 +20,7 @@ function loadEnv($path) {
 }
 
 // Ajusta la ruta al archivo .env según tu estructura de carpetas
-loadEnv(__DIR__ . '../../.env'); // Asumiendo que el .env está en la raíz del proyecto (php_mvc_app/.env)
+loadEnv(__DIR__ . '/../.env'); // Asumiendo que el .env está en la raíz del proyecto (php_mvc_app/.env)
 
 // 2. CONFIGURACIÓN DE CABECERAS (CORS y JSON)
 header("Content-Type: application/json; charset=UTF-8");
@@ -27,9 +30,9 @@ header("Access-Control-Allow-Methods: POST");
 // 3. CONEXIÓN A LA BASE DE DATOS
 try {
     $host = $_ENV['DB_HOST'] ?? 'localhost';
-    $db   = $_ENV['DB_NAME'] ?? 'tu_base_de_datos';
-    $user = $_ENV['DB_USER'] ?? 'root';
-    $pass = $_ENV['DB_PASS'] ?? '';
+    $db   = $_ENV['DB_NAME'] ?? 'grupoave_avemer';
+    $user = $_ENV['DB_USER'] ?? 'udbgravseg';
+    $pass = $_ENV['DB_PASS'] ?? 'Db.Em81w3';
     $charset = 'utf8mb4';
 
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -174,6 +177,156 @@ switch ($action) {
             } else {
                 $stmt = $pdo->prepare("INSERT INTO inscripcion_{$table} (alumno_id, {$table}_abierto_id, estatus_inscripcion_id) VALUES (?, ?, 1)");
                 $stmt->execute([$alumno_id, $oferta_id]);
+
+                // ENVIAR EMAIL DE NOTIFICACIÓN
+                try {
+                    require_once __DIR__ . '/../App/Modules/Correo/enviar.php';
+
+                    // 1. Consultar detalles de la oferta según typeId
+                    $offerInfo = [];
+                    $programType = '';
+                    switch ($typeId) {
+                        case 1:
+                            $stmtOffer = $pdo->prepare("
+                                SELECT ca.numero, c.nombre, s.nombre AS sede_nombre 
+                                FROM curso_abierto ca
+                                INNER JOIN curso c ON ca.curso_id = c.id 
+                                INNER JOIN sede s ON ca.sede_id = s.id
+                                WHERE ca.id = ?
+                            ");
+                            $stmtOffer->execute([$oferta_id]);
+                            $offerInfo = $stmtOffer->fetch();
+                            $programType = 'Curso / Taller';
+                            break;
+                        case 2:
+                            $stmtOffer = $pdo->prepare("
+                                SELECT da.numero, d.nombre, s.nombre AS sede_nombre 
+                                FROM diplomado_abierto da
+                                LEFT JOIN diplomado d ON da.diplomado_id = d.id
+                                LEFT JOIN sede s ON da.sede_id = s.id
+                                WHERE da.id = ?
+                            ");
+                            $stmtOffer->execute([$oferta_id]);
+                            $offerInfo = $stmtOffer->fetch();
+                            $programType = 'Diplomado';
+                            break;
+                        case 3:
+                            $stmtOffer = $pdo->prepare("
+                                SELECT ea.numero, e.nombre, s.nombre AS sede_nombre 
+                                FROM evento_abierto ea
+                                INNER JOIN evento e ON ea.evento_id = e.id 
+                                INNER JOIN sede s ON ea.sede_id = s.id
+                                WHERE ea.id = ?
+                            ");
+                            $stmtOffer->execute([$oferta_id]);
+                            $offerInfo = $stmtOffer->fetch();
+                            $programType = 'Evento';
+                            break;
+                        case 4:
+                            $stmtOffer = $pdo->prepare("
+                                SELECT ma.numero, m.nombre, s.nombre AS sede_nombre 
+                                FROM maestria_abierto ma
+                                INNER JOIN maestria m ON ma.maestria_id = m.id 
+                                INNER JOIN sede s ON ma.sede_id = s.id
+                                WHERE ma.id = ?
+                            ");
+                            $stmtOffer->execute([$oferta_id]);
+                            $offerInfo = $stmtOffer->fetch();
+                            $programType = 'Maestría';
+                            break;
+                    }
+
+                    // 2. Consultar detalles del Alumno
+                    $stmtAlumno = $pdo->prepare("SELECT * FROM alumno WHERE id = ?");
+                    $stmtAlumno->execute([$alumno_id]);
+                    $alumnoInfo = $stmtAlumno->fetch();
+
+                    if ($alumnoInfo && $offerInfo) {
+                        $ci = htmlspecialchars($alumnoInfo['ci_pasapote'] ?? '');
+                        $alumnoName = htmlspecialchars(($alumnoInfo['primer_nombre'] ?? '') . ' ' . ($alumnoInfo['primer_apellido'] ?? ''));
+                        $alumnoCorreo = htmlspecialchars($alumnoInfo['correo'] ?? '');
+                        $alumnoTlf = htmlspecialchars($alumnoInfo['tlf_celular'] ?? '');
+
+                        $numeroProgram = htmlspecialchars($offerInfo['numero'] ?? '');
+                        $nombreProgram = htmlspecialchars($offerInfo['nombre'] ?? '');
+                        $sedeProgram = htmlspecialchars($offerInfo['sede_nombre'] ?? '');
+
+                        // HTML Template
+                        $emailBody = '
+                        <!DOCTYPE html>
+                        <html lang="es">
+                        <head>
+                            <meta charset="UTF-8">
+                            <title>Nueva Preinscripción</title>
+                        </head>
+                        <body style="font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; -webkit-font-smoothing: antialiased;">
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border-collapse: collapse;">
+                                <tr>
+                                    <td style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 30px; text-align: center;">
+                                        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 0.5px;">Nueva Pre-inscripción Registrada</h1>
+                                        <p style="color: #dbeafe; margin: 5px 0 0 0; font-size: 14px;">Landing Page - Sistema de Gestión</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 30px; color: #334155; font-size: 16px; line-height: 1.6;">
+                                        <p style="margin-top: 0; font-size: 16px; font-weight: bold; color: #1e293b;">Detalles del Alumno:</p>
+                                        <table width="100%" style="border-collapse: collapse; margin-bottom: 25px; background-color: #f8fafc; border-radius: 6px; overflow: hidden;">
+                                            <tr>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b; width: 35%;">CI / Pasaporte:</td>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $ci . '</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Nombre Completo:</td>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $alumnoName . '</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Correo:</td>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $alumnoCorreo . '</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 15px; font-weight: 600; color: #64748b;">Celular:</td>
+                                                <td style="padding: 12px 15px; color: #0f172a;">' . $alumnoTlf . '</td>
+                                            </tr>
+                                        </table>
+
+                                        <p style="font-size: 16px; font-weight: bold; color: #1e293b; margin-top: 20px;">Programa Seleccionado:</p>
+                                        <table width="100%" style="border-collapse: collapse; background-color: #f8fafc; border-radius: 6px; overflow: hidden;">
+                                            <tr>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b; width: 35%;">Tipo:</td>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">' . $programType . '</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Número:</td>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $numeroProgram . '</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Nombre:</td>
+                                                <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $nombreProgram . '</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 15px; font-weight: 600; color: #64748b;">Sede:</td>
+                                                <td style="padding: 12px 15px; color: #0f172a;">' . $sedeProgram . '</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color: #f1f5f9; padding: 20px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0;">
+                                        <p style="margin: 0;">Este es un mensaje automático del Sistema de Registro Avemer.</p>
+                                        <p style="margin: 5px 0 0 0;">&copy; ' . date('Y') . ' Grupo Avemer. Todos los derechos reservados.</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </body>
+                        </html>';
+
+                        $subject = "Nueva preinscripción de " . $alumnoName . " en " . $programType;
+                        correo($subject, $emailBody, 'bracovichwilmer@gmail.com');
+                    }
+                } catch (Exception $emailEx) {
+                    error_log('Error al enviar correo de preinscripcion: ' . $emailEx->getMessage());
+                }
+
                 echo json_encode(['success' => true, 'message' => '¡Pre-inscripción realizada con éxito!']);
             }
         } catch (Exception $e) {

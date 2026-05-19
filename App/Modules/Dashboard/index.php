@@ -7,8 +7,6 @@ $activeCursos = array_filter($lastMonthStats ?? [], fn($i) => $i['category_index
 ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<h2 class="text-3xl font-semibold text-gray-800 mb-6">Dashboard de Inscripciones</h2>
-
 <div x-data="{ activeTooltip: null }" @click.outside="activeTooltip = null" class="flex flex-row w-full gap-6 mb-8">
     <div class="flex-1 bg-blue-600 p-6 rounded-lg shadow-md text-white hover:shadow-lg transition duration-300 relative">
         <div class="flex items-center justify-between">
