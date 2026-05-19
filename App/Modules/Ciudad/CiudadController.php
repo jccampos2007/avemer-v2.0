@@ -32,7 +32,8 @@ class CiudadController extends Controller
 
     public function create(): void
     {
-        $this->view('Ciudad/Views/form');
+        $paises = $this->ciudadModel->getAllPaises();
+        $this->view('Ciudad/Views/form', ['paises' => $paises]);
     }
 
     public function store(): void
@@ -65,7 +66,8 @@ class CiudadController extends Controller
             exit;
         }
 
-        $this->view('Ciudad/Views/form', ['ciudad' => $ciudad]);
+        $paises = $this->ciudadModel->getAllPaises();
+        $this->view('Ciudad/Views/form', ['ciudad' => $ciudad, 'paises' => $paises]);
     }
 
     public function update(int $id): void

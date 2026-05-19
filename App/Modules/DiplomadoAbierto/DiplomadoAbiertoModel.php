@@ -235,7 +235,7 @@ class DiplomadoAbiertoModel
     {
         $sql = "UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT); 
         return $stmt->execute();
     }
 }

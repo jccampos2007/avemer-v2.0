@@ -11,8 +11,14 @@ $is_edit = isset($ciudad['id']) && !empty($ciudad['id']);
         </div>
 
         <div class="mb-6">
-            <label for="pais_id" class="label-form">ID de País (por defecto 1):</label>
-            <input type="number" id="pais_id" name="pais_id" value="<?php echo htmlspecialchars($ciudad['pais_id'] ?? '1'); ?>" class="input-form focus:outline-none focus:shadow-outline" required>
+            <label for="pais_id" class="label-form">País:</label>
+            <select id="pais_id" name="pais_id" class="input-form focus:outline-none focus:shadow-outline" required>
+                <?php foreach ($paises ?? [] as $pais): ?>
+                    <option value="<?php echo htmlspecialchars($pais['id']); ?>" <?php echo (isset($ciudad['pais_id']) && $ciudad['pais_id'] == $pais['id']) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($pais['nombre']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <div class="flex items-center justify-between">

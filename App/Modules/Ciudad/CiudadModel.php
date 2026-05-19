@@ -14,12 +14,31 @@ class CiudadModel
         $this->pdo = Database::getInstance()->getConnection();
     }
 
+    /**
+     * Obtiene todas las ciudades que no han sido borradas lógicamente.
+     */
     public function getAll(): array
     {
-        $stmt = $this->pdo->query("SELECT * FROM {$this->table} ORDER BY id DESC");
+        $stmt = $this->pdo->query("SELECT * FROM {$this->table} WHERE deleted_at IS NULL ORDER BY id DESC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Obtiene todos los países disponibles.
+     */
+    public function getAllPaises(): array
+    {
+        $stmt = $this->pdo->query("SELECT id, nombre FROM pais ORDER BY nombre ASC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtiene datos de Ciudades para DataTables con paginación, búsqueda, ordenación
+     * y filtrado de borrado lógico.
+     *
+     * @param array $params Parámetros de DataTables (start, length, search, order, columns).
+     * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
+     */
     public function getPaginated(array $params): array
     {
         $draw = $params['draw'] ?? 1;
@@ -38,9 +57,11 @@ class CiudadModel
         $sql = "SELECT id, nombre, pais_id FROM {$this->table}";
         $countSql = "SELECT COUNT(*) FROM {$this->table}";
         
-        $where = [];
+        // Filtro base de borrado lógico
+        $where = ["deleted_at IS NULL"];
         $queryParams = [];
 
+        // Búsqueda global
         if (!empty($searchValue)) {
             $where[] = "(nombre LIKE :nombre OR pais_id LIKE :pais_id)";
             $like = '%' . $searchValue . '%';
@@ -53,14 +74,17 @@ class CiudadModel
             $countSql .= " WHERE " . implode(' AND ', $where);
         }
 
+        // Obtener el total de registros filtrados (después de la búsqueda)
         $stmt = $this->pdo->prepare($countSql);
         $stmt->execute($queryParams);
         $recordsFiltered = $stmt->fetchColumn();
 
+        // Ordenación
         $orderColumnName = $columnMap[$orderColumnIndex] ?? 'id';
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
+        // Paginación con enlace seguro de enteros
         $sql .= " LIMIT :start, :length";
 
         $stmt = $this->pdo->prepare($sql);
@@ -72,6 +96,7 @@ class CiudadModel
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        // Formatear los datos para DataTables
         $formattedData = [];
         foreach ($data as $row) {
             $formattedData[] = [
@@ -82,7 +107,8 @@ class CiudadModel
             ];
         }
 
-        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table}");
+        // Obtener el total de registros activos sin filtrar (para 'recordsTotal')
+        $totalRecordsStmt = $this->pdo->query("SELECT COUNT(*) FROM {$this->table} WHERE deleted_at IS NULL");
         $recordsTotal = $totalRecordsStmt->fetchColumn();
 
         return [
@@ -93,9 +119,12 @@ class CiudadModel
         ];
     }
 
+    /**
+     * Busca una ciudad activa por su ID.
+     */
     public function findById(int $id): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id");
+        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id AND deleted_at IS NULL");
         $stmt->execute(['id' => $id]);
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
         return $res ?: null;
@@ -122,9 +151,14 @@ class CiudadModel
         ]);
     }
 
+    /**
+     * Realiza un BORRADO LÓGICO de la ciudad.
+     */
     public function delete(int $id): bool
     {
-        $stmt = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = :id");
-        return $stmt->execute(['id' => $id]);
+        $sql = "UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT); 
+        return $stmt->execute();
     }
 }
