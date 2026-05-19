@@ -1,9 +1,7 @@
-// preinscripcion_landing.js (Versión Standalone)
+// preinscripcion_landing.js
 
 // --- CONFIGURACIÓN ---
-// ¡IMPORTANTE! DEBES CAMBIAR ESTA URL para que apunte a tu script PHP en el backend
-// que manejará las solicitudes AJAX (ej. 'https://tu-dominio.com/api/preinscripcion.php')
-const BACKEND_API_URL = './preinscripcion_api.php'; // <--- ¡CAMBIA ESTO!
+const BACKEND_API_URL = BASE_URL_JS + 'preinscripcionlanding/';
 
 // --- FUNCIONES AUXILIARES DE UI ---
 
@@ -249,9 +247,9 @@ $(document).ready(function () {
         $('#search_result_message').text('Buscando alumno...').removeClass('text-red-600 text-green-600').addClass('text-blue-600');
 
         $.ajax({
-            url: BACKEND_API_URL, // Apunta a la URL de tu backend
+            url: BACKEND_API_URL + 'search_alumno',
             method: 'POST',
-            data: { action: 'search_alumno', ci_pasapote: ciPasapote },
+            data: { ci_pasapote: ciPasapote },
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
@@ -278,13 +276,12 @@ $(document).ready(function () {
     // --- Creación de Alumno ---
     createAlumnoForm.on('submit', function (e) {
         e.preventDefault();
-        const formData = $(this).serializeArray();
-        formData.push({ name: 'action', value: 'create_alumno' }); // Añadir la acción al FormData
+        const formData = $(this).serialize();
 
         $.ajax({
-            url: BACKEND_API_URL, // Apunta a la URL de tu backend
+            url: BACKEND_API_URL + 'create_alumno',
             method: 'POST',
-            data: $.param(formData), // Serializa el array de objetos a una cadena de consulta
+            data: formData,
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
@@ -316,9 +313,9 @@ $(document).ready(function () {
         preinscribirBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
 
         $.ajax({
-            url: BACKEND_API_URL, // Apunta a la URL de tu backend
+            url: BACKEND_API_URL + 'get_ofertas_abiertas',
             method: 'POST',
-            data: { action: 'get_ofertas_abiertas', typeId: typeId }, // Enviar el tipo de oferta académica seleccionada
+            data: { typeId: typeId }, // Enviar el tipo de oferta académica seleccionada
             dataType: 'json',
             success: function (response) {
                 ofertasAbiertasList.empty();
@@ -368,10 +365,9 @@ $(document).ready(function () {
             function () {
                 // Código a ejecutar si el usuario hace clic en "Confirmar"
                 $.ajax({
-                    url: BACKEND_API_URL, // Apunta a la URL de tu backend
+                    url: BACKEND_API_URL + 'process_preinscripcion',
                     method: 'POST',
                     data: {
-                        action: 'process_preinscripcion', // Añadir la acción
                         alumno_id: alumnoId,
                         oferta_abierta_id: ofertaAbiertaId,
                         typeId: typeId

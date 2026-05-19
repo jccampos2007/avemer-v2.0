@@ -16,6 +16,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        const BASE_URL_JS = "<?php echo BASE_URL; ?>";
+    </script>
     
     <style>
         #custom-confirm-overlay { background-color: rgba(0, 0, 0, 0.5); }
