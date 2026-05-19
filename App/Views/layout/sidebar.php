@@ -110,7 +110,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                         <li><a href="<?php echo BASE_URL; ?>docentes" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'docentes') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-user mr-2"></i> Instructores</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeCoordinadores): ?>
-                        <li><a href="<?php echo BASE_URL; ?>coordinadores" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'coordinadores') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-person-digging mr-2"></i> Coordinadores</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>coordinadores" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'coordinadores') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-user-gear mr-2"></i> Coordinadores</a></li>
                         <?php endif; ?>
                     </ul>
                 </li>
@@ -304,7 +304,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                         <li><a href="<?php echo BASE_URL; ?>duracion" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'duracion') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-regular fa-calendar mr-2"></i> Duraciones</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeProfesion): ?>
-                        <li><a href="<?php echo BASE_URL; ?>profesion_oficio" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'profesion_oficio') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-briefcase mr-2"></i> Profesiones</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>profesion_oficio" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'profesion_oficio') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-person-digging mr-2"></i> Profesiones</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeCiudad): ?>
                         <li><a href="<?php echo BASE_URL; ?>ciudad" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'ciudad') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-city mr-2"></i> Ciudades / Estados</a></li>
