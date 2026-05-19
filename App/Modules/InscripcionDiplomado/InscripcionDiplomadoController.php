@@ -143,6 +143,14 @@ class InscripcionDiplomadoController extends Controller
                 return;
             }
 
+            // Validar inscripción duplicada
+            if ($this->inscripcionDiplomadoModel->exists($data['alumno_id'], $data['diplomado_abierto_id'], $id)) {
+                Auth::setFlashMessage('error', 'El alumno ya se encuentra inscrito en este diplomado.');
+                $redirectPath = $id ? 'inscripcion_diplomado/edit/' . $id : 'inscripcion_diplomado/create';
+                $this->redirect($redirectPath);
+                return;
+            }
+
             $success = false;
             if ($id) {
                 // Actualizar

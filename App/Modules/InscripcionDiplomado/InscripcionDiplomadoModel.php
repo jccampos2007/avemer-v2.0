@@ -168,6 +168,22 @@ class InscripcionDiplomadoModel
         ]);
     }
 
+    public function exists(int $alumnoId, int $diplomadoAbiertoId, ?int $excludeId = null): bool
+    {
+        $sql = "SELECT COUNT(*) FROM {$this->table} WHERE alumno_id = :alumno_id AND diplomado_abierto_id = :diplomado_abierto_id";
+        if ($excludeId !== null) {
+            $sql .= " AND id != :exclude_id";
+        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':alumno_id', $alumnoId, PDO::PARAM_INT);
+        $stmt->bindParam(':diplomado_abierto_id', $diplomadoAbiertoId, PDO::PARAM_INT);
+        if ($excludeId !== null) {
+            $stmt->bindParam(':exclude_id', $excludeId, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
+    }
+
     /**
      * Elimina un registro de inscripcion_diplomado.
      * @param int $id El ID del registro a eliminar.

@@ -148,6 +148,14 @@ class InscripcionMaestriaController extends Controller
                 return;
             }
 
+            // Validar inscripción duplicada
+            if ($this->inscripcionMaestriaModel->exists($data['alumno_id'], $data['maestria_abierto_id'], $id)) {
+                Auth::setFlashMessage('error', 'El alumno ya se encuentra inscrito en esta maestría.');
+                $redirectPath = $id ? 'inscripcion_maestria/edit/' . $id : 'inscripcion_maestria/create';
+                $this->redirect($redirectPath);
+                return;
+            }
+
             $success = false;
             if ($id) {
                 // Actualizar
