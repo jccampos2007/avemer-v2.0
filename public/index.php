@@ -262,6 +262,15 @@ $router->add('POST', '/profesion_oficio/update/{id}', ProfesionOficioController:
 $router->add('GET', '/profesion_oficio/delete/{id}', ProfesionOficioController::class . '@delete');
 $router->add('POST', '/profesion_oficio/getProfesionesData', ProfesionOficioController::class . '@getProfesionesData');
 
+// Rutas para Ciudad (Estado)
+$router->add('GET', '/ciudad', \App\Modules\Ciudad\CiudadController::class . '@index');
+$router->add('GET', '/ciudad/create', \App\Modules\Ciudad\CiudadController::class . '@create');
+$router->add('POST', '/ciudad/store', \App\Modules\Ciudad\CiudadController::class . '@store');
+$router->add('GET', '/ciudad/edit/{id}', \App\Modules\Ciudad\CiudadController::class . '@edit');
+$router->add('POST', '/ciudad/update/{id}', \App\Modules\Ciudad\CiudadController::class . '@update');
+$router->add('GET', '/ciudad/delete/{id}', \App\Modules\Ciudad\CiudadController::class . '@delete');
+$router->add('POST', '/ciudad/getData', \App\Modules\Ciudad\CiudadController::class . '@getData');
+
 // Rutas para Grupo y Permisos
 $router->add('GET', '/grupo', GrupoController::class . '@index');
 $router->add('GET', '/grupo/create', GrupoController::class . '@create');
@@ -271,9 +280,14 @@ $router->add('POST', '/grupo/update/{id}', GrupoController::class . '@update');
 $router->add('GET', '/grupo/delete/{id}', GrupoController::class . '@delete');
 $router->add('POST', '/grupo/data', GrupoController::class . '@getGroupsData');
 $router->add('GET', '/grupo/permissions/{id}', GrupoController::class . '@getPermissions');
+use App\Modules\Compensar\CompensarController;
+use App\Modules\Cronograma\CronogramaController;
+
 $router->add('POST', '/grupo/save_permissions', GrupoController::class . '@savePermissions');
 
 $router->add('GET', '/pago', PagoController::class . '@index');
+$router->add('GET', '/compensar', CompensarController::class . '@index');
+$router->add('GET', '/cronograma', CronogramaController::class . '@index');
 
 // Rutas para mensajes
 $router->add('GET', '/mensajes', MensajesController::class . '@index');

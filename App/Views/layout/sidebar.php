@@ -49,6 +49,8 @@ $canSeeBanco = Auth::hasPermission('banco');
 $canSeeDuracion = Auth::hasPermission('duracion');
 $canSeeProfesion = Auth::hasPermission('profesion_oficio');
 
+$canSeeCiudad = Auth::hasPermission('estado');
+
 $canSeeUsers = Auth::hasPermission('users');
 $canSeeGrupo = Auth::hasPermission('grupo');
 
@@ -60,7 +62,7 @@ $showDiplomados = $canSeeDiplomado || $canSeeCapitulo || $canSeeDiplomadoAbierto
 $showMaestrias = $canSeeMaestria || $canSeeMaestriaAbierto || $canSeeInscripcionMaestria;
 $showPagos = $canSeeCuota || $canSeePago || $canSeeCompensar || $canSeeCronograma;
 $showMensajes = $canSeeListaCorreo || $canSeeMensajes || $canSeeListaEnvio;
-$showMantenimiento = $canSeeSede || $canSeeBanco || $canSeeDuracion || $canSeeProfesion;
+$showMantenimiento = $canSeeSede || $canSeeBanco || $canSeeDuracion || $canSeeProfesion || $canSeeCiudad;
 $showSeguridad = $canSeeUsers || $canSeeGrupo;
 
 // Estados activos
@@ -70,8 +72,8 @@ $isEventosActive = in_array($module, ['evento', 'evento_abierto', 'inscripcion_e
 $isDiplomadosActive = in_array($module, ['diplomado', 'capitulo', 'diplomado_abierto', 'inscripcion_diplomado', 'preinscripcion_diplomado']);
 $isMaestriasActive = in_array($module, ['maestria', 'maestria_abierto', 'inscripcion_maestria']);
 $isPagosActive = in_array($module, ['cuota', 'pago', 'compensar', 'cronograma']);
-$isMensajesActive = in_array($module, ['listacorreo', 'mensajes', 'listaenvio']);
-$isMantenimientoActive = in_array($module, ['sede', 'banco', 'duracion', 'profesion_oficio']);
+$isMensajesActive = in_array($module, ['listacorreo', 'correo', 'mensajes', 'listaenvio', 'envios']);
+$isMantenimientoActive = in_array($module, ['sede', 'banco', 'duracion', 'profesion_oficio', 'ciudad']);
 $isSeguridadActive = in_array($module, ['users', 'grupo']);
 ?>
 <aside class="w-64 bg-gray-800 text-white h-auto min-h-screen max-h-screen overflow-y-auto p-4 flex flex-col justify-between rounded-r-lg shadow-lg">
@@ -108,7 +110,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                         <li><a href="<?php echo BASE_URL; ?>docentes" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'docentes') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-user mr-2"></i> Instructores</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeCoordinadores): ?>
-                        <li><a href="<?php echo BASE_URL; ?>coordinadores" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'coordinadores') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-person-digging mr-2"></i> Coordinadores</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>coordinadores" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'coordinadores') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-user-gear mr-2"></i> Coordinadores</a></li>
                         <?php endif; ?>
                     </ul>
                 </li>
@@ -267,13 +269,13 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                     </button>
                     <ul x-show="mensajesOpen" x-transition.opacity class="pl-4 mt-1 space-y-1 text-sm text-gray-300">
                         <?php if ($canSeeListaCorreo): ?>
-                        <li><a href="<?php echo BASE_URL; ?>listacorreo" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'listacorreo') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-users-rectangle mr-2"></i> Listas Correo</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>listacorreo" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'listacorreo' || $module == 'correo') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-users-rectangle mr-2"></i> Listas Correo</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeMensajes): ?>
                         <li><a href="<?php echo BASE_URL; ?>mensajes" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'mensajes') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-paper-plane mr-2"></i> Mensajes</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeListaEnvio): ?>
-                        <li><a href="<?php echo BASE_URL; ?>listaenvio" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'listaenvio') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-list mr-2"></i> Listas Envío</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>listaenvio" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'listaenvio' || $module == 'envios') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-list mr-2"></i> Listas Envío</a></li>
                         <?php endif; ?>
                     </ul>
                 </li>
@@ -302,7 +304,10 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                         <li><a href="<?php echo BASE_URL; ?>duracion" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'duracion') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-regular fa-calendar mr-2"></i> Duraciones</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeProfesion): ?>
-                        <li><a href="<?php echo BASE_URL; ?>profesion_oficio" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'profesion_oficio') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-briefcase mr-2"></i> Profesiones</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>profesion_oficio" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'profesion_oficio') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-person-digging mr-2"></i> Profesiones</a></li>
+                        <?php endif; ?>
+                        <?php if ($canSeeCiudad): ?>
+                        <li><a href="<?php echo BASE_URL; ?>ciudad" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'ciudad') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-city mr-2"></i> Ciudades / Estados</a></li>
                         <?php endif; ?>
                     </ul>
                 </li>

@@ -1,14 +1,13 @@
 <?php
-// php_mvc_app/app/Modules/Cursos/CursoModel.php
-namespace App\Modules\Cursos; // Nuevo namespace
+namespace App\Modules\Ciudad;
 
 use App\Core\Database;
 use PDO;
 
-class CursoModel
+class CiudadModel
 {
     private $pdo;
-    private $table = 'curso';
+    private $table = 'estado';
 
     public function __construct()
     {
@@ -16,22 +15,31 @@ class CursoModel
     }
 
     /**
-     * Obtiene todos los cursos que no han sido borrados lógicamente.
+     * Obtiene todas las ciudades que no han sido borradas lógicamente.
      */
     public function getAll(): array
     {
-        $stmt = $this->pdo->query("SELECT id, nombre, numero, horas, convenio FROM {$this->table} WHERE deleted_at IS NULL ORDER BY id DESC");
-        return $stmt->fetchAll();
+        $stmt = $this->pdo->query("SELECT * FROM {$this->table} WHERE deleted_at IS NULL ORDER BY id DESC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Obtiene datos de Cursos para DataTables con paginación, búsqueda, ordenación 
+     * Obtiene todos los países disponibles.
+     */
+    public function getAllPaises(): array
+    {
+        $stmt = $this->pdo->query("SELECT id, nombre FROM pais ORDER BY nombre ASC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtiene datos de Ciudades para DataTables con paginación, búsqueda, ordenación
      * y filtrado de borrado lógico.
      *
      * @param array $params Parámetros de DataTables (start, length, search, order, columns).
      * @return array Un array asociativo con 'data', 'recordsFiltered', 'recordsTotal'.
      */
-    public function getPaginatedCursos(array $params): array
+    public function getPaginated(array $params): array
     {
         $draw = $params['draw'] ?? 1;
         $start = $params['start'] ?? 0;
@@ -40,17 +48,13 @@ class CursoModel
         $orderColumnIndex = $params['order'][0]['column'] ?? 0;
         $orderDir = $params['order'][0]['dir'] ?? 'asc';
 
-        // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
             0 => 'id',
             1 => 'nombre',
-            2 => 'numero',
-            3 => 'horas',
-            4 => 'convenio',
+            2 => 'pais_id'
         ];
 
-        // Construir la consulta base
-        $sql = "SELECT id, nombre, numero, horas, convenio FROM {$this->table}";
+        $sql = "SELECT id, nombre, pais_id FROM {$this->table}";
         $countSql = "SELECT COUNT(*) FROM {$this->table}";
         
         // Filtro base de borrado lógico
@@ -59,11 +63,10 @@ class CursoModel
 
         // Búsqueda global
         if (!empty($searchValue)) {
-            $where[] = "(nombre LIKE :nombre OR numero LIKE :numero OR convenio LIKE :convenio)";
+            $where[] = "(nombre LIKE :nombre OR pais_id LIKE :pais_id)";
             $like = '%' . $searchValue . '%';
             $queryParams[':nombre'] = $like;
-            $queryParams[':numero'] = $like;
-            $queryParams[':convenio'] = $like;
+            $queryParams[':pais_id'] = $like;
         }
 
         if (!empty($where)) {
@@ -98,11 +101,9 @@ class CursoModel
         foreach ($data as $row) {
             $formattedData[] = [
                 $row['id'],
-                htmlspecialchars($row['nombre'] ?? ''),
-                htmlspecialchars($row['numero'] ?? ''),
-                htmlspecialchars($row['horas'] ?? ''),
-                htmlspecialchars($row['convenio'] ?? ''),
-                '' // Columna para acciones
+                htmlspecialchars($row['nombre']),
+                htmlspecialchars($row['pais_id']),
+                '' 
             ];
         }
 
@@ -119,48 +120,45 @@ class CursoModel
     }
 
     /**
-     * Busca un curso activo por su ID.
+     * Busca una ciudad activa por su ID.
      */
     public function findById(int $id): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id AND deleted_at IS NULL");
         $stmt->execute(['id' => $id]);
-        $curso = $stmt->fetch();
-        return $curso ?: null;
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $res ?: null;
     }
 
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (nombre, numero, horas, convenio) VALUES (:nombre, :numero, :horas, :convenio)";
+        $sql = "INSERT INTO {$this->table} (nombre, pais_id) VALUES (:nombre, :pais_id)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            'nombre' => $data['nombre'],
-            'numero' => $data['numero'],
-            'horas' => $data['horas'],
-            'convenio' => $data['convenio'],
+            ':nombre' => $data['nombre'],
+            ':pais_id' => $data['pais_id'] ?? 1
         ]);
     }
 
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE {$this->table} SET nombre = :nombre, numero = :numero, horas = :horas, convenio = :convenio WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET nombre = :nombre, pais_id = :pais_id WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
-        $params = [
-            'nombre' => $data['nombre'],
-            'numero' => $data['numero'],
-            'horas' => $data['horas'],
-            'convenio' => $data['convenio'],
-            'id' => $id
-        ];
-        return $stmt->execute($params);
+        return $stmt->execute([
+            ':nombre' => $data['nombre'],
+            ':pais_id' => $data['pais_id'] ?? 1,
+            ':id' => $id
+        ]);
     }
 
     /**
-     * Realiza un BORRADO LÓGICO del curso.
+     * Realiza un BORRADO LÓGICO de la ciudad.
      */
     public function delete(int $id): bool
     {
-        $stmt = $this->pdo->prepare("UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id");
-        return $stmt->execute(['id' => $id]);
+        $sql = "UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT); 
+        return $stmt->execute();
     }
 }
