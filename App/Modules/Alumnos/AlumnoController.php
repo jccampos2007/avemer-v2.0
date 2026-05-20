@@ -104,7 +104,10 @@ class AlumnoController extends Controller
                 Auth::setFlashMessage('error', 'Alumno no encontrado.');
                 $this->redirect('alumnos');
             }
-            $this->view('Alumnos/form', ['alumno_data' => $alumno_data]); // Ruta de vista relativa al módulo
+            
+            $inscripciones = $this->alumnoModel->getInscripciones($id);
+            
+            $this->view('Alumnos/form', ['alumno_data' => $alumno_data, 'inscripciones' => $inscripciones]); // Ruta de vista relativa al módulo
         }
     }
 
@@ -167,8 +170,9 @@ class AlumnoController extends Controller
                 $this->redirect($redirectPath);
             }
         } catch (\PDOException $e) {
-            Auth::setFlashMessage('error', 'Error de base de datos al actualizar alumno: ' . $e->getMessage());
-            $this->redirect('alumnos/edit/' . $id);
+            Auth::setFlashMessage('error', 'Error de base de datos al guardar alumno: ' . $e->getMessage());
+            $redirectPath = $id ? 'alumnos/edit/' . $id : 'alumnos/create';
+            $this->redirect($redirectPath);
         }
     }
 

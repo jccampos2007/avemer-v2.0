@@ -9,7 +9,7 @@ class PreinscripcionLandingController extends Controller
 {
     public function index(): void
     {
-        $this->renderLanding('LandingPage/preinscripcion_landing');
+        $this->renderLanding('PreinscripcionLanding/Views/preinscripcion_landing');
     }
 
     /**
@@ -331,7 +331,7 @@ class PreinscripcionLandingController extends Controller
                        </html>';
 
                        $subject = "Nueva preinscripción de " . $alumnoName . " en " . $programType;
-                       correo($subject, $emailBody, 'bracovichwilmer@gmail.com');
+                       correo($subject, $emailBody, 'grupoavemer@gmail.com');
                     }
                 } catch (\Exception $emailEx) {
                     error_log('Error al enviar correo de preinscripcion: ' . $emailEx->getMessage());

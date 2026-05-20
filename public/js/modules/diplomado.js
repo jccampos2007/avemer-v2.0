@@ -30,8 +30,8 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                        <a href="diplomado/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="diplomado/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
+                        <a href="diplomado/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                        <a href="diplomado/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
                     `;
                     }
                 }
@@ -114,7 +114,7 @@ $(document).ready(function () {
             const descripcion = $('#descripcion').val();
 
             // if (duracionId === '' || nombre === '' || descripcion === '' || siglas === '') {
-            //     alert('Por favor, complete todos los campos obligatorios y asegúrese de que Costo e Inicial sean números válidos.');
+            //     showFlashMessage('error', 'Por favor, complete todos los campos obligatorios y asegúrese de que Costo e Inicial sean números válidos.');
             //     event.preventDefault(); // Detiene el envío del formulario
             // }
         });

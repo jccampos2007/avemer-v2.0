@@ -21,10 +21,10 @@ class Controller
         $moduleName = $parts[0]; // Ej: 'Dashboard'
         $actualViewFile = $parts[1]; // Ej: 'index'
 
-        $viewFile = MODULES_PATH . $moduleName . '/' . $actualViewFile . '.php';
-
-        if (!file_exists($viewFile))
-            $viewFile = MODULES_PATH . $moduleName . '/Views/' . $actualViewFile . '.php';
+        $viewFile = MODULES_PATH . $moduleName . '/Views/' . $actualViewFile . '.php';
+        if (!file_exists($viewFile)) {
+            $viewFile = MODULES_PATH . $moduleName . '/' . $actualViewFile . '.php';
+        }
 
         if (file_exists($viewFile)) {
             require_once $viewFile;
@@ -58,7 +58,7 @@ class Controller
     protected function renderLanding(string $viewPath): void
     {
         // Construimos la ruta hacia App/Views/
-        $viewFile = '../App/Views/' . $viewPath . '.php';
+        $viewFile = '../App/Modules/' . $viewPath . '.php';
 
         if (file_exists($viewFile)) {
             require_once $viewFile;

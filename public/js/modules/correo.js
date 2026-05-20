@@ -27,12 +27,12 @@ $(document).ready(function () {
     console.log('Initial Oferta Académica ID (from form data-attribute):', formCorreo.data('oferta-academica-id'));
 
 
-    // Función auxiliar para mostrar alertas, usando showFlashMessage si está disponible, o alert() por defecto.
+    // Función auxiliar para mostrar alertas, usando showFlashMessage si está disponible, o showFlashMessage('error', ) por defecto.
     function showAlert(message, type = 'error') {
         if (typeof showFlashMessage === 'function') {
             showFlashMessage(type, message);
         } else {
-            alert(message);
+            showFlashMessage('error', message);
         }
     }
 

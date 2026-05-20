@@ -26,6 +26,27 @@ $(document).ready(function () {
     // Código JavaScript/jQuery general para la aplicación
     console.log("main.js cargado.");
 
+    // Configuración global para DataTables: usar showFlashMessage en lugar de alert()
+    if (typeof $.fn.dataTable !== 'undefined') {
+        $.fn.dataTable.ext.errMode = 'none';
+
+        $(document).on('error.dt', function (e, settings, techNote, message) {
+            console.error('DataTables error:', message);
+            
+            let errorText = 'Ocurrió un error al cargar la tabla.';
+            // Intentar extraer el error personalizado del JSON del servidor
+            if (settings && settings.jqXHR && settings.jqXHR.responseJSON && settings.jqXHR.responseJSON.error) {
+                errorText = settings.jqXHR.responseJSON.error;
+            } else if (message) {
+                // Extraer un mensaje más limpio si viene el prefijo de DataTables
+                let parts = message.split(' - ');
+                errorText = parts.length > 1 ? parts[1] : message;
+            }
+            
+            showFlashMessage('error', errorText);
+        });
+    }
+
     // Ejemplo: Desaparecer mensajes flash al hacer clic
     $('#flash-message').on('click', function () {
         $(this).fadeOut(300, function () {

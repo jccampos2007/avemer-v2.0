@@ -18,7 +18,7 @@ $(document).ready(function () {
                 "type": "POST",
                 "error": function (xhr, error, thrown) {
                     console.log("Error en la solicitud AJAX de DataTables:", error, thrown);
-                    alert('Error al cargar los datos de sedes.');
+                    showFlashMessage('error', 'Error al cargar los datos de sedes.');
                 }
             },
             "columns": [

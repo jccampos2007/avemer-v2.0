@@ -24,10 +24,10 @@ $(document).ready(function () {
                         return `
                             <div class="flex gap-2 justify-center">
                                 <a href="${BASE_URL_JS}grupo/edit/${row[0]}" class="btn btn-default" title="Editar y Permisos">
-                                    <i class="fas fa-edit fs-5"></i>
+                                    <i class="fas fa-edit fs-5 text-blue-600"></i>
                                 </a>
                                 <button class="btn btn-default btn-delete text-red-600" title="Eliminar" data-id="${row[0]}">
-                                    <i class="fas fa-trash-alt fs-5"></i>
+                                    <i class="fas fa-trash-alt fs-5 text-red-600"></i>
                                 </button>
                             </div>
                         `;

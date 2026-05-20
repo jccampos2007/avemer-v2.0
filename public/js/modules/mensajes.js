@@ -41,7 +41,7 @@ $(document).ready(function () {
                 if (typeof showFlashMessage === 'function') {
                     showFlashMessage('error', msg);
                 } else {
-                    alert(msg);
+                    showFlashMessage('error', msg);
                 }
                 
                 event.preventDefault();
@@ -64,7 +64,7 @@ $(document).ready(function () {
                 "type": "POST",
                 "error": function (xhr, error, thrown) {
                     console.log("Error en la solicitud AJAX de DataTables:", error, thrown);
-                    alert('Error al cargar los datos de mensajes.');
+                    showFlashMessage('error', 'Error al cargar los datos de mensajes.');
                 }
             },
             "columns": [
@@ -77,8 +77,8 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         // Añadimos una clase 'btn-delete' para identificar el botón de borrar
                         return `
-                        <a href="mensajes/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="mensajes/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
+                        <a href="mensajes/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                        <a href="mensajes/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
                     `;
                     }
                 }

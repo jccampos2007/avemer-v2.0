@@ -17,7 +17,7 @@ $(document).ready(function () {
                 "error": function (xhr, error, thrown) {
                     console.error("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.error("Respuesta del servidor:", xhr.responseText);
-                    alert('Error al cargar los datos de eventos abiertos. Por favor, revisa la consola para más detalles.');
+                    showFlashMessage('error', 'Error al cargar los datos de eventos abiertos. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [
@@ -33,8 +33,8 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                            <a href="evento_abierto/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
-                            <a href="evento_abierto/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
+                            <a href="evento_abierto/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                            <a href="evento_abierto/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
                         `;
                     }
                 }
@@ -157,7 +157,7 @@ $(document).ready(function () {
             const nombreCartaContent = nombreCartaEditor ? nombreCartaEditor.getData().trim() : ''; // Obtener contenido de CKEditor
 
             if (numero === '' || !eventoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '' || nombreCartaContent === '') {
-                alert('Por favor, complete todos los campos obligatorios.');
+                showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
                 event.preventDefault(); // Detiene el envío del formulario
             }
         });

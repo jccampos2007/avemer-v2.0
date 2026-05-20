@@ -49,25 +49,19 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
-                <label for="profesion_oficio_id" class="label-form">Profesión/Oficio:</label>
-                <select id="profesion_oficio_id" name="profesion_oficio_id" class="input-form focus:outline-none focus:shadow-outline">
-                    <option value="">Seleccione una opción</option>
-                </select>
-                <input type="hidden" name="profesion_oficio_current" id="profesion_oficio_current" value="<?php echo $docente_data['profesion_oficio_id'] ?? ''; ?>">
+                <label for="profesion_oficio_autocomplete" class="label-form">Profesión/Oficio:</label>
+                <input type="text" id="profesion_oficio_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Escriba para buscar...">
+                <input type="hidden" name="profesion_oficio_id" id="profesion_oficio_id" value="<?php echo $docente_data['profesion_oficio_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="estado_id" class="label-form">Estado:</label>
-                <select id="estado_id" name="estado_id" class="input-form focus:outline-none focus:shadow-outline">
-                    <option value="">Seleccione una opción</option>
-                </select>
-                <input type="hidden" name="estado_current" id="estado_current" value="<?php echo $docente_data['estado_id'] ?? ''; ?>">
+                <label for="estado_autocomplete" class="label-form">Estado:</label>
+                <input type="text" id="estado_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Escriba para buscar...">
+                <input type="hidden" name="estado_id" id="estado_id" value="<?php echo $docente_data['estado_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="nacionalidad_id" class="label-form">Nacionalidad:</label>
-                <select id="nacionalidad_id" name="nacionalidad_id" class="input-form focus:outline-none focus:shadow-outline">
-                    <option value="">Seleccione una opción</option>
-                </select>
-                <input type="hidden" name="nacionalidad_current" id="nacionalidad_current" value="<?php echo $docente_data['nacionalidad_id'] ?? ''; ?>">
+                <label for="nacionalidad_autocomplete" class="label-form">Nacionalidad:</label>
+                <input type="text" id="nacionalidad_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Escriba para buscar...">
+                <input type="hidden" name="nacionalidad_id" id="nacionalidad_id" value="<?php echo $docente_data['nacionalidad_id'] ?? ''; ?>">
             </div>
             <div>
                 <label for="estatus_activo_id" class="label-form">Estatus Activo:</label>
@@ -114,5 +108,5 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
     </form>
 </div>
 
-<!-- JavaScript específico para este módulo -->
+
 <?php $page_js = 'js/modules/docentes.js'; ?>

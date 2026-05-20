@@ -10,7 +10,7 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
         <!-- Usamos htmlspecialchars para descripcion en data-*, pero CKEditor lo manejará directamente -->
 
         <?php if ($is_edit): ?>
-            <input type="hidden" name="id" value="<?php echo $diplomado_data['id']; ?>">
+            <input type="hidden" name="id" value="<?php echo $diplomado_data['id'] ?? ''; ?>">
         <?php endif; ?>
 
         <div class="mb-4">
@@ -20,32 +20,32 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
                 <!-- Opciones se llenarán con JS -->
             </select>
             <!-- Campo oculto para pasar el valor actual al JS para pre-selección -->
-            <input type="hidden" name="duracion_current" id="duracion_current" value="<?php echo $diplomado_data['duracion_id']; ?>">
+            <input type="hidden" name="duracion_current" id="duracion_current" value="<?php echo $diplomado_data['duracion_id'] ?? ''; ?>">
         </div>
 
         <div class="mb-4">
             <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" value="<?php echo $diplomado_data['nombre']; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="128">
+            <input type="text" id="nombre" name="nombre" value="<?php echo $diplomado_data['nombre'] ?? ''; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="128">
         </div>
 
         <div class="mb-4">
             <label for="descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
-            <textarea id="descripcion" name="descripcion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5"><?php echo $diplomado_data['descripcion']; ?></textarea>
+            <textarea id="descripcion" name="descripcion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5"><?php echo $diplomado_data['descripcion'] ?? ''; ?></textarea>
         </div>
 
         <div class="mb-4">
             <label for="siglas" class="block text-gray-700 text-sm font-bold mb-2">Siglas:</label>
-            <input type="text" id="siglas" name="siglas" value="<?php echo $diplomado_data['siglas']; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="8">
+            <input type="text" id="siglas" name="siglas" value="<?php echo $diplomado_data['siglas'] ?? ''; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="8">
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
                 <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo:</label>
-                <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $diplomado_data['costo']; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
+                <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $diplomado_data['costo'] ?? ''; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
             </div>
             <div>
                 <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial:</label>
-                <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo $diplomado_data['inicial']; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
+                <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo $diplomado_data['inicial'] ?? ''; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
             </div>
         </div>
 

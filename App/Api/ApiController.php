@@ -92,7 +92,7 @@ class ApiController
         // - 'search_columns': Columnas en las que se realizará la búsqueda LIKE.
         // - 'status_column': (Opcional) Columna para filtrar por estado activo (ej. 'estatus_activo_id').
         // Las tablas que son "tablas de estatus" (ej. estatus_activo) no se filtran por sí mismas.
-        $allowedTablesConfig = [
+                $allowedTablesConfig = [
             'docente' => [
                 'display_columns' => ['primer_nombre', 'primer_apellido', 'CONCAT(primer_apellido, ", ", primer_nombre)'],
                 'search_columns' => ['primer_nombre', 'primer_apellido'],
@@ -102,6 +102,19 @@ class ApiController
                 'display_columns' => ['primer_nombre', 'primer_apellido', 'CONCAT(primer_apellido, ", ", primer_nombre)'],
                 'search_columns' => ['primer_nombre', 'primer_apellido', 'ci_pasapote'], // Puedes añadir más columnas de búsqueda
                 'status_column' => 'estatus_activo_id'
+            ],
+            // New tables for autocomplete
+            'profesion_oficio' => [
+                'display_columns' => ['nombre'],
+                'search_columns' => ['nombre']
+            ],
+            'estado' => [
+                'display_columns' => ['nombre'],
+                'search_columns' => ['nombre']
+            ],
+            'nacionalidad' => [
+                'display_columns' => ['nombre'],
+                'search_columns' => ['nombre']
             ],
         ];
 

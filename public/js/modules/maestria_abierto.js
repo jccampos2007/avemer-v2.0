@@ -21,7 +21,7 @@ $(document).ready(function () {
                     if (typeof showFlashMessage === 'function') {
                         showFlashMessage('error', 'Error al cargar los datos de maestrías abiertas. Por favor, revisa la consola para más detalles.');
                     } else {
-                        alert('Error al cargar los datos de maestrías abiertas. Por favor, revisa la consola para más detalles.');
+                        showFlashMessage('error', 'Error al cargar los datos de maestrías abiertas. Por favor, revisa la consola para más detalles.');
                     }
                 }
             },
@@ -40,8 +40,8 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                            <a href="maestria_abierto/edit/${id}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
-                            <a href="maestria_abierto/delete/${id}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
+                            <a href="maestria_abierto/edit/${id}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                            <a href="maestria_abierto/delete/${id}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
                         `;
                     }
                 }
@@ -164,7 +164,7 @@ $(document).ready(function () {
                 if (typeof showFlashMessage === 'function') {
                     showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
                 } else {
-                    alert('Por favor, complete todos los campos obligatorios.');
+                    showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
                 }
                 event.preventDefault(); // Detiene el envío del formulario
             }

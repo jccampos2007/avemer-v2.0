@@ -26,12 +26,12 @@ $(document).ready(function () {
     console.log('Initial Oferta Académica ID (from form data-attribute):', formCuota.data('oferta-academica-id'));
 
 
-    // Función auxiliar para mostrar alertas, usando showFlashMessage si está disponible, o alert() por defecto.
+    // Función auxiliar para mostrar alertas, usando showFlashMessage si está disponible, o showFlashMessage('error', ) por defecto.
     function showAlert(message, type = 'error') {
         if (typeof showFlashMessage === 'function') {
             showFlashMessage(type, message);
         } else {
-            alert(message);
+            showFlashMessage('error', message);
         }
     }
 
@@ -153,8 +153,8 @@ $(document).ready(function () {
 
                                     return `
                                         ${generateButton}
-                                        <a href="cuota/edit/${row.id}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
-                                        <a href="cuota/delete/${row.id}" class="btn btn-default"><i class="fas fa-trash-alt fs-5"></i></a>
+                                        <a href="cuota/edit/${row.id}" class="btn btn-default"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                                        <a href="cuota/delete/${row.id}" class="btn btn-default"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
                                     `;
                                 }
                             }

@@ -9,6 +9,7 @@ $randomValue = rand(1000, 9999);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión Academica</title>
+        <link rel="icon" href="<?php echo BASE_URL; ?>image/favico.png" type="image/png">
     <!-- Tailwind CSS CDN -->
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/output.css">
     <!-- jQuery UI CSS -->
