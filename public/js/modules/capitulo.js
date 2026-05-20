@@ -45,7 +45,11 @@ $(document).ready(function () {
                 }
             },
             "columns": [
-                { "data": 0 }, // ID
+                {
+                    data: 0,
+                    visible: false,
+                    searchable: false
+                }, // ID
                 { "data": 1 }, // Número
                 { "data": 2 }, // Nombre
                 { "data": 4 }, // Activo
