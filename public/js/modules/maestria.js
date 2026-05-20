@@ -21,7 +21,7 @@ $(document).ready(function () {
                     if (typeof showFlashMessage === 'function') {
                         showFlashMessage('error', 'Error al cargar los datos de maestrías. Por favor, revisa la consola para más detalles.');
                     } else {
-                        alert('Error al cargar los datos de maestrías. Por favor, revisa la consola para más detalles.');
+                        showFlashMessage('error', 'Error al cargar los datos de maestrías. Por favor, revisa la consola para más detalles.');
                     }
                 }
             },
@@ -138,15 +138,15 @@ $(document).ready(function () {
                         method: 'POST',
                         success: function (response) {
                             if (response.success) {
-                                alert(response.message);
+                                showFlashMessage('error', response.message);
                                 maestriaTable.DataTable().ajax.reload();
                             } else {
-                                alert(response.message || 'Error desconocido al eliminar el registro.');
+                                showFlashMessage('error', response.message || 'Error desconocido al eliminar el registro.');
                             }
                         },
                         error: function (xhr, status, error) {
                             console.error('Error al eliminar el registro:', status, error);
-                            alert('Error al eliminar el registro.');
+                            showFlashMessage('error', 'Error al eliminar el registro.');
                         }
                     });
                 }
@@ -174,7 +174,7 @@ $(document).ready(function () {
                 if (typeof showFlashMessage === 'function') {
                     showFlashMessage('error', 'Por favor, complete los campos obligatorios (Nombre y Horas).');
                 } else {
-                    alert('Por favor, complete los campos obligatorios (Nombre y Horas).');
+                    showFlashMessage('error', 'Por favor, complete los campos obligatorios (Nombre y Horas).');
                 }
                 event.preventDefault(); // Detiene el envío del formulario
             }

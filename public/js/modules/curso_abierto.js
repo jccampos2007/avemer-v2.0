@@ -58,7 +58,7 @@ $(document).ready(function () {
                     console.log("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.log("Respuesta del servidor:", xhr.responseText);
                     // Aquí puedes mostrar un mensaje de error al usuario
-                    alert('Error al cargar los datos de cursos abiertos. Por favor, revisa la consola para más detalles.');
+                    showFlashMessage('error', 'Error al cargar los datos de cursos abiertos. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [

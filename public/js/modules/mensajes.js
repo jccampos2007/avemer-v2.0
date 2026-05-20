@@ -41,7 +41,7 @@ $(document).ready(function () {
                 if (typeof showFlashMessage === 'function') {
                     showFlashMessage('error', msg);
                 } else {
-                    alert(msg);
+                    showFlashMessage('error', msg);
                 }
                 
                 event.preventDefault();
@@ -64,7 +64,7 @@ $(document).ready(function () {
                 "type": "POST",
                 "error": function (xhr, error, thrown) {
                     console.log("Error en la solicitud AJAX de DataTables:", error, thrown);
-                    alert('Error al cargar los datos de mensajes.');
+                    showFlashMessage('error', 'Error al cargar los datos de mensajes.');
                 }
             },
             "columns": [

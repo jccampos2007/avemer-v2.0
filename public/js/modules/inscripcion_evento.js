@@ -17,7 +17,7 @@ $(document).ready(function () {
                 "error": function (xhr, error, thrown) {
                     console.error("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.error("Respuesta del servidor:", xhr.responseText);
-                    alert('Error al cargar los datos de inscripciones de evento. Por favor, revisa la consola para más detalles.');
+                    showFlashMessage('error', 'Error al cargar los datos de inscripciones de evento. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [
@@ -115,7 +115,7 @@ $(document).ready(function () {
             const estatusInscripcionId = $('#estatus_inscripcion_id').val();
 
             if (!eventoAbiertoId || !alumnoId || !estatusInscripcionId) {
-                alert('Por favor, complete todos los campos obligatorios.');
+                showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
                 event.preventDefault(); // Detiene el envío del formulario
             }
         });

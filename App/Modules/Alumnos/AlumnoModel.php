@@ -248,9 +248,9 @@ class AlumnoModel
         $sql = "INSERT INTO {$this->table} (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, calle_avenida, casa_apartamento, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida, nombre_universidad, nombre_especialidad) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :calle_avenida, :casa_apartamento, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen, :chk_planilla, :chk_cedula, :chk_notas, :chk_titulo, :chk_partida, :nombre_universidad, :nombre_especialidad)";
         $stmt = $this->pdo->prepare($sql);
         $success = $stmt->execute([
-            'profesion_oficio_id' => $data['profesion_oficio_id'] ?? '',
-            'estado_id' => $data['estado_id'] ?? '',
-            'nacionalidad_id' => $data['nacionalidad_id'] ?? '',
+            'profesion_oficio_id' => $data['profesion_oficio_id'],
+            'estado_id' => $data['estado_id'],
+            'nacionalidad_id' => $data['nacionalidad_id'],
             'usuario_id' => $_SESSION['user_id'] ?? 0,
             'ci_pasapote' => $data['ci_pasapote'],
             'primer_nombre' => $data['primer_nombre'],
@@ -263,16 +263,16 @@ class AlumnoModel
             'tlf_celular' => $data['tlf_celular'],
             'calle_avenida' => $data['calle_avenida'] ?? '',
             'casa_apartamento' => $data['casa_apartamento'] ?? '',
-            'fecha_nacimiento' => $data['fecha_nacimiento'] ?? '',
-            'estatus_activo_id' => $data['estatus_activo_id'] ?? '',
+            'fecha_nacimiento' => $data['fecha_nacimiento'] === '' ? null : ($data['fecha_nacimiento'] ?? null),
+            'estatus_activo_id' => $data['estatus_activo_id'],
             'direccion' => $data['direccion'] ?? '',
-            'foto' => $data['foto'] ?? '',
-            'imagen' => $data['imagen'] ?? '',
-            'chk_planilla' => $data['chk_planilla'] ?? '',
-            'chk_cedula' => $data['chk_cedula'] ?? '',
-            'chk_notas' => $data['chk_notas'] ?? '',
-            'chk_titulo' => $data['chk_titulo'] ?? '',
-            'chk_partida' => $data['chk_partida'] ?? '',
+            'foto' => $data['foto'] ?? null,
+            'imagen' => $data['imagen'] ?? null,
+            'chk_planilla' => $data['chk_planilla'] ?? 0,
+            'chk_cedula' => $data['chk_cedula'] ?? 0,
+            'chk_notas' => $data['chk_notas'] ?? 0,
+            'chk_titulo' => $data['chk_titulo'] ?? 0,
+            'chk_partida' => $data['chk_partida'] ?? 0,
             'nombre_universidad' => $data['nombre_universidad'] ?? '',
             'nombre_especialidad' => $data['nombre_especialidad'] ?? ''
         ]);

@@ -170,8 +170,9 @@ class AlumnoController extends Controller
                 $this->redirect($redirectPath);
             }
         } catch (\PDOException $e) {
-            Auth::setFlashMessage('error', 'Error de base de datos al actualizar alumno: ' . $e->getMessage());
-            $this->redirect('alumnos/edit/' . $id);
+            Auth::setFlashMessage('error', 'Error de base de datos al guardar alumno: ' . $e->getMessage());
+            $redirectPath = $id ? 'alumnos/edit/' . $id : 'alumnos/create';
+            $this->redirect($redirectPath);
         }
     }
 

@@ -114,7 +114,7 @@ $(document).ready(function () {
             const descripcion = $('#descripcion').val();
 
             // if (duracionId === '' || nombre === '' || descripcion === '' || siglas === '') {
-            //     alert('Por favor, complete todos los campos obligatorios y asegúrese de que Costo e Inicial sean números válidos.');
+            //     showFlashMessage('error', 'Por favor, complete todos los campos obligatorios y asegúrese de que Costo e Inicial sean números válidos.');
             //     event.preventDefault(); // Detiene el envío del formulario
             // }
         });

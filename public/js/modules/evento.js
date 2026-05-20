@@ -17,7 +17,7 @@ $(document).ready(function () {
                 "error": function (xhr, error, thrown) {
                     console.error("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.error("Respuesta del servidor:", xhr.responseText);
-                    alert('Error al cargar los datos de eventos. Por favor, revisa la consola para más detalles.');
+                    showFlashMessage('error', 'Error al cargar los datos de eventos. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [
@@ -131,7 +131,7 @@ $(document).ready(function () {
             const inicial = $('#inicial').val(); // No trim() para números, pero valida si es numérico
 
             if (!duracionId || nombre === '' || descripcion === '' || siglas === '' || isNaN(costo) || isNaN(inicial)) {
-                alert('Por favor, complete todos los campos obligatorios y asegúrese de que Costo e Inicial sean números válidos.');
+                showFlashMessage('error', 'Por favor, complete todos los campos obligatorios y asegúrese de que Costo e Inicial sean números válidos.');
                 event.preventDefault(); // Detiene el envío del formulario
             }
         });

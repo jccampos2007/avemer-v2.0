@@ -178,7 +178,7 @@ $(document).ready(function () {
             tabId = 4;
             break;
         default:
-            alert("El modo seleccionado no es válido.");
+            showFlashMessage('error', "El modo seleccionado no es válido.");
             return; 
     } 
     

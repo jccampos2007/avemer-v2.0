@@ -21,7 +21,7 @@ $(document).ready(function () {
                     if (typeof showFlashMessage === 'function') {
                         showFlashMessage('error', 'Error al cargar los datos de maestrías abiertas. Por favor, revisa la consola para más detalles.');
                     } else {
-                        alert('Error al cargar los datos de maestrías abiertas. Por favor, revisa la consola para más detalles.');
+                        showFlashMessage('error', 'Error al cargar los datos de maestrías abiertas. Por favor, revisa la consola para más detalles.');
                     }
                 }
             },
@@ -164,7 +164,7 @@ $(document).ready(function () {
                 if (typeof showFlashMessage === 'function') {
                     showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
                 } else {
-                    alert('Por favor, complete todos los campos obligatorios.');
+                    showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
                 }
                 event.preventDefault(); // Detiene el envío del formulario
             }

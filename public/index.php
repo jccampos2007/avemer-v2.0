@@ -341,4 +341,58 @@ if (strpos($request_uri, $base_path) === 0) {
     $request_uri = substr($request_uri, strlen($base_path));
 }
 
-$router->dispatch($request_uri, $_SERVER['REQUEST_METHOD']);
+try {
+    $router->dispatch($request_uri, $_SERVER['REQUEST_METHOD']);
+} catch (\Throwable $e) {
+    // Registrar el error en el log de errores de PHP
+    error_log("Excepción no capturada: " . $e->getMessage() . " en " . $e->getFile() . " en la línea " . $e->getLine());
+
+    // Asegurarse de enviar un código de estado 500
+    if (!headers_sent()) {
+        http_response_code(500);
+    }
+
+    // Si es una petición AJAX (como DataTables o fetch)
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => false,
+            'error' => 'Ha ocurrido un error interno en el servidor.',
+            // Opcional para DataTables:
+            'draw' => isset($_REQUEST['draw']) ? (int)$_REQUEST['draw'] : 1,
+            'recordsTotal' => 0,
+            'recordsFiltered' => 0,
+            'data' => []
+        ]);
+        exit;
+    }
+
+    // Si es una petición normal del navegador, mostramos una página amigable
+    ?>
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error de Sistema</title>
+        <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9fafb; color: #111827; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+            .error-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); max-width: 500px; text-align: center; }
+            .error-card h1 { color: #dc2626; margin-top: 0; font-size: 2rem; }
+            .error-card p { color: #4b5563; font-size: 1.1rem; margin-bottom: 30px; }
+            .btn { background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; transition: background-color 0.2s; }
+            .btn:hover { background-color: #1d4ed8; }
+            .icon { font-size: 4rem; margin-bottom: 20px; }
+        </style>
+    </head>
+    <body>
+        <div class="error-card">
+            <div class="icon">⚠️</div>
+            <h1>Error Interno</h1>
+            <p>Lo sentimos, ha ocurrido un problema técnico en el servidor. Por favor, inténtelo de nuevo más tarde o contacte al administrador.</p>
+            <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>" class="btn">Volver al inicio</a>
+        </div>
+    </body>
+    </html>
+    <?php
+}
