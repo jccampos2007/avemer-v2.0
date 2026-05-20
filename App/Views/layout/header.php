@@ -9,9 +9,10 @@ $randomValue = rand(1000, 9999);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión Academica</title>
-        <link rel="icon" href="<?php echo BASE_URL; ?>image/favico.png" type="image/png">
+    <link rel="icon" href="<?php echo BASE_URL; ?>image/favico.png" type="image/png">
     <!-- Tailwind CSS CDN -->
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/output.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/base.css">
     <!-- jQuery UI CSS -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
     <!-- Font Awesome CDN -->
@@ -19,6 +20,8 @@ $randomValue = rand(1000, 9999);
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+    <!-- DataTables Buttons CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" />
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>

@@ -51,6 +51,33 @@ $(document).ready(function () {
             "processing": true,
             "serverSide": true, // Habilitar procesamiento del lado del servidor
             "responsive": true, // Habilitar diseño responsivo
+            "dom": 'Bfrtip', // Definir ubicación de los elementos de control (B = Botones)
+            "buttons": [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel mr-2"></i> Exportar a Excel',
+                    className: 'buttons-excel',
+                    title: 'Listado de Alumnos',
+                    exportOptions: {
+                        columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf mr-2"></i> Exportar a PDF',
+                    className: 'buttons-pdf',
+                    title: 'Listado de Alumnos',
+                    exportOptions: {
+                        columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
+                    },
+                    customize: function (doc) {
+                        // Personalizaciones estéticas básicas para el PDF
+                        doc.content[1].table.widths = ['25%', '45%', '30%'];
+                        doc.styles.tableHeader.fillColor = '#1e3a8a'; // Color azul corporativo
+                        doc.styles.tableHeader.color = '#ffffff';
+                    }
+                }
+            ],
             "ajax": {
                 "url": BASE_URL_JS + "cursos_abiertos/data", // Endpoint para obtener los datos
                 "type": "POST",
@@ -62,7 +89,11 @@ $(document).ready(function () {
                 }
             },
             "columns": [
-                { "data": 0 }, // Columna 0: ID
+                {
+                    data: 0,
+                    visible: false,
+                    searchable: false
+                }, // Columna 0: ID
                 { "data": 1 }, // Columna 1: Número
                 { "data": 2 }, // Columna 2: Curso ID (debería ser el nombre del curso)
                 { "data": 3 }, // Columna 3: Sede ID (debería ser el nombre de la sede)

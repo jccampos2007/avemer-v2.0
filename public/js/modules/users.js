@@ -30,7 +30,11 @@ $(document).ready(function () {
                 }
             },
             "columns": [
-                { "data": 0 }, // Columna 0: ID
+                {
+                    data: 0,
+                    visible: false,
+                    searchable: false
+                }, // Columna 0: ID
                 { "data": 1 }, // Columna 2: C.I./Pasaporte
                 { "data": 2 }, // Columna 3: Nombre Completo
                 { "data": 3 }, // Columna 4: Usuario

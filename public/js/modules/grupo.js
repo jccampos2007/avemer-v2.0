@@ -13,7 +13,11 @@ $(document).ready(function () {
                 "type": "POST"
             },
             "columns": [
-                { "data": 0 },
+                {
+                    data: 0,
+                    visible: false,
+                    searchable: false
+                },
                 { "data": 1 },
                 { "data": 2 },
                 { "data": 3 },
