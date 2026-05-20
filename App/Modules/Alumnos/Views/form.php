@@ -147,6 +147,64 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
             </div>
         </div>
 
+        <?php if ($is_edit && isset($inscripciones) && !empty($inscripciones)): ?>
+        <div class="mb-6">
+            <h4 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Inscripciones (Ofertas Académicas)</h4>
+            <div class="overflow-x-auto">
+                <table class="min-w-full leading-normal shadow rounded-lg overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tipo</th>
+                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Número</th>
+                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Oferta</th>
+                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Estatus Inscripción</th>
+                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Estatus Oferta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($inscripciones as $inscripcion): ?>
+                            <tr>
+                                <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                                    <p class="text-gray-900 whitespace-no-wrap"><?php echo htmlspecialchars($inscripcion['tipo']); ?></p>
+                                </td>
+                                <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                                    <p class="text-gray-900 whitespace-no-wrap"><?php echo htmlspecialchars($inscripcion['oferta_numero']); ?></p>
+                                </td>
+                                <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                                    <p class="text-gray-900 whitespace-no-wrap"><?php echo htmlspecialchars($inscripcion['oferta_nombre']); ?></p>
+                                </td>
+                                <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                                    <span class="relative inline-block px-3 py-1 font-semibold text-gray-900 leading-tight">
+                                        <span aria-hidden class="absolute inset-0 bg-blue-200 opacity-50 rounded-full"></span>
+                                        <span class="relative"><?php echo htmlspecialchars($inscripcion['estatus_inscripcion']); ?></span>
+                                    </span>
+                                </td>
+                                <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                                    <?php 
+                                        $statusClass = 'bg-gray-200 text-gray-800'; // Default
+                                        if (strtolower($inscripcion['estatus_oferta']) == 'activo') {
+                                            $statusClass = 'bg-green-200 text-green-800';
+                                        } elseif (strtolower($inscripcion['estatus_oferta']) == 'inactivo') {
+                                            $statusClass = 'bg-red-200 text-red-800';
+                                        }
+                                    ?>
+                                    <span class="relative inline-block px-3 py-1 font-semibold leading-tight">
+                                        <span aria-hidden class="absolute inset-0 <?php echo $statusClass; ?> opacity-50 rounded-full"></span>
+                                        <span class="relative text-gray-900"><?php echo htmlspecialchars($inscripcion['estatus_oferta']); ?></span>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <?php elseif ($is_edit): ?>
+        <div class="mb-6 p-4 bg-gray-50 border border-gray-200 rounded text-gray-600">
+            Este alumno no tiene inscripciones registradas.
+        </div>
+        <?php endif; ?>
+
         <div class="flex items-center justify-between">
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Guardar Alumno

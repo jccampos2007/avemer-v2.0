@@ -167,6 +167,82 @@ class AlumnoModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Obtiene todas las inscripciones (diplomados, cursos, eventos, maestrías) de un alumno
+     */
+    public function getInscripciones(int $alumnoId): array
+    {
+        // Diplomados
+        $sqlDiplomados = "
+            SELECT 
+                'Diplomado' AS tipo,
+                d.nombre AS oferta_nombre,
+                da.numero AS oferta_numero,
+                e.nombre AS estatus_oferta,
+                ei.nombre AS estatus_inscripcion
+            FROM inscripcion_diplomado idip
+            JOIN diplomado_abierto da ON idip.diplomado_abierto_id = da.id
+            JOIN diplomado d ON da.diplomado_id = d.id
+            JOIN estatus e ON da.estatus_id = e.id
+            JOIN estatus_inscripcion ei ON idip.estatus_inscripcion_id = ei.id
+            WHERE idip.alumno_id = ?
+        ";
+        // Cursos
+        $sqlCursos = "
+            SELECT 
+                'Curso/Taller' AS tipo,
+                c.nombre AS oferta_nombre,
+                ca.numero AS oferta_numero,
+                e.nombre AS estatus_oferta,
+                ei.nombre AS estatus_inscripcion
+            FROM inscripcion_curso ic
+            JOIN curso_abierto ca ON ic.curso_abierto_id = ca.id
+            JOIN curso c ON ca.curso_id = c.id
+            JOIN estatus e ON ca.estatus_id = e.id
+            JOIN estatus_inscripcion ei ON ic.estatus_inscripcion_id = ei.id
+            WHERE ic.alumno_id = ?
+        ";
+        // Eventos
+        $sqlEventos = "
+            SELECT 
+                'Evento' AS tipo,
+                ev.nombre AS oferta_nombre,
+                ea.numero AS oferta_numero,
+                e.nombre AS estatus_oferta,
+                ei.nombre AS estatus_inscripcion
+            FROM inscripcion_evento ie
+            JOIN evento_abierto ea ON ie.evento_abierto_id = ea.id
+            JOIN evento ev ON ea.evento_id = ev.id
+            JOIN estatus e ON ea.estatus_id = e.id
+            JOIN estatus_inscripcion ei ON ie.estatus_inscripcion_id = ei.id
+            WHERE ie.alumno_id = ?
+        ";
+        // Maestrias
+        $sqlMaestrias = "
+            SELECT 
+                'Maestría' AS tipo,
+                m.nombre AS oferta_nombre,
+                ma.numero AS oferta_numero,
+                e.nombre AS estatus_oferta,
+                ei.nombre AS estatus_inscripcion
+            FROM inscripcion_maestria im
+            JOIN maestria_abierto ma ON im.maestria_abierto_id = ma.id
+            JOIN maestria m ON ma.maestria_id = m.id
+            JOIN estatus e ON ma.estatus_id = e.id
+            JOIN estatus_inscripcion ei ON im.estatus_inscripcion_id = ei.id
+            WHERE im.alumno_id = ?
+        ";
+
+        $sql = "($sqlDiplomados) UNION ALL ($sqlCursos) UNION ALL ($sqlEventos) UNION ALL ($sqlMaestrias)";
+        
+        $stmt = $this->pdo->prepare($sql);
+        
+        // Pasamos el ID 4 veces, uno para cada signo de interrogación en el orden del UNION
+        $stmt->execute([$alumnoId, $alumnoId, $alumnoId, $alumnoId]);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function create(array $data) // : bool
     {
         $sql = "INSERT INTO {$this->table} (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, calle_avenida, casa_apartamento, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida, nombre_universidad, nombre_especialidad) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :calle_avenida, :casa_apartamento, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen, :chk_planilla, :chk_cedula, :chk_notas, :chk_titulo, :chk_partida, :nombre_universidad, :nombre_especialidad)";
