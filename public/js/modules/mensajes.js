@@ -77,8 +77,8 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         // Añadimos una clase 'btn-delete' para identificar el botón de borrar
                         return `
-                        <a href="mensajes/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="mensajes/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
+                        <a href="mensajes/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                        <a href="mensajes/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
                     `;
                     }
                 }

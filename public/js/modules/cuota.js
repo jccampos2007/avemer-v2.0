@@ -153,8 +153,8 @@ $(document).ready(function () {
 
                                     return `
                                         ${generateButton}
-                                        <a href="cuota/edit/${row.id}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
-                                        <a href="cuota/delete/${row.id}" class="btn btn-default"><i class="fas fa-trash-alt fs-5"></i></a>
+                                        <a href="cuota/edit/${row.id}" class="btn btn-default"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                                        <a href="cuota/delete/${row.id}" class="btn btn-default"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
                                     `;
                                 }
                             }

@@ -23,10 +23,10 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         let btns = '';
                         if (CIUDAD_PERMISSIONS.modificar) {
-                            btns += `<a href="${BASE_URL_JS}ciudad/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5"></i></a> `;
+                            btns += `<a href="${BASE_URL_JS}ciudad/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a> `;
                         }
                         if (CIUDAD_PERMISSIONS.eliminar) {
-                            btns += `<a href="${BASE_URL_JS}ciudad/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>`;
+                            btns += `<a href="${BASE_URL_JS}ciudad/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
                         }
                         return btns;
                     }

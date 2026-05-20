@@ -48,25 +48,19 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
-                <label for="profesion_oficio_id" class="block text-gray-700 text-sm font-bold mb-2">Profesión/Oficio:</label>
-                <select id="profesion_oficio_id" name="profesion_oficio_id" class="input-form focus:outline-none focus:shadow-outline">
-                    <option value="">Seleccione una opción</option>
-                </select>
-                <input type="hidden" name="profesion_oficio_current" id="profesion_oficio_current" value="<?php echo $alumno_data['profesion_oficio_id'] ?? ''; ?>">
+                <label for="profesion_oficio_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Profesión/Oficio:</label>
+                <input type="text" id="profesion_oficio_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Escriba para buscar...">
+                <input type="hidden" name="profesion_oficio_id" id="profesion_oficio_id" value="<?php echo $alumno_data['profesion_oficio_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="estado_id" class="block text-gray-700 text-sm font-bold mb-2">Estado:</label>
-                <select id="estado_id" name="estado_id" class="input-form focus:outline-none focus:shadow-outline">
-                    <option value="">Seleccione una opción</option>
-                </select>
-                <input type="hidden" name="estado_current" id="estado_current" value="<?php echo $alumno_data['estado_id'] ?? ''; ?>">
+                <label for="estado_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Estado:</label>
+                <input type="text" id="estado_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Escriba para buscar...">
+                <input type="hidden" name="estado_id" id="estado_id" value="<?php echo $alumno_data['estado_id'] ?? ''; ?>">
             </div>
             <div>
-                <label for="nacionalidad_id" class="block text-gray-700 text-sm font-bold mb-2">Nacionalidad:</label>
-                <select id="nacionalidad_id" name="nacionalidad_id" class="input-form focus:outline-none focus:shadow-outline">
-                    <option value="">Seleccione una opción</option>
-                </select>
-                <input type="hidden" name="nacionalidad_current" id="nacionalidad_current" value="<?php echo $alumno_data['nacionalidad_id'] ?? ''; ?>">
+                <label for="nacionalidad_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Nacionalidad:</label>
+                <input type="text" id="nacionalidad_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Escriba para buscar...">
+                <input type="hidden" name="nacionalidad_id" id="nacionalidad_id" value="<?php echo $alumno_data['nacionalidad_id'] ?? ''; ?>">
             </div>
             <div>
                 <label for="estatus_activo_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus Activo:</label>
@@ -216,5 +210,5 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
     </form>
 </div>
 
-<!-- JavaScript específico para este módulo (si el formulario lo necesita, por ejemplo, para validación en cliente) -->
+
 <?php $page_js = 'js/modules/alumnos.js'; ?>

@@ -24,8 +24,8 @@ $(document).ready(function () {
                     searchable: false,
                     render: function (data, type, row) {
                         return `
-                        <a href="${BASE_URL_JS}duracion/edit/${row[0]}" class="btn btn-default"><i class="fas fa-edit fs-5"></i></a>
-                        <a href="${BASE_URL_JS}duracion/delete/${row[0]}" class="btn btn-default btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5"></i></a>
+                        <a href="${BASE_URL_JS}duracion/edit/${row[0]}" class="btn btn-default"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
+                        <a href="${BASE_URL_JS}duracion/delete/${row[0]}" class="btn btn-default btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
                     `;
                     }
                 }
