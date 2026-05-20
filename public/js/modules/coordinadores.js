@@ -6,16 +6,17 @@ $(document).ready(function () {
     const formCoordinadores = $('#form_coordinadores');
     if (formCoordinadores.length > 0) {
 
-        flatpickr("#fecha_nacimiento", {
-            dateFormat: "Y-m-d", // Formato de fecha deseado (YYYY-MM-DD)
-            altInput: true, // Muestra una entrada alternativa formateada para el usuario
-            altFormat: "d F, Y", // Formato amigable para el usuario (ej. 23 Julio, 2025)
-            locale: "es", // Establece el idioma a español
-        });
-
-        if (typeof flatpickr !== 'undefined') {
+        // Localizar flatpickr en español ANTES de crear la instancia
+        if (typeof flatpickr !== 'undefined' && flatpickr.l10ns && flatpickr.l10ns.es) {
             flatpickr.localize(flatpickr.l10ns.es);
         }
+
+        flatpickr("#fecha_nacimiento", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d F, Y",
+            locale: "es",
+        });
 
         if (typeof fillSelect === 'function') {
             fillSelect('estatus_activo_id', 'estatus_activo', 'estatus_activo_current');
