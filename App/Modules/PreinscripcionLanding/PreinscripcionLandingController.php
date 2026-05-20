@@ -9,7 +9,7 @@ class PreinscripcionLandingController extends Controller
 {
     public function index(): void
     {
-        $this->renderLanding('LandingPage/preinscripcion_landing');
+        $this->renderLanding('PreinscripcionLanding/Views/preinscripcion_landing');
     }
 
     /**

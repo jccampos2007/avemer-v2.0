@@ -58,7 +58,7 @@ class Controller
     protected function renderLanding(string $viewPath): void
     {
         // Construimos la ruta hacia App/Views/
-        $viewFile = '../App/Views/' . $viewPath . '.php';
+        $viewFile = '../App/Modules/' . $viewPath . '.php';
 
         if (file_exists($viewFile)) {
             require_once $viewFile;
