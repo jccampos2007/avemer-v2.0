@@ -150,6 +150,64 @@ class DocenteModel
         return $docente ?: null;
     }
 
+    /**
+     * Obtiene la lista de ofertas académicas (cursos, eventos y maestrías) en las que imparte clases el docente.
+     * Se incluye 'evento_abierto' en la consulta dado que ahora cuenta con la columna 'docente_id'.
+     *
+     * @param int $docenteId El ID del docente/instructor.
+     * @return array Ofertas asociadas.
+     */
+    public function getOfertasAsociadas(int $docenteId): array
+    {
+        // Cursos / Talleres
+        $sqlCursos = "
+            SELECT 
+                'Curso/Taller' AS tipo,
+                c.nombre AS oferta_nombre,
+                ca.numero AS oferta_numero,
+                e.nombre AS estatus_oferta
+            FROM curso_abierto ca
+            JOIN curso c ON ca.curso_id = c.id
+            JOIN estatus e ON ca.estatus_id = e.id
+            WHERE ca.docente_id = ? AND ca.deleted_at IS NULL
+        ";
+
+        // Eventos (Nueva relación adaptada)
+        $sqlEventos = "
+            SELECT 
+                'Evento' AS tipo,
+                ev.nombre AS oferta_nombre,
+                ea.numero AS oferta_numero,
+                e.nombre AS estatus_oferta
+            FROM evento_abierto ea
+            JOIN evento ev ON ea.evento_id = ev.id
+            JOIN estatus e ON ea.estatus_id = e.id
+            WHERE ea.docente_id = ? AND ea.deleted_at IS NULL
+        ";
+
+        // Maestrías
+        $sqlMaestrias = "
+            SELECT 
+                'Maestría' AS tipo,
+                m.nombre AS oferta_nombre,
+                ma.numero AS oferta_numero,
+                e.nombre AS estatus_oferta
+            FROM maestria_abierto ma
+            JOIN maestria m ON ma.maestria_id = m.id
+            JOIN estatus e ON ma.estatus_id = e.id
+            WHERE ma.docente_id = ? AND ma.deleted_at IS NULL
+        ";
+
+        // Unimos las ofertas asociadas con el instructor (Cursos, Eventos y Maestrías)
+        $sql = "($sqlCursos) UNION ALL ($sqlEventos) UNION ALL ($sqlMaestrias)";
+        
+        $stmt = $this->pdo->prepare($sql);
+        // Ejecutamos pasando el ID del docente tres veces (una por cada marcador en el UNION)
+        $stmt->execute([$docenteId, $docenteId, $docenteId]);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function create(array $data): bool
     {
         // Se eliminan los campos calle_avenida, casa_apartamento, nombre_universidad, nombre_especialidad, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida

@@ -54,7 +54,14 @@ class DocenteController extends Controller
                 Auth::setFlashMessage('error', 'Registro de Docente no encontrado.');
                 $this->redirect('docentes');
             }
-            $this->view('Docentes/form', ['docente_data' => $docente_data]);
+            
+            // Obtener ofertas académicas asignadas a este docente
+            $ofertas = $this->docenteModel->getOfertasAsociadas($id);
+            
+            $this->view('Docentes/form', [
+                'docente_data' => $docente_data,
+                'ofertas' => $ofertas
+            ]);
         }
     }
 

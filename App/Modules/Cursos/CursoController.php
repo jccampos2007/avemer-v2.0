@@ -10,24 +10,10 @@ class CursoController extends Controller
 {
     private $cursosModel;
 
-    // public function script() {
-    //     // __DIR__ obtiene la ruta de la carpeta donde está este controlador
-    //     $file = __DIR__ . '/cursos.js'; 
-
-    //     if (file_exists($file)) {
-    //         header('Content-Type: application/javascript');
-    //         readfile($file);
-    //         exit;
-    //     } else {
-    //         header("HTTP/1.0 404 Not Found");
-    //         echo "/* Error: No se encontro el archivo en $file */";
-    //     }
-    // }
-
     public function __construct()
     {
         Auth::requireLogin();
-        $this->cursosModel = new CursoModel(); // Ruta del modelo dentro del patrón
+        $this->cursosModel = new CursoModel();
     }
 
     public function index(): void
@@ -54,7 +40,13 @@ class CursoController extends Controller
                 Auth::setFlashMessage('error', 'Curso no encontrado.');
                 $this->redirect('cursos');
             }
-            $this->view('Cursos/form', ['curso_data' => $curso_data]);
+            // Obtener los cursos abiertos asociados a este curso base
+            $cursos_abiertos = $this->cursosModel->getCursosAbiertos($id);
+            
+            $this->view('Cursos/form', [
+                'curso_data' => $curso_data,
+                'cursos_abiertos' => $cursos_abiertos
+            ]);
         }
     }
 

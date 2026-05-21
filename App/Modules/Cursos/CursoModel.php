@@ -89,7 +89,7 @@ class CursoModel
         $stmt = $this->pdo->prepare($sql);
         if ((int)$length !== -1) {
             $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
-        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+            $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
         }
         foreach ($queryParams as $key => $val) {
             $stmt->bindValue($key, $val);
@@ -131,6 +131,30 @@ class CursoModel
         $stmt->execute(['id' => $id]);
         $curso = $stmt->fetch();
         return $curso ?: null;
+    }
+
+    /**
+     * Obtiene la lista de cursos abiertos asociados a este curso base.
+     *
+     * @param int $cursoId El ID del curso base.
+     * @return array Lista de cursos abiertos.
+     */
+    public function getCursosAbiertos(int $cursoId): array
+    {
+        $sql = "
+            SELECT 
+                ca.id,
+                ca.numero AS oferta_numero,
+                e.nombre AS estatus_oferta,
+                (SELECT COUNT(*) FROM inscripcion_curso ic WHERE ic.curso_abierto_id = ca.id) AS total_inscritos
+            FROM curso_abierto ca
+            LEFT JOIN estatus e ON ca.estatus_id = e.id
+            WHERE ca.curso_id = :curso_id
+            ORDER BY ca.id DESC
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['curso_id' => $cursoId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function create(array $data): bool

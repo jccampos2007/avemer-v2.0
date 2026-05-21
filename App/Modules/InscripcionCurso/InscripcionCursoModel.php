@@ -72,7 +72,6 @@ class InscripcionCursoModel
         ";
 
         $where = [];
-        $where[] = "a.estatus_activo_id = 1";
         $queryParams = [];
 
         // Búsqueda global

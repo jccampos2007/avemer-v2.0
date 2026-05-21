@@ -24,6 +24,7 @@ use App\Modules\Cursos\CursoController;
 use App\Modules\Dashboard\DashboardController;
 use App\Modules\Diplomado\DiplomadoController;
 use App\Modules\DiplomadoAbierto\DiplomadoAbiertoController;
+use App\Modules\DiplomadoControl\DiplomadoControlController;
 use App\Modules\Docentes\DocenteController;
 use App\Modules\Duracion\DuracionController;
 use App\Modules\Envios\EnviosController;
@@ -164,6 +165,14 @@ $router->add('GET', '/diplomado_abierto/edit/{id}', DiplomadoAbiertoController::
 $router->add('POST', '/diplomado_abierto/edit/{id}', DiplomadoAbiertoController::class . '@edit');
 $router->add('GET', '/diplomado_abierto/delete/{id}', DiplomadoAbiertoController::class . '@delete');
 $router->add('POST', '/diplomado_abierto/data', DiplomadoAbiertoController::class . '@getDiplomadoAbiertoData');
+
+// Diplomado Control
+$router->add('GET', '/diplomadocontrol', DiplomadoControlController::class . '@index');
+$router->add('GET', '/diplomadocontrol/create', DiplomadoControlController::class . '@create');
+$router->add('POST', '/diplomadocontrol/create', DiplomadoControlController::class . '@create');
+$router->add('GET', '/diplomadocontrol/edit/{id}', DiplomadoControlController::class . '@edit');
+$router->add('POST', '/diplomadocontrol/edit/{id}', DiplomadoControlController::class . '@edit');
+$router->add('GET', '/diplomadocontrol/getCapitulosAjax', DiplomadoControlController::class . '@getCapitulosAjax');
 
 $router->add('GET', '/inscripcion_diplomado', InscripcionDiplomadoController::class . '@index');
 $router->add('GET', '/inscripcion_diplomado/create', InscripcionDiplomadoController::class . '@create');

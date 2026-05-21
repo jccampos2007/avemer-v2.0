@@ -28,6 +28,7 @@ $canSeeInscripcionEvento = Auth::hasPermission('inscripcion_even');
 $canSeeDiplomado = Auth::hasPermission('diplomado');
 $canSeeCapitulo = Auth::hasPermission('capitulo');
 $canSeeDiplomadoAbierto = Auth::hasPermission('diplomado_abiert');
+$canSeeDiplomadoControl = Auth::hasPermission('diplomado_cont');
 $canSeeInscripcionDiplomado = Auth::hasPermission('inscripcion_dipl');
 $canSeePreinscripcionDiplomado = Auth::hasPermission('preinscripcion_d');
 
@@ -58,7 +59,7 @@ $canSeeGrupo = Auth::hasPermission('grupo');
 $showRegistro = $canSeeAlumnos || $canSeeDocentes || $canSeeCoordinadores;
 $showTalleres = $canSeeCursos || $canSeeCursosAbiertos || $canSeeInscripcionCurso;
 $showEventos = $canSeeEvento || $canSeeEventoAbierto || $canSeeInscripcionEvento;
-$showDiplomados = $canSeeDiplomado || $canSeeCapitulo || $canSeeDiplomadoAbierto || $canSeeInscripcionDiplomado || $canSeePreinscripcionDiplomado;
+$showDiplomados = $canSeeDiplomado || $canSeeCapitulo || $canSeeDiplomadoAbierto || $canSeeDiplomadoControl || $canSeeInscripcionDiplomado || $canSeePreinscripcionDiplomado;
 $showMaestrias = $canSeeMaestria || $canSeeMaestriaAbierto || $canSeeInscripcionMaestria;
 $showPagos = $canSeeCuota || $canSeePago || $canSeeCompensar || $canSeeCronograma;
 $showMensajes = $canSeeListaCorreo || $canSeeMensajes || $canSeeListaEnvio;
@@ -69,19 +70,30 @@ $showSeguridad = $canSeeUsers || $canSeeGrupo;
 $isRegistroActive = in_array($module, ['alumnos', 'docentes', 'coordinadores']);
 $isTalleresActive = in_array($module, ['cursos', 'cursos_abiertos', 'inscripcion_curso']);
 $isEventosActive = in_array($module, ['evento', 'evento_abierto', 'inscripcion_evento']);
-$isDiplomadosActive = in_array($module, ['diplomado', 'capitulo', 'diplomado_abierto', 'inscripcion_diplomado', 'preinscripcion_diplomado']);
+$isDiplomadosActive = in_array($module, ['diplomado', 'capitulo', 'diplomado_abierto', 'diplomadocontrol', 'inscripcion_diplomado', 'preinscripcion_diplomado']);
 $isMaestriasActive = in_array($module, ['maestria', 'maestria_abierto', 'inscripcion_maestria']);
 $isPagosActive = in_array($module, ['cuota', 'pago', 'compensar', 'cronograma']);
 $isMensajesActive = in_array($module, ['listacorreo', 'correo', 'mensajes', 'listaenvio', 'envios']);
 $isMantenimientoActive = in_array($module, ['sede', 'banco', 'duracion', 'profesion_oficio', 'ciudad']);
 $isSeguridadActive = in_array($module, ['users', 'grupo']);
 ?>
-<aside class="w-64 bg-gray-800 text-white h-auto min-h-screen max-h-screen overflow-y-auto p-4 flex flex-col justify-between rounded-r-lg shadow-lg">
+
+<!-- Menú lateral responsivo utilizando Tailwind transitions -->
+<aside 
+    :class="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen}"
+    class="fixed inset-y-0 left-0 z-40 w-64 bg-gray-800 text-white h-full transform md:translate-x-0 md:static transition-transform duration-300 ease-in-out p-4 flex flex-col justify-between shadow-lg overflow-y-auto flex-shrink-0">
+    
     <div>
-        <h1 class="mb-8 bg-sky-50 rounded-md p-2">
-            <img src="<?php echo BASE_URL; ?>image/logo-grupo-avemer.webp" alt="Avemer Logo" class="w-full h-auto">
-        </h1>
-        <nav>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="bg-sky-50 rounded-md p-2 w-full">
+                <img src="<?php echo BASE_URL; ?>image/logo-grupo-avemer.webp" alt="Avemer Logo" class="w-full h-auto">
+            </h1>
+            <!-- Botón de cierre para pantallas móviles -->
+            <button @click="sidebarOpen = false" class="md:hidden text-gray-400 hover:text-white ml-2 p-1 focus:outline-none">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+        </div>
+        <nav class="mt-2">
             <ul class="text-white space-y-2">
                 <li>
                     <a href="<?php echo BASE_URL; ?>dashboard"
@@ -190,6 +202,9 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                         <?php if ($canSeeDiplomadoAbierto): ?>
                         <li><a href="<?php echo BASE_URL; ?>diplomado_abierto" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'diplomado_abierto') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-unlock mr-2"></i> Apertura</a></li>
                         <?php endif; ?>
+                        <?php if ($canSeeDiplomadoControl): ?>
+                        <li><a href="<?php echo BASE_URL; ?>diplomadocontrol" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'diplomadocontrol') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa-solid fa-sliders mr-2"></i> Control de Capítulos</a></li>
+                        <?php endif; ?>
                         <?php if ($canSeeInscripcionDiplomado): ?>
                         <li><a href="<?php echo BASE_URL; ?>inscripcion_diplomado" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'inscripcion_diplomado') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fas fa-user-check mr-2"></i> Inscripción</a></li>
                         <?php endif; ?>
@@ -249,7 +264,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                         <li><a href="<?php echo BASE_URL; ?>compensar" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'compensar') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-exchange-alt mr-2"></i> Compensar</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeCronograma): ?>
-                        <li><a href="<?php echo BASE_URL; ?>cronograma" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'cronograma') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-calendar-alt mr-2"></i> Cronograma</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>cronograma" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'cronograma') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa de-calendar-alt mr-2"></i> Cronograma</a></li>
                         <?php endif; ?>
                     </ul>
                 </li>
@@ -347,7 +362,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
     ?>
     <div class="mt-8 pt-4 border-t border-gray-700">
         <div class="flex flex-col items-center mb-4">
-            <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-600 flex items-center justify-center flex-shrink-0">
+            <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-600 flex items-center justify-center flex-shrink-0">
                 <img src="<?php echo $avatarPath; ?>" alt="User Avatar" class="w-full h-full object-cover" />
             </div>
             
@@ -359,9 +374,38 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
         
         <a href="<?php echo BASE_URL; ?>logout"
             class="block w-full py-2 px-4 rounded bg-red-600 hover:bg-red-700 text-center text-white text-sm transition duration-200">
-            <i class="fa fa-sign-out-alt mr-2"></i> Cerrar Sesión
+            <i class="fa fa-sign-out-alt mr-1"></i> Salir
         </a>
     </div>
 </aside>
-<main class="flex-1 p-8 overflow-y-auto">
-    <div class="container mx-auto">
+
+<!-- Overlay translúcido de fondo para cerrar la barra en dispositivos móviles -->
+<div 
+    x-show="sidebarOpen" 
+    @click="sidebarOpen = false" 
+    x-transition:enter="transition-opacity ease-out duration-300"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition-opacity ease-in duration-200"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    class="fixed inset-0 z-30 bg-black/50 md:hidden">
+</div>
+
+<!-- Contenedor del contenido principal de la página -->
+<div class="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+    
+    <!-- Barra superior móvil (Únicamente visible en pantallas móviles) -->
+    <header class="flex items-center justify-between px-4 py-3 bg-gray-800 text-white md:hidden shadow-md flex-shrink-0">
+        <button @click="sidebarOpen = true" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded hover:bg-gray-700">
+            <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+        <span class="font-semibold text-sm tracking-wide">AVEMER - Académico</span>
+        <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-600 border border-gray-600">
+            <img src="<?php echo $avatarPath; ?>" alt="Avatar" class="w-full h-full object-cover">
+        </div>
+    </header>
+
+    <!-- Área de contenido con scroll seguro para tablas responsivas -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto bg-gray-100">
+        <div class="container mx-auto">

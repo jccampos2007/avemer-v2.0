@@ -1,6 +1,13 @@
 <?php
 // php_mvc_app/app/Views/layout/footer.php
 ?>
+<?php if (!($isLogin ?? false)): ?>
+        </div> <!-- Cierra el div .container -->
+    </main> <!-- Cierra el main de contenido scrollable -->
+</div> <!-- Cierra el flex-col de la main content area -->
+</div> <!-- Cierra el div x-data general del layout -->
+<?php endif; ?>
+
 <script type="text/javascript">
     const BASE_URL_JS = "<?php echo BASE_URL; ?>";
 </script>
@@ -20,8 +27,7 @@
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
-<!-- Alpinejs JS -->
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 <!-- Scripts JS globales -->
 <?php if (isset($page_js)): ?>
     <script src="<?php echo BASE_URL . $page_js; ?>"></script>
