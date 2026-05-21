@@ -102,14 +102,20 @@ class EventoModel
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
         // Paginación
-        $sql .= " LIMIT :start, :length";
-        $queryParams[':start'] = (int) $start;
-        $queryParams[':length'] = (int) $length;
+        if ((int)$length !== -1) {
+            if ((int)$length !== -1) {
+            $sql .= " LIMIT :start, :length";
+        }
+            $queryParams[':start'] = (int) $start;
+            $queryParams[':length'] = (int) $length;
+        }
 
         $stmt = $this->pdo->prepare($sql);
         // Vinculación manual de enteros por compatibilidad con LIMIT en emulación de PDO
-        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        if ((int)$length !== -1) {
+            $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
         $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+        }
         foreach ($queryParams as $key => $val) {
             if ($key !== ':start' && $key !== ':length') {
                 $stmt->bindValue($key, $val);

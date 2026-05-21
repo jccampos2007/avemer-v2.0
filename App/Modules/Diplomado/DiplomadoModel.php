@@ -100,11 +100,15 @@ class DiplomadoModel
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
         // Paginación con binds explícitos de enteros para evitar inconvenientes de PDO
-        $sql .= " LIMIT :start, :length";
+        if ((int)$length !== -1) {
+            $sql .= " LIMIT :start, :length";
+        }
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        if ((int)$length !== -1) {
+            $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
         $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+        }
         foreach ($queryParams as $key => $val) {
             $stmt->bindValue($key, $val);
         }

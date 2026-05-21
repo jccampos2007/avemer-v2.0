@@ -20,7 +20,8 @@ $(document).ready(function () {
                     title: 'Listado de Alumnos',
                     exportOptions: {
                         columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
-                    }
+                    },
+                    action: newExportAction
                 },
                 {
                     extend: 'pdfHtml5',
@@ -30,6 +31,7 @@ $(document).ready(function () {
                     exportOptions: {
                         columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
                     },
+                    action: newExportAction,
                     customize: function (doc) {
                         // Personalizaciones estéticas básicas para el PDF
                         doc.content[1].table.widths = ['25%', '45%', '30%'];

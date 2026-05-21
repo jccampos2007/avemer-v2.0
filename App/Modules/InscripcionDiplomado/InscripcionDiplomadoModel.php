@@ -100,9 +100,11 @@ class InscripcionDiplomadoModel
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
         // Paginación
-        $sql .= " LIMIT :start, :length";
-        $queryParams[':start'] = (int) $start;
-        $queryParams[':length'] = (int) $length;
+        if ((int)$length !== -1) {
+            $sql .= " LIMIT :start, :length";
+            $queryParams[':start'] = (int) $start;
+            $queryParams[':length'] = (int) $length;
+        }
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($queryParams);
