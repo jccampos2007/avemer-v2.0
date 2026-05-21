@@ -108,7 +108,11 @@ class CoordinadorModel
         foreach ($data as $row) {
             $raw_blob = $row['foto'];
             $finfo = new \finfo(FILEINFO_MIME_TYPE); // Crea una nueva instancia de finfo
-            $detected_mime_type = $finfo->buffer($raw_blob); // Detecta el MIME type del BLOB
+            if (!is_null($raw_blob)) {
+                $detected_mime_type = $finfo->buffer($raw_blob);
+            } else {
+                $detected_mime_type = null; 
+            }
 
 
             // Codifica el BLOB en Base64

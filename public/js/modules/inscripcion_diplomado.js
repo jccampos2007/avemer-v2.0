@@ -19,7 +19,7 @@ $(document).ready(function () {
                     className: 'buttons-excel',
                     title: 'Listado de Alumnos',
                     exportOptions: {
-                        columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
+                        columns: [1, 2, 3] // Exportar únicamente C.I., Nombre y Correo
                     },
                     action: newExportAction
                 },
@@ -29,7 +29,7 @@ $(document).ready(function () {
                     className: 'buttons-pdf',
                     title: 'Listado de Alumnos',
                     exportOptions: {
-                        columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
+                        columns: [1, 2, 3] // Exportar únicamente C.I., Nombre y Correo
                     },
                     action: newExportAction,
                     customize: function (doc) {
