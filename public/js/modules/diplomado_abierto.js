@@ -17,9 +17,9 @@ $(document).ready(function () {
                     extend: 'excelHtml5',
                     text: '<i class="fas fa-file-excel mr-2"></i> Exportar a Excel',
                     className: 'buttons-excel',
-                    title: 'Listado de Alumnos',
+                    title: 'Listado de Diplomados Abiertos',
                     exportOptions: {
-                        columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
+                        columns: [1, 2, 3, 4, 5, 6] // Exportar únicamente C.I., Nombre y Correo
                     },
                     action: newExportAction
                 },
@@ -27,9 +27,9 @@ $(document).ready(function () {
                     extend: 'pdfHtml5',
                     text: '<i class="fas fa-file-pdf mr-2"></i> Exportar a PDF',
                     className: 'buttons-pdf',
-                    title: 'Listado de Alumnos',
+                    title: 'Listado de Diplomados Abiertos',
                     exportOptions: {
-                        columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
+                        columns: [1, 2, 3, 4, 5, 6] // Exportar únicamente C.I., Nombre y Correo
                     },
                     action: newExportAction,
                     customize: function (doc) {

@@ -64,7 +64,7 @@ $(document).ready(function () {
                     extend: 'excelHtml5',
                     text: '<i class="fas fa-file-excel mr-2"></i> Exportar a Excel',
                     className: 'buttons-excel',
-                    title: 'Listado de Alumnos',
+                    title: 'Listado de Coordinadores',
                     exportOptions: {
                         columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
                     },
@@ -74,7 +74,7 @@ $(document).ready(function () {
                     extend: 'pdfHtml5',
                     text: '<i class="fas fa-file-pdf mr-2"></i> Exportar a PDF',
                     className: 'buttons-pdf',
-                    title: 'Listado de Alumnos',
+                    title: 'Listado de Coordinadores',
                     exportOptions: {
                         columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
                     },

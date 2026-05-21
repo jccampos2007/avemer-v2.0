@@ -13,9 +13,9 @@ $(document).ready(function () {
                     extend: 'excelHtml5',
                     text: '<i class="fas fa-file-excel mr-2"></i> Exportar a Excel',
                     className: 'buttons-excel',
-                    title: 'Listado de Alumnos',
+                    title: 'Listado de Profesiones y Oficios',
                     exportOptions: {
-                        columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
+                        columns: [1] // Exportar únicamente Profesión/Oficio
                     },
                     action: newExportAction
                 },
@@ -23,14 +23,14 @@ $(document).ready(function () {
                     extend: 'pdfHtml5',
                     text: '<i class="fas fa-file-pdf mr-2"></i> Exportar a PDF',
                     className: 'buttons-pdf',
-                    title: 'Listado de Alumnos',
+                    title: 'Listado de Profesiones y Oficios',
                     exportOptions: {
-                        columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
+                        columns: [1] // Exportar únicamente Profesión/Oficio
                     },
                     action: newExportAction,
                     customize: function (doc) {
                         // Personalizaciones estéticas básicas para el PDF
-                        doc.content[1].table.widths = ['25%', '45%', '30%'];
+                        doc.content[1].table.widths = ['100%'];
                         doc.styles.tableHeader.fillColor = '#1e3a8a'; // Color azul corporativo
                         doc.styles.tableHeader.color = '#ffffff';
                     }
