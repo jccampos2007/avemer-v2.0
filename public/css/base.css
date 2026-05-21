@@ -1,5 +1,73 @@
+/* php_mvc_app/public/css/base.css */
+
+/* Contenedor general de controles de DataTables (Fila superior) */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dt-buttons,
+.dataTables_wrapper .dataTables_filter {
+    display: inline-flex !important;
+    align-items: center !important;
+    vertical-align: middle !important;
+}
+
+/* Margen inferior aplicado simultáneamente a los tres elementos solicitados */
+.dataTables_length,
+.dt-buttons,
+.dataTables_filter {
+    margin-bottom: 0.5rem !important;
+}
+
+/* Forzar alineación vertical perfecta en el contenedor superior */
+#alumnosTable_wrapper > div:first-child,
+.dataTables_wrapper > div:first-child {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+}
+
+/* Homologar alturas y comportamiento de caja a exactamente 38px */
+.dataTables_wrapper .dataTables_length select,
+.dt-button,
+.dataTables_wrapper .dataTables_filter input {
+    height: 38px !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.875rem !important;
+}
+
+/* Ajustes específicos para el selector de registros (lengthMenu) */
+.dataTables_wrapper .dataTables_length select {
+    border-radius: 0.375rem !important;
+    border: 1px solid #d1d5db !important;
+    background-color: #ffffff !important;
+    cursor: pointer;
+}
+
+/* Ajustes específicos para el buscador (Search Input) */
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5rem !important;
+    padding: 0 0.75rem !important;
+    border-radius: 0.375rem !important;
+    border: 1px solid #d1d5db !important;
+    background-color: #ffffff !important;
+    outline: none;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #3b82f6 !important; /* Resalte azul al enfocar */
+    box-shadow: 0 0 0 1px #3b82f6 !important;
+}
+
+/* --- Estilos personalizados para los Botones --- */
 .dt-buttons {
-    margin-bottom: 1rem;
+    margin-left: 0.5rem !important;
+    display: flex !important;
+    gap: 0.5rem !important;
+    align-items: center !important;
 }
 
 .dt-button {
@@ -7,10 +75,10 @@
     color: #374151 !important;
     border: 1px solid #d1d5db !important;
     border-radius: 0.375rem !important;
-    padding: 0.5rem 1rem !important;
+    padding: 0 1rem !important;
     font-weight: 600 !important;
-    font-size: 0.875rem !important;
     transition: all 0.2s;
+    cursor: pointer;
 }
 
 .dt-button:hover {

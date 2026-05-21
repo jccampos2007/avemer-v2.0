@@ -6,9 +6,6 @@ $canCreate = Auth::hasPermission('evento', 'crear');
 $canEdit = Auth::hasPermission('evento', 'modificar');
 $canDelete = Auth::hasPermission('evento', 'eliminar');
 ?>
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" />
 
 <h2 class="text-3xl font-semibold text-gray-800 mb-6">Gestión de Eventos</h2>
 

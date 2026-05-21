@@ -51,7 +51,7 @@ $(document).ready(function () {
             "processing": true,
             "serverSide": true, // Habilitar procesamiento del lado del servidor
             "responsive": true, // Habilitar diseño responsivo
-            "dom": 'Bfrtip', // Definir ubicación de los elementos de control (B = Botones)
+            "dom": 'lBfrtip', // Definir ubicación de los elementos de control (B = Botones)
             "buttons": [
                 {
                     extend: 'excelHtml5',
