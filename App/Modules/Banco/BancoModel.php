@@ -22,7 +22,7 @@ class BancoModel
     }
 
     /**
-     * Obtiene datos de bancos para DataTables.
+     * Obtiene datos de bancos para DataTables con paginación adaptativa.
      */
     public function getPaginatedBancos(array $params): array
     {
@@ -61,13 +61,23 @@ class BancoModel
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
-        $sql .= " LIMIT :start, :length";
+        // Modificación de la paginación: Solo agregamos LIMIT si length no es -1
+        if ((int)$length !== -1) {
+            $sql .= " LIMIT :start, :length";
+        }
+
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
-        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+
+        // Si no se usa LIMIT, evitamos enlazar los parámetros de paginación
+        if ((int)$length !== -1) {
+            $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+            $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+        }
+
         foreach ($queryParams as $key => $val) {
             $stmt->bindValue($key, $val);
         }
+        
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
