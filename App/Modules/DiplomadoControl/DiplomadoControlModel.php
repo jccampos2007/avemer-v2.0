@@ -102,7 +102,6 @@ class DiplomadoControlModel
         $sql = "
             SELECT id, ci_pasapote, primer_nombre, primer_apellido 
             FROM docente 
-            WHERE estatus_activo_id = 1 
             ORDER BY primer_apellido ASC, primer_nombre ASC
         ";
         $stmt = $this->pdo->query($sql);

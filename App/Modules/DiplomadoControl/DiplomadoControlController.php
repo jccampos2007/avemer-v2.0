@@ -60,7 +60,7 @@ class DiplomadoControlController extends Controller
             }
 
             $docentes = $this->controlModel->getDocentesActivos();
-            $controlesExistentes = $this->controlModel->getControlesPorDiplomadoAbierto($diplomadoAbiertoId);
+            $controlesExistentes = $this->controlModel->    ($diplomadoAbiertoId);
 
             // Si por alguna razón no tiene controles aún, lo tratamos con su diplomado base para cargar vacíos
             if (empty($controlesExistentes)) {
