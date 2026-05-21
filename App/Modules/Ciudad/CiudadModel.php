@@ -49,24 +49,24 @@ class CiudadModel
         $orderDir = $params['order'][0]['dir'] ?? 'asc';
 
         $columnMap = [
-            0 => 'id',
-            1 => 'nombre',
-            2 => 'pais_id'
+            0 => 'e.id',
+            1 => 'e.nombre',
+            2 => 'p.nombre'
         ];
 
-        $sql = "SELECT id, nombre, pais_id FROM {$this->table}";
-        $countSql = "SELECT COUNT(*) FROM {$this->table}";
+        $sql = "SELECT e.id, e.nombre, p.nombre AS pais_nombre FROM {$this->table} e LEFT JOIN pais p ON e.pais_id = p.id";
+        $countSql = "SELECT COUNT(*) FROM {$this->table} e LEFT JOIN pais p ON e.pais_id = p.id";
         
         // Filtro base de borrado lógico
-        $where = ["deleted_at IS NULL"];
+        $where = ["e.deleted_at IS NULL"];
         $queryParams = [];
 
         // Búsqueda global
         if (!empty($searchValue)) {
-            $where[] = "(nombre LIKE :nombre OR pais_id LIKE :pais_id)";
+            $where[] = "(e.nombre LIKE :nombre OR p.nombre LIKE :pais_nombre)";
             $like = '%' . $searchValue . '%';
             $queryParams[':nombre'] = $like;
-            $queryParams[':pais_id'] = $like;
+            $queryParams[':pais_nombre'] = $like;
         }
 
         if (!empty($where)) {
@@ -80,7 +80,7 @@ class CiudadModel
         $recordsFiltered = $stmt->fetchColumn();
 
         // Ordenación
-        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'id';
+        $orderColumnName = $columnMap[$orderColumnIndex] ?? 'e.id';
         $orderDir = in_array(strtolower($orderDir), ['asc', 'desc']) ? $orderDir : 'asc';
         $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
 
@@ -106,7 +106,7 @@ class CiudadModel
             $formattedData[] = [
                 $row['id'],
                 htmlspecialchars($row['nombre']),
-                htmlspecialchars($row['pais_id']),
+                htmlspecialchars($row['pais_nombre'] ?? ''),
                 '' 
             ];
         }
