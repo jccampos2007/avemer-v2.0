@@ -4,6 +4,14 @@
 // Este módulo no tiene una vista de lista tradicional, redirige al formulario de creación.
 // Puedes añadir un mensaje o un botón si lo deseas.
 ?>
+
+<div class="flex flex-col md:flex-row md:items-center md:justify-between bg-white p-6 rounded-lg shadow-sm border border-gray-150 mb-6">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-800">Listado</h2>
+        <p class="text-sm text-gray-500 mt-1">Gestión y listado de registros.</p>
+    </div>
+</div>
+
 <!DOCTYPE html>
 <html lang="es">
 
