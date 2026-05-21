@@ -243,3 +243,62 @@ function showConfirmationDialog(message, onConfirm, onCancel = null) {
         dialog.style.opacity = '1';
     }, 10); // Pequeño retraso para que la transición se aplique
 }
+
+/**
+ * Función auxiliar global para exportar todos los datos en Server-Side Processing.
+ * Cambia temporalmente la longitud de la página a -1 (todos) y dispara la acción nativa de DataTables.
+ * Útil para múltiples módulos que requieran exportación de listados completos.
+ */
+function newExportAction(e, dt, button, config) {
+    var self = this;
+    var oldStart = dt.settings()[0]._iDisplayStart;
+    var oldLength = dt.settings()[0]._iDisplayLength;
+
+    // Mostrar un indicador de carga al usuario mientras se exporta todo
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Preparando exportación',
+            text: 'Por favor, espere un momento...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    }
+
+    dt.one('preXhr', function (e, s, data) {
+        // Justo antes de enviar la petición, le decimos al backend que queremos TODOS los registros
+        data.start = 0;
+        data.length = -1; // -1 indica que se deben omitir los límites de paginación
+    });
+
+    dt.one('draw', function (e, settings) {
+        // Una vez recibidos los datos completos, ejecutamos la exportación original
+        if (button[0].className.indexOf('buttons-excel') >= 0) {
+            $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config);
+        } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
+            $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button, config);
+        }
+
+        // Cerrar indicador de carga
+        if (typeof Swal !== 'undefined') {
+            Swal.close();
+        }
+
+        // Restablecer la tabla a su paginación y estado original
+        dt.one('preXhr', function (e, s, data) {
+            settings._iDisplayStart = oldStart;
+            settings._iDisplayLength = oldLength;
+            data.start = oldStart;
+            data.length = oldLength;
+        });
+
+        // Recargar el grid con el tamaño original de paginación de manera silenciosa
+        setTimeout(function() {
+            dt.ajax.reload(null, false);
+        }, 100);
+    });
+
+    // Disparar la petición AJAX interna con la nueva longitud (-1)
+    dt.ajax.reload();
+}

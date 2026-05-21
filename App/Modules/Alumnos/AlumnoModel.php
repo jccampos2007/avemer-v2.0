@@ -89,14 +89,21 @@ class AlumnoModel
             $sql .= " ORDER BY {$orderColumnName} {$orderDir}";
         }
 
-
-        // Paginación
-        $sql .= " LIMIT :start, :length";
-        $queryParams[':start'] = (int) $start;
-        $queryParams[':length'] = (int) $length;
-
+        // Modificación de la paginación: Solo agregamos LIMIT si length no es -1
+        if ((int)$length !== -1) {
+            $sql .= " LIMIT :start, :length";
+            $queryParams[':start'] = (int) $start;
+            $queryParams[':length'] = (int) $length;
+        }
 
         $stmt = $this->pdo->prepare($sql);
+        
+        // Si no se usa LIMIT, removemos los parámetros de paginación de la lista para evitar errores de PDO
+        if ((int)$length === -1) {
+            unset($queryParams[':start']);
+            unset($queryParams[':length']);
+        }
+
         $stmt->execute($queryParams);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -110,8 +117,6 @@ class AlumnoModel
             } else {
                 $detected_mime_type = null; 
             }
-            // $detected_mime_type = $finfo->buffer($raw_blob); // Detecta el MIME type del BLOB
-
 
             // Codifica el BLOB en Base64
             if ($raw_blob === null || $raw_blob === 'NO-IMAGE' || $detected_mime_type === false || !str_starts_with($detected_mime_type, 'image/')) {
