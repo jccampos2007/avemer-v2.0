@@ -126,7 +126,14 @@ class EventoAbiertoController extends Controller
                 Auth::setFlashMessage('error', 'Evento Abierto no encontrado.');
                 $this->redirect('evento_abierto');
             }
-            $this->view('EventoAbierto/form', ['evento_abierto_data' => $evento_abierto_data]);
+
+            // Se obtiene la lista de alumnos inscritos para este Evento Abierto específico
+            $inscritos = $this->eventoAbiertoModel->getInscritos($id);
+
+            $this->view('EventoAbierto/form', [
+                'evento_abierto_data' => $evento_abierto_data,
+                'inscritos' => $inscritos
+            ]);
         }
     }
 
@@ -208,7 +215,7 @@ class EventoAbiertoController extends Controller
             }
             exit(); // Terminar a execução para a solicitação AJAX
         } else {
-            // Comportamento original para solicitações não-AJAX (redirecionamento)
+            // Comportamiento original para solicitudes no-AJAX (redirecionamiento)
             try {
                 if ($this->eventoAbiertoModel->delete($id)) {
                     Auth::setFlashMessage('success', 'Registro de Evento Abierto eliminado con éxito.');

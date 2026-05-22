@@ -10,9 +10,10 @@ class EventoAbiertoModel
     private $pdo;
     private $table = 'evento_abierto';
 
-    public function __construct()
+    public function __construct(PDO $pdo = null)
     {
-        $this->pdo = Database::getInstance()->getConnection();
+        // Se preserva la inicialización de la conexión de forma segura
+        $this->pdo = $pdo ?? Database::getInstance()->getConnection();
     }
 
     /**
@@ -116,9 +117,7 @@ class EventoAbiertoModel
 
         // Paginación
         if ((int)$length !== -1) {
-            if ((int)$length !== -1) {
             $sql .= " LIMIT :start, :length";
-        }
             $queryParams[':start'] = (int) $start;
             $queryParams[':length'] = (int) $length;
         }
@@ -126,7 +125,7 @@ class EventoAbiertoModel
         $stmt = $this->pdo->prepare($sql);
         if ((int)$length !== -1) {
             $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
-        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+            $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
         }
         foreach ($queryParams as $key => $val) {
             if ($key !== ':start' && $key !== ':length') {
@@ -161,6 +160,33 @@ class EventoAbiertoModel
     }
 
     /**
+     * Obtiene la lista de alumnos inscritos en este evento abierto específico.
+     *
+     * @param int $eventoAbiertoId ID de la apertura del evento.
+     * @return array Alumnos inscritos con sus datos personales y estatus.
+     */
+    public function getInscritos(int $eventoAbiertoId): array
+    {
+        $sql = "SELECT 
+                    ie.id AS inscripcion_id,
+                    ie.fecha AS fecha_inscripcion,
+                    a.ci_pasapote,
+                    CONCAT(a.primer_nombre, ' ', COALESCE(a.segundo_nombre, ''), ' ', a.primer_apellido, ' ', COALESCE(a.segundo_apellido, '')) AS alumno_nombre,
+                    a.correo,
+                    ei.nombre AS estatus_inscripcion
+                FROM inscripcion_evento ie
+                INNER JOIN alumno a ON ie.alumno_id = a.id
+                LEFT JOIN estatus_inscripcion ei ON ie.estatus_inscripcion_id = ei.id
+                WHERE ie.evento_abierto_id = :evento_abierto_id
+                ORDER BY ie.id DESC";
+                
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':evento_abierto_id', $eventoAbiertoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Comprueba si una apertura tiene inscritos asociados.
      * Útil antes de permitir cualquier borrado.
      *
@@ -169,8 +195,8 @@ class EventoAbiertoModel
      */
     public function countInscritos(int $eventoAbiertoId): int
     {
-        // Asumiendo que tu tabla de inscripciones se llama 'inscritos' y se relaciona con 'evento_abierto_id'
-        $sql = "SELECT COUNT(*) FROM inscritos WHERE evento_abierto_id = :evento_abierto_id";
+        // Se actualiza el nombre de la tabla a 'inscripcion_evento' de acuerdo al esquema real
+        $sql = "SELECT COUNT(*) FROM inscripcion_evento WHERE evento_abierto_id = :evento_abierto_id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':evento_abierto_id', $eventoAbiertoId, PDO::PARAM_INT);
         $stmt->execute();
@@ -213,7 +239,6 @@ class EventoAbiertoModel
      */
     public function delete(int $id): bool
     {
-        // Se realiza un UPDATE en lugar de un DELETE físico
         $sql = "UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
