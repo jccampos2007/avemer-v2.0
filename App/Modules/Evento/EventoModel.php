@@ -103,9 +103,7 @@ class EventoModel
 
         // Paginación
         if ((int)$length !== -1) {
-            if ((int)$length !== -1) {
             $sql .= " LIMIT :start, :length";
-        }
             $queryParams[':start'] = (int) $start;
             $queryParams[':length'] = (int) $length;
         }
@@ -114,7 +112,7 @@ class EventoModel
         // Vinculación manual de enteros por compatibilidad con LIMIT en emulación de PDO
         if ((int)$length !== -1) {
             $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
-        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+            $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
         }
         foreach ($queryParams as $key => $val) {
             if ($key !== ':start' && $key !== ':length') {
@@ -148,6 +146,36 @@ class EventoModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Obtiene la lista de eventos aperturados (evento_abierto) para un evento específico.
+     * Calcula la cantidad de inscritos desde la tabla 'inscripcion_evento'.
+     *
+     * @param int $eventoId El ID del evento base.
+     * @return array Listado de aperturas con sus datos básicos.
+     */
+    public function getEventosAbiertos(int $eventoId): array
+    {
+        $sql = "
+            SELECT 
+                ea.id,
+                ea.numero AS oferta_numero,
+                s.nombre AS sede_nombre,
+                est.nombre AS estatus_oferta,
+                ea.fecha_inicio,
+                ea.fecha_fin,
+                (SELECT COUNT(*) FROM inscripcion_evento ie WHERE ie.evento_abierto_id = ea.id) AS total_inscritos
+            FROM evento_abierto ea
+            LEFT JOIN sede s ON ea.sede_id = s.id
+            LEFT JOIN estatus est ON ea.estatus_id = est.id
+            WHERE ea.evento_id = :evento_id AND ea.deleted_at IS NULL
+            ORDER BY ea.id DESC
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':evento_id', $eventoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function create(array $data): bool
     {
         $sql = "INSERT INTO {$this->table} (duracion_id, nombre, descripcion, siglas, costo, inicial) VALUES (:duracion_id, :nombre, :descripcion, :siglas, :costo, :inicial)";
@@ -179,11 +207,9 @@ class EventoModel
 
     /**
      * Realiza un BORRADO LÓGICO del evento.
-     * También deberías evaluar propagar este estado a las aperturas asociadas si corresponde.
      */
     public function delete(int $id): bool
     {
-        // Se realiza un UPDATE en lugar de un DELETE físico
         $sql = "UPDATE {$this->table} SET deleted_at = CURRENT_TIMESTAMP WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);

@@ -128,7 +128,7 @@ class CursoAbiertoModel
         $stmt = $this->pdo->prepare($sql);
         if ((int)$length !== -1) {
             $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
-        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+            $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
         }
         foreach ($queryParams as $key => $val) {
             $stmt->bindValue($key, $val);
@@ -175,16 +175,38 @@ class CursoAbiertoModel
     }
 
     /**
-     * Cuenta si hay alumnos matriculados en esta apertura de curso para evitar su borrado accidental.
-     * Ajustar el nombre de la tabla (por ejemplo, 'inscrito_curso') según corresponda en tu base de datos.
+     * Obtiene la lista de alumnos inscritos en esta apertura de curso específica.
      *
      * @param int $cursoAbiertoId ID de la apertura del curso.
-     * @return int Cantidad de inscritos.
+     * @return array Alumnos inscritos con sus datos básicos y estado.
+     */
+    public function getInscritos(int $cursoAbiertoId): array
+    {
+        $sql = "SELECT 
+                    ic.id AS inscripcion_id,
+                    ic.fecha AS fecha_inscripcion,
+                    a.ci_pasapote,
+                    CONCAT(a.primer_nombre, ' ', COALESCE(a.segundo_nombre, ''), ' ', a.primer_apellido, ' ', COALESCE(a.segundo_apellido, '')) AS alumno_nombre,
+                    a.correo,
+                    ei.nombre AS estatus_inscripcion
+                FROM inscripcion_curso ic
+                INNER JOIN alumno a ON ic.alumno_id = a.id
+                LEFT JOIN estatus_inscripcion ei ON ic.estatus_inscripcion_id = ei.id
+                WHERE ic.curso_abierto_id = :curso_abierto_id
+                ORDER BY ic.id DESC";
+                
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':curso_abierto_id', $cursoAbiertoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Cuenta si hay alumnos matriculados en esta apertura de curso para evitar su borrado accidental.
      */
     public function countInscritos(int $cursoAbiertoId): int
     {
-        // Ajusta el nombre de la tabla pivote/inscritos si es diferente en tu base de datos
-        $sql = "SELECT COUNT(*) FROM inscrito_curso WHERE curso_abierto_id = :curso_abierto_id";
+        $sql = "SELECT COUNT(*) FROM inscripcion_curso WHERE curso_abierto_id = :curso_abierto_id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':curso_abierto_id', $cursoAbiertoId, PDO::PARAM_INT);
         $stmt->execute();

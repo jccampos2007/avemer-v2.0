@@ -5,7 +5,7 @@ namespace App\Modules\Evento;
 use App\Core\Controller;
 use App\Core\Auth;
 use App\Modules\Evento\EventoModel;
-use PDO; // Asegúrate de que PDO esté disponible
+use PDO;
 
 class EventoController extends Controller
 {
@@ -55,7 +55,14 @@ class EventoController extends Controller
                 Auth::setFlashMessage('error', 'Registro de Evento no encontrado.');
                 $this->redirect('evento');
             }
-            $this->view('Evento/form', ['evento_data' => $evento_data]);
+
+            // Obtener aperturas del evento actual (evento_abierto)
+            $eventos_abiertos = $this->eventoModel->getEventosAbiertos($id);
+
+            $this->view('Evento/form', [
+                'evento_data' => $evento_data,
+                'eventos_abiertos' => $eventos_abiertos
+            ]);
         }
     }
 
@@ -96,16 +103,14 @@ class EventoController extends Controller
             // Formatear los datos para DataTables (array de arrays)
             $formattedData = [];
             foreach ($data['data'] as $row) {
-                // Los nombres de las columnas aquí deben coincidir con los aliases en la consulta SQL del modelo
                 $formattedData[] = [
                     $row['id'],
                     htmlspecialchars($row['siglas']),
                     htmlspecialchars($row['nombre']),
-                    htmlspecialchars($row['duracion_nombre'] ?? 'N/A'), // Nombre de la Duración
+                    htmlspecialchars($row['duracion_nombre'] ?? 'N/A'),
                     htmlspecialchars($row['descripcion']),
                     htmlspecialchars($row['costo']),
                     htmlspecialchars($row['inicial']),
-                    // Columna para acciones (editar/eliminar) - será renderizada en el JS
                     ''
                 ];
             }
@@ -135,17 +140,17 @@ class EventoController extends Controller
     private function processForm(?int $id = null): void
     {
         try {
-            // Validação básica y sanitización
+            // Validación básica y sanitización
             $data = [
                 'duracion_id' => !empty($_POST['duracion_id']) ? (int)$this->sanitizeInput($_POST['duracion_id']) : null,
                 'nombre' => $this->sanitizeInput($_POST['nombre']),
-                'descripcion' => $this->sanitizeInput($_POST['descripcion']), // CKEditor content, handle carefully
+                'descripcion' => $_POST['descripcion'], // Se conserva tal como está para soportar CKEditor
                 'siglas' => $this->sanitizeInput($_POST['siglas']),
                 'costo' => (float)$this->sanitizeInput($_POST['costo']),
                 'inicial' => (float)$this->sanitizeInput($_POST['inicial']),
             ];
 
-            // Validação de campos obrigatórios
+            // Validación de campos obligatorios
             if (empty($data['duracion_id']) || empty($data['nombre']) || empty($data['descripcion']) || empty($data['siglas']) || !isset($data['costo']) || !isset($data['inicial'])) {
                 Auth::setFlashMessage('error', 'Todos los campos son obligatorios.');
                 $redirectPath = $id ? 'evento/edit/' . $id : 'evento/create';
@@ -159,18 +164,18 @@ class EventoController extends Controller
                 $success = $this->eventoModel->update($id, $data);
                 $message = $success ? 'Registro de Evento actualizado con éxito.' : 'Error al actualizar el Registro de Evento.';
             } else {
-                // Criar
+                // Crear
                 $success = $this->eventoModel->create($data);
                 $message = $success ? 'Registro de Evento creado con éxito.' : 'Error al crear el Registro de Evento.';
             }
 
             if ($success) {
                 Auth::setFlashMessage('success', $message);
-                $this->redirect('evento'); // Redirecionar para a lista
+                $this->redirect('evento'); // Redireccionar para a lista
             } else {
                 Auth::setFlashMessage('error', $message);
                 $redirectPath = $id ? 'evento/edit/' . $id : 'evento/create';
-                $this->redirect($redirectPath); // Redirecionar de volta para o formulário
+                $this->redirect($redirectPath); // Redireccionar de vuelta para el formulario
             }
         } catch (\PDOException $e) {
             error_log('Error de BD en processForm (Evento): ' . $e->getMessage());
@@ -203,9 +208,9 @@ class EventoController extends Controller
                 error_log("Erro ao eliminar evento: " . $e->getMessage());
                 echo json_encode(['success' => false, 'message' => 'Erro de base de dados ao eliminar Evento: ' . $e->getMessage()]);
             }
-            exit(); // Terminar a execução para a solicitação AJAX
+            exit(); // Terminar la ejecución para la solicitud AJAX
         } else {
-            // Comportamento original para solicitações não-AJAX (redirecionamento)
+            // Comportamiento original para solicitudes no-AJAX (redireccionamiento)
             try {
                 if ($this->eventoModel->delete($id)) {
                     Auth::setFlashMessage('success', 'Registro de Evento eliminado con éxito.');

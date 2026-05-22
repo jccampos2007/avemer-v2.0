@@ -40,7 +40,14 @@ class CursoAbiertoController extends Controller
                 Auth::setFlashMessage('error', 'Taller Abierto no encontrado.');
                 $this->redirect('cursos_abiertos');
             }
-            $this->view('CursoAbierto/form', ['curso_abierto_data' => $curso_abierto_data]); // Ruta de vista relativa al módulo
+            
+            // Obtener los alumnos inscritos asociados a este taller abierto
+            $inscritos = $this->cursoAbiertoModel->getInscritos($id);
+            
+            $this->view('CursoAbierto/form', [
+                'curso_abierto_data' => $curso_abierto_data,
+                'inscritos' => $inscritos
+            ]);
         }
     }
 
