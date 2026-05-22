@@ -121,7 +121,14 @@ class DiplomadoAbiertoController extends Controller
                 Auth::setFlashMessage('error', 'Diplomado Abierto no encontrado.');
                 $this->redirect('diplomado_abierto');
             }
-            $this->view('DiplomadoAbierto/form', ['diplomado_abierto_data' => $diplomado_abierto_data]);
+
+            // Obtener alumnos inscritos en este diplomado abierto
+            $inscritos = $this->diplomadoAbiertoModel->getInscritos($id);
+
+            $this->view('DiplomadoAbierto/form', [
+                'diplomado_abierto_data' => $diplomado_abierto_data,
+                'inscritos' => $inscritos
+            ]);
         }
     }
 

@@ -127,7 +127,7 @@ class DiplomadoAbiertoModel
         $stmt = $this->pdo->prepare($sql);
         if ((int)$length !== -1) {
             $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
-        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+            $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
         }
         foreach ($queryParams as $key => $val) {
             $stmt->bindValue($key, $val);
@@ -241,5 +241,32 @@ class DiplomadoAbiertoModel
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT); 
         return $stmt->execute();
+    }
+
+    /**
+     * Obtiene la lista de alumnos inscritos en un diplomado abierto específico.
+     *
+     * @param int $diplomadoAbiertoId El ID del diplomado abierto.
+     * @return array Listado de alumnos inscritos con sus datos personales y estatus.
+     */
+    public function getInscritos(int $diplomadoAbiertoId): array
+    {
+        $sql = "SELECT 
+                    idip.id AS inscripcion_id,
+                    idip.fecha AS fecha_inscripcion,
+                    a.ci_pasapote,
+                    CONCAT(a.primer_nombre, ' ', COALESCE(a.segundo_nombre, ''), ' ', a.primer_apellido, ' ', COALESCE(a.segundo_apellido, '')) AS alumno_nombre,
+                    a.correo,
+                    ei.nombre AS estatus_inscripcion
+                FROM inscripcion_diplomado idip
+                INNER JOIN alumno a ON idip.alumno_id = a.id
+                LEFT JOIN estatus_inscripcion ei ON idip.estatus_inscripcion_id = ei.id
+                WHERE idip.diplomado_abierto_id = :diplomado_abierto_id
+                ORDER BY idip.id DESC";
+                
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':diplomado_abierto_id', $diplomadoAbiertoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
