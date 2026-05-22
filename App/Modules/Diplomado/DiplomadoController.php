@@ -122,7 +122,18 @@ class DiplomadoController extends Controller
                 Auth::setFlashMessage('error', 'Registro de Diplomado no encontrado.');
                 $this->redirect('diplomado');
             }
-            $this->view('Diplomado/form', ['diplomado_data' => $diplomado_data]);
+
+            // Obtener aperturas del diplomado actual (diplomado_abierto)
+            $diplomados_abiertos = $this->diplomadoModel->getDiplomadosAbiertos($id);
+
+            // Obtener capítulos asociados al diplomado actual
+            $capitulos = $this->diplomadoModel->getCapitulosByDiplomadoId($id);
+
+            $this->view('Diplomado/form', [
+                'diplomado_data' => $diplomado_data,
+                'diplomados_abiertos' => $diplomados_abiertos,
+                'capitulos' => $capitulos
+            ]);
         }
     }
 
@@ -203,7 +214,7 @@ class DiplomadoController extends Controller
             }
             exit(); // Terminar a execução para a solicitação AJAX
         } else {
-            // Comportamento original para solicitações no-AJAX (redireccionamento)
+            // Comportamiento original para solicitações no-AJAX (redireccionamiento)
             try {
                 if ($this->diplomadoModel->delete($id)) {
                     Auth::setFlashMessage('success', 'Registro de Diplomado eliminado con éxito.');

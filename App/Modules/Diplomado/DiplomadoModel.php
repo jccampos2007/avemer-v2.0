@@ -107,7 +107,7 @@ class DiplomadoModel
         $stmt = $this->pdo->prepare($sql);
         if ((int)$length !== -1) {
             $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
-        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+            $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
         }
         foreach ($queryParams as $key => $val) {
             $stmt->bindValue($key, $val);
@@ -140,6 +140,62 @@ class DiplomadoModel
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtiene la lista de diplomados abiertos (aperturas/ofertas) asociados a un diplomado específico.
+     * Calcula la cantidad de inscritos dinámicamente desde 'inscripcion_diplomado'.
+     *
+     * @param int $diplomadoId El ID del diplomado base.
+     * @return array Listado de aperturas con sus datos básicos.
+     */
+    public function getDiplomadosAbiertos(int $diplomadoId): array
+    {
+        $sql = "
+            SELECT 
+                da.id,
+                da.numero AS oferta_numero,
+                s.nombre AS sede_nombre,
+                est.nombre AS estatus_oferta,
+                da.fecha_inicio,
+                da.fecha_fin,
+                (SELECT COUNT(*) FROM inscripcion_diplomado idip WHERE idip.diplomado_abierto_id = da.id) AS total_inscritos
+            FROM diplomado_abierto da
+            LEFT JOIN sede s ON da.sede_id = s.id
+            LEFT JOIN estatus est ON da.estatus_id = est.id
+            WHERE da.diplomado_id = :diplomado_id AND da.deleted_at IS NULL
+            ORDER BY da.id DESC
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':diplomado_id', $diplomadoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtiene la lista de capítulos asociados a un diplomado específico.
+     *
+     * @param int $diplomadoId El ID del diplomado base.
+     * @return array Listado de capítulos.
+     */
+    public function getCapitulosByDiplomadoId(int $diplomadoId): array
+    {
+        $sql = "
+            SELECT 
+                id,
+                numero,
+                nombre,
+                descripcion,
+                activo,
+                orden
+            FROM capitulo
+            WHERE diplomado_id = :diplomado_id AND deleted_at IS NULL
+            ORDER BY orden ASC, numero ASC
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':diplomado_id', $diplomadoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
