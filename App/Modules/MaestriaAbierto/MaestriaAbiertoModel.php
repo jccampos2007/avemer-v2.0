@@ -131,7 +131,7 @@ class MaestriaAbiertoModel
         $stmt = $this->pdo->prepare($sql);
         if ((int)$length !== -1) {
             $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
-        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+            $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
         }
         foreach ($queryParams as $key => $val) {
             $stmt->bindValue($key, $val);
@@ -165,16 +165,41 @@ class MaestriaAbiertoModel
     }
 
     /**
+     * Obtiene la lista de alumnos inscritos en esta maestría abierta específica.
+     *
+     * @param int $maestriaAbiertoId ID de la apertura de la maestría.
+     * @return array Alumnos inscritos con sus datos personales y estatus.
+     */
+    public function getInscritos(int $maestriaAbiertoId): array
+    {
+        $sql = "SELECT 
+                    im.id AS inscripcion_id,
+                    im.fecha AS fecha_inscripcion,
+                    a.ci_pasapote,
+                    CONCAT(a.primer_nombre, ' ', COALESCE(a.segundo_nombre, ''), ' ', a.primer_apellido, ' ', COALESCE(a.segundo_apellido, '')) AS alumno_nombre,
+                    a.correo,
+                    ei.nombre AS estatus_inscripcion
+                FROM inscripcion_maestria im
+                INNER JOIN alumno a ON im.alumno_id = a.id
+                LEFT JOIN estatus_inscripcion ei ON im.estatus_inscripcion_id = ei.id
+                WHERE im.maestria_abierto_id = :maestria_abierto_id
+                ORDER BY im.id DESC";
+                
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':maestria_abierto_id', $maestriaAbiertoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Cuenta el número de alumnos inscritos en esta apertura de maestría para evitar su eliminación si ya posee alumnos.
-     * Ajusta el nombre de la tabla de relación (por ejemplo 'inscritos_maestria') según corresponda en tu base de datos.
      *
      * @param int $maestriaAbiertoId El ID de la apertura de maestría.
      * @return int Cantidad de inscripciones.
      */
     public function countInscritos(int $maestriaAbiertoId): int
     {
-        // Cambia 'inscrito_maestria' por el nombre real de tu tabla pivote o de inscripciones
-        $sql = "SELECT COUNT(*) FROM inscrito_maestria WHERE maestria_abierto_id = :maestria_abierto_id";
+        $sql = "SELECT COUNT(*) FROM inscripcion_maestria WHERE maestria_abierto_id = :maestria_abierto_id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':maestria_abierto_id', $maestriaAbiertoId, PDO::PARAM_INT);
         $stmt->execute();

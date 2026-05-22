@@ -2,7 +2,7 @@
 // app/Modules/Maestria/MaestriaController.php
 namespace App\Modules\Maestria;
 
-use App\Core\Controller; // Asume que Controller provee los helpers (sanitizeInput, redirect, view)
+use App\Core\Controller; // Controller provee los helpers (sanitizeInput, redirect, view)
 use App\Core\Auth;
 use App\Modules\Maestria\MaestriaModel;
 
@@ -121,7 +121,14 @@ class MaestriaController extends Controller
                 Auth::setFlashMessage('error', 'Registro de Maestría no encontrado.');
                 $this->redirect('maestria');
             }
-            $this->view('Maestria/form', ['maestria_data' => $maestria_data]);
+            
+            // Obtener aperturas de la maestría actual (maestria_abierto)
+            $maestrias_abiertas = $this->maestriaModel->getMaestriasAbiertas($id);
+
+            $this->view('Maestria/form', [
+                'maestria_data' => $maestria_data,
+                'maestrias_abiertas' => $maestrias_abiertas
+            ]);
         }
     }
 

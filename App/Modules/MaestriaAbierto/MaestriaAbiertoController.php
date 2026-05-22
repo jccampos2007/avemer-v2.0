@@ -122,7 +122,14 @@ class MaestriaAbiertoController extends Controller
                 Auth::setFlashMessage('error', 'Registro de Maestría Abierta no encontrado.');
                 $this->redirect('maestria_abierto');
             }
-            $this->view('MaestriaAbierto/form', ['maestria_abierto_data' => $maestria_abierto_data]);
+
+            // Obtener alumnos inscritos en esta maestría abierta
+            $inscritos = $this->maestriaAbiertoModel->getInscritos($id);
+
+            $this->view('MaestriaAbierto/form', [
+                'maestria_abierto_data' => $maestria_abierto_data,
+                'inscritos' => $inscritos
+            ]);
         }
     }
 

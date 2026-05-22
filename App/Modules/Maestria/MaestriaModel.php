@@ -81,9 +81,7 @@ class MaestriaModel
 
         // Paginación
         if ((int)$length !== -1) {
-            if ((int)$length !== -1) {
             $sql .= " LIMIT :start, :length";
-        }
             $queryParams[':start'] = (int) $start;
             $queryParams[':length'] = (int) $length;
         }
@@ -92,7 +90,7 @@ class MaestriaModel
         // Vinculación segura de enteros para evitar problemas con LIMIT en ciertos drivers PDO
         if ((int)$length !== -1) {
             $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
-        $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+            $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
         }
         foreach ($queryParams as $key => $val) {
             if ($key !== ':start' && $key !== ':length') {
@@ -127,6 +125,35 @@ class MaestriaModel
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtiene la lista de maestrías abiertas (aperturas/ofertas) asociadas a una maestría específica.
+     * Calcula la cantidad de inscritos dinámicamente desde 'inscripcion_maestria'.
+     *
+     * @param int $maestriaId El ID de la maestría base.
+     * @return array Listado de aperturas con sus datos básicos.
+     */
+    public function getMaestriasAbiertas(int $maestriaId): array
+    {
+        $sql = "
+            SELECT 
+                ma.id,
+                ma.numero AS oferta_numero,
+                s.nombre AS sede_nombre,
+                est.nombre AS estatus_oferta,
+                ma.fecha,
+                (SELECT COUNT(*) FROM inscripcion_maestria ima WHERE ima.maestria_abierto_id = ma.id) AS total_inscritos
+            FROM maestria_abierto ma
+            LEFT JOIN sede s ON ma.sede_id = s.id
+            LEFT JOIN estatus est ON ma.estatus_id = est.id
+            WHERE ma.maestria_id = :maestria_id AND ma.deleted_at IS NULL
+            ORDER BY ma.id DESC
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':maestria_id', $maestriaId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
