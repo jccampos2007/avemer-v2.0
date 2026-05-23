@@ -54,6 +54,10 @@ $(document).ready(function () {
         });
     });
 
+    // Inicializar el toggle de colapsar formulario (acordeón) de forma global
+    // Se activa automáticamente en cualquier módulo que tenga los IDs requeridos
+    initFormToggle();
+
 });
 
 // Función reusable para llenar un select
@@ -153,6 +157,97 @@ function showFlashMessage(type, text) {
             setTimeout(() => currentMsg.remove(), 500); // Eliminar después de la transición
         }
     }, 5000); // 5 segundos
+}
+
+
+/**
+ * Inicializa el toggle de colapsar/expandir formulario (estilo acordeón con switch).
+ * Se llama automáticamente desde document.ready en cualquier vista que contenga
+ * los IDs estándar del formulario colapsable. No requiere ningún código adicional
+ * en los módulos individuales para funcionar.
+ *
+ * IDs HTML requeridos en la vista:
+ *   - toggle_form_collapse_btn   → el elemento switch (button/div)
+ *   - toggle_form_collapse_dot   → el punto deslizante del switch
+ *   - toggle_form_text           → etiqueta de texto "Ocultar / Mostrar"
+ *   - form_collapsible_wrapper   → contenedor con grid-template-rows para la animación
+ *   - form_collapsible_content   → contenido colapsable (hijo directo del wrapper)
+ *   - form_main_card             → tarjeta principal del formulario (opcional)
+ *   - form_header_row            → fila de cabecera del formulario (opcional)
+ */
+function initFormToggle() {
+    const toggleBtn   = document.getElementById('toggle_form_collapse_btn');
+    const toggleDot   = document.getElementById('toggle_form_collapse_dot');
+    const toggleText  = document.getElementById('toggle_form_text');
+    const collWrapper = document.getElementById('form_collapsible_wrapper');
+    const collContent = document.getElementById('form_collapsible_content');
+    const mainCard    = document.getElementById('form_main_card');
+    const headerRow   = document.getElementById('form_header_row');
+
+    // Si no existe el botón o el wrapper, esta vista no usa el toggle — salir silenciosamente
+    if (!toggleBtn || !collWrapper || !collContent) return;
+
+    let isCollapsed = false;
+
+    // Clic en la etiqueta de texto también activa el switch
+    if (toggleText) {
+        toggleText.addEventListener('click', function () { toggleBtn.click(); });
+    }
+
+    toggleBtn.addEventListener('click', function () {
+        isCollapsed = !isCollapsed;
+
+        if (isCollapsed) {
+            // --- SWITCH: activar (verde oscuro) ---
+            toggleBtn.classList.remove('bg-green-200');
+            toggleBtn.classList.add('bg-green-600');
+            toggleDot.classList.remove('translate-x-0');
+            toggleDot.classList.add('translate-x-8');
+            toggleBtn.setAttribute('aria-checked', 'true');
+            if (toggleText) toggleText.textContent = 'Mostrar';
+
+            // --- TARJETA: estilo colapsado ---
+            if (mainCard) {
+                mainCard.classList.remove('border-gray-100', 'shadow-md');
+                mainCard.classList.add('border-gray-800', 'shadow-sm');
+            }
+            if (headerRow) {
+                headerRow.classList.remove('border-b', 'pb-3', 'mb-6');
+                headerRow.classList.add('mb-0');
+            }
+
+            // --- COLAPSAR contenido ---
+            collContent.style.overflow = 'hidden';
+            collWrapper.style.gridTemplateRows = '0fr';
+
+        } else {
+            // --- SWITCH: desactivar (verde claro) ---
+            toggleBtn.classList.remove('bg-green-600');
+            toggleBtn.classList.add('bg-green-200');
+            toggleDot.classList.remove('translate-x-8');
+            toggleDot.classList.add('translate-x-0');
+            toggleBtn.setAttribute('aria-checked', 'false');
+            if (toggleText) toggleText.textContent = 'Ocultar';
+
+            // --- TARJETA: restaurar estilo original ---
+            if (mainCard) {
+                mainCard.classList.remove('border-gray-800', 'shadow-sm');
+                mainCard.classList.add('border-gray-100', 'shadow-md');
+            }
+            if (headerRow) {
+                headerRow.classList.remove('mb-0');
+                headerRow.classList.add('border-b', 'pb-3', 'mb-6');
+            }
+
+            // --- EXPANDIR contenido ---
+            collWrapper.style.gridTemplateRows = '1fr';
+
+            // Restaurar overflow para que selects/autocompletes no queden recortados
+            setTimeout(function () {
+                if (!isCollapsed) collContent.style.overflow = 'visible';
+            }, 300);
+        }
+    });
 }
 
 

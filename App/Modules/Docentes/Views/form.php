@@ -7,12 +7,27 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
 <div class="max-w-4xl mx-auto space-y-6">
 
     <!-- TARJETA 1: Formulario Principal de Registro/Edición -->
-    <div class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
-        <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
-            <?php echo ($is_edit) ? 'Editar Instructor' : 'Crear Nuevo Instructor'; ?>
-        </h3>
-        
+    <div id="form_main_card" class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
+        <div id="form_header_row" class="flex justify-between items-center mb-6 border-b pb-3">
+            <h3 class="text-2xl font-bold text-gray-800">
+                <?php echo ($is_edit) ? 'Editar Instructor' : 'Crear Nuevo Instructor'; ?>
+            </h3>
+            <?php if ($is_edit): ?>
+            <div class="flex items-center">
+                <div class="flex items-center gap-3 select-none">
+                    <button type="button" id="toggle_form_collapse_btn" class="relative inline-flex h-6 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 bg-green-200" role="switch" aria-checked="false">
+                        <span class="sr-only">Ocultar / Mostrar</span>
+                        <span aria-hidden="true" id="toggle_form_collapse_dot" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-300 ease-in-out translate-x-0"></span>
+                    </button>
+                    <span class="text-sm font-bold text-gray-700 cursor-pointer" id="toggle_form_text">Ocultar</span>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+
         <form id="form_docentes" action="<?php echo $form_action; ?>" method="POST" enctype="multipart/form-data">
+            <div id="form_collapsible_wrapper" class="grid transition-all duration-300" style="grid-template-rows: 1fr;">
+                <div id="form_collapsible_content" class="min-h-0" style="overflow: visible;">
             
             <!-- Datos Personales -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -122,6 +137,8 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
                     Cancelar
                 </a>
             </div>
+                </div> <!-- End of form_collapsible_content -->
+            </div> <!-- End of form_collapsible_wrapper -->
         </form>
     </div>
 
