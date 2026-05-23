@@ -3,7 +3,7 @@
 // Se espera la variable $curso_abierto_data (vacía para crear, con datos para editar)
 $is_edit = isset($curso_abierto_data['id']) && !empty($curso_abierto_data['id']);
 ?>
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="w-full space-y-6">
 
     <!-- TARJETA 1: Formulario Principal de Registro/Edición -->
     <div class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
@@ -12,7 +12,7 @@ $is_edit = isset($curso_abierto_data['id']) && !empty($curso_abierto_data['id'])
         </h3>
 
         <form id="form_cursos_abiertos" action="<?php echo BASE_URL; ?>cursos_abiertos/<?php echo ($is_edit) ? 'edit/' . $curso_abierto_data['id'] : 'create'; ?>" method="POST">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="numero" class="block text-gray-700 text-sm font-bold mb-2">Número:</label>
                     <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($curso_abierto_data['numero'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
@@ -49,15 +49,14 @@ $is_edit = isset($curso_abierto_data['id']) && !empty($curso_abierto_data['id'])
                     <label for="fecha" class="block text-gray-700 text-sm font-bold mb-2">Fecha:</label>
                     <input type="text" id="fecha" name="fecha" value="<?php echo htmlspecialchars($curso_abierto_data['fecha'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="YYYY-MM-DD" required>
                 </div>
-                <div class="md:col-span-2">
+                <div>
                     <label for="convenio" class="block text-gray-700 text-sm font-bold mb-2">Convenio:</label>
                     <input type="text" id="convenio" name="convenio" value="<?php echo htmlspecialchars($curso_abierto_data['convenio'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
-            </div>
-
-            <div class="mb-6">
-                <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
-                <textarea id="nombre_carta" name="nombre_carta" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3"><?php echo htmlspecialchars($curso_abierto_data['nombre_carta'] ?? ''); ?></textarea>
+                <div class="lg:col-span-4 md:col-span-2">
+                    <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
+                    <textarea id="nombre_carta" name="nombre_carta" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3"><?php echo htmlspecialchars($curso_abierto_data['nombre_carta'] ?? ''); ?></textarea>
+                </div>
             </div>
 
             <div class="flex items-center justify-between border-t pt-5">

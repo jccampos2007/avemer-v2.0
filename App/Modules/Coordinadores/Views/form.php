@@ -3,10 +3,10 @@
 // Se espera la variable $coordinador_data (vacía para crear, con datos para editar)
 $is_edit = isset($coordinador_data['id']) && !empty($coordinador_data['id']);
 ?>
-<div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+<div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Coordinador' : 'Crear Nuevo Coordinador'; ?></h3>
     <form id="form_coordinadores" action="<?php echo BASE_URL; ?>coordinadores/<?php echo ($is_edit) ? 'update/' . $coordinador_data['id'] : 'create'; ?>" method="POST" enctype="multipart/form-data">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
                 <label for="ci_pasapote" class="label-form">C.I. / Pasaporte:</label>
                 <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($coordinador_data['ci_pasapote'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required>
@@ -39,14 +39,12 @@ $is_edit = isset($coordinador_data['id']) && !empty($coordinador_data['id']);
                 <label for="fecha_nacimiento" class="label-form">Fecha Nacimiento:</label>
                 <input type="text" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo htmlspecialchars($coordinador_data['fecha_nacimiento'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" placeholder="YYYY-MM-DD">
             </div>
-        </div>
 
-        <div class="mb-4">
-            <label for="direccion" class="label-form">Dirección:</label>
-            <textarea id="direccion" name="direccion" class="input-form focus:outline-none focus:shadow-outline"><?php echo htmlspecialchars($coordinador_data['direccion'] ?? ''); ?></textarea>
-        </div>
+            <div class="lg:col-span-4 md:col-span-2">
+                <label for="direccion" class="label-form">Dirección:</label>
+                <textarea id="direccion" name="direccion" class="input-form focus:outline-none focus:shadow-outline"><?php echo htmlspecialchars($coordinador_data['direccion'] ?? ''); ?></textarea>
+            </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
                 <label for="profesion_oficio_autocomplete" class="label-form">Profesión/Oficio:</label>
                 <input type="text" id="profesion_oficio_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Escriba para buscar...">
@@ -77,9 +75,7 @@ $is_edit = isset($coordinador_data['id']) && !empty($coordinador_data['id']);
                 <label for="tlf_trabajo" class="label-form">Teléfono Trabajo:</label>
                 <input type="text" id="tlf_trabajo" name="tlf_trabajo" value="<?php echo htmlspecialchars($coordinador_data['tlf_trabajo'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline">
             </div>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
                 <label for="foto" class="label-form">Foto:</label>
                 <input type="file" id="foto" name="foto" class="input-form focus:outline-none focus:shadow-outline">

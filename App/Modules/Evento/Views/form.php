@@ -13,7 +13,7 @@ $siglas_val = htmlspecialchars($evento_data['siglas'] ?? '');
 $costo_val = htmlspecialchars($evento_data['costo'] ?? '0.00');
 $inicial_val = htmlspecialchars($evento_data['inicial'] ?? '0.00');
 ?>
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="w-full space-y-6">
 
     <!-- TARJETA 1: Formulario Principal de Registro/Edición -->
     <div id="form_main_card" class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
@@ -42,7 +42,7 @@ $inicial_val = htmlspecialchars($evento_data['inicial'] ?? '0.00');
                 <input type="hidden" name="id" value="<?php echo $evento_data['id']; ?>">
             <?php endif; ?>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="duracion_id" class="block text-gray-700 text-sm font-bold mb-2">Duración:</label>
                     <select id="duracion_id" name="duracion_id" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
@@ -57,19 +57,17 @@ $inicial_val = htmlspecialchars($evento_data['inicial'] ?? '0.00');
                     <label for="siglas" class="block text-gray-700 text-sm font-bold mb-2">Siglas:</label>
                     <input type="text" id="siglas" name="siglas" value="<?php echo $siglas_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="8">
                 </div>
-            </div>
 
-            <div class="mb-6">
-                <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="64">
-            </div>
+                <div class="lg:col-span-4 md:col-span-2">
+                    <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="64">
+                </div>
 
-            <div class="mb-6">
-                <label for="descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
-                <textarea id="descripcion" name="descripcion" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="4" required><?php echo $descripcion_val; ?></textarea>
-            </div>
+                <div class="lg:col-span-4 md:col-span-2">
+                    <label for="descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
+                    <textarea id="descripcion" name="descripcion" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="4" required><?php echo $descripcion_val; ?></textarea>
+                </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
                     <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo:</label>
                     <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $costo_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">

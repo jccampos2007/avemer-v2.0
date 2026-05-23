@@ -4,7 +4,7 @@
 $is_edit = isset($docente_data['id']) && !empty($docente_data['id']);
 $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BASE_URL . 'docentes/create';
 ?>
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="w-full space-y-6">
 
     <!-- TARJETA 1: Formulario Principal de Registro/Edición -->
     <div id="form_main_card" class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
@@ -29,8 +29,7 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
             <div id="form_collapsible_wrapper" class="grid transition-all duration-300" style="grid-template-rows: 1fr;">
                 <div id="form_collapsible_content" class="min-h-0" style="overflow: visible;">
             
-            <!-- Datos Personales -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="ci_pasapote" class="block text-gray-700 text-sm font-bold mb-2">C.I. / Pasaporte:</label>
                     <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($docente_data['ci_pasapote'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
@@ -63,15 +62,12 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
                     <label for="fecha_nacimiento" class="block text-gray-700 text-sm font-bold mb-2">Fecha Nacimiento:</label>
                     <input type="text" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo htmlspecialchars($docente_data['fecha_nacimiento'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="YYYY-MM-DD">
                 </div>
-            </div>
 
-            <div class="mb-6">
-                <label for="direccion" class="block text-gray-700 text-sm font-bold mb-2">Dirección:</label>
-                <textarea id="direccion" name="direccion" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"><?php echo htmlspecialchars($docente_data['direccion'] ?? ''); ?></textarea>
-            </div>
+                <div class="lg:col-span-4 md:col-span-2">
+                    <label for="direccion" class="block text-gray-700 text-sm font-bold mb-2">Dirección:</label>
+                    <textarea id="direccion" name="direccion" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"><?php echo htmlspecialchars($docente_data['direccion'] ?? ''); ?></textarea>
+                </div>
 
-            <!-- Información Sociodemográfica y de Contacto -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
                     <label for="profesion_oficio_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Profesión/Oficio:</label>
                     <input type="text" id="profesion_oficio_autocomplete" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Escriba para buscar...">
@@ -102,10 +98,7 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
                     <label for="tlf_trabajo" class="block text-gray-700 text-sm font-bold mb-2">Teléfono Trabajo:</label>
                     <input type="text" id="tlf_trabajo" name="tlf_trabajo" value="<?php echo htmlspecialchars($docente_data['tlf_trabajo'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
-            </div>
 
-            <!-- Archivos Fotográficos / Multimedia -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
                     <label for="foto" class="block text-gray-700 text-sm font-bold mb-2">Foto:</label>
                     <input type="file" id="foto" name="foto" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">

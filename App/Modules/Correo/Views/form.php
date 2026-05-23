@@ -14,7 +14,7 @@ $buscar_mensajes_val = $correo_data['mensaje_id'] ?? '';
 <!-- DataTables CSS y JS para la tabla de cuotas -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" />
-<div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+<div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title; ?></h3>
     <form id="formCorreo"  method="POST"
         data-oferta-academica-id="<?php echo $oferta_academica_id_val; ?>"
@@ -33,20 +33,22 @@ $buscar_mensajes_val = $correo_data['mensaje_id'] ?? '';
             <input type="hidden" id="tipo_oferta_academica_id" name="tipo_oferta_academica_id" value="<?php echo $tipo_oferta_academica_id_val; ?>">
         </div>
 
-        <div class="mb-4">
-            <label for="oferta_academica_id" class="block text-gray-700 text-sm font-bold mb-2"></label>
-            <select id="oferta_academica_id" name="oferta_academica_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                <option value="">Seleccione</option>
-                <!-- Opciones se llenarán dinámicamente con JS -->
-            </select>
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div>
+                <label for="oferta_academica_id" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                <select id="oferta_academica_id" name="oferta_academica_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <option value="">Seleccione</option>
+                    <!-- Opciones se llenarán dinámicamente con JS -->
+                </select>
+            </div>
  
-        <div class="mb-4">
-            <label for="buscar_mensajes" class="block text-gray-700 text-sm font-bold mb-2">Mensaje</label>
-            <select id="mensaje_id" name="buscar_mensajes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                <option value="">Seleccione</option>
-                <!-- Opciones se llenarán dinámicamente con JS -->
-            </select>
+            <div>
+                <label for="buscar_mensajes" class="block text-gray-700 text-sm font-bold mb-2">Mensaje</label>
+                <select id="mensaje_id" name="buscar_mensajes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <option value="">Seleccione</option>
+                    <!-- Opciones se llenarán dinámicamente con JS -->
+                </select>
+            </div>
         </div>
 
         <div class="flex items-center justify-between mt-6">

@@ -3,7 +3,7 @@
 // Se espera la variable $alumno_data (vacía para crear, con datos para editar)
 $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
 ?>
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="w-full space-y-6">
 
     <!-- TARJETA 1: Formulario Principal de Registro/Edición -->
     <div id="form_main_card" class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
@@ -25,10 +25,8 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
         </div>
 
         <form id="form_alumnos" action="<?php echo BASE_URL; ?>alumnos/<?php echo ($is_edit) ? 'edit/' . $alumno_data['id'] : 'create'; ?>" method="POST" enctype="multipart/form-data">
-            <div id="form_collapsible_wrapper" class="grid transition-all duration-300" style="grid-template-rows: 1fr;">
-                <div id="form_collapsible_content" class="min-h-0" style="overflow: visible;">
-            <!-- Datos Personales -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="ci_pasapote" class="block text-gray-700 text-sm font-bold mb-2">C.I. / Pasaporte:</label>
                     <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($alumno_data['ci_pasapote'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
@@ -61,15 +59,12 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
                     <label for="fecha_nacimiento" class="block text-gray-700 text-sm font-bold mb-2">Fecha Nacimiento:</label>
                     <input type="text" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo htmlspecialchars($alumno_data['fecha_nacimiento'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="YYYY-MM-DD">
                 </div>
-            </div>
 
-            <div class="mb-6">
-                <label for="direccion" class="block text-gray-700 text-sm font-bold mb-2">Dirección:</label>
-                <textarea id="direccion" name="direccion" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"><?php echo htmlspecialchars($alumno_data['direccion'] ?? ''); ?></textarea>
-            </div>
+                <div class="lg:col-span-4 md:col-span-2">
+                    <label for="direccion" class="block text-gray-700 text-sm font-bold mb-2">Dirección:</label>
+                    <textarea id="direccion" name="direccion" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"><?php echo htmlspecialchars($alumno_data['direccion'] ?? ''); ?></textarea>
+                </div>
 
-            <!-- Información Sociodemográfica y de Contacto -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
                     <label for="profesion_oficio_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Profesión/Oficio:</label>
                     <input type="text" id="profesion_oficio_autocomplete" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Escriba para buscar...">
@@ -100,10 +95,7 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
                     <label for="tlf_trabajo" class="block text-gray-700 text-sm font-bold mb-2">Teléfono Trabajo:</label>
                     <input type="text" id="tlf_trabajo" name="tlf_trabajo" value="<?php echo htmlspecialchars($alumno_data['tlf_trabajo'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
-            </div>
 
-            <!-- Ubicación y Educación -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                     <label for="calle_avenida" class="block text-gray-700 text-sm font-bold mb-2">Calle/Avenida:</label>
                     <input type="text" id="calle_avenida" name="calle_avenida" value="<?php echo htmlspecialchars($alumno_data['calle_avenida'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -120,37 +112,35 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
                     <label for="nombre_especialidad" class="block text-gray-700 text-sm font-bold mb-2">Nombre Especialidad:</label>
                     <input type="text" id="nombre_especialidad" name="nombre_especialidad" value="<?php echo htmlspecialchars($alumno_data['nombre_especialidad'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
-            </div>
 
-            <!-- Documentos Entregados -->
-            <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                <label class="block text-gray-700 text-sm font-bold mb-3">Documentos Entregados:</label>
-                <div class="flex flex-wrap gap-5">
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="chk_planilla" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-150" <?php echo (isset($alumno_data['chk_planilla']) && $alumno_data['chk_planilla'] == 1) ? 'checked' : ''; ?>>
-                        <span class="ml-2 text-gray-700 text-sm">Planilla</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="chk_cedula" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-150" <?php echo (isset($alumno_data['chk_cedula']) && $alumno_data['chk_cedula'] == 1) ? 'checked' : ''; ?>>
-                        <span class="ml-2 text-gray-700 text-sm">Cédula</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="chk_notas" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-150" <?php echo (isset($alumno_data['chk_notas']) && $alumno_data['chk_notas'] == 1) ? 'checked' : ''; ?>>
-                        <span class="ml-2 text-gray-700 text-sm">Notas</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="chk_titulo" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-150" <?php echo (isset($alumno_data['chk_titulo']) && $alumno_data['chk_titulo'] == 1) ? 'checked' : ''; ?>>
-                        <span class="ml-2 text-gray-700 text-sm">Título</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="chk_partida" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-150" <?php echo (isset($alumno_data['chk_partida']) && $alumno_data['chk_partida'] == 1) ? 'checked' : ''; ?>>
-                        <span class="ml-2 text-gray-700 text-sm">Partida de Nacimiento</span>
-                    </label>
+                <div class="lg:col-span-4 md:col-span-2">
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-100">
+                        <label class="block text-gray-700 text-sm font-bold mb-3">Documentos Entregados:</label>
+                        <div class="flex flex-wrap gap-5">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="chk_planilla" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-150" <?php echo (isset($alumno_data['chk_planilla']) && $alumno_data['chk_planilla'] == 1) ? 'checked' : ''; ?>>
+                                <span class="ml-2 text-gray-700 text-sm">Planilla</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="chk_cedula" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-150" <?php echo (isset($alumno_data['chk_cedula']) && $alumno_data['chk_cedula'] == 1) ? 'checked' : ''; ?>>
+                                <span class="ml-2 text-gray-700 text-sm">Cédula</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="chk_notas" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-150" <?php echo (isset($alumno_data['chk_notas']) && $alumno_data['chk_notas'] == 1) ? 'checked' : ''; ?>>
+                                <span class="ml-2 text-gray-700 text-sm">Notas</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="chk_titulo" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-150" <?php echo (isset($alumno_data['chk_titulo']) && $alumno_data['chk_titulo'] == 1) ? 'checked' : ''; ?>>
+                                <span class="ml-2 text-gray-700 text-sm">Título</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="chk_partida" class="form-checkbox h-5 w-5 text-blue-600 rounded transition duration-150" <?php echo (isset($alumno_data['chk_partida']) && $alumno_data['chk_partida'] == 1) ? 'checked' : ''; ?>>
+                                <span class="ml-2 text-gray-700 text-sm">Partida de Nacimiento</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Archivos Fotográficos / Multimedia -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
                     <label for="foto" class="block text-gray-700 text-sm font-bold mb-2">Foto:</label>
                     <input type="file" id="foto" name="foto" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">

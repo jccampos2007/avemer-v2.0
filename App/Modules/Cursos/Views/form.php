@@ -3,7 +3,7 @@
 // Se espera la variable $curso_data (vacía para crear, con datos para editar)
 $is_edit = isset($curso_data['id']) && !empty($curso_data['id']);
 ?>
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="w-full space-y-6">
     
     <div class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
         <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
@@ -11,7 +11,7 @@ $is_edit = isset($curso_data['id']) && !empty($curso_data['id']);
         </h3>
         
         <form id="formCurso" action="<?php echo BASE_URL; ?>cursos/<?php echo ($is_edit) ? 'edit/' . $curso_data['id'] : 'create'; ?>" method="POST">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
                     <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($curso_data['nombre'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="128">
@@ -20,9 +20,6 @@ $is_edit = isset($curso_data['id']) && !empty($curso_data['id']);
                     <label for="numero" class="block text-gray-700 text-sm font-bold mb-2">Número:</label>
                     <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($curso_data['numero'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" maxlength="16">
                 </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
                     <label for="horas" class="block text-gray-700 text-sm font-bold mb-2">Horas:</label>
                     <input type="number" id="horas" name="horas" value="<?php echo $curso_data['horas'] ?? '0'; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">

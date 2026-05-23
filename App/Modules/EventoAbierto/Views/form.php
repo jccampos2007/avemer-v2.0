@@ -14,7 +14,7 @@ $fecha_inicio_val = htmlspecialchars($evento_abierto_data['fecha_inicio'] ?? '')
 $fecha_fin_val = htmlspecialchars($evento_abierto_data['fecha_fin'] ?? '');
 $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? ''); // Contenido HTML de CKEditor
 ?>
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="w-full space-y-6">
 
     <!-- TARJETA 1: Formulario Principal de Registro/Edición -->
     <div id="form_main_card" class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
@@ -48,7 +48,7 @@ $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? '')
                 <input type="hidden" name="id" value="<?php echo $evento_abierto_data['id']; ?>">
             <?php endif; ?>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="numero" class="block text-gray-700 text-sm font-bold mb-2">Número:</label>
                     <input type="text" id="numero" name="numero" value="<?php echo $numero_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="10">
@@ -60,7 +60,6 @@ $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? '')
                         <option value="">Seleccione un Evento</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
-                    <!-- Campo oculto para pasar el valor actual al JS para pre-selección -->
                     <input type="hidden" name="evento_current" id="evento_current" value="<?php echo $evento_id_val; ?>">
                 </div>
 
@@ -70,7 +69,6 @@ $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? '')
                         <option value="">Seleccione una Sede</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
-                    <!-- Campo oculto para pasar el valor actual al JS para pre-selección -->
                     <input type="hidden" name="sede_current" id="sede_current" value="<?php echo $sede_id_val; ?>">
                 </div>
 
@@ -80,7 +78,6 @@ $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? '')
                         <option value="">Seleccione un Estatus</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
-                    <!-- Campo oculto para pasar el valor actual al JS para pre-selección -->
                     <input type="hidden" name="estatus_current" id="estatus_current" value="<?php echo $estatus_id_val; ?>">
                 </div>
 
@@ -92,13 +89,13 @@ $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? '')
                     <label for="fecha_fin" class="block text-gray-700 text-sm font-bold mb-2">Fecha Fin:</label>
                     <input type="text" id="fecha_fin" name="fecha_fin" value="<?php echo $fecha_fin_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required placeholder="YYYY-MM-DD">
                 </div>
-            </div>
 
-            <div class="mb-6">
-                <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
-                <textarea id="nombre_carta" name="nombre_carta" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="5"><?php echo $nombre_carta_val; ?></textarea>
-                <!-- NOTA: No uses 'required' en el textarea si usas CKEditor.
-                         La validación de contenido vacío debe hacerse en JS, como en curso_abierto.js -->
+                <div class="lg:col-span-4 md:col-span-2">
+                    <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
+                    <textarea id="nombre_carta" name="nombre_carta" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="5"><?php echo $nombre_carta_val; ?></textarea>
+                    <!-- NOTA: No uses 'required' en el textarea si usas CKEditor.
+                             La validación de contenido vacío debe hacerse en JS, como en curso_abierto.js -->
+                </div>
             </div>
 
             <div class="flex items-center justify-between border-t pt-5">

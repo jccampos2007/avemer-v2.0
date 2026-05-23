@@ -18,7 +18,7 @@ $fecha_vencimiento_val = htmlspecialchars($cuota_data['fecha_vencimiento'] ?? ''
 <!-- DataTables CSS y JS para la tabla de cuotas -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" />
-<div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+<div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title; ?></h3>
     <form id="formCuota" action="<?php echo $form_action; ?>" method="POST"
         data-oferta-academica-id="<?php echo $oferta_academica_id_val; ?>"
@@ -28,7 +28,7 @@ $fecha_vencimiento_val = htmlspecialchars($cuota_data['fecha_vencimiento'] ?? ''
             <input type="hidden" name="id" value="<?php echo $cuota_data['id']; ?>">
         <?php endif; ?>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <div>
                 <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre de la Cuota:</label>
                 <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="32">
@@ -60,7 +60,7 @@ $fecha_vencimiento_val = htmlspecialchars($cuota_data['fecha_vencimiento'] ?? ''
             </select>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <div>
                 <label for="generado" class="block text-gray-700 text-sm font-bold mb-2">Generado:</label>
                 <select id="generado" name="generado" disabled class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>

@@ -2,7 +2,7 @@
 // php_mvc_app/app/Modules/DiplomadoControl/Views/form.php
 // $is_edit indica si viene con un diplomado abierto ya seleccionado y estructurado
 ?>
-<div class="max-w-5xl mx-auto space-y-6">
+<div class="w-full space-y-6">
 
     <!-- TARJETA 1: Configuración de Parámetros Globales -->
     <div class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
@@ -12,7 +12,7 @@
 
         <form id="formDiplomadoControl" action="<?php echo BASE_URL; ?>diplomadocontrol/<?php echo ($is_edit) ? 'edit/' . $diplomadoAbierto['id'] : 'create'; ?>" method="POST">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <!-- Selección de Diplomado Abierto -->
                 <div>
                     <label for="diplomado_abierto_id" class="block text-gray-700 text-sm font-bold mb-2">Diplomado Abierto (Oferta):</label>

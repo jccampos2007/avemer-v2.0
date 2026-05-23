@@ -3,10 +3,10 @@
 // Se espera la variable $user_data (vacía para crear, con datos para editar)
 $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
 ?>
-<div class="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+<div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Usuario' : 'Crear Nuevo Usuario'; ?></h3>
     <form id="form_users" action="<?php echo BASE_URL; ?>users/<?php echo ($is_edit) ? 'update/' . htmlspecialchars($user_data['usuario_id']) : 'store'; ?>" method="POST">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
                 <label for="usuario_cedula" class="block text-gray-700 text-sm font-bold mb-2">Cédula:</label>
                 <input type="text" id="usuario_cedula" name="usuario_cedula" value="<?php echo htmlspecialchars($user_data['usuario_cedula'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
@@ -23,14 +23,10 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
                 <label for="usuario_user" class="block text-gray-700 text-sm font-bold mb-2">Usuario (Login):</label>
                 <input type="text" id="usuario_user" name="usuario_user" value="<?php echo htmlspecialchars($user_data['usuario_user'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
-        </div>
-
-        <div class="mb-4">
-            <label for="usuario_pws" class="block text-gray-700 text-sm font-bold mb-2">Contraseña: <?php echo ($is_edit) ? '(Dejar en blanco para no cambiar)' : ''; ?></label>
-            <input type="password" id="usuario_pws" name="usuario_pws" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" <?php echo ($is_edit) ? '' : 'required'; ?>>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="lg:col-span-4 md:col-span-2">
+                <label for="usuario_pws" class="block text-gray-700 text-sm font-bold mb-2">Contraseña: <?php echo ($is_edit) ? '(Dejar en blanco para no cambiar)' : ''; ?></label>
+                <input type="password" id="usuario_pws" name="usuario_pws" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" <?php echo ($is_edit) ? '' : 'required'; ?>>
+            </div>
             <div>
                 <label for="estatus_activo_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus Activo:</label>
                 <select id="estatus_activo_id" name="estatus_activo_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">

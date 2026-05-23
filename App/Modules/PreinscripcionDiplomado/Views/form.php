@@ -5,7 +5,7 @@
 $page_title = 'Pre-inscripción de Diplomado';
 $randomValue = rand(1000, 9999);
 ?>
-<div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
+<div class="w-full bg-white p-8 rounded-lg shadow-md">
     <h1 class="text-2xl font-bold mb-6 text-gray-800"><?php echo $page_title; ?></h1>
 
     <!-- Sección 1: Búsqueda de Alumno -->
@@ -33,7 +33,7 @@ $randomValue = rand(1000, 9999);
         <!-- Formulario para Crear Nuevo Alumno -->
         <form id="createAlumnoForm" class="hidden p-4 border border-yellow-300 bg-yellow-50 rounded-lg">
             <h3 class="text-lg font-bold text-yellow-800 mb-2">Crear Nuevo Alumno:</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div>
                     <label for="new_ci_pasapote" class="block text-gray-700 text-sm font-bold mb-2">CI/Pasaporte:</label>
                     <input type="text" id="new_ci_pasapote" name="ci_pasapote" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>

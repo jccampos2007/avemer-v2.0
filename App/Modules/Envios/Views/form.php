@@ -10,22 +10,24 @@ $page_title = $is_edit ? 'Editar Mensaje' : 'Crear Nuevo Mensaje';
 $titulo_val = htmlspecialchars($envios_data['titulo'] ?? '');
 $mensaje_val = htmlspecialchars($envios_data['mensaje'] ?? '');
 ?>
-<div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+<div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title; ?></h3>
     <form id="formenvios" action="<?php echo $form_action; ?>" method="POST">
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?php echo $envios_data['id']; ?>">
         <?php endif; ?>
 
-        <div class="mb-4">
-            <label for="titulo" class="block text-gray-700 text-sm font-bold mb-2">titulo:</label>
-            <input type="text" id="titulo" name="titulo" value="<?php echo $titulo_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="128">
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div>
+                <label for="titulo" class="block text-gray-700 text-sm font-bold mb-2">titulo:</label>
+                <input type="text" id="titulo" name="titulo" value="<?php echo $titulo_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="128">
+            </div>
 
-        <div class="mb-4">
-            <label for="mensaje" class="block text-gray-700 text-sm font-bold mb-2">Mensaje:</label>
-            <!-- <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="256" src="../../../index.php"></textarea> -->
-            <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="256"><?= isset($envios_data['mensaje']) ? htmlspecialchars($envios_data['mensaje']) : '' ?></textarea>
+            <div class="lg:col-span-4 md:col-span-2">
+                <label for="mensaje" class="block text-gray-700 text-sm font-bold mb-2">Mensaje:</label>
+                <!-- <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="256" src="../../../index.php"></textarea> -->
+                <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="256"><?= isset($envios_data['mensaje']) ? htmlspecialchars($envios_data['mensaje']) : '' ?></textarea>
+            </div>
         </div>
 
         <div class="flex items-center justify-between">
