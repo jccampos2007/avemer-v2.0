@@ -1,5 +1,5 @@
 <?php
-// php_mvc_app/app/Views/layout/sidebar.php
+// php_mvc_app/app/Layout/sidebar.php
 use App\Core\Auth;
 
 // Obtener la URI relativa para manejar estados activos
@@ -264,7 +264,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                         <li><a href="<?php echo BASE_URL; ?>compensar" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'compensar') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-exchange-alt mr-2"></i> Compensar</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeCronograma): ?>
-                        <li><a href="<?php echo BASE_URL; ?>cronograma" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'cronograma') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa de-calendar-alt mr-2"></i> Cronograma</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>cronograma" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'cronograma') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-calendar-alt mr-2"></i> Cronograma</a></li>
                         <?php endif; ?>
                     </ul>
                 </li>

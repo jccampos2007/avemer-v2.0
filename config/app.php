@@ -29,7 +29,7 @@ define('BASE_URL', 'http://localhost/php_mvc_app/public/');
 define('APP_ROOT', dirname(__DIR__)); // Directorio 'php_mvc_app'
 define('MODULES_PATH', APP_ROOT . '/App/Modules/'); // Nuevo directorio para módulos (ajustado para la nueva base_dir)
 define('CORE_PATH', APP_ROOT . '/App/Core/'); // Ajustado para la nueva base_dir
-define('VIEWS_LAYOUT_PATH', APP_ROOT . '/App/Views/layout/'); // Vistas de layout globales (ajustado para la nueva base_dir)
+define('VIEWS_LAYOUT_PATH', APP_ROOT . '/App/Layout/'); // Vistas de layout globales
 
 // Autoload de clases (PSR-4 compatible mejorado)
 spl_autoload_register(function ($class) {

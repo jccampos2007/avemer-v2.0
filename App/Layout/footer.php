@@ -1,5 +1,5 @@
 <?php
-// php_mvc_app/app/Views/layout/footer.php
+// php_mvc_app/app/Layout/footer.php
 ?>
 <?php if (!($isLogin ?? false)): ?>
         </div> <!-- Cierra el div .container -->

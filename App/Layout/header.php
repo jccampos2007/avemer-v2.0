@@ -1,5 +1,5 @@
 <?php
-// php_mvc_app/app/Views/layout/header.php
+// php_mvc_app/app/Layout/header.php
 $randomValue = rand(1000, 9999);
 ?>
 <!DOCTYPE html>

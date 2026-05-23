@@ -1,5 +1,5 @@
 <?php
-// php_mvc_app/app/Views/layout/message.php
+// php_mvc_app/app/Layout/message.php
 // Para mostrar mensajes de éxito/error (flash messages)
 // $message variable se pasa desde el Controller::view()
 
