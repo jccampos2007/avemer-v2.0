@@ -172,8 +172,6 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
                     Cancelar
                 </a>
             </div>
-                </div> <!-- End of form_collapsible_content -->
-            </div> <!-- End of form_collapsible_wrapper -->
         </form>
     </div>
 
