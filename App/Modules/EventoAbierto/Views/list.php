@@ -43,4 +43,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/evento_abierto.js'; ?>
+<?php $page_js = 'asset/js/EventoAbierto/evento_abierto.js'; ?>

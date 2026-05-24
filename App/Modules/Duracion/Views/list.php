@@ -34,4 +34,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/duracion.js'; ?>
+<?php $page_js = 'asset/js/Duracion/duracion.js'; ?>

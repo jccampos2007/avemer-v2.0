@@ -182,4 +182,4 @@ $nombre_carta_val = htmlspecialchars($diplomado_abierto_data['nombre_carta'] ?? 
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/diplomado_abierto.js?2'; ?>
+<?php $page_js = 'asset/js/DiplomadoAbierto/diplomado_abierto.js?2'; ?>

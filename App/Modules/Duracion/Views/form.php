@@ -24,4 +24,4 @@ $is_edit = isset($duracion_data['id']) && !empty($duracion_data['id']);
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/duracion.js'; ?>
+<?php $page_js = 'asset/js/Duracion/duracion.js'; ?>

@@ -59,4 +59,4 @@ $canDelete = Auth::hasPermission('cursos_abiertos', 'eliminar');
 </script>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/curso_abierto.js'; ?>
+<?php $page_js = 'asset/js/CursoAbierto/curso_abierto.js'; ?>

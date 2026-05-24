@@ -140,7 +140,7 @@ $is_edit = isset($curso_abierto_data['id']) && !empty($curso_abierto_data['id'])
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/curso_abierto.js'; ?>
+<?php $page_js = 'asset/js/CursoAbierto/curso_abierto.js'; ?>
 
 <!-- CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>

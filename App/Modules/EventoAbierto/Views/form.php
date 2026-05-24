@@ -181,7 +181,7 @@ $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? '')
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/evento_abierto.js?1'; ?>
+<?php $page_js = 'asset/js/EventoAbierto/evento_abierto.js?1'; ?>
 
 <!-- CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>

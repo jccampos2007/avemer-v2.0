@@ -35,4 +35,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/envios.js'; ?>
+<?php $page_js = 'asset/js/Envios/envios.js'; ?>

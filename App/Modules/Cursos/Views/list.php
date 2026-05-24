@@ -31,7 +31,7 @@ $canDelete = Auth::hasPermission('cursos', 'eliminar');
         <h3 class="text-lg font-bold text-gray-700">Gestión de Talleres / Cursos</h3>
     </div>
 
-    <table id="cursosTable" class="min-w-full leading-normal display responsive nowrap" style="width:100%">
+    <table id="cursosTable" class="w-full min-w-full leading-normal display responsive">
         <thead>
             <tr>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
@@ -57,4 +57,4 @@ $canDelete = Auth::hasPermission('cursos', 'eliminar');
 </script>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/cursos.js'; ?>
+<?php $page_js = 'asset/js/Cursos/cursos.js'; ?>

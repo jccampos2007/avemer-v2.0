@@ -43,4 +43,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/maestria_abierto.js'; ?>
+<?php $page_js = 'asset/js/MaestriaAbierto/maestria_abierto.js'; ?>

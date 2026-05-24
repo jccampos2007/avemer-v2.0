@@ -40,4 +40,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/inscripcion_maestria.js?33'; ?>
+<?php $page_js = 'asset/js/InscripcionMaestria/inscripcion_maestria.js?33'; ?>

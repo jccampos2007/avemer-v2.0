@@ -34,4 +34,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/profesion_oficio.js'; ?>
+<?php $page_js = 'asset/js/ProfesionOficio/profesion_oficio.js'; ?>

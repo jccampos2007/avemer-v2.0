@@ -104,4 +104,4 @@ $is_edit = isset($coordinador_data['id']) && !empty($coordinador_data['id']);
 </div>
 
 
-<?php $page_js = 'js/modules/coordinadores.js'; ?>
+<?php $page_js = 'asset/js/Coordinadores/coordinadores.js'; ?>

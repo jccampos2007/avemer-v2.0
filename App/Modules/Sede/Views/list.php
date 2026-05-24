@@ -52,4 +52,4 @@ $canDelete = Auth::hasPermission('sede', 'eliminar');
 </script>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/sede.js'; ?>
+<?php $page_js = 'asset/js/Sede/sede.js'; ?>

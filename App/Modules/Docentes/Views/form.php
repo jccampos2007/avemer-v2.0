@@ -195,4 +195,4 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
 
 </div>
 
-<?php $page_js = 'js/modules/docentes.js'; ?>
+<?php $page_js = 'asset/js/Docentes/docentes.js'; ?>

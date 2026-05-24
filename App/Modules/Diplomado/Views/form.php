@@ -209,4 +209,4 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/diplomado.js?#1'; ?>
+<?php $page_js = 'asset/js/Diplomado/diplomado.js?#1'; ?>

@@ -57,4 +57,4 @@ $canDelete = Auth::hasPermission('coordinadores', 'eliminar');
 </script>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/coordinadores.js'; ?>
+<?php $page_js = 'asset/js/Coordinadores/coordinadores.js'; ?>

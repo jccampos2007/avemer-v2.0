@@ -40,4 +40,4 @@ $is_edit = isset($sede_data['id']) && !empty($sede_data['id']);
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/sede.js'; ?>
+<?php $page_js = 'asset/js/Sede/sede.js'; ?>

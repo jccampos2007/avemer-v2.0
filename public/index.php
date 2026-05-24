@@ -6,6 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 // Core Imports
 use App\Core\Router;
+use App\Core\AssetController;
 use App\Api\ApiController;
 
 // Modules Imports (Alphabetical)
@@ -52,6 +53,7 @@ $router = new Router();
 // ==========================================
 $router->add('GET', '/api/data/{table_name}', ApiController::class . '@getTableData');
 $router->add('GET', '/api/search/{table_name}', ApiController::class . '@getAutocompleteData');
+$router->add('GET', '/asset/js/{module}/{file}', AssetController::class . '@serveJs');
 
 // ==========================================
 // 2. AUTENTICACIÓN Y PANEL PRINCIPAL (DASHBOARD)

@@ -141,4 +141,4 @@ $fecha_vencimiento_val = htmlspecialchars($cuota_data['fecha_vencimiento'] ?? ''
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/cuota.js'; ?>
+<?php $page_js = 'asset/js/Cuota/cuota.js'; ?>

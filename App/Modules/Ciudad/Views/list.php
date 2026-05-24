@@ -52,4 +52,4 @@ $canDelete = Auth::hasPermission('estado', 'eliminar');
     };
 </script>
 
-<?php $page_js = 'js/modules/ciudad.js'; ?>
+<?php $page_js = 'asset/js/Ciudad/ciudad.js'; ?>

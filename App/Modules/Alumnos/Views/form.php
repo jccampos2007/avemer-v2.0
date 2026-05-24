@@ -245,4 +245,4 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
 
 </div>
 
-<?php $page_js = 'js/modules/alumnos.js'; ?>
+<?php $page_js = 'asset/js/Alumnos/alumnos.js'; ?>

@@ -40,4 +40,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/diplomado.js'; ?>
+<?php $page_js = 'asset/js/Diplomado/diplomado.js'; ?>

@@ -34,4 +34,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/banco.js'; ?>
+<?php $page_js = 'asset/js/Banco/banco.js'; ?>
