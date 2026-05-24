@@ -175,6 +175,7 @@ $router->add('POST', '/diplomadocontrol/create', DiplomadoControlController::cla
 $router->add('GET', '/diplomadocontrol/edit/{id}', DiplomadoControlController::class . '@edit');
 $router->add('POST', '/diplomadocontrol/edit/{id}', DiplomadoControlController::class . '@edit');
 $router->add('GET', '/diplomadocontrol/getCapitulosAjax', DiplomadoControlController::class . '@getCapitulosAjax');
+$router->add('POST', '/diplomadocontrol/data', DiplomadoControlController::class . '@getDiplomadosData');
 
 $router->add('GET', '/inscripcion_diplomado', InscripcionDiplomadoController::class . '@index');
 $router->add('GET', '/inscripcion_diplomado/create', InscripcionDiplomadoController::class . '@create');

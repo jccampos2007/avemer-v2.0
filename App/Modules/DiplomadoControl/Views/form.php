@@ -179,8 +179,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 tbodyCapitulos.innerHTML = '';
-                
-                // Obtener fecha por defecto (hoy)
+
+                // Obtener fecha por defecto (hoy) solo si no viene del servidor
                 const today = new Date().toISOString().split('T')[0];
 
                 capitulos.forEach(cap => {
@@ -188,6 +188,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     docentesList.forEach(doc => {
                         docenteOptions += `<option value="${doc.id}">${doc.primer_apellido}, ${doc.primer_nombre}</option>`;
                     });
+
+                    // Si el servidor devolvió docente_id (de controles existentes), preseleccionarlo
+                    var selectedDocente = cap.docente_id || '';
+                    if (selectedDocente) {
+                        docenteOptions = docenteOptions.replace(
+                            `value="${selectedDocente}"`,
+                            `value="${selectedDocente}" selected`
+                        );
+                    }
+
+                    var fechaVal = cap.fecha || today;
+                    var mensualidadVal = cap.mensualidad !== undefined ? parseFloat(cap.mensualidad).toFixed(2) : '0.00';
+                    var generadoVal = cap.generado || 1;
 
                     const tr = document.createElement('tr');
                     tr.className = 'hover:bg-gray-50/50 transition';
@@ -197,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <span class="text-xs font-normal text-gray-500 block">${cap.nombre}</span>
                         </td>
                         <td class="px-5 py-4 border-b border-gray-200 text-sm">
-                            <input type="date" name="capitulos[${cap.id}][fecha]" value="${today}" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required>
+                            <input type="date" name="capitulos[${cap.id}][fecha]" value="${fechaVal}" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required>
                         </td>
                         <td class="px-5 py-4 border-b border-gray-200 text-sm">
                             <select name="capitulos[${cap.id}][docente_id]" class="docente-select px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none w-full" required>
@@ -209,13 +222,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                                     <span class="text-gray-500 text-xs">$</span>
                                 </div>
-                                <input type="number" step="0.01" name="capitulos[${cap.id}][mensualidad]" value="0.00" class="mensualidad-input pl-5 pr-2 py-1.5 w-full border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required min="0">
+                                <input type="number" step="0.01" name="capitulos[${cap.id}][mensualidad]" value="${mensualidadVal}" class="mensualidad-input pl-5 pr-2 py-1.5 w-full border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required min="0">
                             </div>
                         </td>
                         <td class="px-5 py-4 border-b border-gray-200 text-sm">
                             <select name="capitulos[${cap.id}][generado]" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required>
-                                <option value="1" selected>Pendiente</option>
-                                <option value="2">Generado</option>
+                                <option value="1" ${generadoVal == 1 ? 'selected' : ''}>Pendiente</option>
+                                <option value="2" ${generadoVal == 2 ? 'selected' : ''}>Generado</option>
                             </select>
                         </td>
                     `;

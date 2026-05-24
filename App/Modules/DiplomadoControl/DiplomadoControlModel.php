@@ -149,6 +149,83 @@ class DiplomadoControlModel
     }
 
     /**
+     * Retorna registros paginados para DataTables server-side.
+     */
+    public function getDiplomadosDataTable(int $draw, int $start, int $length, string $search, array $order): array
+    {
+        $where = 'WHERE da.deleted_at IS NULL';
+
+        if (!empty($search)) {
+            $where .= " AND (d.nombre LIKE :search OR da.numero LIKE :search)";
+        }
+
+        $orderBy = 'ORDER BY da.id DESC';
+        if (!empty($order)) {
+            $columns = ['oferta_numero', 'diplomado_nombre', 'estatus_oferta', 'total_controles', 'controles_generados'];
+            $colIdx = $order[0]['column'];
+            $colDir = strtoupper($order[0]['dir']) === 'ASC' ? 'ASC' : 'DESC';
+            if (isset($columns[$colIdx])) {
+                $orderBy = 'ORDER BY ' . $columns[$colIdx] . ' ' . $colDir;
+            }
+        }
+
+        $countSql = "
+            SELECT COUNT(*) 
+            FROM diplomado_abierto da
+            JOIN diplomado d ON da.diplomado_id = d.id
+            JOIN estatus e ON da.estatus_id = e.id
+            $where
+        ";
+
+        $dataSql = "
+            SELECT 
+                da.id AS diplomado_abierto_id,
+                da.numero AS oferta_numero,
+                d.nombre AS diplomado_nombre,
+                e.nombre AS estatus_oferta,
+                (SELECT COUNT(*) FROM diplomado_control dc WHERE dc.diplomado_abierto_id = da.id) AS total_controles,
+                (
+                    SELECT COUNT(*) 
+                    FROM diplomado_control dc 
+                    WHERE dc.diplomado_abierto_id = da.id AND dc.generado = 2
+                ) AS controles_generados
+            FROM diplomado_abierto da
+            JOIN diplomado d ON da.diplomado_id = d.id
+            JOIN estatus e ON da.estatus_id = e.id
+            $where
+            $orderBy
+            LIMIT :start, :length
+        ";
+
+        $stmtCount = $this->pdo->prepare($countSql);
+        if (!empty($search)) {
+            $stmtCount->bindValue(':search', "%$search%", \PDO::PARAM_STR);
+        }
+        $stmtCount->execute();
+        $totalFiltered = (int)$stmtCount->fetchColumn();
+
+        $totalSql = "SELECT COUNT(*) FROM diplomado_abierto WHERE deleted_at IS NULL";
+        $totalStmt = $this->pdo->query($totalSql);
+        $totalRecords = (int)$totalStmt->fetchColumn();
+
+        $stmtData = $this->pdo->prepare($dataSql);
+        if (!empty($search)) {
+            $stmtData->bindValue(':search', "%$search%", \PDO::PARAM_STR);
+        }
+        $stmtData->bindValue(':start', $start, \PDO::PARAM_INT);
+        $stmtData->bindValue(':length', $length, \PDO::PARAM_INT);
+        $stmtData->execute();
+        $rows = $stmtData->fetchAll(\PDO::FETCH_ASSOC);
+
+        return [
+            'draw' => $draw,
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalFiltered,
+            'data' => $rows
+        ];
+    }
+
+    /**
      * Elimina todos los registros de control para un diplomado abierto específico (útil para sobreescribir).
      */
     public function deleteControlesPorDiplomadoAbierto(int $diplomadoAbiertoId): bool

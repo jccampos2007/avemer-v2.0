@@ -17,12 +17,11 @@ class DiplomadoControlController extends Controller
     }
 
     /**
-     * Vista principal del módulo. Muestra los diplomados abiertos y el estado de su control.
+     * Vista principal del módulo. La tabla se carga vía AJAX con DataTables server-side.
      */
     public function index(): void
     {
-        $diplomados = $this->controlModel->getDiplomadosAbiertosConControl();
-        $this->view('DiplomadoControl/list', ['diplomados' => $diplomados]);
+        $this->view('DiplomadoControl/list');
     }
 
     /**
@@ -140,7 +139,8 @@ class DiplomadoControlController extends Controller
     }
 
     /**
-     * Endpoint AJAX para obtener los capítulos asociados a un Diplomado Abierto.
+     * Endpoint AJAX para obtener los capítulos o controles guardados de un Diplomado Abierto.
+     * Si existen registros en diplomado_control los retorna. Si no, retorna los capítulos base con valores por defecto.
      */
     public function getCapitulosAjax(): void
     {
@@ -164,8 +164,82 @@ class DiplomadoControlController extends Controller
             exit();
         }
 
+        // Primero verificar si ya existen controles guardados
+        $controles = $this->controlModel->getControlesPorDiplomadoAbierto($diplomadoAbiertoId);
+        
+        if (!empty($controles)) {
+            // Mapear para que el JS use 'id' como el id del capítulo, igual que en el caso base
+            $result = [];
+            foreach ($controles as $ctrl) {
+                $result[] = [
+                    'id' => $ctrl['capitulo_id'],
+                    'numero' => $ctrl['capitulo_numero'],
+                    'nombre' => $ctrl['capitulo_nombre'],
+                    'docente_id' => $ctrl['docente_id'],
+                    'fecha' => $ctrl['fecha'] ?? '',
+                    'mensualidad' => $ctrl['mensualidad'] ?? 0.0,
+                    'generado' => $ctrl['generado'] ?? 1
+                ];
+            }
+            echo json_encode($result);
+            exit();
+        }
+
+        // Si no hay controles, retornar los capítulos base con valores por defecto
         $capitulos = $this->controlModel->getCapitulosPorDiplomado($diplomadoAbierto['diplomado_id']);
-        echo json_encode($capitulos);
+        $result = [];
+        foreach ($capitulos as $cap) {
+            $result[] = [
+                'id' => $cap['id'],
+                'numero' => $cap['numero'],
+                'nombre' => $cap['nombre'],
+                'docente_id' => null,
+                'fecha' => '',
+                'mensualidad' => 0.0,
+                'generado' => 1
+            ];
+        }
+        echo json_encode($result);
         exit();
+    }
+
+    /**
+     * Endpoint AJAX para DataTables server-side del listado de diplomados control.
+     */
+    public function getDiplomadosData(): void
+    {
+        Auth::requireLogin();
+
+        if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+            header('HTTP/1.0 403 Forbidden');
+            echo json_encode(['error' => 'Acceso denegado.']);
+            exit();
+        }
+
+        header('Content-Type: application/json');
+
+        $draw = isset($_POST['draw']) ? (int)$_POST['draw'] : 1;
+        $start = isset($_POST['start']) ? (int)$_POST['start'] : 0;
+        $length = isset($_POST['length']) ? (int)$_POST['length'] : 10;
+        $search = $_POST['search']['value'] ?? '';
+        $order = $_POST['order'] ?? [];
+
+        $result = $this->controlModel->getDiplomadosDataTable($draw, $start, $length, $search, $order);
+
+        // Mapear a array indexado para DataTables
+        $data = [];
+        foreach ($result['data'] as $row) {
+            $data[] = [
+                $row['diplomado_abierto_id'],
+                $row['oferta_numero'],
+                $row['diplomado_nombre'],
+                $row['estatus_oferta'],
+                $row['total_controles'],
+                $row['controles_generados']
+            ];
+        }
+        $result['data'] = $data;
+
+        echo json_encode($result);
     }
 }
