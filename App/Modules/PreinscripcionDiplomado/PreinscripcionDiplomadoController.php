@@ -66,6 +66,9 @@ class PreinscripcionDiplomadoController extends Controller
         try {
             $alumno = $this->alumnoModel->findByCiPasaporte($ciPasaporte);
             if ($alumno) {
+                if (!empty($alumno['foto'])) {
+                    $alumno['foto'] = base64_encode($alumno['foto']);
+                }
                 echo json_encode(['success' => true, 'found' => true, 'alumno' => $alumno]);
             } else {
                 echo json_encode(['success' => true, 'found' => false, 'message' => 'Alumno no encontrado.']);
