@@ -16,7 +16,7 @@ $(document).ready(function () {
             "buttons": [
                 {
                     extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel mr-2"></i> Exportar a Excel',
+                    text: '<i class="fas fa-file-excel"></i><span class="export-label"> Exportar a Excel</span>',
                     className: 'buttons-excel',
                     title: 'Listado de Envíos',
                     exportOptions: {
@@ -26,7 +26,7 @@ $(document).ready(function () {
                 },
                 {
                     extend: 'pdfHtml5',
-                    text: '<i class="fas fa-file-pdf mr-2"></i> Exportar a PDF',
+                    text: '<i class="fas fa-file-pdf"></i><span class="export-label"> Exportar a PDF</span>',
                     className: 'buttons-pdf',
                     title: 'Listado de Envíos',
                     exportOptions: {
@@ -67,7 +67,7 @@ $(document).ready(function () {
 
         // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN
         // Usamos delegación de eventos porque los botones se crean dinámicamente
-        tableElement.on('click', '.btn-delete', function (e) {
+        tableElement.on('click', '.btn-action-delete', function (e) {
             e.preventDefault(); // Evita que el enlace se abra inmediatamente
             
             const urlEliminar = $(this).attr('href');

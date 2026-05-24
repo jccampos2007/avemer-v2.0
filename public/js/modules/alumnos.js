@@ -61,7 +61,7 @@ $(document).ready(function () {
             "buttons": [
                 {
                     extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel mr-2"></i> Exportar a Excel',
+                    text: '<i class="fas fa-file-excel"></i><span class="export-label"> Exportar a Excel</span>',
                     className: 'buttons-excel',
                     title: 'Listado de Alumnos',
                     exportOptions: {
@@ -71,7 +71,7 @@ $(document).ready(function () {
                 },
                 {
                     extend: 'pdfHtml5',
-                    text: '<i class="fas fa-file-pdf mr-2"></i> Exportar a PDF',
+                    text: '<i class="fas fa-file-pdf"></i><span class="export-label"> Exportar a PDF</span>',
                     className: 'buttons-pdf',
                     title: 'Listado de Alumnos',
                     exportOptions: {
@@ -122,21 +122,23 @@ $(document).ready(function () {
                     data: null,
                     orderable: false,
                     searchable: false,
+                    "width": "1%",
+                    "className": "actions-column",
                     render: function (data, type, row) {
                         let actions = '<div class="flex gap-2 justify-center">';
                         
                         if (typeof ALUMNO_PERMISSIONS !== 'undefined') {
                             if (ALUMNO_PERMISSIONS.modificar) {
-                                actions += `<a href="alumnos/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>`;
+                                actions += `<a href="alumnos/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>`;
                             }
                             if (ALUMNO_PERMISSIONS.eliminar) {
-                                actions += `<a href="alumnos/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
+                                actions += `<a href="alumnos/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>`;
                             }
                         } else {
                             // Fallback por si la variable no está definida
                             actions += `
-                                <a href="alumnos/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
-                                <a href="alumnos/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
+                                <a href="alumnos/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                                <a href="alumnos/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
                             `;
                         }
                         
@@ -151,7 +153,7 @@ $(document).ready(function () {
         });
 
         // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
-        $('#alumnosTable').on('click', '.btn-delete', function (e) {
+        $('#alumnosTable').on('click', '.btn-action-delete', function (e) {
             e.preventDefault();
             const urlEliminar = $(this).attr('href');
 

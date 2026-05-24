@@ -105,3 +105,78 @@
 .dt-button.buttons-pdf:hover {
     background-color: #fee2e2 !important;
 }
+
+/* === Columnas de Acciones (ancho mínimo, última columna) === */
+table.dataTable th.actions-column,
+table.dataTable td.actions-column {
+    width: 1% !important;
+    white-space: nowrap !important;
+    text-align: right !important;
+    vertical-align: middle !important;
+}
+
+/* === Botones de acción (solo ícono, sin texto) === */
+.btn-action {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    border-radius: 0.375rem !important;
+    border: 1px solid transparent !important;
+    background: transparent !important;
+    transition: all 0.15s ease-in-out !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+}
+
+.btn-action:hover {
+    text-decoration: none !important;
+}
+
+.btn-action svg,
+.btn-action i {
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 16px !important;
+}
+
+.btn-action-edit {
+    color: #2563eb !important;
+    border-color: #bfdbfe !important;
+}
+
+.btn-action-edit:hover {
+    background-color: #eff6ff !important;
+    border-color: #93c5fd !important;
+    color: #1d4ed8 !important;
+}
+
+.btn-action-delete {
+    color: #dc2626 !important;
+    border-color: #fecaca !important;
+}
+
+.btn-action-delete:hover {
+    background-color: #fef2f2 !important;
+    border-color: #fca5a5 !important;
+    color: #b91c1c !important;
+}
+
+/* === Botones Exportar (responsive: ocultar texto en mobile) === */
+.export-label {
+    display: inline;
+}
+
+@media (max-width: 640px) {
+    .dataTables_wrapper .dt-buttons .dt-button {
+        padding: 0 0.5rem !important;
+        min-width: 38px;
+    }
+
+    .dataTables_wrapper .dt-buttons .dt-button .export-label {
+        display: none !important;
+    }
+}

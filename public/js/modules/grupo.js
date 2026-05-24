@@ -24,14 +24,16 @@ $(document).ready(function () {
                 {
                     data: null,
                     orderable: false,
+                    "width": "1%",
+                    "className": "actions-column",
                     render: function (data, type, row) {
                         return `
                             <div class="flex gap-2 justify-center">
-                                <a href="${BASE_URL_JS}grupo/edit/${row[0]}" class="btn btn-default" title="Editar y Permisos">
-                                    <i class="fas fa-edit fs-5 text-blue-600"></i>
+                                <a href="${BASE_URL_JS}grupo/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar">
+                                    <i class="fas fa-edit"></i>
                                 </a>
-                                <button class="btn btn-default btn-delete text-red-600" title="Eliminar" data-id="${row[0]}">
-                                    <i class="fas fa-trash-alt fs-5 text-red-600"></i>
+                                <button class="btn-action btn-action-delete" title="Eliminar" data-id="${row[0]}">
+                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
                         `;
@@ -44,7 +46,7 @@ $(document).ready(function () {
         });
 
         // Delete button click
-        $(document).on('click', '.btn-delete', function () {
+        $(document).on('click', '.btn-action-delete', function () {
             const id = $(this).data('id');
             Swal.fire({
                 title: '¿Estás seguro?',

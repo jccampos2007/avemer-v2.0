@@ -43,10 +43,12 @@ $(document).ready(function () {
                     data: null,
                     orderable: false,
                     searchable: false,
+                    "width": "1%",
+                    "className": "actions-column",
                     render: function (data, type, row) {
                         return `
-                        <a href="users/edit/${row[0]}" class="btn btn-default"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
-                        <a href="users/delete/${row[0]}" class="btn btn-default"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
+                        <a href="users/edit/${row[0]}" class="btn-action btn-action-edit"><i class="fas fa-edit"></i></a>
+                        <a href="users/delete/${row[0]}" class="btn-action btn-action-delete"><i class="fas fa-trash-alt"></i></a>
                     `;
                     }
                 }

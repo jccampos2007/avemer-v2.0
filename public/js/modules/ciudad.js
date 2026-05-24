@@ -9,7 +9,7 @@ $(document).ready(function () {
             "buttons": [
                 {
                     extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel mr-2"></i> Exportar a Excel',
+                    text: '<i class="fas fa-file-excel"></i><span class="export-label"> Exportar a Excel</span>',
                     className: 'buttons-excel',
                     title: 'Listado de Ciudades',
                     exportOptions: {
@@ -19,7 +19,7 @@ $(document).ready(function () {
                 },
                 {
                     extend: 'pdfHtml5',
-                    text: '<i class="fas fa-file-pdf mr-2"></i> Exportar a PDF',
+                    text: '<i class="fas fa-file-pdf"></i><span class="export-label"> Exportar a PDF</span>',
                     className: 'buttons-pdf',
                     title: 'Listado de Ciudades',
                     exportOptions: {
@@ -53,13 +53,15 @@ $(document).ready(function () {
                     "data": null,
                     "orderable": false,
                     "searchable": false,
+                    "width": "1%",
+                    "className": "actions-column",
                     "render": function (data, type, row) {
                         let btns = '';
                         if (CIUDAD_PERMISSIONS.modificar) {
-                            btns += `<a href="${BASE_URL_JS}ciudad/edit/${row[0]}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a> `;
+                            btns += `<a href="${BASE_URL_JS}ciudad/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a> `;
                         }
                         if (CIUDAD_PERMISSIONS.eliminar) {
-                            btns += `<a href="${BASE_URL_JS}ciudad/delete/${row[0]}" class="btn btn-default btn-delete" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
+                            btns += `<a href="${BASE_URL_JS}ciudad/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>`;
                         }
                         return btns;
                     }
@@ -71,7 +73,7 @@ $(document).ready(function () {
             "autoWidth": false
         });
 
-        ciudadTable.on("click", ".btn-delete", function (e) {
+        ciudadTable.on("click", ".btn-action-delete", function (e) {
             e.preventDefault();
             const urlEliminar = $(this).attr("href");
 
