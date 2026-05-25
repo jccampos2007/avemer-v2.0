@@ -73,8 +73,9 @@
                         <span class="flex items-center justify-center w-12 h-12 rounded-full bg-slate-100 text-slate-600 text-2xl font-bold">2</span>
                         Información del Alumno
                     </h2>
-                    <span id="alumno-verified-badge" class="text-xs text-emerald-600 font-medium bg-emerald-50 px-2 py-0.5 rounded items-center gap-1 hidden">
-                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Verificado
+                    <span id="alumno-verified-badge" class="flex flex-col items-center text-emerald-600 font-medium bg-emerald-50 px-3 py-1.5 rounded-lg hidden">
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        <span class="text-[10px] leading-tight">Verificado</span>
                     </span>
                 </div>
 
