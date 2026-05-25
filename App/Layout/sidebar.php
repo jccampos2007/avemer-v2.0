@@ -409,3 +409,28 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
     <!-- Área de contenido con scroll seguro para tablas responsivas -->
     <main class="flex-1 p-4 md:p-8 overflow-y-auto bg-gray-100">
         <div class="container mx-auto">
+
+<?php
+require __DIR__ . '/breadcrumb.php';
+$crumbs = generateBreadcrumbs();
+if (!empty($crumbs)):
+?>
+<nav aria-label="Breadcrumb" class="mb-4">
+    <ol class="flex flex-wrap items-center gap-1 text-sm text-gray-500">
+        <?php foreach ($crumbs as $i => $crumb): ?>
+        <li class="flex items-center gap-1">
+            <?php if ($i > 0): ?>
+            <svg class="w-3.5 h-3.5 text-gray-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/>
+            </svg>
+            <?php endif; ?>
+            <?php if (!empty($crumb['url'])): ?>
+            <a href="<?php echo $crumb['url']; ?>" class="text-blue-600 hover:text-blue-800 hover:underline"><?php echo $crumb['label']; ?></a>
+            <?php else: ?>
+            <span class="text-gray-800 font-medium"<?php echo ($i === array_key_last($crumbs)) ? ' aria-current="page"' : ''; ?>><?php echo $crumb['label']; ?></span>
+            <?php endif; ?>
+        </li>
+        <?php endforeach; ?>
+    </ol>
+</nav>
+<?php endif; ?>

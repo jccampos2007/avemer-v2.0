@@ -1,0 +1,78 @@
+<?php
+// App/Layout/breadcrumb.php
+// Config y generador de breadcrumbs
+
+function generateBreadcrumbs(): array
+{
+    $moduleLabels = [
+        'dashboard'              => 'Dashboard',
+        'alumnos'                => 'Alumnos',
+        'docentes'               => 'Instructores',
+        'coordinadores'          => 'Coordinadores',
+        'cursos'                 => 'Talleres / Cursos',
+        'cursos_abiertos'        => 'Apertura',
+        'inscripcion_curso'      => 'Inscripción',
+        'evento'                 => 'Eventos',
+        'evento_abierto'         => 'Apertura',
+        'inscripcion_evento'     => 'Inscripción',
+        'diplomado'              => 'Diplomados',
+        'capitulo'               => 'Capítulos',
+        'diplomado_abierto'      => 'Apertura',
+        'diplomadocontrol'       => 'Control de Capítulos',
+        'inscripcion_diplomado'  => 'Inscripción',
+        'preinscripcion_diplomado' => 'Pre-Inscripción',
+        'maestria'               => 'Maestrías',
+        'maestria_abierto'       => 'Apertura',
+        'inscripcion_maestria'   => 'Inscripción',
+        'cuota'                  => 'Cuotas',
+        'pago'                   => 'Pagos',
+        'compensar'              => 'Compensar',
+        'cronograma'             => 'Cronograma',
+        'sede'                   => 'Sedes',
+        'banco'                  => 'Bancos',
+        'duracion'               => 'Duraciones',
+        'profesion_oficio'       => 'Profesiones',
+        'ciudad'                 => 'Ciudades / Estados',
+        'mensajes'               => 'Mensajes',
+        'listaenvio'             => 'Listas Envío',
+        'listacorreo'            => 'Listas Correo',
+        'correo'                 => 'Correo',
+        'users'                  => 'Usuarios',
+        'grupo'                  => 'Grupo y Permisos',
+        'preinscripcionlanding'  => 'Pre-Inscripción Landing',
+    ];
+
+    $currentUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $baseUrlPath = parse_url(BASE_URL, PHP_URL_PATH);
+    $relativeUri = str_replace($baseUrlPath, '', $currentUri);
+    $relativeUri = trim($relativeUri, '/');
+    $segments = explode('/', $relativeUri);
+    $module = $segments[0] ?? '';
+    $action = $segments[1] ?? 'index';
+    $id = $segments[2] ?? null;
+
+    if (in_array($module, ['api', 'asset', 'image', 'uploads', ''])) {
+        return [];
+    }
+
+    $crumbs = [];
+
+    // 1. Inicio → link a dashboard
+    $crumbs[] = ['label' => 'Inicio', 'url' => BASE_URL . 'dashboard'];
+
+    // 2. Módulo (solo con link si no estamos en su listado)
+    $moduleLabel = $moduleLabels[$module] ?? ucfirst(str_replace('_', ' ', $module));
+    $crumbs[] = [
+        'label' => $moduleLabel,
+        'url'   => ($action === 'index') ? null : BASE_URL . $module,
+    ];
+
+    // 3. Acción (create / edit)
+    if ($action === 'create') {
+        $crumbs[] = ['label' => 'Crear', 'url' => null];
+    } elseif ($action === 'edit' && $id) {
+        $crumbs[] = ['label' => "Editar #{$id}", 'url' => null];
+    }
+
+    return $crumbs;
+}
