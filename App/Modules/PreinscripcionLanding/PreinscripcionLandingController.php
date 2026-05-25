@@ -34,6 +34,9 @@ class PreinscripcionLandingController extends Controller
             $alumno = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($alumno) {
+                if (!empty($alumno['foto'])) {
+                    $alumno['foto'] = base64_encode($alumno['foto']);
+                }
                 echo json_encode(['success' => true, 'found' => true, 'alumno' => $alumno]);
             } else {
                 echo json_encode(['success' => true, 'found' => false, 'message' => 'Alumno no registrado. Por favor, complete el formulario.']);
