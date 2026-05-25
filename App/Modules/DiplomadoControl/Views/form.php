@@ -12,9 +12,9 @@
 
         <form id="formDiplomadoControl" action="<?php echo BASE_URL; ?>diplomadocontrol/<?php echo ($is_edit) ? 'edit/' . $diplomadoAbierto['id'] : 'create'; ?>" method="POST">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <!-- Selección de Diplomado Abierto -->
-                <div>
+                <div class="md:col-span-2">
                     <label for="diplomado_abierto_id" class="block text-gray-700 text-sm font-bold mb-2">Diplomado Abierto (Oferta):</label>
                     <?php if ($is_edit): ?>
                         <div class="p-3 bg-gray-50 border border-gray-200 rounded-md font-semibold text-gray-800">
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <!-- TARJETA DE CAPÍTULOS Y DETALLES (Se genera dinámicamente o se renderiza si es edición) -->
+            <!-- TARJETA DE CAPÍTULOS Y DETALLES -->
             <div class="mt-8 border-t pt-6">
                 <h4 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
@@ -80,10 +80,10 @@
                                             <span class="text-xs font-normal text-gray-500 block"><?php echo htmlspecialchars($ctrl['capitulo_nombre']); ?></span>
                                         </td>
                                         <td class="px-5 py-4 border-b border-gray-200 text-sm">
-                                            <input type="date" name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][fecha]" value="<?php echo $ctrl['fecha']; ?>" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required>
+                                            <input type="date" name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][fecha]" value="<?php echo $ctrl['fecha']; ?>" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">
                                         </td>
                                         <td class="px-5 py-4 border-b border-gray-200 text-sm">
-                                            <select name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][docente_id]" class="docente-select px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none w-full" required>
+                                            <select name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][docente_id]" class="docente-select px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none w-full">
                                                 <option value="">Seleccione...</option>
                                                 <?php foreach ($docentes as $doc): ?>
                                                     <option value="<?php echo $doc['id']; ?>" <?php echo ($ctrl['docente_id'] == $doc['id']) ? 'selected' : ''; ?>>
@@ -97,11 +97,11 @@
                                                 <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                                                     <span class="text-gray-500 text-xs">$</span>
                                                 </div>
-                                                <input type="number" step="0.01" name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][mensualidad]" value="<?php echo $ctrl['mensualidad']; ?>" class="mensualidad-input pl-5 pr-2 py-1.5 w-full border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required min="0">
+                                                <input type="number" step="0.01" name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][mensualidad]" value="<?php echo $ctrl['mensualidad']; ?>" class="mensualidad-input pl-5 pr-2 py-1.5 w-full border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" min="0">
                                             </div>
                                         </td>
                                         <td class="px-5 py-4 border-b border-gray-200 text-sm">
-                                            <select name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][generado]" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required>
+                                            <select name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][generado]" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">
                                                 <option value="1" <?php echo ($ctrl['generado'] == 1) ? 'selected' : ''; ?>>Pendiente</option>
                                                 <option value="2" <?php echo ($ctrl['generado'] == 2) ? 'selected' : ''; ?>>Generado</option>
                                             </select>
@@ -133,129 +133,5 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const diplomadoSelect = document.getElementById('diplomado_abierto_id');
-    const tbodyCapitulos = document.getElementById('tbodyCapitulos');
-    const rowPlaceholder = document.getElementById('rowPlaceholder');
-    const bulkDocente = document.getElementById('bulk_docente');
-    const bulkMensualidad = document.getElementById('bulk_mensualidad');
-    const btnApplyBulk = document.getElementById('btnApplyBulk');
-
-    // Lista de docentes cargada dinámicamente desde PHP para usar en JS
-    const docentesList = <?php echo json_encode($docentes); ?>;
-
-    if (diplomadoSelect) {
-        diplomadoSelect.addEventListener('change', function() {
-            const id = this.value;
-            if (!id) {
-                tbodyCapitulos.innerHTML = `
-                    <tr id="rowPlaceholder">
-                        <td colspan="5" class="px-5 py-8 text-center text-gray-500">
-                            Por favor, seleccione una oferta de diplomado abierto arriba para desplegar sus capítulos asociados.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            // Llamada AJAX para obtener capítulos
-            fetch(`<?php echo BASE_URL; ?>diplomadocontrol/getCapitulosAjax?diplomado_abierto_id=${id}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(res => res.json())
-            .then(capitulos => {
-                if (capitulos.length === 0) {
-                    tbodyCapitulos.innerHTML = `
-                        <tr>
-                            <td colspan="5" class="px-5 py-8 text-center text-amber-600 font-semibold">
-                                Este diplomado no posee capítulos asociados o cargados en la base de datos base.
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                tbodyCapitulos.innerHTML = '';
-
-                // Obtener fecha por defecto (hoy) solo si no viene del servidor
-                const today = new Date().toISOString().split('T')[0];
-
-                capitulos.forEach(cap => {
-                    let docenteOptions = '<option value="">Seleccione...</option>';
-                    docentesList.forEach(doc => {
-                        docenteOptions += `<option value="${doc.id}">${doc.primer_apellido}, ${doc.primer_nombre}</option>`;
-                    });
-
-                    // Si el servidor devolvió docente_id (de controles existentes), preseleccionarlo
-                    var selectedDocente = cap.docente_id || '';
-                    if (selectedDocente) {
-                        docenteOptions = docenteOptions.replace(
-                            `value="${selectedDocente}"`,
-                            `value="${selectedDocente}" selected`
-                        );
-                    }
-
-                    var fechaVal = cap.fecha || today;
-                    var mensualidadVal = cap.mensualidad !== undefined ? parseFloat(cap.mensualidad).toFixed(2) : '0.00';
-                    var generadoVal = cap.generado || 1;
-
-                    const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-gray-50/50 transition';
-                    tr.innerHTML = `
-                        <td class="px-5 py-4 border-b border-gray-200 text-sm font-semibold text-gray-800">
-                            Capítulo ${cap.numero}: 
-                            <span class="text-xs font-normal text-gray-500 block">${cap.nombre}</span>
-                        </td>
-                        <td class="px-5 py-4 border-b border-gray-200 text-sm">
-                            <input type="date" name="capitulos[${cap.id}][fecha]" value="${fechaVal}" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required>
-                        </td>
-                        <td class="px-5 py-4 border-b border-gray-200 text-sm">
-                            <select name="capitulos[${cap.id}][docente_id]" class="docente-select px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none w-full" required>
-                                ${docenteOptions}
-                            </select>
-                        </td>
-                        <td class="px-5 py-4 border-b border-gray-200 text-sm">
-                            <div class="relative rounded-md shadow-sm max-w-[120px]">
-                                <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                                    <span class="text-gray-500 text-xs">$</span>
-                                </div>
-                                <input type="number" step="0.01" name="capitulos[${cap.id}][mensualidad]" value="${mensualidadVal}" class="mensualidad-input pl-5 pr-2 py-1.5 w-full border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required min="0">
-                            </div>
-                        </td>
-                        <td class="px-5 py-4 border-b border-gray-200 text-sm">
-                            <select name="capitulos[${cap.id}][generado]" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" required>
-                                <option value="1" ${generadoVal == 1 ? 'selected' : ''}>Pendiente</option>
-                                <option value="2" ${generadoVal == 2 ? 'selected' : ''}>Generado</option>
-                            </select>
-                        </td>
-                    `;
-                    tbodyCapitulos.appendChild(tr);
-                });
-            });
-        });
-    }
-
-    // Lógica para aplicar asignación masiva/rápida en los inputs inferiores
-    btnApplyBulk.addEventListener('click', function() {
-        const selectedDocente = bulkDocente.value;
-        const valMensualidad = bulkMensualidad.value;
-
-        if (selectedDocente) {
-            const selectDocentes = document.querySelectorAll('.docente-select');
-            selectDocentes.forEach(select => {
-                select.value = selectedDocente;
-            });
-        }
-
-        if (valMensualidad !== '') {
-            const inputsMensualidad = document.querySelectorAll('.mensualidad-input');
-            inputsMensualidad.forEach(input => {
-                input.value = parseFloat(valMensualidad).toFixed(2);
-            });
-        }
-    });
-});
-</script>
+<script>const docentesList = <?php echo json_encode($docentes); ?>;</script>
+<?php $page_js = 'asset/js/DiplomadoControl/diplomadocontrol.js'; ?>

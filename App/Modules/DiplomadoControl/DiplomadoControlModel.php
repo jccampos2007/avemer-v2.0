@@ -26,7 +26,7 @@ class DiplomadoControlModel
                 da.numero AS oferta_numero,
                 d.nombre AS diplomado_nombre,
                 e.nombre AS estatus_oferta,
-                (SELECT COUNT(*) FROM diplomado_control dc WHERE dc.diplomado_abierto_id = da.id) AS total_controles,
+                (SELECT COUNT(*) FROM capitulo c WHERE c.diplomado_id = d.id AND c.deleted_at IS NULL) AS total_controles,
                 (
                     SELECT COUNT(*) 
                     FROM diplomado_control dc 
@@ -109,15 +109,22 @@ class DiplomadoControlModel
     }
 
     /**
-     * Registra un nuevo control en la tabla diplomado_control.
+     * Inserta o actualiza un control en la tabla diplomado_control.
+     * Si ya existe un registro para (diplomado_abierto_id, capitulo_id), lo actualiza.
+     * Si no existe, lo inserta.
      */
-    public function createControl(array $data): bool
+    public function upsertControl(array $data): bool
     {
         $sql = "
             INSERT INTO {$this->table} 
             (diplomado_abierto_id, capitulo_id, docente_id, fecha, mensualidad, generado) 
             VALUES 
             (:diplomado_abierto_id, :capitulo_id, :docente_id, :fecha, :mensualidad, :generado)
+            ON DUPLICATE KEY UPDATE
+                docente_id = VALUES(docente_id),
+                fecha = VALUES(fecha),
+                mensualidad = VALUES(mensualidad),
+                generado = VALUES(generado)
         ";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
@@ -156,7 +163,7 @@ class DiplomadoControlModel
         $where = 'WHERE da.deleted_at IS NULL';
 
         if (!empty($search)) {
-            $where .= " AND (d.nombre LIKE :search OR da.numero LIKE :search)";
+            $where .= " AND (d.nombre LIKE :search1 OR da.numero LIKE :search2)";
         }
 
         $orderBy = 'ORDER BY da.id DESC';
@@ -183,7 +190,7 @@ class DiplomadoControlModel
                 da.numero AS oferta_numero,
                 d.nombre AS diplomado_nombre,
                 e.nombre AS estatus_oferta,
-                (SELECT COUNT(*) FROM diplomado_control dc WHERE dc.diplomado_abierto_id = da.id) AS total_controles,
+                (SELECT COUNT(*) FROM capitulo c WHERE c.diplomado_id = d.id AND c.deleted_at IS NULL) AS total_controles,
                 (
                     SELECT COUNT(*) 
                     FROM diplomado_control dc 
@@ -199,7 +206,8 @@ class DiplomadoControlModel
 
         $stmtCount = $this->pdo->prepare($countSql);
         if (!empty($search)) {
-            $stmtCount->bindValue(':search', "%$search%", \PDO::PARAM_STR);
+            $stmtCount->bindValue(':search1', "%$search%", \PDO::PARAM_STR);
+            $stmtCount->bindValue(':search2', "%$search%", \PDO::PARAM_STR);
         }
         $stmtCount->execute();
         $totalFiltered = (int)$stmtCount->fetchColumn();
@@ -210,7 +218,8 @@ class DiplomadoControlModel
 
         $stmtData = $this->pdo->prepare($dataSql);
         if (!empty($search)) {
-            $stmtData->bindValue(':search', "%$search%", \PDO::PARAM_STR);
+            $stmtData->bindValue(':search1', "%$search%", \PDO::PARAM_STR);
+            $stmtData->bindValue(':search2', "%$search%", \PDO::PARAM_STR);
         }
         $stmtData->bindValue(':start', $start, \PDO::PARAM_INT);
         $stmtData->bindValue(':length', $length, \PDO::PARAM_INT);

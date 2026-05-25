@@ -60,13 +60,19 @@ class DiplomadoControlController extends Controller
 
             $docentes = $this->controlModel->getDocentesActivos();
             $controlesExistentes = $this->controlModel->getControlesPorDiplomadoAbierto($diplomadoAbiertoId);
+            $capitulosBase = $this->controlModel->getCapitulosPorDiplomado($diplomadoAbierto['diplomado_id']);
 
-            // Si por alguna razón no tiene controles aún, lo tratamos con su diplomado base para cargar vacíos
-            if (empty($controlesExistentes)) {
-                $capitulos = $this->controlModel->getCapitulosPorDiplomado($diplomadoAbierto['diplomado_id']);
-                $controlesExistentes = [];
-                foreach ($capitulos as $cap) {
-                    $controlesExistentes[] = [
+            $controlesIndexados = [];
+            foreach ($controlesExistentes as $ctrl) {
+                $controlesIndexados[$ctrl['capitulo_id']] = $ctrl;
+            }
+
+            $merged = [];
+            foreach ($capitulosBase as $cap) {
+                if (isset($controlesIndexados[$cap['id']])) {
+                    $merged[] = $controlesIndexados[$cap['id']];
+                } else {
+                    $merged[] = [
                         'capitulo_id' => $cap['id'],
                         'capitulo_numero' => $cap['numero'],
                         'capitulo_nombre' => $cap['nombre'],
@@ -81,7 +87,7 @@ class DiplomadoControlController extends Controller
             $this->view('DiplomadoControl/form', [
                 'diplomadoAbierto' => $diplomadoAbierto,
                 'docentes' => $docentes,
-                'controles' => $controlesExistentes,
+                'controles' => $merged,
                 'is_edit' => true
             ]);
         }
@@ -100,25 +106,28 @@ class DiplomadoControlController extends Controller
             return;
         }
 
-        // Estructura de recepción de capítulos
         $capitulosData = $_POST['capitulos'] ?? [];
 
         try {
-            // Iniciamos limpiando los registros existentes del diplomado abierto en cuestión si es actualización
-            $this->controlModel->deleteControlesPorDiplomadoAbierto($diplomadoAbiertoId);
-
             $successCount = 0;
             foreach ($capitulosData as $capituloId => $campos) {
+                $fecha = !empty($campos['fecha']) ? $this->sanitizeInput($campos['fecha']) : '';
+                $docenteId = !empty($campos['docente_id']) ? (int)$campos['docente_id'] : 0;
+
+                if (empty($fecha) && empty($docenteId)) {
+                    continue;
+                }
+
                 $data = [
                     'diplomado_abierto_id' => $diplomadoAbiertoId,
                     'capitulo_id' => (int)$capituloId,
-                    'docente_id' => !empty($campos['docente_id']) ? (int)$campos['docente_id'] : null,
-                    'fecha' => !empty($campos['fecha']) ? $this->sanitizeInput($campos['fecha']) : date('Y-m-d'),
+                    'docente_id' => $docenteId ?: null,
+                    'fecha' => $fecha ?: date('Y-m-d'),
                     'mensualidad' => !empty($campos['mensualidad']) ? (float)$campos['mensualidad'] : 0.0,
                     'generado' => !empty($campos['generado']) ? (int)$campos['generado'] : 1
                 ];
 
-                if ($this->controlModel->createControl($data)) {
+                if ($this->controlModel->upsertControl($data)) {
                     $successCount++;
                 }
             }
