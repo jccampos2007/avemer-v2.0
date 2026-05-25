@@ -181,6 +181,7 @@ class AlumnoModel
         $sqlDiplomados = "
             SELECT 
                 'Diplomado' AS tipo,
+                idip.id AS inscripcion_id,
                 d.nombre AS oferta_nombre,
                 da.numero AS oferta_numero,
                 e.nombre AS estatus_oferta,
@@ -196,6 +197,7 @@ class AlumnoModel
         $sqlCursos = "
             SELECT 
                 'Curso/Taller' AS tipo,
+                ic.id AS inscripcion_id,
                 c.nombre AS oferta_nombre,
                 ca.numero AS oferta_numero,
                 e.nombre AS estatus_oferta,
@@ -211,6 +213,7 @@ class AlumnoModel
         $sqlEventos = "
             SELECT 
                 'Evento' AS tipo,
+                ie.id AS inscripcion_id,
                 ev.nombre AS oferta_nombre,
                 ea.numero AS oferta_numero,
                 e.nombre AS estatus_oferta,
@@ -226,6 +229,7 @@ class AlumnoModel
         $sqlMaestrias = "
             SELECT 
                 'Maestría' AS tipo,
+                im.id AS inscripcion_id,
                 m.nombre AS oferta_nombre,
                 ma.numero AS oferta_numero,
                 e.nombre AS estatus_oferta,

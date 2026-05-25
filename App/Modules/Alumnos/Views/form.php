@@ -193,10 +193,19 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Oferta</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Estatus Inscripción</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Estatus Oferta</th>
+                                <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($inscripciones as $inscripcion): ?>
+                            <?php foreach ($inscripciones as $inscripcion): 
+                                $tipoRoute = match ($inscripcion['tipo']) {
+                                    'Diplomado' => 'inscripcion_diplomado',
+                                    'Curso/Taller' => 'inscripcion_curso',
+                                    'Evento' => 'inscripcion_evento',
+                                    'Maestría' => 'inscripcion_maestria',
+                                    default => null,
+                                };
+                            ?>
                                 <tr class="hover:bg-gray-50 transition duration-100">
                                     <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
                                         <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($inscripcion['tipo']); ?></p>
@@ -226,6 +235,13 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
                                             <span aria-hidden class="absolute inset-0 <?php echo $statusClass; ?> opacity-60 rounded-full"></span>
                                             <span class="relative text-xs"><?php echo htmlspecialchars($inscripcion['estatus_oferta']); ?></span>
                                         </span>
+                                    </td>
+                                    <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
+                                        <?php if ($tipoRoute): ?>
+                                        <a href="<?php echo BASE_URL . $tipoRoute . '/edit/' . $inscripcion['inscripcion_id']; ?>" class="text-blue-600 hover:text-blue-800" title="Editar inscripción">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

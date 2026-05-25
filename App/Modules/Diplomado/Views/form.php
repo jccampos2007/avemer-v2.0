@@ -82,9 +82,21 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
 
     <!-- TARJETA 3: Capítulos Asociados (Solo visible en modo Edición) -->
     <?php if ($is_edit): ?>
-        <div class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
-            <h4 class="text-xl font-bold text-gray-800 mb-6 border-b pb-3">Capítulos del Diplomado</h4>
-            
+        <div id="capitulos_card" class="bg-white p-8 rounded-lg shadow-md border border-gray-100">
+            <div id="capitulos_header_row" class="flex justify-between items-center mb-6 border-b pb-3">
+                <h4 class="text-xl font-bold text-gray-800">Capítulos del Diplomado</h4>
+                <div class="flex items-center">
+                    <div class="flex items-center gap-3 select-none">
+                        <button type="button" id="toggle_capitulos_collapse_btn" class="relative inline-flex h-6 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 bg-green-200" role="switch" aria-checked="false">
+                            <span class="sr-only">Ocultar / Mostrar</span>
+                            <span aria-hidden="true" id="toggle_capitulos_collapse_dot" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-300 ease-in-out translate-x-0"></span>
+                        </button>
+                        <span class="text-sm font-bold text-gray-700 cursor-pointer" id="toggle_capitulos_text">Ocultar</span>
+                    </div>
+                </div>
+            </div>
+            <div id="capitulos_collapsible_wrapper" class="grid transition-all duration-300" style="grid-template-rows: 1fr;">
+                <div id="capitulos_collapsible_content" class="min-h-0" style="overflow: visible;">
             <?php if (isset($capitulos) && !empty($capitulos)): ?>
                 <div class="overflow-x-auto">
                     <table class="min-w-full leading-normal rounded-lg overflow-hidden border border-gray-100">
@@ -94,6 +106,7 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nro.</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nombre / Descripción</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Estatus</th>
+                                <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -122,6 +135,11 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
                                             <span class="relative text-xs"><?php echo $statusLabel; ?></span>
                                         </span>
                                     </td>
+                                    <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
+                                        <a href="<?php echo BASE_URL; ?>capitulo/edit/<?php echo $capitulo['id']; ?>" class="text-blue-600 hover:text-blue-800" title="Editar capítulo">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -135,7 +153,65 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
                     Este diplomado no posee capítulos asociados registrados.
                 </div>
             <?php endif; ?>
+                </div>
+            </div>
         </div>
+        <script>
+        (function() {
+            const toggleBtn = document.getElementById('toggle_capitulos_collapse_btn');
+            const toggleDot = document.getElementById('toggle_capitulos_collapse_dot');
+            const toggleText = document.getElementById('toggle_capitulos_text');
+            const collWrapper = document.getElementById('capitulos_collapsible_wrapper');
+            const collContent = document.getElementById('capitulos_collapsible_content');
+            const mainCard = document.getElementById('capitulos_card');
+            const headerRow = document.getElementById('capitulos_header_row');
+            if (!toggleBtn || !collWrapper || !collContent) return;
+            let isCollapsed = false;
+            if (toggleText) {
+                toggleText.addEventListener('click', function() { toggleBtn.click(); });
+            }
+            toggleBtn.addEventListener('click', function() {
+                isCollapsed = !isCollapsed;
+                if (isCollapsed) {
+                    toggleBtn.classList.remove('bg-green-200');
+                    toggleBtn.classList.add('bg-green-600');
+                    toggleDot.classList.remove('translate-x-0');
+                    toggleDot.classList.add('translate-x-8');
+                    toggleBtn.setAttribute('aria-checked', 'true');
+                    if (toggleText) toggleText.textContent = 'Mostrar';
+                    if (mainCard) {
+                        mainCard.classList.remove('border-gray-100', 'shadow-md');
+                        mainCard.classList.add('border-gray-800', 'shadow-sm');
+                    }
+                    if (headerRow) {
+                        headerRow.classList.remove('border-b', 'pb-3', 'mb-6');
+                        headerRow.classList.add('mb-0');
+                    }
+                    collContent.style.overflow = 'hidden';
+                    collWrapper.style.gridTemplateRows = '0fr';
+                } else {
+                    toggleBtn.classList.remove('bg-green-600');
+                    toggleBtn.classList.add('bg-green-200');
+                    toggleDot.classList.remove('translate-x-8');
+                    toggleDot.classList.add('translate-x-0');
+                    toggleBtn.setAttribute('aria-checked', 'false');
+                    if (toggleText) toggleText.textContent = 'Ocultar';
+                    if (mainCard) {
+                        mainCard.classList.remove('border-gray-800', 'shadow-sm');
+                        mainCard.classList.add('border-gray-100', 'shadow-md');
+                    }
+                    if (headerRow) {
+                        headerRow.classList.remove('mb-0');
+                        headerRow.classList.add('border-b', 'pb-3', 'mb-6');
+                    }
+                    collWrapper.style.gridTemplateRows = '1fr';
+                    setTimeout(function () {
+                        if (!isCollapsed) collContent.style.overflow = 'visible';
+                    }, 300);
+                }
+            });
+        })();
+        </script>
     <?php endif; ?>
 
     <!-- TARJETA 2: Aperturas Asociadas (Solo visible en modo Edición) -->
@@ -153,6 +229,7 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Fechas</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Inscritos</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Estatus</th>
+                                <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -189,6 +266,11 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
                                             <span aria-hidden class="absolute inset-0 <?php echo $statusClass; ?> opacity-60 rounded-full"></span>
                                             <span class="relative text-xs"><?php echo htmlspecialchars($abierto['estatus_oferta'] ?? 'N/A'); ?></span>
                                         </span>
+                                    </td>
+                                    <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
+                                        <a href="<?php echo BASE_URL; ?>diplomado_abierto/edit/<?php echo $abierto['id']; ?>" class="text-blue-600 hover:text-blue-800" title="Editar apertura">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

@@ -106,6 +106,7 @@ $inicial_val = htmlspecialchars($evento_data['inicial'] ?? '0.00');
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Fechas</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Inscritos</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Estatus Oferta</th>
+                                <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -142,6 +143,11 @@ $inicial_val = htmlspecialchars($evento_data['inicial'] ?? '0.00');
                                             <span aria-hidden class="absolute inset-0 <?php echo $statusClass; ?> opacity-60 rounded-full"></span>
                                             <span class="relative text-xs"><?php echo htmlspecialchars($abierto['estatus_oferta'] ?? 'N/A'); ?></span>
                                         </span>
+                                    </td>
+                                    <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
+                                        <a href="<?php echo BASE_URL; ?>evento_abierto/edit/<?php echo $abierto['id']; ?>" class="text-blue-600 hover:text-blue-800" title="Editar apertura">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

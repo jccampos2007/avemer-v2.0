@@ -163,6 +163,7 @@ class DocenteModel
         $sqlCursos = "
             SELECT 
                 'Curso/Taller' AS tipo,
+                ca.id AS oferta_id,
                 c.nombre AS oferta_nombre,
                 ca.numero AS oferta_numero,
                 e.nombre AS estatus_oferta
@@ -176,6 +177,7 @@ class DocenteModel
         $sqlEventos = "
             SELECT 
                 'Evento' AS tipo,
+                ea.id AS oferta_id,
                 ev.nombre AS oferta_nombre,
                 ea.numero AS oferta_numero,
                 e.nombre AS estatus_oferta
@@ -189,6 +191,7 @@ class DocenteModel
         $sqlMaestrias = "
             SELECT 
                 'Maestría' AS tipo,
+                ma.id AS oferta_id,
                 m.nombre AS oferta_nombre,
                 ma.numero AS oferta_numero,
                 e.nombre AS estatus_oferta

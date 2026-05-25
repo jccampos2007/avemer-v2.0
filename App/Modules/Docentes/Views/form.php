@@ -149,10 +149,18 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Número</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nombre de la Oferta</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Estatus Oferta</th>
+                                <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($ofertas as $oferta): ?>
+                            <?php foreach ($ofertas as $oferta): 
+                                $tipoRoute = match ($oferta['tipo']) {
+                                    'Curso/Taller' => 'cursos_abiertos',
+                                    'Evento' => 'evento_abierto',
+                                    'Maestría' => 'maestria_abierto',
+                                    default => null,
+                                };
+                            ?>
                                 <tr class="hover:bg-gray-50 transition duration-100">
                                     <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
                                         <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($oferta['tipo']); ?></p>
@@ -176,6 +184,13 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
                                             <span aria-hidden class="absolute inset-0 <?php echo $statusClass; ?> opacity-60 rounded-full"></span>
                                             <span class="relative text-xs"><?php echo htmlspecialchars($oferta['estatus_oferta']); ?></span>
                                         </span>
+                                    </td>
+                                    <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
+                                        <?php if ($tipoRoute): ?>
+                                        <a href="<?php echo BASE_URL . $tipoRoute . '/edit/' . $oferta['oferta_id']; ?>" class="text-blue-600 hover:text-blue-800" title="Editar oferta">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

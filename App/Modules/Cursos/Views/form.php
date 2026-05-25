@@ -53,6 +53,7 @@ $is_edit = isset($curso_data['id']) && !empty($curso_data['id']);
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Número de Oferta</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Inscritos</th>
                                 <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Estatus Oferta</th>
+                                <th class="px-5 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,6 +81,11 @@ $is_edit = isset($curso_data['id']) && !empty($curso_data['id']);
                                             <span aria-hidden class="absolute inset-0 <?php echo $statusClass; ?> opacity-60 rounded-full"></span>
                                             <span class="relative text-xs"><?php echo htmlspecialchars($abierto['estatus_oferta']); ?></span>
                                         </span>
+                                    </td>
+                                    <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
+                                        <a href="<?php echo BASE_URL; ?>cursos_abiertos/edit/<?php echo $abierto['id']; ?>" class="text-blue-600 hover:text-blue-800" title="Editar apertura">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
