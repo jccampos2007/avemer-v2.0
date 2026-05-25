@@ -397,3 +397,41 @@ function newExportAction(e, dt, button, config) {
     // Disparar la petición AJAX interna con la nueva longitud (-1)
     dt.ajax.reload();
 }
+
+/**
+ * Configura un autocomplete de jQuery UI con búsqueda AJAX.
+ * @param {string} inputId - ID del input visible.
+ * @param {string} hiddenId - ID del input oculto para almacenar el ID seleccionado.
+ * @param {string} endpoint - Nombre del recurso (ej: 'alumno' → 'api/search/alumno') o ruta completa (ej: 'api/users/search').
+ * @param {number} [minLength=2] - Caracteres mínimos para iniciar la búsqueda.
+ * @param {object|null} [extraData=null] - Datos adicionales a enviar en la petición (ej: { displayColumn: '...' }).
+ */
+function setupAutocomplete(inputId, hiddenId, endpoint, minLength, extraData) {
+    if (typeof minLength === 'undefined' || minLength === null) minLength = 2;
+    if (typeof extraData === 'undefined' || extraData === null) extraData = {};
+
+    var url = endpoint.indexOf('/') > -1
+        ? `${BASE_URL_JS}${endpoint}`
+        : `${BASE_URL_JS}api/search/${endpoint}`;
+
+    $('#' + inputId).autocomplete({
+        minLength: minLength,
+        source: function (request, response) {
+            $.ajax({
+                url: url,
+                dataType: "json",
+                data: $.extend({ term: request.term }, extraData),
+                success: function (data) { response(data); },
+                error: function () { response([]); }
+            });
+        },
+        select: function (event, ui) {
+            $('#' + hiddenId).val(ui.item.id);
+            $(this).val(ui.item.label);
+            return false;
+        },
+        change: function (event, ui) {
+            if (!ui.item) { $('#' + hiddenId).val(''); }
+        }
+    });
+}

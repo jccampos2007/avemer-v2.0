@@ -55,4 +55,4 @@ $canDelete = Auth::hasPermission('evento', 'eliminar');
 </script>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/evento.js?1'; ?>
+<?php $page_js = 'asset/js/Evento/evento.js?1'; ?>

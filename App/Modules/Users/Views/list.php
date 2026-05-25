@@ -38,4 +38,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/users.js'; ?>
+<?php $page_js = 'asset/js/Users/users.js'; ?>

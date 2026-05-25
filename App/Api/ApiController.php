@@ -94,9 +94,8 @@ class ApiController
         // Las tablas que son "tablas de estatus" (ej. estatus_activo) no se filtran por sí mismas.
                 $allowedTablesConfig = [
             'docente' => [
-                'display_columns' => ['primer_nombre', 'primer_apellido', 'CONCAT(primer_apellido, ", ", primer_nombre)'],
-                'search_columns' => ['primer_nombre', 'primer_apellido'],
-                'status_column' => 'estatus_activo_id'
+                'display_columns' => ['primer_nombre', 'primer_apellido', "CONCAT(primer_apellido, ', ', primer_nombre)"],
+                'search_columns' => ['primer_nombre', 'primer_apellido']
             ],
             'alumno' => [
                 'display_columns' => ['primer_nombre', 'primer_apellido', 'CONCAT(primer_apellido, ", ", primer_nombre)'],
@@ -115,6 +114,42 @@ class ApiController
             'nacionalidad' => [
                 'display_columns' => ['nombre'],
                 'search_columns' => ['nombre']
+            ],
+            'curso' => [
+                'display_columns' => ['nombre', 'numero', "CONCAT(numero, ' - ', nombre)"],
+                'search_columns' => ['numero', 'nombre']
+            ],
+            'evento' => [
+                'display_columns' => ['nombre', 'siglas', "CONCAT(siglas, ' - ', nombre)"],
+                'search_columns' => ['siglas', 'nombre']
+            ],
+            'diplomado' => [
+                'display_columns' => ['nombre', 'siglas', "CONCAT(siglas, ' - ', nombre)"],
+                'search_columns' => ['siglas', 'nombre']
+            ],
+            'maestria' => [
+                'display_columns' => ['nombre', 'numero', "CONCAT(numero, ' - ', nombre)"],
+                'search_columns' => ['numero', 'nombre']
+            ],
+            'curso_abierto' => [
+                'display_columns' => ['numero', "CONCAT(numero, ' - ', (SELECT nombre FROM curso WHERE id = curso_abierto.curso_id))"],
+                'search_columns' => ['numero', '(SELECT nombre FROM curso WHERE id = curso_abierto.curso_id)'],
+                'status_column' => 'estatus_id'
+            ],
+            'evento_abierto' => [
+                'display_columns' => ['numero', "CONCAT(numero, ' - ', (SELECT nombre FROM evento WHERE id = evento_abierto.evento_id))"],
+                'search_columns' => ['numero', '(SELECT nombre FROM evento WHERE id = evento_abierto.evento_id)'],
+                'status_column' => 'estatus_id'
+            ],
+            'diplomado_abierto' => [
+                'display_columns' => ['numero', "CONCAT(numero, ' - ', (SELECT nombre FROM diplomado WHERE id = diplomado_abierto.diplomado_id))"],
+                'search_columns' => ['numero', '(SELECT nombre FROM diplomado WHERE id = diplomado_abierto.diplomado_id)'],
+                'status_column' => 'estatus_id'
+            ],
+            'maestria_abierto' => [
+                'display_columns' => ['numero', "CONCAT(numero, ' - ', (SELECT nombre FROM maestria WHERE id = maestria_abierto.maestria_id))"],
+                'search_columns' => ['numero', '(SELECT nombre FROM maestria WHERE id = maestria_abierto.maestria_id)'],
+                'status_column' => 'estatus_id'
             ],
         ];
 

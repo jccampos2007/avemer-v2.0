@@ -1,13 +1,13 @@
-// app/Modules/InscripcionCurso/Views/js/inscripcion_curso.js
-console.log('inscripcion_curso.js cargado.');
+// app/Modules/InscripcionEvento/Views/js/inscripcion_evento.js
+console.log('inscripcion_evento.js cargado.');
 
 $(document).ready(function () {
     // ---------------------------------------------------
     // Lógica para la vista de LISTADO (DataTables)
     // ---------------------------------------------------
-    const inscripcionCursoTable = $('#inscripcionCursoTable');
-    if (inscripcionCursoTable.length) {
-        inscripcionCursoTable.DataTable({
+    const inscripcionEventoTable = $('#inscripcionEventoTable');
+    if (inscripcionEventoTable.length) {
+        inscripcionEventoTable.DataTable({
             "processing": true,
             "serverSide": true, // Habilitar procesamiento del lado del servidor
             "responsive": true, // Habilitar diseño responsivo
@@ -17,9 +17,9 @@ $(document).ready(function () {
                     extend: 'excelHtml5',
                     text: '<i class="fas fa-file-excel"></i><span class="export-label"> Exportar a Excel</span>',
                     className: 'buttons-excel',
-                    title: 'Listado de Inscripciones de Cursos',
+                    title: 'Listado de Inscripciones de Eventos',
                     exportOptions: {
-                        columns: [1, 2, 3] // Exportar únicamente Número, Alumno y Estatus
+                        columns: [1, 2, 3] // Exportar únicamente Número, Alumno, Estatus
                     },
                     action: newExportAction
                 },
@@ -27,7 +27,7 @@ $(document).ready(function () {
                     extend: 'pdfHtml5',
                     text: '<i class="fas fa-file-pdf"></i><span class="export-label"> Exportar a PDF</span>',
                     className: 'buttons-pdf',
-                    title: 'Listado de Inscripciones de Cursos',
+                    title: 'Listado de Inscripciones de Eventos',
                     exportOptions: {
                         columns: [1, 2, 3] // Exportar únicamente Número, Alumno y Estatus
                     },
@@ -41,12 +41,12 @@ $(document).ready(function () {
                 }
             ],
             "ajax": {
-                "url": `${BASE_URL_JS}inscripcion_curso/data`, // Ruta para obtener los datos
+                "url": `${BASE_URL_JS}inscripcion_evento/data`, // Ruta para obtener los datos
                 "type": "POST", // Usar POST para DataTables server-side
                 "error": function (xhr, error, thrown) {
                     console.error("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.error("Respuesta del servidor:", xhr.responseText);
-                    showFlashMessage('error', 'Error al cargar los datos de inscripciones de curso. Por favor, revisa la consola para más detalles.');
+                    showFlashMessage('error', 'Error al cargar los datos de inscripciones de evento. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [
@@ -55,7 +55,7 @@ $(document).ready(function () {
                     visible: false,
                     searchable: false
                 }, // ID
-                { "data": 1 }, // Curso Abierto (número)
+                { "data": 1 }, // Evento Abierto (número)
                 { "data": 2 }, // Alumno (nombre completo)
                 { "data": 3 }, // Estatus de Inscripción
                 { // Columna de Acciones
@@ -67,8 +67,8 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                            <a href="inscripcion_curso/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
-                            <a href="inscripcion_curso/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                            <a href="inscripcion_evento/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                            <a href="inscripcion_evento/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
                         `;
                     }
                 }
@@ -79,10 +79,10 @@ $(document).ready(function () {
             "autoWidth": false
         });
         // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
-        inscripcionCursoTable.on("click", ".btn-action-delete", function (e) {
+        inscripcionEventoTable.on("click", ".btn-action-delete", function (e) {
             e.preventDefault();
             const urlEliminar = $(this).attr("href");
-            const dataTableInstance = inscripcionCursoTable.DataTable();
+            const dataTableInstance = inscripcionEventoTable.DataTable();
 
             Swal.fire({
                 title: "¿Estás seguro?",
@@ -135,61 +135,33 @@ $(document).ready(function () {
     // ---------------------------------------------------
     // Lógica para la vista de FORMULARIO (Crear/Editar)
     // ---------------------------------------------------
-    const formInscripcionCurso = $('#formInscripcionCurso'); // Asume que el ID de tu formulario es 'formInscripcionCurso'
-    if (formInscripcionCurso.length) {
+    const formInscripcionEvento = $('#formInscripcionEvento'); // Asume que el ID de tu formulario es 'formInscripcionEvento'
+    if (formInscripcionEvento.length) {
         // Llenar selects con la función reusable 'fillSelect'
         if (typeof fillSelect === 'function') {
-            fillSelect('curso_abierto_id', 'curso_abierto', 'curso_abierto_current', 'CONCAT(numero)', 'estatus_id'); // TODO select con union de Tabla
             fillSelect('estatus_inscripcion_id', 'estatus_inscripcion', 'estatus_inscripcion_current');
         }
 
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('evento_abierto_autocomplete', 'evento_abierto_id', 'evento_abierto', 3, {
+                displayColumn: "CONCAT(numero, ' - ', (SELECT nombre FROM evento WHERE id = evento_abierto.evento_id))"
+            });
+        }
+
         // Validación del formulario antes de enviar
-        formInscripcionCurso.on('submit', function (event) {
-            const cursoAbiertoId = $('#curso_abierto_id').val();
+        formInscripcionEvento.on('submit', function (event) {
+            const eventoAbiertoId = $('#evento_abierto_id').val();
             const alumnoId = $('#alumno_id').val();
             const estatusInscripcionId = $('#estatus_inscripcion_id').val();
 
-            if (!cursoAbiertoId || !alumnoId || !estatusInscripcionId) {
+            if (!eventoAbiertoId || !alumnoId || !estatusInscripcionId) {
                 showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
                 event.preventDefault(); // Detiene el envío del formulario
             }
         });
 
-        $("#alumno_autocomplete").autocomplete({
-            minLength: 3, // Iniciar la búsqueda después de 3 caracteres
-            source: function (request, response) {
-                // Realizar la solicitud AJAX al endpoint de búsqueda de alumnos
-                $.ajax({
-                    url: `${BASE_URL_JS}api/search/alumno`, // La URL de tu nuevo endpoint PHP
-                    dataType: "json",
-                    data: {
-                        term: request.term,
-                        displayColumn: 'CONCAT(primer_apellido, ", ", primer_nombre)'
-                    },
-                    success: function (data) {
-                        response(data); // Pasar los datos al autocompletado de jQuery UI
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error en la búsqueda de alumnos:", status, error);
-                        response([]); // Devolver un array vacío en caso de error
-                    }
-                });
-            },
-            select: function (event, ui) {
-                // Cuando se selecciona un elemento de la lista
-                // ui.item.id contiene el ID real del alumno
-                // ui.item.value contiene el texto que se muestra en el input (nombre completo)
-                $("#alumno_id").val(ui.item.id); // Guardar el ID en el campo oculto
-                // El campo visible ya se actualiza automáticamente con ui.item.value
-                console.log("alumno seleccionado:", ui.item.label, "ID:", ui.item.id);
-            },
-            change: function (event, ui) {
-                console.log('ln: 101 >>> ' + event)
-                if (ui.item === null) { // No se seleccionó ningún item de la lista
-                    $("#alumno_id").val(""); // Limpiar el ID oculto
-                    console.log("Campo de alumno limpiado o valor no válido.");
-                }
-            }
+        setupAutocomplete('alumno_autocomplete', 'alumno_id', 'alumno', 3, {
+            displayColumn: 'CONCAT(primer_apellido, ", ", primer_nombre)'
         });
     }
 });

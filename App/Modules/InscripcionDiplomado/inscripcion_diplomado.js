@@ -1,13 +1,13 @@
-// app/Modules/InscripcionMaestria/Views/js/inscripcion_maestria.js
-console.log('inscripcion_maestria.js cargado.');
+// app/Modules/InscripcionDiplomado/Views/js/inscripcion_diplomado.js
+console.log('inscripcion_diplomado.js cargado.');
 
 $(document).ready(function () {
     // ---------------------------------------------------
     // Lógica para la vista de LISTADO (DataTables)
     // ---------------------------------------------------
-    const inscripcionMaestriaTable = $('#inscripcionMaestriaTable');
-    if (inscripcionMaestriaTable.length) {
-        inscripcionMaestriaTable.DataTable({
+    const inscripcionDiplomadoTable = $('#inscripcionDiplomadoTable');
+    if (inscripcionDiplomadoTable.length) {
+        inscripcionDiplomadoTable.DataTable({
             "processing": true,
             "serverSide": true, // Habilitar procesamiento del lado del servidor
             "responsive": true, // Habilitar diseño responsivo
@@ -17,7 +17,7 @@ $(document).ready(function () {
                     extend: 'excelHtml5',
                     text: '<i class="fas fa-file-excel"></i><span class="export-label"> Exportar a Excel</span>',
                     className: 'buttons-excel',
-                    title: 'Listado de Inscripciones de Maestrías',
+                    title: 'Listado de Inscripciones de Diplomados',
                     exportOptions: {
                         columns: [1, 2, 3] // Exportar únicamente Número, Alumno y Estatus
                     },
@@ -27,7 +27,7 @@ $(document).ready(function () {
                     extend: 'pdfHtml5',
                     text: '<i class="fas fa-file-pdf"></i><span class="export-label"> Exportar a PDF</span>',
                     className: 'buttons-pdf',
-                    title: 'Listado de Inscripciones de Maestrías',
+                    title: 'Listado de Inscripciones de Diplomados',
                     exportOptions: {
                         columns: [1, 2, 3] // Exportar únicamente Número, Alumno y Estatus
                     },
@@ -41,17 +41,12 @@ $(document).ready(function () {
                 }
             ],
             "ajax": {
-                "url": `${BASE_URL_JS}inscripcion_maestria/data`, // Ruta para obtener los datos
+                "url": `${BASE_URL_JS}inscripcion_diplomado/data`, // Ruta para obtener los datos
                 "type": "POST", // Usar POST para DataTables server-side
                 "error": function (xhr, error, thrown) {
                     console.error("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.error("Respuesta del servidor:", xhr.responseText);
-                    // Usar showFlashMessage si está disponible, de lo contrario alert
-                    if (typeof showFlashMessage === 'function') {
-                        showFlashMessage('error', 'Error al cargar los datos de inscripciones de maestría. Por favor, revisa la consola para más detalles.');
-                    } else {
-                        showFlashMessage('error', 'Error al cargar los datos de inscripciones de maestría. Por favor, revisa la consola para más detalles.');
-                    }
+                    showFlashMessage('error', 'Error al cargar los datos de inscripciones de diplomado. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [
@@ -59,11 +54,11 @@ $(document).ready(function () {
                     data: 0,
                     visible: false,
                     searchable: false
-                }, // ID (mantener en los datos para referencia, pero ocultarlo)
-                { "data": 1 }, // Maestría Abierta (número)
-                { "data": 2 }, // Alumno (nombre completo)
+                }, // ID
+                { "data": 1 }, // Número de Diplomado Abierto
+                { "data": 2 }, // Nombre completo del Alumno
                 { "data": 3 }, // Estatus de Inscripción
-                { // Columna de Acciones
+                { // Columna para Acciones
                     "data": null,
                     "orderable": false,
                     "searchable": false,
@@ -72,17 +67,10 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                            <a href="inscripcion_maestria/edit/${id}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
-                            <a href="inscripcion_maestria/delete/${id}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                            <a href="inscripcion_diplomado/edit/${id}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                            <a href="inscripcion_diplomado/delete/${id}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
                         `;
                     }
-                }
-            ],
-            "columnDefs": [
-                {
-                    "targets": [0], // Ocultar la primera columna (índice 0, que es el ID)
-                    "visible": false,
-                    "searchable": false
                 }
             ],
             "language": {
@@ -92,7 +80,7 @@ $(document).ready(function () {
         });
 
         // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
-        inscripcionMaestriaTable.on("click", ".btn-action-delete", function (e) {
+        inscripcionDiplomadoTable.on("click", ".btn-action-delete", function (e) {
             e.preventDefault();
             const urlEliminar = $(this).attr("href");
 
@@ -121,7 +109,7 @@ $(document).ready(function () {
                                     res.message,
                                     "success"
                                 );
-                                inscripcionMaestriaTable.DataTable().ajax.reload(null, false);
+                                inscripcionDiplomadoTable.DataTable().ajax.reload(null, false);
                             } else {
                                 Swal.fire(
                                     "Error",
@@ -147,65 +135,21 @@ $(document).ready(function () {
     // ---------------------------------------------------
     // Lógica para la vista de FORMULARIO (Crear/Editar)
     // ---------------------------------------------------
-    const formInscripcionMaestria = $('#formInscripcionMaestria'); // Asume que el ID de tu formulario es 'formInscripcionMaestria'
-    if (formInscripcionMaestria.length) {
+    const formInscripcionDiplomado = $('#formInscripcionDiplomado'); // Asume que el ID de tu formulario es 'formInscripcionDiplomado'
+    if (formInscripcionDiplomado.length) {
         // Llenar selects con la función reusable 'fillSelect'
         if (typeof fillSelect === 'function') {
-            fillSelect('maestria_abierto_id', 'maestria_abierto', 'maestria_abierto_current', 'numero');
             fillSelect('estatus_inscripcion_id', 'estatus_inscripcion', 'estatus_inscripcion_current');
         }
 
-        // Validación del formulario antes de enviar
-        formInscripcionMaestria.on('submit', function (event) {
-            const maestriaAbiertoId = $('#maestria_abierto_id').val();
-            const alumnoId = $('#alumno_id').val();
-            const estatusInscripcionId = $('#estatus_inscripcion_id').val();
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('diplomado_abierto_autocomplete', 'diplomado_abierto_id', 'diplomado_abierto', 3, {
+                displayColumn: "CONCAT(numero, ' - ', (SELECT nombre FROM diplomado WHERE id = diplomado_abierto.diplomado_id))"
+            });
+        }
 
-            if (!maestriaAbiertoId || !alumnoId || !estatusInscripcionId) {
-                // Usar showFlashMessage si está disponible, de lo contrario alert
-                if (typeof showFlashMessage === 'function') {
-                    showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
-                } else {
-                    showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
-                }
-                event.preventDefault(); // Detiene el envío del formulario
-            }
-        });
-
-        $("#alumno_autocomplete").autocomplete({
-            minLength: 3, // Iniciar la búsqueda después de 3 caracteres
-            source: function (request, response) {
-                // Realizar la solicitud AJAX al endpoint de búsqueda de alumnos
-                $.ajax({
-                    url: `${BASE_URL_JS}api/search/alumno`, // La URL de tu nuevo endpoint PHP
-                    dataType: "json",
-                    data: {
-                        term: request.term,
-                        displayColumn: 'CONCAT(primer_apellido, ", ", primer_nombre)'
-                    },
-                    success: function (data) {
-                        response(data); // Pasar los datos al autocompletado de jQuery UI
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error en la búsqueda de alumnos:", status, error);
-                        response([]); // Devolver un array vacío en caso de error
-                    }
-                });
-            },
-            select: function (event, ui) {
-                // Cuando se selecciona un elemento de la lista
-                // ui.item.id contiene el ID real del alumno
-                // ui.item.value contiene el texto que se muestra en el input (nombre completo)
-                $("#alumno_id").val(ui.item.id); // Guardar el ID en el campo oculto
-                // El campo visible ya se actualiza automáticamente con ui.item.value
-                console.log("alumno seleccionado:", ui.item.label, "ID:", ui.item.id);
-            },
-            change: function (event, ui) {
-                if (ui.item === null) { // No se seleccionó ningún item de la lista
-                    $("#alumno_id").val(""); // Limpiar el ID oculto
-                    console.log("Campo de alumno limpiado o valor no válido.");
-                }
-            }
+        setupAutocomplete('alumno_autocomplete', 'alumno_id', 'alumno', 3, {
+            displayColumn: 'CONCAT(primer_apellido, ", ", primer_nombre)'
         });
     }
 });

@@ -1,13 +1,13 @@
-// app/Modules/InscripcionDiplomado/Views/js/inscripcion_diplomado.js
-console.log('inscripcion_diplomado.js cargado.');
+// app/Modules/DiplomadoAbierto/Views/js/diplomado_abierto.js
+console.log('diplomado_abierto.js cargado.');
 
 $(document).ready(function () {
     // ---------------------------------------------------
     // Lógica para la vista de LISTADO (DataTables)
     // ---------------------------------------------------
-    const inscripcionDiplomadoTable = $('#inscripcionDiplomadoTable');
-    if (inscripcionDiplomadoTable.length) {
-        inscripcionDiplomadoTable.DataTable({
+    const diplomadoAbiertoTable = $('#diplomadoAbiertoTable');
+    if (diplomadoAbiertoTable.length) {
+        diplomadoAbiertoTable.DataTable({
             "processing": true,
             "serverSide": true, // Habilitar procesamiento del lado del servidor
             "responsive": true, // Habilitar diseño responsivo
@@ -17,9 +17,9 @@ $(document).ready(function () {
                     extend: 'excelHtml5',
                     text: '<i class="fas fa-file-excel"></i><span class="export-label"> Exportar a Excel</span>',
                     className: 'buttons-excel',
-                    title: 'Listado de Inscripciones de Diplomados',
+                    title: 'Listado de Diplomados Abiertos',
                     exportOptions: {
-                        columns: [1, 2, 3] // Exportar únicamente Número, Alumno y Estatus
+                        columns: [1, 2, 3, 4, 5, 6] // Exportar únicamente C.I., Nombre y Correo
                     },
                     action: newExportAction
                 },
@@ -27,9 +27,9 @@ $(document).ready(function () {
                     extend: 'pdfHtml5',
                     text: '<i class="fas fa-file-pdf"></i><span class="export-label"> Exportar a PDF</span>',
                     className: 'buttons-pdf',
-                    title: 'Listado de Inscripciones de Diplomados',
+                    title: 'Listado de Diplomados Abiertos',
                     exportOptions: {
-                        columns: [1, 2, 3] // Exportar únicamente Número, Alumno y Estatus
+                        columns: [1, 2, 3, 4, 5, 6] // Exportar únicamente C.I., Nombre y Correo
                     },
                     action: newExportAction,
                     customize: function (doc) {
@@ -41,12 +41,12 @@ $(document).ready(function () {
                 }
             ],
             "ajax": {
-                "url": `${BASE_URL_JS}inscripcion_diplomado/data`, // Ruta para obtener los datos
+                "url": `${BASE_URL_JS}diplomado_abierto/data`, // Ruta para obtener los datos
                 "type": "POST", // Usar POST para DataTables server-side
                 "error": function (xhr, error, thrown) {
                     console.error("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.error("Respuesta del servidor:", xhr.responseText);
-                    showFlashMessage('error', 'Error al cargar los datos de inscripciones de diplomado. Por favor, revisa la consola para más detalles.');
+                    showFlashMessage('error', 'Error al cargar los datos de diplomados abiertos. Por favor, revisa la consola para más detalles.');
                 }
             },
             "columns": [
@@ -55,9 +55,12 @@ $(document).ready(function () {
                     visible: false,
                     searchable: false
                 }, // ID
-                { "data": 1 }, // Número de Diplomado Abierto
-                { "data": 2 }, // Nombre completo del Alumno
-                { "data": 3 }, // Estatus de Inscripción
+                { "data": 1 }, // Número
+                { "data": 2 }, // Diplomado (nombre)
+                { "data": 3 }, // Sede (nombre)
+                { "data": 4 }, // Estatus (nombre)
+                { "data": 5 }, // Fecha Inicio
+                { "data": 6 }, // Fecha Fin
                 { // Columna para Acciones
                     "data": null,
                     "orderable": false,
@@ -67,8 +70,8 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                            <a href="inscripcion_diplomado/edit/${id}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
-                            <a href="inscripcion_diplomado/delete/${id}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                            <a href="diplomado_abierto/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                            <a href="diplomado_abierto/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
                         `;
                     }
                 }
@@ -78,9 +81,8 @@ $(document).ready(function () {
             },
             "autoWidth": false
         });
-
         // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
-        inscripcionDiplomadoTable.on("click", ".btn-action-delete", function (e) {
+        diplomadoAbiertoTable.on("click", ".btn-action-delete", function (e) {
             e.preventDefault();
             const urlEliminar = $(this).attr("href");
 
@@ -109,7 +111,7 @@ $(document).ready(function () {
                                     res.message,
                                     "success"
                                 );
-                                inscripcionDiplomadoTable.DataTable().ajax.reload(null, false);
+                                diplomadoAbiertoTable.DataTable().ajax.reload(null, false);
                             } else {
                                 Swal.fire(
                                     "Error",
@@ -135,49 +137,66 @@ $(document).ready(function () {
     // ---------------------------------------------------
     // Lógica para la vista de FORMULARIO (Crear/Editar)
     // ---------------------------------------------------
-    const formInscripcionDiplomado = $('#formInscripcionDiplomado'); // Asume que el ID de tu formulario es 'formInscripcionDiplomado'
-    if (formInscripcionDiplomado.length) {
-        // Llenar selects con la función reusable 'fillSelect'
-        if (typeof fillSelect === 'function') {
-            fillSelect('diplomado_abierto_id', 'diplomado_abierto', 'diplomado_abierto_current', 'numero');
-            fillSelect('estatus_inscripcion_id', 'estatus_inscripcion', 'estatus_inscripcion_current');
+    const formDiplomadoAbierto = $('#formDiplomadoAbierto'); // Asume que el ID de tu formulario es 'formDiplomadoAbierto'
+    if (formDiplomadoAbierto.length) {
+        // Inicializar Flatpickr para los campos de fecha
+        flatpickr("#fecha_inicio", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d F, Y",
+            locale: "es",
+        });
+        flatpickr("#fecha_fin", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d F, Y",
+            locale: "es",
+        });
+
+        if (typeof flatpickr !== 'undefined') {
+            flatpickr.localize(flatpickr.l10ns.es);
         }
 
-        $("#alumno_autocomplete").autocomplete({
-            minLength: 3, // Iniciar la búsqueda después de 3 caracteres
-            source: function (request, response) {
-                // Realizar la solicitud AJAX al endpoint de búsqueda de alumnos
-                $.ajax({
-                    url: `${BASE_URL_JS}api/search/alumno`, // La URL de tu nuevo endpoint PHP
-                    dataType: "json",
-                    data: {
-                        term: request.term,
-                        displayColumn: 'CONCAT(primer_apellido, ", ", primer_nombre)'
-                    },
-                    success: function (data) {
-                        response(data); // Pasar los datos al autocompletado de jQuery UI
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error en la búsqueda de alumnos:", status, error);
-                        response([]); // Devolver un array vacío en caso de error
-                    }
-                });
-            },
-            select: function (event, ui) {
-                // Cuando se selecciona un elemento de la lista
-                // ui.item.id contiene el ID real del alumno
-                // ui.item.value contiene el texto que se muestra en el input (nombre completo)
-                $("#alumno_id").val(ui.item.id); // Guardar el ID en el campo oculto
-                // El campo visible ya se actualiza automáticamente con ui.item.value
-                console.log("alumno seleccionado:", ui.item.label, "ID:", ui.item.id);
-            },
-            change: function (event, ui) {
-                console.log('ln: 101 >>> ' + event)
-                if (ui.item === null) { // No se seleccionó ningún item de la lista
-                    $("#alumno_id").val(""); // Limpiar el ID oculto
-                    console.log("Campo de alumno limpiado o valor no válido.");
-                }
-            }
+        // Inicializar CKEditor para el campo nombre_carta
+        ClassicEditor
+            .create(document.querySelector('#nombre_carta'), {
+                language: 'es'
+            })
+            .then(editor => {
+                window.nombreCartaEditor = editor;
+            })
+            .catch(error => {
+                console.error('Error al inicializar el editor de nombre_carta:', error);
+            });
+
+
+        // Llenar selects con la función reusable 'fillSelect'
+        if (typeof fillSelect === 'function') {
+            fillSelect('sede_id', 'sede', 'sede_current');
+            fillSelect('estatus_id', 'estatus', 'estatus_current');
+        }
+
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('diplomado_autocomplete', 'diplomado_id', 'diplomado', 3, {
+                displayColumn: "CONCAT(siglas, ' - ', nombre)"
+            });
+        }
+
+        // Validación del formulario antes de enviar
+        formDiplomadoAbierto.on('submit', function (event) {
+            const numero = $('#numero').val().trim();
+            const diplomadoId = $('#diplomado_id').val();
+            const sedeId = $('#sede_id').val();
+            const estatusId = $('#estatus_id').val();
+            const fechaInicio = $('#fecha_inicio').val().trim();
+            const fechaFin = $('#fecha_fin').val().trim();
+            const nombreCartaContent = (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances.nombre_carta) ? CKEDITOR.instances.nombre_carta.getData().trim() : '';
+
+            // TODO validaciones
+            // if (numero === '' || !diplomadoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '' || nombreCartaContent === '') {
+            //     showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
+            //     event.preventDefault(); // Detiene el envío del formulario
+            // }
         });
     }
 });

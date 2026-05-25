@@ -8,6 +8,7 @@ $page_title = $is_edit ? 'Editar Inscripción de Diplomado' : 'Crear Nueva Inscr
 
 // Datos para pre-llenar los selects
 $diplomado_abierto_id_val = $inscripcion_diplomado_data['diplomado_abierto_id'] ?? '';
+$diplomado_abierto_nombre_val = htmlspecialchars($inscripcion_diplomado_data['diplomado_abierto_nombre'] ?? '');
 $alumno_id_val = $inscripcion_diplomado_data['alumno_id'] ?? '';
 $alumno_nombre_current = $inscripcion_diplomado_data['alumno_nombre_completo'] ?? '';
 $estatus_inscripcion_id_val = $inscripcion_diplomado_data['estatus_inscripcion_id'] ?? '';
@@ -24,18 +25,15 @@ $estatus_inscripcion_id_val = $inscripcion_diplomado_data['estatus_inscripcion_i
         <?php endif; ?>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div>
-                <label for="diplomado_abierto_id" class="block text-gray-700 text-sm font-bold mb-2">Diplomado Abierto:</label>
-                <select id="diplomado_abierto_id" name="diplomado_abierto_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    <option value="">Seleccione un Diplomado Abierto</option>
-                    <!-- Opciones se llenarán con JS -->
-                </select>
-                <input type="hidden" name="diplomado_abierto_current" id="diplomado_abierto_current" value="<?php echo $diplomado_abierto_id_val; ?>">
+            <div class="lg:col-span-2">
+                <label for="diplomado_abierto_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Diplomado Abierto:</label>
+                <input type="text" id="diplomado_abierto_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar diplomado abierto..." value="<?php echo $diplomado_abierto_nombre_val; ?>" required>
+                <input type="hidden" name="diplomado_abierto_id" id="diplomado_abierto_id" value="<?php echo $diplomado_abierto_id_val; ?>">
             </div>
 
             <div>
                 <label for="alumno_id" class="block text-gray-700 text-sm font-bold mb-2">Alumno:</label>
-                <input id="alumno_autocomplete" value="<?php echo $alumno_nombre_current; ?>" class="input-form focus:outline-none focus:shadow-outline">
+                <input id="alumno_autocomplete" value="<?php echo $alumno_nombre_current; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 <input type="hidden" id="alumno_id" name="alumno_id" value="<?php echo $alumno_id_val; ?>">
             </div>
 
@@ -61,4 +59,4 @@ $estatus_inscripcion_id_val = $inscripcion_diplomado_data['estatus_inscripcion_i
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/inscripcion_diplomado.js?2'; ?>
+<?php $page_js = 'asset/js/InscripcionDiplomado/inscripcion_diplomado.js?2'; ?>

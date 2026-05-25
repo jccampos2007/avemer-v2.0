@@ -100,4 +100,4 @@ $is_edit = isset($curso_data['id']) && !empty($curso_data['id']);
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/cursos.js'; ?>
+<?php $page_js = 'asset/js/Cursos/cursos.js'; ?>

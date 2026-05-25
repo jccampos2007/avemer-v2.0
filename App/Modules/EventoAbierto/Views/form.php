@@ -8,11 +8,14 @@ $form_action = $is_edit ? BASE_URL . 'evento_abierto/edit/' . htmlspecialchars($
 // Datos para pre-llenar los selects y campos en JavaScript
 $numero_val = htmlspecialchars($evento_abierto_data['numero'] ?? '');
 $evento_id_val = $evento_abierto_data['evento_id'] ?? '';
+$evento_nombre_val = htmlspecialchars($evento_abierto_data['evento_nombre'] ?? '');
 $sede_id_val = $evento_abierto_data['sede_id'] ?? '';
 $estatus_id_val = $evento_abierto_data['estatus_id'] ?? '';
 $fecha_inicio_val = htmlspecialchars($evento_abierto_data['fecha_inicio'] ?? '');
 $fecha_fin_val = htmlspecialchars($evento_abierto_data['fecha_fin'] ?? '');
 $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? ''); // Contenido HTML de CKEditor
+$docente_id_val = $evento_abierto_data['docente_id'] ?? '';
+$docente_nombre_val = htmlspecialchars($evento_abierto_data['docente_nombre'] ?? '');
 ?>
 <div class="w-full space-y-6">
 
@@ -55,12 +58,9 @@ $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? '')
                 </div>
 
                 <div>
-                    <label for="evento_id" class="block text-gray-700 text-sm font-bold mb-2">Evento:</label>
-                    <select id="evento_id" name="evento_id" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-                        <option value="">Seleccione un Evento</option>
-                        <!-- Opciones se llenarán con JS -->
-                    </select>
-                    <input type="hidden" name="evento_current" id="evento_current" value="<?php echo $evento_id_val; ?>">
+                    <label for="evento_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Evento:</label>
+                    <input type="text" id="evento_autocomplete" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar evento..." value="<?php echo $evento_nombre_val; ?>" required>
+                    <input type="hidden" name="evento_id" id="evento_id" value="<?php echo $evento_id_val; ?>">
                 </div>
 
                 <div>
@@ -79,6 +79,12 @@ $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? '')
                         <!-- Opciones se llenarán con JS -->
                     </select>
                     <input type="hidden" name="estatus_current" id="estatus_current" value="<?php echo $estatus_id_val; ?>">
+                </div>
+
+                <div>
+                    <label for="docente_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Instructor:</label>
+                    <input type="text" id="docente_autocomplete" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar instructor..." value="<?php echo $docente_nombre_val; ?>">
+                    <input type="hidden" name="docente_id" id="docente_id" value="<?php echo $docente_id_val; ?>">
                 </div>
 
                 <div>
@@ -181,7 +187,7 @@ $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? '')
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/evento_abierto.js?1'; ?>
+<?php $page_js = 'asset/js/EventoAbierto/evento_abierto.js?1'; ?>
 
 <!-- CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>

@@ -117,6 +117,18 @@ class InscripcionDiplomadoController extends Controller
                 Auth::setFlashMessage('error', 'Inscripción de Diplomado no encontrada.');
                 $this->redirect('inscripcion_diplomado');
             }
+
+            $pdo = \App\Core\Database::getInstance()->getConnection();
+
+            $diplomadoAbiertoNombre = '';
+            if (!empty($inscripcion_diplomado_data['diplomado_abierto_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(numero, ' - ', (SELECT nombre FROM diplomado WHERE id = diplomado_abierto.diplomado_id)) AS texto FROM diplomado_abierto WHERE id = :id");
+                $stmt->execute(['id' => $inscripcion_diplomado_data['diplomado_abierto_id']]);
+                $row = $stmt->fetch();
+                $diplomadoAbiertoNombre = $row['texto'] ?? '';
+            }
+            $inscripcion_diplomado_data['diplomado_abierto_nombre'] = $diplomadoAbiertoNombre;
+
             $this->view('InscripcionDiplomado/form', ['inscripcion_diplomado_data' => $inscripcion_diplomado_data]);
         }
     }

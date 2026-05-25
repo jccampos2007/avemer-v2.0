@@ -84,4 +84,4 @@ $buscar_mensajes_val = $correo_data['mensaje_id'] ?? '';
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/correo.js'; ?>
+<?php $page_js = 'asset/js/Correo/correo.js'; ?>

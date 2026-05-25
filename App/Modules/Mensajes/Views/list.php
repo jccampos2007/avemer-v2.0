@@ -39,4 +39,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/mensajes.js'; ?>
+<?php $page_js = 'asset/js/Mensajes/mensajes.js'; ?>

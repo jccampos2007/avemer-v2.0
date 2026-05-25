@@ -1,10 +1,10 @@
-// php_mvc_app/app/Modules/Coordinadores/Views/js/coordinadores.js
-// Archivo JavaScript para el módulo de coordinadores
+// php_mvc_app/app/Modules/Docentes/Views/js/docentes.js
+// Archivo JavaScript para el módulo de docentes
 $(document).ready(function () {
-    console.log("coordinadores.js cargado.");
+    console.log("docentes.js cargado.");
 
-    const formCoordinadores = $('#form_coordinadores');
-    if (formCoordinadores.length > 0) {
+    const formDocentes = $('#form_docentes');
+    if (formDocentes.length > 0) {
 
         // Localizar flatpickr en español ANTES de crear la instancia
         if (typeof flatpickr !== 'undefined' && flatpickr.l10ns && flatpickr.l10ns.es) {
@@ -22,41 +22,19 @@ $(document).ready(function () {
             fillSelect('estatus_activo_id', 'estatus_activo', 'estatus_activo_current');
         }
 
-
-        // Autocomplete for Profesión/Oficio, Estado, Nacionalidad
-        function setupAutocomplete(inputId, hiddenId, endpoint) {
-            $('#' + inputId).autocomplete({
-                minLength: 2,
-                source: function (request, response) {
-                    $.ajax({
-                        url: `${BASE_URL_JS}api/search/${endpoint}`,
-                        dataType: "json",
-                        data: { term: request.term },
-                        success: function (data) { response(data); },
-                        error: function () { response([]); }
-                    });
-                },
-                select: function (event, ui) {
-                    $('#' + hiddenId).val(ui.item.id);
-                    $(this).val(ui.item.label);
-                    return false;
-                },
-                change: function (event, ui) {
-                    if (!ui.item) { $('#' + hiddenId).val(''); }
-                }
-            });
-        }
         setupAutocomplete('profesion_oficio_autocomplete', 'profesion_oficio_id', 'profesion_oficio');
         setupAutocomplete('estado_autocomplete', 'estado_id', 'estado');
         setupAutocomplete('nacionalidad_autocomplete', 'nacionalidad_id', 'nacionalidad');
 
+        setupAutocomplete('usuario_autocomplete', 'usuario_id', 'api/users/search', 3);
+
     } else {
 
-        console.log(BASE_URL_JS + "coordinadores/data");
+        console.log(BASE_URL_JS + "docentes/data");
 
-        var coordinadoresTable = $('#coordinadoresTable').DataTable({
+        var docentesTable = $('#docentesTable').DataTable({
             "processing": true,
-            "serverSide": true, // Habilitar procesamiento del lado del servidor
+            "serverSide": true,
             "responsive": true, // Habilitar diseño responsivo
             "dom": 'lBfrtip', // Definir ubicación de los elementos de control (B = Botones)
             "buttons": [
@@ -64,7 +42,7 @@ $(document).ready(function () {
                     extend: 'excelHtml5',
                     text: '<i class="fas fa-file-excel"></i><span class="export-label"> Exportar a Excel</span>',
                     className: 'buttons-excel',
-                    title: 'Listado de Coordinadores',
+                    title: 'Listado de Docentes',
                     exportOptions: {
                         columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
                     },
@@ -74,7 +52,7 @@ $(document).ready(function () {
                     extend: 'pdfHtml5',
                     text: '<i class="fas fa-file-pdf"></i><span class="export-label"> Exportar a PDF</span>',
                     className: 'buttons-pdf',
-                    title: 'Listado de Coordinadores',
+                    title: 'Listado de Docentes',
                     exportOptions: {
                         columns: [2, 3, 4] // Exportar únicamente C.I., Nombre y Correo
                     },
@@ -88,7 +66,7 @@ $(document).ready(function () {
                 }
             ],
             "ajax": {
-                "url": BASE_URL_JS + "coordinadores/data", // Endpoint para obtener los datos
+                "url": BASE_URL_JS + "docentes/data",
                 "type": "POST",
                 "error": function (xhr, error, thrown) {
                     console.log("Error en la solicitud AJAX de DataTables:", error, thrown);
@@ -107,11 +85,11 @@ $(document).ready(function () {
                     render: function (data, type, row) {
                         if (row[1] === null || row[1] === '')
                             return `
-                                <img src="${BASE_URL_JS}image/default-avatar.png" alt="Foto de Coordinador" class="img-thumbnail" style="width: 50px; height: 50px;">
+                                <img src="${BASE_URL_JS}image/default-avatar.png" alt="Foto de Alumno" class="img-thumbnail" style="width: 50px; height: 50px;">
                             `;
                         else
                             return `
-                                <img src="data:${row[1]}" alt="Foto de Coordinador" class="img-thumbnail" style="width: 50px; height: 50px;">
+                                <img src="data:${row[1]}" alt="Foto de Alumno" class="img-thumbnail" style="width: 50px; height: 50px;">
                             `;
                     }
                 }, // Columna 1: Foto
@@ -127,17 +105,17 @@ $(document).ready(function () {
                     render: function (data, type, row) {
                         let actions = '<div class="flex gap-2 justify-center">';
                         
-                        if (typeof COORDINADOR_PERMISSIONS !== 'undefined') {
-                            if (COORDINADOR_PERMISSIONS.modificar) {
-                                actions += `<a href="coordinadores/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>`;
+                        if (typeof DOCENTE_PERMISSIONS !== 'undefined') {
+                            if (DOCENTE_PERMISSIONS.modificar) {
+                                actions += `<a href="docentes/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>`;
                             }
-                            if (COORDINADOR_PERMISSIONS.eliminar) {
-                                actions += `<a href="coordinadores/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>`;
+                            if (DOCENTE_PERMISSIONS.eliminar) {
+                                actions += `<a href="docentes/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>`;
                             }
                         } else {
                             actions += `
-                                <a href="coordinadores/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
-                                <a href="coordinadores/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                                <a href="docentes/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                                <a href="docentes/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
                             `;
                         }
                         
@@ -147,12 +125,12 @@ $(document).ready(function () {
                 }
             ],
             "language": {
-                "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json" // Idioma español
+                "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json"
             }
         });
 
         // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
-        $('#coordinadoresTable').on('click', '.btn-action-delete', function (e) {
+        $('#docentesTable').on('click', '.btn-action-delete', function (e) {
             e.preventDefault();
             const urlEliminar = $(this).attr('href');
 
@@ -177,7 +155,7 @@ $(document).ready(function () {
                             let res = typeof response === 'string' ? JSON.parse(response) : response;
                             if (res.success) {
                                 Swal.fire('¡Eliminado!', res.message, 'success');
-                                coordinadoresTable.ajax.reload(null, false);
+                                docentesTable.ajax.reload(null, false);
                             } else {
                                 Swal.fire('Error', res.message, 'error');
                             }

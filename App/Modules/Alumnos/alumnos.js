@@ -22,29 +22,6 @@ $(document).ready(function () {
             fillSelect('estatus_activo_id', 'estatus_activo', 'estatus_activo_current');
         }
 
-        // Autocomplete for Profesión/Oficio, Estado, Nacionalidad
-        function setupAutocomplete(inputId, hiddenId, endpoint) {
-            $('#' + inputId).autocomplete({
-                minLength: 2,
-                source: function (request, response) {
-                    $.ajax({
-                        url: `${BASE_URL_JS}api/search/${endpoint}`,
-                        dataType: "json",
-                        data: { term: request.term },
-                        success: function (data) { response(data); },
-                        error: function () { response([]); }
-                    });
-                },
-                select: function (event, ui) {
-                    $('#' + hiddenId).val(ui.item.id);
-                    $(this).val(ui.item.label);
-                    return false;
-                },
-                change: function (event, ui) {
-                    if (!ui.item) { $('#' + hiddenId).val(''); }
-                }
-            });
-        }
         setupAutocomplete('profesion_oficio_autocomplete', 'profesion_oficio_id', 'profesion_oficio');
         setupAutocomplete('estado_autocomplete', 'estado_id', 'estado');
         setupAutocomplete('nacionalidad_autocomplete', 'nacionalidad_id', 'nacionalidad');

@@ -66,4 +66,4 @@ $is_edit = isset($grupo_data['grupo_id']) && !empty($grupo_data['grupo_id']);
     </div>
 </div>
 
-<script src="<?php echo BASE_URL; ?>js/modules/grupo.js"></script>
+<script src="<?php echo BASE_URL; ?>asset/js/Grupo/grupo.js"></script>

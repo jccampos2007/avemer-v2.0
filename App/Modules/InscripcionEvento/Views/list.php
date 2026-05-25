@@ -41,4 +41,4 @@
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/inscripcion_evento.js?1'; ?>
+<?php $page_js = 'asset/js/InscripcionEvento/inscripcion_evento.js?1'; ?>

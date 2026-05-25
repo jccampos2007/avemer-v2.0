@@ -60,14 +60,15 @@ $(document).ready(function () {
                     visible: false,
                     searchable: false
                 }, // Columna 0: ID
-                { "data": 1 }, // Columna 1: Nombre
-                { "data": 2 }, // Columna 2: Número
-                { "data": 3 }, // Columna 3: Horas
-                { "data": 4 }, // Columna 4: Convenio
+                { "data": 1, responsivePriority: 1 }, // Columna 1: Nombre (siempre visible)
+                { "data": 2, responsivePriority: 3 }, // Columna 2: Número
+                { "data": 3, responsivePriority: 4 }, // Columna 3: Horas
+                { "data": 4, responsivePriority: 5 }, // Columna 4: Convenio
                 {
                     data: null,
                     orderable: false,
                     searchable: false,
+                    responsivePriority: 10000,
                     "width": "1%",
                     "className": "actions-column",
                     render: function (data, type, row) {

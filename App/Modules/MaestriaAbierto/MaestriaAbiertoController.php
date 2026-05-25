@@ -4,6 +4,7 @@ namespace App\Modules\MaestriaAbierto;
 
 use App\Core\Controller;
 use App\Core\Auth;
+use App\Core\Database;
 use App\Modules\MaestriaAbierto\MaestriaAbiertoModel;
 
 class MaestriaAbiertoController extends Controller
@@ -122,6 +123,26 @@ class MaestriaAbiertoController extends Controller
                 Auth::setFlashMessage('error', 'Registro de Maestría Abierta no encontrado.');
                 $this->redirect('maestria_abierto');
             }
+
+            $pdo = Database::getInstance()->getConnection();
+
+            $docenteNombre = '';
+            if (!empty($maestria_abierto_data['docente_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(primer_apellido, ', ', primer_nombre) AS texto FROM docente WHERE id = :id");
+                $stmt->execute(['id' => $maestria_abierto_data['docente_id']]);
+                $row = $stmt->fetch();
+                $docenteNombre = $row['texto'] ?? '';
+            }
+            $maestria_abierto_data['docente_nombre'] = $docenteNombre;
+
+            $maestriaNombre = '';
+            if (!empty($maestria_abierto_data['maestria_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(numero, ' - ', nombre) AS texto FROM maestria WHERE id = :id");
+                $stmt->execute(['id' => $maestria_abierto_data['maestria_id']]);
+                $row = $stmt->fetch();
+                $maestriaNombre = $row['texto'] ?? '';
+            }
+            $maestria_abierto_data['maestria_nombre'] = $maestriaNombre;
 
             // Obtener alumnos inscritos en esta maestría abierta
             $inscritos = $this->maestriaAbiertoModel->getInscritos($id);

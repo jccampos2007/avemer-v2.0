@@ -4,6 +4,7 @@ namespace App\Modules\CursoAbierto;
 
 use App\Core\Controller;
 use App\Core\Auth;
+use App\Core\Database;
 use App\Modules\CursoAbierto\CursoAbiertoModel; // Asegúrate de que el namespace sea correcto
 
 class CursoAbiertoController extends Controller
@@ -40,10 +41,31 @@ class CursoAbiertoController extends Controller
                 Auth::setFlashMessage('error', 'Taller Abierto no encontrado.');
                 $this->redirect('cursos_abiertos');
             }
-            
+
+            $pdo = Database::getInstance()->getConnection();
+
+            $cursoNombre = '';
+            if (!empty($curso_abierto_data['curso_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(numero, ' - ', nombre) AS texto FROM curso WHERE id = :id");
+                $stmt->execute(['id' => $curso_abierto_data['curso_id']]);
+                $row = $stmt->fetch();
+                $cursoNombre = $row['texto'] ?? '';
+            }
+
+            $docenteNombre = '';
+            if (!empty($curso_abierto_data['docente_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(primer_apellido, ', ', primer_nombre) AS texto FROM docente WHERE id = :id");
+                $stmt->execute(['id' => $curso_abierto_data['docente_id']]);
+                $row = $stmt->fetch();
+                $docenteNombre = $row['texto'] ?? '';
+            }
+
             // Obtener los alumnos inscritos asociados a este taller abierto
             $inscritos = $this->cursoAbiertoModel->getInscritos($id);
             
+            $curso_abierto_data['curso_nombre'] = $cursoNombre;
+            $curso_abierto_data['docente_nombre'] = $docenteNombre;
+
             $this->view('CursoAbierto/form', [
                 'curso_abierto_data' => $curso_abierto_data,
                 'inscritos' => $inscritos

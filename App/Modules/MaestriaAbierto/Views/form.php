@@ -9,6 +9,7 @@ $page_title = $is_edit ? 'Editar Maestría Abierta' : 'Crear Nueva Maestría Abi
 // Datos para pre-llenar los campos
 $numero_val = htmlspecialchars($maestria_abierto_data['numero'] ?? '');
 $maestria_id_val = htmlspecialchars($maestria_abierto_data['maestria_id'] ?? '');
+$maestria_nombre_val = htmlspecialchars($maestria_abierto_data['maestria_nombre'] ?? '');
 $sede_id_val = htmlspecialchars($maestria_abierto_data['sede_id'] ?? '');
 $estatus_id_val = htmlspecialchars($maestria_abierto_data['estatus_id'] ?? '');
 $docente_id_val = htmlspecialchars($maestria_abierto_data['docente_id'] ?? '');
@@ -57,12 +58,9 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
                 </div>
 
                 <div>
-                    <label for="maestria_id" class="block text-gray-700 text-sm font-bold mb-2">Maestría:</label>
-                    <select id="maestria_id" name="maestria_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                        <option value="">Seleccione una Maestría</option>
-                        <!-- Opciones se llenarán con JS -->
-                    </select>
-                    <input type="hidden" name="maestria_current" id="maestria_current" value="<?php echo $maestria_id_val; ?>">
+                    <label for="maestria_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Maestría:</label>
+                    <input type="text" id="maestria_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar maestría..." value="<?php echo $maestria_nombre_val; ?>" required>
+                    <input type="hidden" name="maestria_id" id="maestria_id" value="<?php echo $maestria_id_val; ?>">
                 </div>
 
                 <div>
@@ -84,12 +82,9 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
                 </div>
 
                 <div>
-                    <label for="docente_id" class="block text-gray-700 text-sm font-bold mb-2">Docente:</label>
-                    <select id="docente_id" name="docente_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                        <option value="">Seleccione un Docente</option>
-                        <!-- Opciones se llenarán con JS -->
-                    </select>
-                    <input type="hidden" name="docente_current" id="docente_current" value="<?php echo $docente_id_val; ?>">
+                    <label for="docente_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Instructor:</label>
+                    <input type="text" id="docente_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar instructor..." value="<?php echo htmlspecialchars($maestria_abierto_data['docente_nombre'] ?? ''); ?>" required>
+                    <input type="hidden" name="docente_id" id="docente_id" value="<?php echo $docente_id_val; ?>">
                 </div>
 
                 <div>
@@ -191,7 +186,7 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/maestria_abierto.js'; ?>
+<?php $page_js = 'asset/js/MaestriaAbierto/maestria_abierto.js'; ?>
 
 <!-- CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>

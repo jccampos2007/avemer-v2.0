@@ -70,7 +70,7 @@ $fecha_vencimiento_val = htmlspecialchars($cuota_data['fecha_vencimiento'] ?? ''
             </div>
             <div>
                 <label for="fecha_vencimiento" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Vencimiento:</label>
-                <input type="date" id="fecha_vencimiento" name="fecha_vencimiento" value="<?php echo $fecha_vencimiento_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input type="text" id="fecha_vencimiento" name="fecha_vencimiento" value="<?php echo $fecha_vencimiento_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
         </div>
 
@@ -141,4 +141,4 @@ $fecha_vencimiento_val = htmlspecialchars($cuota_data['fecha_vencimiento'] ?? ''
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/cuota.js'; ?>
+<?php $page_js = 'asset/js/Cuota/cuota.js'; ?>

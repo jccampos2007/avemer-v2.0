@@ -67,14 +67,10 @@ class EventoAbiertoController extends Controller
                 $formattedData[] = [
                     $row['id'],
                     htmlspecialchars($row['numero']),
-                    htmlspecialchars($row['evento_nombre'] ?? 'N/A'), // Nombre del Evento
-                    htmlspecialchars($row['sede_nombre'] ?? 'N/A'),   // Nombre de la Sede
-                    htmlspecialchars($row['estatus_nombre'] ?? 'N/A'), // Nombre del Estatus
-                    htmlspecialchars($row['fecha_inicio']),
-                    htmlspecialchars($row['fecha_fin']),
-                    // No mostramos nombre_carta directamente en la tabla, pero puedes si lo deseas
-                    // htmlspecialchars($row['nombre_carta']),
-                    // Columna para acciones (editar/eliminar) - será renderizada en el JS
+                    htmlspecialchars($row['evento_nombre'] ?? 'N/A'),
+                    htmlspecialchars($row['sede_nombre'] ?? 'N/A'),
+                    htmlspecialchars($row['estatus_nombre'] ?? 'N/A'),
+                    htmlspecialchars($row['docente_nombre_completo'] ?? ''),
                     ''
                 ];
             }
@@ -127,6 +123,26 @@ class EventoAbiertoController extends Controller
                 $this->redirect('evento_abierto');
             }
 
+            $pdo = \App\Core\Database::getInstance()->getConnection();
+
+            $docenteNombre = '';
+            if (!empty($evento_abierto_data['docente_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(primer_apellido, ', ', primer_nombre) AS texto FROM docente WHERE id = :id");
+                $stmt->execute(['id' => $evento_abierto_data['docente_id']]);
+                $row = $stmt->fetch();
+                $docenteNombre = $row['texto'] ?? '';
+            }
+            $evento_abierto_data['docente_nombre'] = $docenteNombre;
+
+            $eventoNombre = '';
+            if (!empty($evento_abierto_data['evento_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(siglas, ' - ', nombre) AS texto FROM evento WHERE id = :id");
+                $stmt->execute(['id' => $evento_abierto_data['evento_id']]);
+                $row = $stmt->fetch();
+                $eventoNombre = $row['texto'] ?? '';
+            }
+            $evento_abierto_data['evento_nombre'] = $eventoNombre;
+
             // Se obtiene la lista de alumnos inscritos para este Evento Abierto específico
             $inscritos = $this->eventoAbiertoModel->getInscritos($id);
 
@@ -150,6 +166,7 @@ class EventoAbiertoController extends Controller
                 'evento_id' => !empty($_POST['evento_id']) ? (int)$this->sanitizeInput($_POST['evento_id']) : null,
                 'sede_id' => !empty($_POST['sede_id']) ? (int)$this->sanitizeInput($_POST['sede_id']) : null,
                 'estatus_id' => !empty($_POST['estatus_id']) ? (int)$this->sanitizeInput($_POST['estatus_id']) : null,
+                'docente_id' => !empty($_POST['docente_id']) ? (int)$_POST['docente_id'] : null,
                 'fecha_inicio' => $this->sanitizeInput($_POST['fecha_inicio']),
                 'fecha_fin' => $this->sanitizeInput($_POST['fecha_fin']),
                 'nombre_carta' => $_POST['nombre_carta'], // CKEditor content, no usar htmlspecialchars directamente aquí

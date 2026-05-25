@@ -24,4 +24,4 @@ $is_edit = isset($banco_data['id']) && !empty($banco_data['id']);
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/banco.js'; ?>
+<?php $page_js = 'asset/js/Banco/banco.js'; ?>

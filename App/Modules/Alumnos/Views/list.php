@@ -57,4 +57,4 @@ $canDelete = Auth::hasPermission('alumnos', 'eliminar');
 </script>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/alumnos.js'; ?>
+<?php $page_js = 'asset/js/Alumnos/alumnos.js'; ?>

@@ -39,4 +39,4 @@
     </table>
 </div>
 
-<script src="<?php echo BASE_URL; ?>js/modules/grupo.js"></script>
+<script src="<?php echo BASE_URL; ?>asset/js/Grupo/grupo.js"></script>

@@ -34,9 +34,10 @@ class EventoAbiertoModel
             2 => 'evento_nombre',
             3 => 'sede_nombre',
             4 => 'estatus_nombre',
-            5 => 'ea.fecha_inicio',
-            6 => 'ea.fecha_fin',
-            7 => 'ea.nombre_carta',
+            5 => 'docente_nombre_completo',
+            6 => 'ea.fecha_inicio',
+            7 => 'ea.fecha_fin',
+            8 => 'ea.nombre_carta',
         ];
 
         // Filtro base: Excluir eliminados de forma lógica
@@ -50,6 +51,7 @@ class EventoAbiertoModel
                 s.nombre AS sede_nombre,
                 ea.estatus_id,
                 st.nombre AS estatus_nombre,
+                CONCAT(d.primer_apellido, ', ', d.primer_nombre) AS docente_nombre_completo,
                 ea.fecha_inicio,
                 ea.fecha_fin,
                 ea.nombre_carta
@@ -61,6 +63,8 @@ class EventoAbiertoModel
                 sede s ON ea.sede_id = s.id
             LEFT JOIN
                 estatus st ON ea.estatus_id = st.id
+            LEFT JOIN
+                docente d ON ea.docente_id = d.id
             WHERE
                 ea.deleted_at IS NULL
         ";
@@ -75,6 +79,8 @@ class EventoAbiertoModel
                 sede s ON ea.sede_id = s.id
             LEFT JOIN
                 estatus st ON ea.estatus_id = st.id
+            LEFT JOIN
+                docente d ON ea.docente_id = d.id
             WHERE
                 ea.deleted_at IS NULL
         ";
@@ -87,6 +93,7 @@ class EventoAbiertoModel
                 . "OR e.nombre LIKE :search_evento_nombre "
                 . "OR s.nombre LIKE :search_sede_nombre "
                 . "OR st.nombre LIKE :search_estatus_nombre "
+                . "OR CONCAT(d.primer_apellido, ', ', d.primer_nombre) LIKE :search_docente_nombre "
                 . "OR ea.fecha_inicio LIKE :search_fecha_inicio "
                 . "OR ea.fecha_fin LIKE :search_fecha_fin "
                 . "OR ea.nombre_carta LIKE :search_nombre_carta)";
@@ -95,6 +102,7 @@ class EventoAbiertoModel
             $queryParams[':search_evento_nombre'] = $like;
             $queryParams[':search_sede_nombre'] = $like;
             $queryParams[':search_estatus_nombre'] = $like;
+            $queryParams[':search_docente_nombre'] = $like;
             $queryParams[':search_fecha_inicio'] = $like;
             $queryParams[':search_fecha_fin'] = $like;
             $queryParams[':search_nombre_carta'] = $like;
@@ -205,13 +213,14 @@ class EventoAbiertoModel
 
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (numero, evento_id, sede_id, estatus_id, fecha_inicio, fecha_fin, nombre_carta) VALUES (:numero, :evento_id, :sede_id, :estatus_id, :fecha_inicio, :fecha_fin, :nombre_carta)";
+        $sql = "INSERT INTO {$this->table} (numero, evento_id, sede_id, estatus_id, docente_id, fecha_inicio, fecha_fin, nombre_carta) VALUES (:numero, :evento_id, :sede_id, :estatus_id, :docente_id, :fecha_inicio, :fecha_fin, :nombre_carta)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':numero' => $data['numero'],
             ':evento_id' => $data['evento_id'],
             ':sede_id' => $data['sede_id'],
             ':estatus_id' => $data['estatus_id'],
+            ':docente_id' => $data['docente_id'],
             ':fecha_inicio' => $data['fecha_inicio'],
             ':fecha_fin' => $data['fecha_fin'],
             ':nombre_carta' => $data['nombre_carta']
@@ -220,13 +229,14 @@ class EventoAbiertoModel
 
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE {$this->table} SET numero = :numero, evento_id = :evento_id, sede_id = :sede_id, estatus_id = :estatus_id, fecha_inicio = :fecha_inicio, fecha_fin = :fecha_fin, nombre_carta = :nombre_carta WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET numero = :numero, evento_id = :evento_id, sede_id = :sede_id, estatus_id = :estatus_id, docente_id = :docente_id, fecha_inicio = :fecha_inicio, fecha_fin = :fecha_fin, nombre_carta = :nombre_carta WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':numero' => $data['numero'],
             ':evento_id' => $data['evento_id'],
             ':sede_id' => $data['sede_id'],
             ':estatus_id' => $data['estatus_id'],
+            ':docente_id' => $data['docente_id'],
             ':fecha_inicio' => $data['fecha_inicio'],
             ':fecha_fin' => $data['fecha_fin'],
             ':nombre_carta' => $data['nombre_carta'],

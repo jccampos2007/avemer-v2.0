@@ -1,13 +1,13 @@
-// app/Modules/EventoAbierto/Views/js/evento_abierto.js
-console.log('evento_abierto.js cargado.');
+// app/Modules/InscripcionMaestria/Views/js/inscripcion_maestria.js
+console.log('inscripcion_maestria.js cargado.');
 
 $(document).ready(function () {
     // ---------------------------------------------------
     // Lógica para la vista de LISTADO (DataTables)
     // ---------------------------------------------------
-    const eventoAbiertoTable = $('#eventoAbiertoTable');
-    if (eventoAbiertoTable.length) {
-        eventoAbiertoTable.DataTable({
+    const inscripcionMaestriaTable = $('#inscripcionMaestriaTable');
+    if (inscripcionMaestriaTable.length) {
+        inscripcionMaestriaTable.DataTable({
             "processing": true,
             "serverSide": true, // Habilitar procesamiento del lado del servidor
             "responsive": true, // Habilitar diseño responsivo
@@ -17,9 +17,9 @@ $(document).ready(function () {
                     extend: 'excelHtml5',
                     text: '<i class="fas fa-file-excel"></i><span class="export-label"> Exportar a Excel</span>',
                     className: 'buttons-excel',
-                    title: 'Listado de Eventos Abiertos',
+                    title: 'Listado de Inscripciones de Maestrías',
                     exportOptions: {
-                        columns: [1, 2, 3, 4] // Exportar únicamente Número, Evento, Sede y Estatus
+                        columns: [1, 2, 3] // Exportar únicamente Número, Alumno y Estatus
                     },
                     action: newExportAction
                 },
@@ -27,26 +27,31 @@ $(document).ready(function () {
                     extend: 'pdfHtml5',
                     text: '<i class="fas fa-file-pdf"></i><span class="export-label"> Exportar a PDF</span>',
                     className: 'buttons-pdf',
-                    title: 'Listado de Eventos Abiertos',
+                    title: 'Listado de Inscripciones de Maestrías',
                     exportOptions: {
-                        columns: [1, 2, 3, 4] // Exportar únicamente Número, Evento, Sede y Estatus
+                        columns: [1, 2, 3] // Exportar únicamente Número, Alumno y Estatus
                     },
                     action: newExportAction,
                     customize: function (doc) {
                         // Personalizaciones estéticas básicas para el PDF
-                        doc.content[1].table.widths = ['10%', '30%', '30%', '30%'];
+                        doc.content[1].table.widths = ['25%', '45%', '30%'];
                         doc.styles.tableHeader.fillColor = '#1e3a8a'; // Color azul corporativo
                         doc.styles.tableHeader.color = '#ffffff';
                     }
                 }
             ],
             "ajax": {
-                "url": `${BASE_URL_JS}evento_abierto/data`, // Ruta para obtener los datos
+                "url": `${BASE_URL_JS}inscripcion_maestria/data`, // Ruta para obtener los datos
                 "type": "POST", // Usar POST para DataTables server-side
                 "error": function (xhr, error, thrown) {
                     console.error("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.error("Respuesta del servidor:", xhr.responseText);
-                    showFlashMessage('error', 'Error al cargar los datos de eventos abiertos. Por favor, revisa la consola para más detalles.');
+                    // Usar showFlashMessage si está disponible, de lo contrario alert
+                    if (typeof showFlashMessage === 'function') {
+                        showFlashMessage('error', 'Error al cargar los datos de inscripciones de maestría. Por favor, revisa la consola para más detalles.');
+                    } else {
+                        showFlashMessage('error', 'Error al cargar los datos de inscripciones de maestría. Por favor, revisa la consola para más detalles.');
+                    }
                 }
             },
             "columns": [
@@ -54,11 +59,10 @@ $(document).ready(function () {
                     data: 0,
                     visible: false,
                     searchable: false
-                }, // ID
-                { "data": 1 }, // Número
-                { "data": 2 }, // Evento (nombre)
-                { "data": 3 }, // Sede (nombre)
-                { "data": 4 }, // Estatus (nombre)
+                }, // ID (mantener en los datos para referencia, pero ocultarlo)
+                { "data": 1 }, // Maestría Abierta (número)
+                { "data": 2 }, // Alumno (nombre completo)
+                { "data": 3 }, // Estatus de Inscripción
                 { // Columna de Acciones
                     "data": null,
                     "orderable": false,
@@ -68,10 +72,17 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
-                            <a href="evento_abierto/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
-                            <a href="evento_abierto/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                            <a href="inscripcion_maestria/edit/${id}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                            <a href="inscripcion_maestria/delete/${id}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
                         `;
                     }
+                }
+            ],
+            "columnDefs": [
+                {
+                    "targets": [0], // Ocultar la primera columna (índice 0, que es el ID)
+                    "visible": false,
+                    "searchable": false
                 }
             ],
             "language": {
@@ -79,11 +90,11 @@ $(document).ready(function () {
             },
             "autoWidth": false
         });
+
         // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
-        eventoAbiertoTable.on("click", ".btn-action-delete", function (e) {
+        inscripcionMaestriaTable.on("click", ".btn-action-delete", function (e) {
             e.preventDefault();
             const urlEliminar = $(this).attr("href");
-            const dataTableInstance = eventoAbiertoTable.DataTable();
 
             Swal.fire({
                 title: "¿Estás seguro?",
@@ -110,7 +121,7 @@ $(document).ready(function () {
                                     res.message,
                                     "success"
                                 );
-                                dataTableInstance.ajax.reload(null, false);
+                                inscripcionMaestriaTable.DataTable().ajax.reload(null, false);
                             } else {
                                 Swal.fire(
                                     "Error",
@@ -136,65 +147,38 @@ $(document).ready(function () {
     // ---------------------------------------------------
     // Lógica para la vista de FORMULARIO (Crear/Editar)
     // ---------------------------------------------------
-    const formEventoAbierto = $('#formEventoAbierto'); // Asume que el ID de tu formulario es 'formEventoAbierto'
-    if (formEventoAbierto.length) {
-        // Inicializar Flatpickr para los campos de fecha
-        flatpickr("#fecha_inicio", {
-            dateFormat: "Y-m-d",
-            altInput: true,
-            altFormat: "d F, Y",
-            locale: "es",
-        });
-        flatpickr("#fecha_fin", {
-            dateFormat: "Y-m-d",
-            altInput: true,
-            altFormat: "d F, Y",
-            locale: "es",
-        });
-
-        if (typeof flatpickr !== 'undefined') {
-            flatpickr.localize(flatpickr.l10ns.es);
+    const formInscripcionMaestria = $('#formInscripcionMaestria'); // Asume que el ID de tu formulario es 'formInscripcionMaestria'
+    if (formInscripcionMaestria.length) {
+        // Llenar selects con la función reusable 'fillSelect'
+        if (typeof fillSelect === 'function') {
+            fillSelect('estatus_inscripcion_id', 'estatus_inscripcion', 'estatus_inscripcion_current');
         }
 
-        // Inicializar CKEditor para el campo nombre_carta
-        let nombreCartaEditor; // Variable para almacenar la instancia del editor
-        ClassicEditor
-            .create(document.querySelector('#nombre_carta'), {
-                language: 'es',
-                toolbar: CKEDITOR_TOOLBAR_OPTIONS
-            })
-            .then(editor => {
-                nombreCartaEditor = editor;
-                // Si estamos en modo edición, pre-llenar CKEditor
-                const currentNombreCarta = formEventoAbierto.data('nombre-carta');
-                if (currentNombreCarta) {
-                    editor.setData(currentNombreCarta);
-                }
-            })
-            .catch(error => {
-                console.error('Error al inicializar el editor de nombre_carta:', error);
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('maestria_abierto_autocomplete', 'maestria_abierto_id', 'maestria_abierto', 3, {
+                displayColumn: "CONCAT(numero, ' - ', (SELECT nombre FROM maestria WHERE id = maestria_abierto.maestria_id))"
             });
-
-        if (typeof fillSelect === 'function') {
-            fillSelect('evento_id', 'evento', 'evento_current');
-            fillSelect('sede_id', 'sede', 'sede_current');
-            fillSelect('estatus_id', 'estatus', 'estatus_current');
         }
 
         // Validación del formulario antes de enviar
-        formEventoAbierto.on('submit', function (event) {
-            const numero = $('#numero').val().trim();
-            const eventoId = $('#evento_id').val();
-            const sedeId = $('#sede_id').val();
-            const estatusId = $('#estatus_id').val();
-            const fechaInicio = $('#fecha_inicio').val().trim();
-            const fechaFin = $('#fecha_fin').val().trim();
-            const nombreCartaContent = nombreCartaEditor ? nombreCartaEditor.getData().trim() : ''; // Obtener contenido de CKEditor
+        formInscripcionMaestria.on('submit', function (event) {
+            const maestriaAbiertoId = $('#maestria_abierto_id').val();
+            const alumnoId = $('#alumno_id').val();
+            const estatusInscripcionId = $('#estatus_inscripcion_id').val();
 
-            if (numero === '' || !eventoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '' || nombreCartaContent === '') {
-                showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
+            if (!maestriaAbiertoId || !alumnoId || !estatusInscripcionId) {
+                // Usar showFlashMessage si está disponible, de lo contrario alert
+                if (typeof showFlashMessage === 'function') {
+                    showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
+                } else {
+                    showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
+                }
                 event.preventDefault(); // Detiene el envío del formulario
             }
+        });
+
+        setupAutocomplete('alumno_autocomplete', 'alumno_id', 'alumno', 3, {
+            displayColumn: 'CONCAT(primer_apellido, ", ", primer_nombre)'
         });
     }
 });

@@ -17,12 +17,11 @@ class DiplomadoControlController extends Controller
     }
 
     /**
-     * Vista principal del módulo. Muestra los diplomados abiertos y el estado de su control.
+     * Vista principal del módulo. La tabla se carga vía AJAX con DataTables server-side.
      */
     public function index(): void
     {
-        $diplomados = $this->controlModel->getDiplomadosAbiertosConControl();
-        $this->view('DiplomadoControl/list', ['diplomados' => $diplomados]);
+        $this->view('DiplomadoControl/list');
     }
 
     /**
@@ -33,11 +32,9 @@ class DiplomadoControlController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->processForm();
         } else {
-            $diplomadosAbiertos = $this->controlModel->getDiplomadosAbiertosDisponibles();
             $docentes = $this->controlModel->getDocentesActivos();
             
             $this->view('DiplomadoControl/form', [
-                'diplomadosAbiertos' => $diplomadosAbiertos,
                 'docentes' => $docentes,
                 'control_data' => [],
                 'is_edit' => false
@@ -61,13 +58,19 @@ class DiplomadoControlController extends Controller
 
             $docentes = $this->controlModel->getDocentesActivos();
             $controlesExistentes = $this->controlModel->getControlesPorDiplomadoAbierto($diplomadoAbiertoId);
+            $capitulosBase = $this->controlModel->getCapitulosPorDiplomado($diplomadoAbierto['diplomado_id']);
 
-            // Si por alguna razón no tiene controles aún, lo tratamos con su diplomado base para cargar vacíos
-            if (empty($controlesExistentes)) {
-                $capitulos = $this->controlModel->getCapitulosPorDiplomado($diplomadoAbierto['diplomado_id']);
-                $controlesExistentes = [];
-                foreach ($capitulos as $cap) {
-                    $controlesExistentes[] = [
+            $controlesIndexados = [];
+            foreach ($controlesExistentes as $ctrl) {
+                $controlesIndexados[$ctrl['capitulo_id']] = $ctrl;
+            }
+
+            $merged = [];
+            foreach ($capitulosBase as $cap) {
+                if (isset($controlesIndexados[$cap['id']])) {
+                    $merged[] = $controlesIndexados[$cap['id']];
+                } else {
+                    $merged[] = [
                         'capitulo_id' => $cap['id'],
                         'capitulo_numero' => $cap['numero'],
                         'capitulo_nombre' => $cap['nombre'],
@@ -82,7 +85,7 @@ class DiplomadoControlController extends Controller
             $this->view('DiplomadoControl/form', [
                 'diplomadoAbierto' => $diplomadoAbierto,
                 'docentes' => $docentes,
-                'controles' => $controlesExistentes,
+                'controles' => $merged,
                 'is_edit' => true
             ]);
         }
@@ -101,25 +104,28 @@ class DiplomadoControlController extends Controller
             return;
         }
 
-        // Estructura de recepción de capítulos
         $capitulosData = $_POST['capitulos'] ?? [];
 
         try {
-            // Iniciamos limpiando los registros existentes del diplomado abierto en cuestión si es actualización
-            $this->controlModel->deleteControlesPorDiplomadoAbierto($diplomadoAbiertoId);
-
             $successCount = 0;
             foreach ($capitulosData as $capituloId => $campos) {
+                $fecha = !empty($campos['fecha']) ? $this->sanitizeInput($campos['fecha']) : '';
+                $docenteId = !empty($campos['docente_id']) ? (int)$campos['docente_id'] : 0;
+
+                if (empty($fecha) && empty($docenteId)) {
+                    continue;
+                }
+
                 $data = [
                     'diplomado_abierto_id' => $diplomadoAbiertoId,
                     'capitulo_id' => (int)$capituloId,
-                    'docente_id' => !empty($campos['docente_id']) ? (int)$campos['docente_id'] : null,
-                    'fecha' => !empty($campos['fecha']) ? $this->sanitizeInput($campos['fecha']) : date('Y-m-d'),
+                    'docente_id' => $docenteId ?: null,
+                    'fecha' => $fecha ?: date('Y-m-d'),
                     'mensualidad' => !empty($campos['mensualidad']) ? (float)$campos['mensualidad'] : 0.0,
                     'generado' => !empty($campos['generado']) ? (int)$campos['generado'] : 1
                 ];
 
-                if ($this->controlModel->createControl($data)) {
+                if ($this->controlModel->upsertControl($data)) {
                     $successCount++;
                 }
             }
@@ -140,7 +146,8 @@ class DiplomadoControlController extends Controller
     }
 
     /**
-     * Endpoint AJAX para obtener los capítulos asociados a un Diplomado Abierto.
+     * Endpoint AJAX para obtener los capítulos o controles guardados de un Diplomado Abierto.
+     * Si existen registros en diplomado_control los retorna. Si no, retorna los capítulos base con valores por defecto.
      */
     public function getCapitulosAjax(): void
     {
@@ -164,8 +171,82 @@ class DiplomadoControlController extends Controller
             exit();
         }
 
+        // Primero verificar si ya existen controles guardados
+        $controles = $this->controlModel->getControlesPorDiplomadoAbierto($diplomadoAbiertoId);
+        
+        if (!empty($controles)) {
+            // Mapear para que el JS use 'id' como el id del capítulo, igual que en el caso base
+            $result = [];
+            foreach ($controles as $ctrl) {
+                $result[] = [
+                    'id' => $ctrl['capitulo_id'],
+                    'numero' => $ctrl['capitulo_numero'],
+                    'nombre' => $ctrl['capitulo_nombre'],
+                    'docente_id' => $ctrl['docente_id'],
+                    'fecha' => $ctrl['fecha'] ?? '',
+                    'mensualidad' => $ctrl['mensualidad'] ?? 0.0,
+                    'generado' => $ctrl['generado'] ?? 1
+                ];
+            }
+            echo json_encode($result);
+            exit();
+        }
+
+        // Si no hay controles, retornar los capítulos base con valores por defecto
         $capitulos = $this->controlModel->getCapitulosPorDiplomado($diplomadoAbierto['diplomado_id']);
-        echo json_encode($capitulos);
+        $result = [];
+        foreach ($capitulos as $cap) {
+            $result[] = [
+                'id' => $cap['id'],
+                'numero' => $cap['numero'],
+                'nombre' => $cap['nombre'],
+                'docente_id' => null,
+                'fecha' => '',
+                'mensualidad' => 0.0,
+                'generado' => 1
+            ];
+        }
+        echo json_encode($result);
         exit();
+    }
+
+    /**
+     * Endpoint AJAX para DataTables server-side del listado de diplomados control.
+     */
+    public function getDiplomadosData(): void
+    {
+        Auth::requireLogin();
+
+        if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+            header('HTTP/1.0 403 Forbidden');
+            echo json_encode(['error' => 'Acceso denegado.']);
+            exit();
+        }
+
+        header('Content-Type: application/json');
+
+        $draw = isset($_POST['draw']) ? (int)$_POST['draw'] : 1;
+        $start = isset($_POST['start']) ? (int)$_POST['start'] : 0;
+        $length = isset($_POST['length']) ? (int)$_POST['length'] : 10;
+        $search = $_POST['search']['value'] ?? '';
+        $order = $_POST['order'] ?? [];
+
+        $result = $this->controlModel->getDiplomadosDataTable($draw, $start, $length, $search, $order);
+
+        // Mapear a array indexado para DataTables
+        $data = [];
+        foreach ($result['data'] as $row) {
+            $data[] = [
+                $row['diplomado_abierto_id'],
+                $row['oferta_numero'],
+                $row['diplomado_nombre'],
+                $row['estatus_oferta'],
+                $row['total_controles'],
+                $row['controles_generados']
+            ];
+        }
+        $result['data'] = $data;
+
+        echo json_encode($result);
     }
 }

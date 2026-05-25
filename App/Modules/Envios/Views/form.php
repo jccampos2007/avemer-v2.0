@@ -42,7 +42,7 @@ $mensaje_val = htmlspecialchars($envios_data['mensaje'] ?? '');
 </div>
 
 <!-- JavaScript específico para este módulo -->
-<?php $page_js = 'js/modules/envios.js'; ?>
+<?php $page_js = 'asset/js/Envios/envios.js'; ?>
 
 <!-- CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
