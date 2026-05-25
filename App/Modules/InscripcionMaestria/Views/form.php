@@ -9,6 +9,7 @@ $page_title = ($is_edit) ? 'Editar Inscripción de Maestría' : 'Crear Nueva Ins
 
 // Datos para pre-llenar los selects y campos en JavaScript
 $maestria_abierto_id_val = $inscripcion_maestria_data['maestria_abierto_id'] ?? '';
+$maestria_abierto_nombre_val = htmlspecialchars($inscripcion_maestria_data['maestria_abierto_nombre'] ?? '');
 $alumno_id_val = $inscripcion_maestria_data['alumno_id'] ?? '';
 $alumno_nombre_current = $inscripcion_maestria_data['alumno_nombre_completo'] ?? '';
 $estatus_inscripcion_id_val = $inscripcion_maestria_data['estatus_inscripcion_id'] ?? '';
@@ -25,17 +26,15 @@ $estatus_inscripcion_id_val = $inscripcion_maestria_data['estatus_inscripcion_id
         <?php endif; ?>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div>
-                <label for="maestria_abierto_id" class="block text-gray-700 text-sm font-bold mb-2">Maestría Abierta:</label>
-                <select id="maestria_abierto_id" name="maestria_abierto_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    <option value="">Seleccione una Maestría Abierta</option>
-                </select>
-                <input type="hidden" name="maestria_abierto_current" id="maestria_abierto_current" value="<?php echo $maestria_abierto_id_val; ?>">
+            <div class="lg:col-span-2">
+                <label for="maestria_abierto_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Maestría Abierta:</label>
+                <input type="text" id="maestria_abierto_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar maestría abierta..." value="<?php echo $maestria_abierto_nombre_val; ?>" required>
+                <input type="hidden" name="maestria_abierto_id" id="maestria_abierto_id" value="<?php echo $maestria_abierto_id_val; ?>">
             </div>
 
             <div>
                 <label for="alumno_id" class="block text-gray-700 text-sm font-bold mb-2">Alumno:</label>
-                <input id="alumno_autocomplete" value="<?php echo $alumno_nombre_current; ?>" class="input-form focus:outline-none focus:shadow-outline">
+                <input id="alumno_autocomplete" value="<?php echo $alumno_nombre_current; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 <input type="hidden" id="alumno_id" name="alumno_id" value="<?php echo $alumno_id_val; ?>">
             </div>
 

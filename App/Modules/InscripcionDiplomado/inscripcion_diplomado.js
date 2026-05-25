@@ -139,8 +139,13 @@ $(document).ready(function () {
     if (formInscripcionDiplomado.length) {
         // Llenar selects con la función reusable 'fillSelect'
         if (typeof fillSelect === 'function') {
-            fillSelect('diplomado_abierto_id', 'diplomado_abierto', 'diplomado_abierto_current', 'numero');
             fillSelect('estatus_inscripcion_id', 'estatus_inscripcion', 'estatus_inscripcion_current');
+        }
+
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('diplomado_abierto_autocomplete', 'diplomado_abierto_id', 'diplomado_abierto', 3, {
+                displayColumn: "CONCAT(numero, ' - ', (SELECT nombre FROM diplomado WHERE id = diplomado_abierto.diplomado_id))"
+            });
         }
 
         setupAutocomplete('alumno_autocomplete', 'alumno_id', 'alumno', 3, {

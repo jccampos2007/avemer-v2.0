@@ -122,6 +122,17 @@ class DiplomadoAbiertoController extends Controller
                 $this->redirect('diplomado_abierto');
             }
 
+            $pdo = \App\Core\Database::getInstance()->getConnection();
+
+            $diplomadoNombre = '';
+            if (!empty($diplomado_abierto_data['diplomado_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(siglas, ' - ', nombre) AS texto FROM diplomado WHERE id = :id");
+                $stmt->execute(['id' => $diplomado_abierto_data['diplomado_id']]);
+                $row = $stmt->fetch();
+                $diplomadoNombre = $row['texto'] ?? '';
+            }
+            $diplomado_abierto_data['diplomado_nombre'] = $diplomadoNombre;
+
             // Obtener alumnos inscritos en este diplomado abierto
             $inscritos = $this->diplomadoAbiertoModel->getInscritos($id);
 

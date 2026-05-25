@@ -9,6 +9,7 @@ $page_title = $is_edit ? 'Editar Diplomado Abierto' : 'Crear Nuevo Diplomado Abi
 // Datos para pre-llenar los selects y campos en JavaScript
 $numero_val = htmlspecialchars($diplomado_abierto_data['numero'] ?? '');
 $diplomado_id_val = $diplomado_abierto_data['diplomado_id'] ?? '';
+$diplomado_nombre_val = htmlspecialchars($diplomado_abierto_data['diplomado_nombre'] ?? '');
 $sede_id_val = $diplomado_abierto_data['sede_id'] ?? '';
 $estatus_id_val = $diplomado_abierto_data['estatus_id'] ?? '';
 $fecha_inicio_val = htmlspecialchars($diplomado_abierto_data['fecha_inicio'] ?? '');
@@ -55,12 +56,9 @@ $nombre_carta_val = htmlspecialchars($diplomado_abierto_data['nombre_carta'] ?? 
                 </div>
 
                 <div>
-                    <label for="diplomado_id" class="block text-gray-700 text-sm font-bold mb-2">Diplomado:</label>
-                    <select id="diplomado_id" name="diplomado_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                        <option value="">Seleccione un Diplomado</option>
-                        <!-- Opciones se llenarán con JS -->
-                    </select>
-                    <input type="hidden" name="diplomado_current" id="diplomado_current" value="<?php echo $diplomado_id_val; ?>">
+                    <label for="diplomado_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Diplomado:</label>
+                    <input type="text" id="diplomado_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar diplomado..." value="<?php echo $diplomado_nombre_val; ?>" required>
+                    <input type="hidden" name="diplomado_id" id="diplomado_id" value="<?php echo $diplomado_id_val; ?>">
                 </div>
 
                 <div>

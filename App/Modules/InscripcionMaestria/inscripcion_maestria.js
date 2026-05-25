@@ -151,8 +151,13 @@ $(document).ready(function () {
     if (formInscripcionMaestria.length) {
         // Llenar selects con la función reusable 'fillSelect'
         if (typeof fillSelect === 'function') {
-            fillSelect('maestria_abierto_id', 'maestria_abierto', 'maestria_abierto_current', 'numero');
             fillSelect('estatus_inscripcion_id', 'estatus_inscripcion', 'estatus_inscripcion_current');
+        }
+
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('maestria_abierto_autocomplete', 'maestria_abierto_id', 'maestria_abierto', 3, {
+                displayColumn: "CONCAT(numero, ' - ', (SELECT nombre FROM maestria WHERE id = maestria_abierto.maestria_id))"
+            });
         }
 
         // Validación del formulario antes de enviar

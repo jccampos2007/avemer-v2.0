@@ -122,6 +122,18 @@ class InscripcionMaestriaController extends Controller
                 Auth::setFlashMessage('error', 'Registro de Inscripción de Maestría no encontrado.');
                 $this->redirect('inscripcion_maestria');
             }
+
+            $pdo = \App\Core\Database::getInstance()->getConnection();
+
+            $maestriaAbiertoNombre = '';
+            if (!empty($inscripcion_maestria_data['maestria_abierto_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(numero, ' - ', (SELECT nombre FROM maestria WHERE id = maestria_abierto.maestria_id)) AS texto FROM maestria_abierto WHERE id = :id");
+                $stmt->execute(['id' => $inscripcion_maestria_data['maestria_abierto_id']]);
+                $row = $stmt->fetch();
+                $maestriaAbiertoNombre = $row['texto'] ?? '';
+            }
+            $inscripcion_maestria_data['maestria_abierto_nombre'] = $maestriaAbiertoNombre;
+
             $this->view('InscripcionMaestria/form', ['inscripcion_maestria_data' => $inscripcion_maestria_data]);
         }
     }

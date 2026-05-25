@@ -15,21 +15,15 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <!-- Selección de Diplomado Abierto -->
                 <div class="md:col-span-2">
-                    <label for="diplomado_abierto_id" class="block text-gray-700 text-sm font-bold mb-2">Diplomado Abierto (Oferta):</label>
+                    <label for="diplomado_abierto_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Diplomado Abierto (Oferta):</label>
                     <?php if ($is_edit): ?>
                         <div class="p-3 bg-gray-50 border border-gray-200 rounded-md font-semibold text-gray-800">
                             <?php echo htmlspecialchars($diplomadoAbierto['diplomado_nombre'] . " [" . $diplomadoAbierto['numero'] . "]"); ?>
                         </div>
                         <input type="hidden" name="diplomado_abierto_id" id="diplomado_abierto_id" value="<?php echo $diplomadoAbierto['id']; ?>">
                     <?php else: ?>
-                        <select id="diplomado_abierto_id" name="diplomado_abierto_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-                            <option value="">Seleccione una oferta abierta...</option>
-                            <?php foreach ($diplomadosAbiertos as $dip): ?>
-                                <option value="<?php echo $dip['id']; ?>">
-                                    <?php echo htmlspecialchars($dip['diplomado_nombre'] . " [" . $dip['numero'] . "]"); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                        <input type="text" id="diplomado_abierto_autocomplete" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar oferta de diplomado..." required>
+                        <input type="hidden" name="diplomado_abierto_id" id="diplomado_abierto_id" value="">
                     <?php endif; ?>
                 </div>
 
@@ -37,14 +31,8 @@
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Asignación Masiva (Opcional):</label>
                     <div class="flex space-x-2">
-                        <select id="bulk_docente" class="w-1/2 px-3 py-2 border border-gray-200 rounded-md text-sm">
-                            <option value="">Elegir Instructor...</option>
-                            <?php foreach ($docentes as $doc): ?>
-                                <option value="<?php echo $doc['id']; ?>">
-                                    <?php echo htmlspecialchars($doc['primer_apellido'] . ", " . $doc['primer_nombre']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                        <input type="text" id="bulk_docente_autocomplete" class="w-1/2 px-3 py-2 border border-gray-200 rounded-md text-sm" placeholder="Elegir Instructor...">
+                        <input type="hidden" id="bulk_docente">
                         <input type="number" id="bulk_mensualidad" placeholder="Mensualidad" class="w-1/3 px-3 py-2 border border-gray-200 rounded-md text-sm" min="0">
                         <button type="button" id="btnApplyBulk" class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-md border transition">
                             Aplicar
@@ -57,7 +45,7 @@
             <div class="mt-8 border-t pt-6">
                 <h4 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                    Distribución de Capítulos, Docentes y Tarifas
+                    Distribución de Capítulos, Instructores y Tarifas
                 </h4>
 
                 <div class="overflow-x-auto">
@@ -80,7 +68,7 @@
                                             <span class="text-xs font-normal text-gray-500 block"><?php echo htmlspecialchars($ctrl['capitulo_nombre']); ?></span>
                                         </td>
                                         <td class="px-5 py-4 border-b border-gray-200 text-sm">
-                                            <input type="date" name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][fecha]" value="<?php echo $ctrl['fecha']; ?>" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                                            <input type="text" name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][fecha]" value="<?php echo $ctrl['fecha']; ?>" class="fecha-input px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">
                                         </td>
                                         <td class="px-5 py-4 border-b border-gray-200 text-sm">
                                             <select name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][docente_id]" class="docente-select px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none w-full">

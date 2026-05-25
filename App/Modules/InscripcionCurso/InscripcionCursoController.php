@@ -120,6 +120,18 @@ class InscripcionCursoController extends Controller
                 Auth::setFlashMessage('error', 'Registro de Inscripción de Curso no encontrado.');
                 $this->redirect('inscripcion_curso');
             }
+
+            $pdo = \App\Core\Database::getInstance()->getConnection();
+
+            $cursoAbiertoNombre = '';
+            if (!empty($inscripcion_curso_data['curso_abierto_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(numero, ' - ', (SELECT nombre FROM curso WHERE id = curso_abierto.curso_id)) AS texto FROM curso_abierto WHERE id = :id");
+                $stmt->execute(['id' => $inscripcion_curso_data['curso_abierto_id']]);
+                $row = $stmt->fetch();
+                $cursoAbiertoNombre = $row['texto'] ?? '';
+            }
+            $inscripcion_curso_data['curso_abierto_nombre'] = $cursoAbiertoNombre;
+
             $this->view('InscripcionCurso/form', ['inscripcion_curso_data' => $inscripcion_curso_data]);
         }
     }

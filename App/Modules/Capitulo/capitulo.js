@@ -6,8 +6,7 @@ $(document).ready(function () {
     // Lógica para la vista de LISTADO (DataTables)
     // ---------------------------------------------------
     const capituloTable = $('#capituloTable');
-    const diplomadoFilterSelect = $('#diplomado_filter_id'); // El select para filtrar diplomados
-    const createCapituloBtn = $('#createCapituloBtn'); // Botón para crear nuevo capítulo
+    const createCapituloBtn = $('#createCapituloBtn');
 
     let dataTableInstance = null; // Variable para almacenar la instancia de DataTables
 
@@ -127,26 +126,42 @@ $(document).ready(function () {
         });
     }
 
-    // Llenar el select de diplomados y manejar el filtro
+    if ($('#diplomado_filter_autocomplete').length) {
+        setupAutocomplete('diplomado_filter_autocomplete', 'diplomado_filter_id', 'diplomado', 3, {
+            displayColumn: "CONCAT(siglas, ' - ', nombre)"
+        });
 
-    if (diplomadoFilterSelect.length && typeof fillSelect === 'function') {
-        const urlParams = new URLSearchParams(window.location.search);
-        const initialDiplomadoId = urlParams.get('diplomado_id');
+        var urlParams = new URLSearchParams(window.location.search);
+        var initialDiplomadoId = urlParams.get('diplomado_id');
+        if (initialDiplomadoId) {
+            $.ajax({
+                url: BASE_URL_JS + 'api/search/diplomado',
+                dataType: "json",
+                data: { term: initialDiplomadoId, displayColumn: "CONCAT(siglas, ' - ', nombre)" },
+                success: function (data) {
+                    if (data && data.length > 0) {
+                        $('#diplomado_filter_autocomplete').val(data[0].label);
+                        $('#diplomado_filter_id').val(initialDiplomadoId);
+                        initializeCapituloDataTable(initialDiplomadoId);
+                    }
+                }
+            });
+        }
 
-        fillSelect('diplomado_filter_id', 'diplomado', initialDiplomadoId);
-
-        diplomadoFilterSelect.on('change', function () {
-            const selectedDiplomadoId = $(this).val();
-            initializeCapituloDataTable(selectedDiplomadoId);
-
-            // Actualizar la URL para reflejar el filtro (opcional, para compartir enlaces)
-            const newUrl = new URL(window.location.href);
-            if (selectedDiplomadoId) {
-                newUrl.searchParams.set('diplomado_id', selectedDiplomadoId);
-            } else {
-                newUrl.searchParams.delete('diplomado_id');
-            }
+        $('#diplomado_filter_autocomplete').on('autocompleteselect', function (event, ui) {
+            initializeCapituloDataTable(ui.item.id);
+            var newUrl = new URL(window.location.href);
+            newUrl.searchParams.set('diplomado_id', ui.item.id);
             window.history.pushState({ path: newUrl.href }, '', newUrl.href);
+        });
+
+        $('#diplomado_filter_autocomplete').on('autocompletechange', function (event, ui) {
+            if (!ui.item) {
+                initializeCapituloDataTable(null);
+                var newUrl = new URL(window.location.href);
+                newUrl.searchParams.delete('diplomado_id');
+                window.history.pushState({ path: newUrl.href }, '', newUrl.href);
+            }
         });
     }
 

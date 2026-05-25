@@ -172,9 +172,14 @@ $(document).ready(function () {
 
         // Llenar selects con la función reusable 'fillSelect'
         if (typeof fillSelect === 'function') {
-            fillSelect('diplomado_id', 'diplomado', 'diplomado_current');
             fillSelect('sede_id', 'sede', 'sede_current');
             fillSelect('estatus_id', 'estatus', 'estatus_current');
+        }
+
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('diplomado_autocomplete', 'diplomado_id', 'diplomado', 3, {
+                displayColumn: "CONCAT(siglas, ' - ', nombre)"
+            });
         }
 
         // Validación del formulario antes de enviar

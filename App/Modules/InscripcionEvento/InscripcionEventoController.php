@@ -120,6 +120,18 @@ class InscripcionEventoController extends Controller
                 Auth::setFlashMessage('error', 'Registro de Inscripción de Evento no encontrado.');
                 $this->redirect('inscripcion_evento');
             }
+
+            $pdo = \App\Core\Database::getInstance()->getConnection();
+
+            $eventoAbiertoNombre = '';
+            if (!empty($inscripcion_evento_data['evento_abierto_id'])) {
+                $stmt = $pdo->prepare("SELECT CONCAT(numero, ' - ', (SELECT nombre FROM evento WHERE id = evento_abierto.evento_id)) AS texto FROM evento_abierto WHERE id = :id");
+                $stmt->execute(['id' => $inscripcion_evento_data['evento_abierto_id']]);
+                $row = $stmt->fetch();
+                $eventoAbiertoNombre = $row['texto'] ?? '';
+            }
+            $inscripcion_evento_data['evento_abierto_nombre'] = $eventoAbiertoNombre;
+
             $this->view('InscripcionEvento/form', ['inscripcion_evento_data' => $inscripcion_evento_data]);
         }
     }

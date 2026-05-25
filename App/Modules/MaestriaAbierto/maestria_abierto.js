@@ -178,10 +178,17 @@ $(document).ready(function () {
 
         // Llenar selects con la función reusable 'fillSelect'
         if (typeof fillSelect === 'function') {
-            fillSelect('maestria_id', 'maestria', 'maestria_current');
             fillSelect('sede_id', 'sede', 'sede_current');
             fillSelect('estatus_id', 'estatus', 'estatus_current');
-            fillSelect('docente_id', 'docente', 'docente_current', 'CONCAT(primer_apellido, ", ", primer_nombre)');
+        }
+
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('maestria_autocomplete', 'maestria_id', 'maestria', 3, {
+                displayColumn: "CONCAT(numero, ' - ', nombre)"
+            });
+            setupAutocomplete('docente_autocomplete', 'docente_id', 'docente', 3, {
+                displayColumn: "CONCAT(primer_apellido, ', ', primer_nombre)"
+            });
         }
 
         // Validación del formulario antes de enviar

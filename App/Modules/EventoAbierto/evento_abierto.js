@@ -19,7 +19,7 @@ $(document).ready(function () {
                     className: 'buttons-excel',
                     title: 'Listado de Eventos Abiertos',
                     exportOptions: {
-                        columns: [1, 2, 3, 4] // Exportar únicamente Número, Evento, Sede y Estatus
+                        columns: [1, 2, 3, 4, 5] // Exportar Número, Evento, Sede, Estatus y Docente
                     },
                     action: newExportAction
                 },
@@ -29,7 +29,7 @@ $(document).ready(function () {
                     className: 'buttons-pdf',
                     title: 'Listado de Eventos Abiertos',
                     exportOptions: {
-                        columns: [1, 2, 3, 4] // Exportar únicamente Número, Evento, Sede y Estatus
+                        columns: [1, 2, 3, 4, 5] // Exportar Número, Evento, Sede, Estatus y Docente
                     },
                     action: newExportAction,
                     customize: function (doc) {
@@ -59,6 +59,7 @@ $(document).ready(function () {
                 { "data": 2 }, // Evento (nombre)
                 { "data": 3 }, // Sede (nombre)
                 { "data": 4 }, // Estatus (nombre)
+                { "data": 5 }, // Docente (nombre)
                 { // Columna de Acciones
                     "data": null,
                     "orderable": false,
@@ -176,9 +177,17 @@ $(document).ready(function () {
             });
 
         if (typeof fillSelect === 'function') {
-            fillSelect('evento_id', 'evento', 'evento_current');
             fillSelect('sede_id', 'sede', 'sede_current');
             fillSelect('estatus_id', 'estatus', 'estatus_current');
+        }
+
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('evento_autocomplete', 'evento_id', 'evento', 3, {
+                displayColumn: "CONCAT(siglas, ' - ', nombre)"
+            });
+            setupAutocomplete('docente_autocomplete', 'docente_id', 'docente', 3, {
+                displayColumn: "CONCAT(primer_apellido, ', ', primer_nombre)"
+            });
         }
 
         // Validación del formulario antes de enviar

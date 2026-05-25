@@ -1,12 +1,12 @@
 <?php
-// php_mvc_app/app/Modules/Coordinadores/list.php
+// php_mvc_app/app/Modules/Capitulo/list.php
 // Se espera la variable $coordinadores (ya no se usa directamente para renderizar la tabla)
 ?>
 
 
 <div class="flex flex-col md:flex-row md:items-center md:justify-between bg-white p-6 rounded-lg shadow-sm border border-gray-150 mb-6">
     <div>
-        <h2 class="text-2xl font-bold text-gray-800">Gestión de Coordinadores</h2>
+        <h2 class="text-2xl font-bold text-gray-800">Gestión de Capítulos</h2>
         <p class="text-sm text-gray-500 mt-1">Gestión y listado de registros.</p>
     </div>
         <div class="mt-4 md:mt-0">
@@ -18,20 +18,14 @@
 </div>
 
 
-<div class="mb-4 flex justify-between items-center">
-    <div class="max-w-2/3 pr-4">
-        <label for="diplomado_filter_id" class="block text-gray-700 text-sm font-bold mb-2">Seleccionar Diplomado:</label>
-        <select id="diplomado_filter_id" name="diplomado_filter_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            <option value="">-- Seleccione un Diplomado --</option>
-            <!-- Opciones se llenarán con JS -->
-        </select>
-    </div>
-    
-</div>
-
 <div class="bg-white shadow-md rounded-lg overflow-hidden p-4">
     <div class="p-4 border-b border-gray-100 bg-gray-50/50 mb-4">
-        <h3 class="text-lg font-bold text-gray-700">Gestión de Coordinadores</h3>
+        <h3 class="text-lg font-bold text-gray-700">Gestión de Capítulos</h3>
+    </div>
+    <div class="mb-4 px-4">
+        <label for="diplomado_filter_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Seleccionar Diplomado:</label>
+        <input type="text" id="diplomado_filter_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar diplomado...">
+        <input type="hidden" id="diplomado_filter_id" name="diplomado_filter_id" value="">
     </div>
     <table id="capituloTable" class="min-w-full leading-normal display responsive nowrap" style="width:100%">
         <thead>

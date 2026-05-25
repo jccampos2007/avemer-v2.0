@@ -139,8 +139,13 @@ $(document).ready(function () {
     if (formInscripcionCurso.length) {
         // Llenar selects con la función reusable 'fillSelect'
         if (typeof fillSelect === 'function') {
-            fillSelect('curso_abierto_id', 'curso_abierto', 'curso_abierto_current', 'CONCAT(numero)', 'estatus_id'); // TODO select con union de Tabla
             fillSelect('estatus_inscripcion_id', 'estatus_inscripcion', 'estatus_inscripcion_current');
+        }
+
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('curso_abierto_autocomplete', 'curso_abierto_id', 'curso_abierto', 3, {
+                displayColumn: "CONCAT(numero, ' - ', (SELECT nombre FROM curso WHERE id = curso_abierto.curso_id))"
+            });
         }
 
         // Validación del formulario antes de enviar

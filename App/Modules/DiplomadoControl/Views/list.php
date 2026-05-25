@@ -1,7 +1,7 @@
 <div class="flex flex-col md:flex-row md:items-center md:justify-between bg-white p-6 rounded-lg shadow-sm border border-gray-150 mb-6">
     <div>
         <h2 class="text-2xl font-bold text-gray-800">Control de Diplomados</h2>
-        <p class="text-sm text-gray-500 mt-1">Gestión y control de capítulos, docentes y mensualidades asignadas a las ofertas de diplomados.</p>
+        <p class="text-sm text-gray-500 mt-1">Gestión y control de capítulos, instructores y mensualidades asignadas a las ofertas de diplomados.</p>
     </div>
     <div class="mt-4 md:mt-0">
         <a href="<?php echo BASE_URL; ?>diplomadocontrol/create" class="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow transition duration-150">

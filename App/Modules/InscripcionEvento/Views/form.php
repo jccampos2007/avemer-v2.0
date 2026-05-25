@@ -9,8 +9,8 @@ $page_title = ($is_edit) ? 'Editar Inscripción' : 'Crear Nueva Inscripción';
 
 // Datos para pre-llenar los selects y campos en JavaScript
 $evento_abierto_id_val = $inscripcion_evento_data['evento_abierto_id'] ?? '';
+$evento_abierto_nombre_val = htmlspecialchars($inscripcion_evento_data['evento_abierto_nombre'] ?? '');
 $alumno_id_val = $inscripcion_evento_data['alumno_id'] ?? '';
-$estatus_inscripcion_id_val = $inscripcion_evento_data['estatus_inscripcion_id'] ?? '';
 $estatus_inscripcion_id_val = $inscripcion_evento_data['estatus_inscripcion_id'] ?? '';
 $alumno_nombre_current = $inscripcion_evento_data['alumno_nombre_completo'] ?? '';
 ?>
@@ -22,29 +22,24 @@ $alumno_nombre_current = $inscripcion_evento_data['alumno_nombre_completo'] ?? '
         <?php endif; ?>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div>
-                <label for="evento_abierto_id" class="label-form">Evento Abierto:</label>
-                <select id="evento_abierto_id" name="evento_abierto_id" class="input-form focus:outline-none focus:shadow-outline" required>
-                    <option value="">Seleccione un Evento Abierto</option>
-                    <!-- Opciones se llenarán con JS -->
-                </select>
-                <!-- Campo oculto para pasar el valor actual al JS para pre-selección -->
-                <input type="hidden" name="evento_abierto_current" id="evento_abierto_current" value="<?php echo $evento_abierto_id_val; ?>">
+            <div class="lg:col-span-2">
+                <label for="evento_abierto_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Evento Abierto:</label>
+                <input type="text" id="evento_abierto_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar evento abierto..." value="<?php echo $evento_abierto_nombre_val; ?>" required>
+                <input type="hidden" name="evento_abierto_id" id="evento_abierto_id" value="<?php echo $evento_abierto_id_val; ?>">
             </div>
 
             <div>
-                <label for="alumno_id" class="label-form">Alumno:</label>
-                <input id="alumno_autocomplete" value="<?php echo $alumno_nombre_current; ?>" class="input-form focus:outline-none focus:shadow-outline">
+                <label for="alumno_id" class="block text-gray-700 text-sm font-bold mb-2">Alumno:</label>
+                <input id="alumno_autocomplete" value="<?php echo $alumno_nombre_current; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 <input type="hidden" id="alumno_id" name="alumno_id" value="<?php echo $alumno_id_val; ?>">
             </div>
 
             <div>
-                <label for="estatus_inscripcion_id" class="label-form">Estatus de Inscripción:</label>
-                <select id="estatus_inscripcion_id" name="estatus_inscripcion_id" class="input-form focus:outline-none focus:shadow-outline" required>
+                <label for="estatus_inscripcion_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus de Inscripción:</label>
+                <select id="estatus_inscripcion_id" name="estatus_inscripcion_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                     <option value="">Seleccione un Estatus</option>
                     <!-- Opciones se llenarán con JS -->
                 </select>
-                <!-- Campo oculto para pasar el valor actual al JS para pre-selección -->
                 <input type="hidden" name="estatus_inscripcion_current" id="estatus_inscripcion_current" value="<?php echo $estatus_inscripcion_id_val; ?>">
             </div>
         </div>

@@ -17,11 +17,18 @@ $(document).ready(function () {
             flatpickr.localize(flatpickr.l10ns.es);
         }
 
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('curso_autocomplete', 'curso_id', 'curso', 3, {
+                displayColumn: "CONCAT(numero, ' - ', nombre)"
+            });
+            setupAutocomplete('docente_autocomplete', 'docente_id', 'docente', 3, {
+                displayColumn: "CONCAT(primer_apellido, ', ', primer_nombre)"
+            });
+        }
+
         if (typeof fillSelect === 'function') {
-            fillSelect('curso_id', 'curso', 'curso_current');
             fillSelect('sede_id', 'sede', 'sede_current');
             fillSelect('estatus_id', 'estatus', 'estatus_current');
-            fillSelect('docente_id', 'docente', 'docente_current', 'CONCAT(primer_apellido, \', \', primer_nombre)', 'estatus_activo_id');
         }
 
         // Inicializar CKEditor para el campo nombre_carta

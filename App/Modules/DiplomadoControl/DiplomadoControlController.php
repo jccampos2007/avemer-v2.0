@@ -32,11 +32,9 @@ class DiplomadoControlController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->processForm();
         } else {
-            $diplomadosAbiertos = $this->controlModel->getDiplomadosAbiertosDisponibles();
             $docentes = $this->controlModel->getDocentesActivos();
             
             $this->view('DiplomadoControl/form', [
-                'diplomadosAbiertos' => $diplomadosAbiertos,
                 'docentes' => $docentes,
                 'control_data' => [],
                 'is_edit' => false

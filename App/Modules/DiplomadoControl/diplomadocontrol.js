@@ -3,98 +3,141 @@ $(document).ready(function () {
     console.log("diplomadocontrol.js cargado.");
 
     if ($('#formDiplomadoControl').length) {
-        var $diplomadoSelect = $('#diplomado_abierto_id');
+        var $diplomadoAbiertoAutocomplete = $('#diplomado_abierto_autocomplete');
         var $tbody = $('#tbodyCapitulos');
         var $bulkDocente = $('#bulk_docente');
         var $bulkMensualidad = $('#bulk_mensualidad');
         var $btnApplyBulk = $('#btnApplyBulk');
 
-        if ($diplomadoSelect.length) {
-            $diplomadoSelect.on('change', function () {
-                var id = $(this).val();
-                if (!id) {
-                    $tbody.html('\n\
-                        <tr id="rowPlaceholder">\n\
-                            <td colspan="5" class="px-5 py-8 text-center text-gray-500">\n\
-                                Por favor, seleccione una oferta de diplomado abierto arriba para desplegar sus cap\u00edtulos asociados.\n\
-                            </td>\n\
-                        </tr>\n\
-                    ');
-                    return;
-                }
+        function loadCapitulos(diplomadoAbiertoId) {
+            if (!diplomadoAbiertoId) {
+                $tbody.html('\
+                    <tr id="rowPlaceholder">\
+                        <td colspan="5" class="px-5 py-8 text-center text-gray-500">\
+                            Por favor, seleccione una oferta de diplomado abierto arriba para desplegar sus cap\u00edtulos asociados.\
+                        </td>\
+                    </tr>\
+                ');
+                return;
+            }
 
-                $.ajax({
-                    url: BASE_URL_JS + 'diplomadocontrol/getCapitulosAjax?diplomado_abierto_id=' + id,
-                    method: 'GET',
-                    dataType: 'json',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                    success: function (capitulos) {
-                        if (capitulos.length === 0) {
-                            $tbody.html('\n\
-                                <tr>\n\
-                                    <td colspan="5" class="px-5 py-8 text-center text-amber-600 font-semibold">\n\
-                                        Este diplomado no posee cap\u00edtulos asociados o cargados en la base de datos base.\n\
-                                    </td>\n\
-                                </tr>\n\
-                            ');
-                            return;
+            $.ajax({
+                url: BASE_URL_JS + 'diplomadocontrol/getCapitulosAjax?diplomado_abierto_id=' + diplomadoAbiertoId,
+                method: 'GET',
+                dataType: 'json',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                success: function (capitulos) {
+                    if (capitulos.length === 0) {
+                        $tbody.html('\
+                            <tr>\
+                                <td colspan="5" class="px-5 py-8 text-center text-amber-600 font-semibold">\
+                                    Este diplomado no posee cap\u00edtulos asociados o cargados en la base de datos base.\
+                                </td>\
+                            </tr>\
+                        ');
+                        return;
+                    }
+
+                    $tbody.empty();
+                    var today = new Date().toISOString().split('T')[0];
+
+                    $.each(capitulos, function (i, cap) {
+                        var docenteOptions = '<option value="">Seleccione...</option>';
+                        $.each(docentesList, function (j, doc) {
+                            docenteOptions += '<option value="' + doc.id + '">' + doc.primer_apellido + ', ' + doc.primer_nombre + '</option>';
+                        });
+
+                        var selectedDocente = cap.docente_id || '';
+                        if (selectedDocente) {
+                            docenteOptions = docenteOptions.replace(
+                                'value="' + selectedDocente + '"',
+                                'value="' + selectedDocente + '" selected'
+                            );
                         }
 
-                        $tbody.empty();
-                        var today = new Date().toISOString().split('T')[0];
+                        var fechaVal = cap.fecha || '';
+                        var mensualidadVal = cap.mensualidad !== undefined ? parseFloat(cap.mensualidad).toFixed(2) : '0.00';
+                        var generadoVal = cap.generado || 1;
 
-                        $.each(capitulos, function (i, cap) {
-                            var docenteOptions = '<option value="">Seleccione...</option>';
-                            $.each(docentesList, function (j, doc) {
-                                docenteOptions += '<option value="' + doc.id + '">' + doc.primer_apellido + ', ' + doc.primer_nombre + '</option>';
+                        var tr = '\
+                            <tr class="hover:bg-gray-50/50 transition">\
+                                <td class="px-5 py-4 border-b border-gray-200 text-sm font-semibold text-gray-800">\
+                                    Cap\u00edtulo ' + cap.numero + ':\
+                                    <span class="text-xs font-normal text-gray-500 block">' + cap.nombre + '</span>\
+                                </td>\
+                                <td class="px-5 py-4 border-b border-gray-200 text-sm">\
+                                    <input type="text" name="capitulos[' + cap.id + '][fecha]" value="' + fechaVal + '" class="fecha-input px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">\
+                                </td>\
+                                <td class="px-5 py-4 border-b border-gray-200 text-sm">\
+                                    <select name="capitulos[' + cap.id + '][docente_id]" class="docente-select px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none w-full">\
+                                        ' + docenteOptions + '\
+                                    </select>\
+                                </td>\
+                                <td class="px-5 py-4 border-b border-gray-200 text-sm">\
+                                    <div class="relative rounded-md shadow-sm max-w-[120px]">\
+                                        <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">\
+                                            <span class="text-gray-500 text-xs">$</span>\
+                                        </div>\
+                                        <input type="number" step="0.01" name="capitulos[' + cap.id + '][mensualidad]" value="' + mensualidadVal + '" class="mensualidad-input pl-5 pr-2 py-1.5 w-full border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" min="0">\
+                                    </div>\
+                                </td>\
+                                <td class="px-5 py-4 border-b border-gray-200 text-sm">\
+                                    <select name="capitulos[' + cap.id + '][generado]" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">\
+                                        <option value="1"' + (generadoVal == 1 ? ' selected' : '') + '>Pendiente</option>\
+                                        <option value="2"' + (generadoVal == 2 ? ' selected' : '') + '>Generado</option>\
+                                    </select>\
+                                </td>\
+                            </tr>\
+                        ';
+                        $tbody.append(tr);
+                    });
+
+                    if (typeof flatpickr !== 'undefined') {
+                        $tbody.find('.fecha-input').each(function () {
+                            flatpickr(this, {
+                                dateFormat: "Y-m-d",
+                                altInput: true,
+                                altFormat: "d F, Y",
+                                locale: "es",
                             });
-
-                            var selectedDocente = cap.docente_id || '';
-                            if (selectedDocente) {
-                                docenteOptions = docenteOptions.replace(
-                                    'value="' + selectedDocente + '"',
-                                    'value="' + selectedDocente + '" selected'
-                                );
-                            }
-
-                            var fechaVal = cap.fecha || '';
-                            var mensualidadVal = cap.mensualidad !== undefined ? parseFloat(cap.mensualidad).toFixed(2) : '0.00';
-                            var generadoVal = cap.generado || 1;
-
-                            var tr = '\n\
-                                <tr class="hover:bg-gray-50/50 transition">\n\
-                                    <td class="px-5 py-4 border-b border-gray-200 text-sm font-semibold text-gray-800">\n\
-                                        Cap\u00edtulo ' + cap.numero + ':\n\
-                                        <span class="text-xs font-normal text-gray-500 block">' + cap.nombre + '</span>\n\
-                                    </td>\n\
-                                    <td class="px-5 py-4 border-b border-gray-200 text-sm">\n\
-                                        <input type="date" name="capitulos[' + cap.id + '][fecha]" value="' + fechaVal + '" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">\n\
-                                    </td>\n\
-                                    <td class="px-5 py-4 border-b border-gray-200 text-sm">\n\
-                                        <select name="capitulos[' + cap.id + '][docente_id]" class="docente-select px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none w-full">\n\
-                                            ' + docenteOptions + '\n\
-                                        </select>\n\
-                                    </td>\n\
-                                    <td class="px-5 py-4 border-b border-gray-200 text-sm">\n\
-                                        <div class="relative rounded-md shadow-sm max-w-[120px]">\n\
-                                            <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">\n\
-                                                <span class="text-gray-500 text-xs">$</span>\n\
-                                            </div>\n\
-                                            <input type="number" step="0.01" name="capitulos[' + cap.id + '][mensualidad]" value="' + mensualidadVal + '" class="mensualidad-input pl-5 pr-2 py-1.5 w-full border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" min="0">\n\
-                                        </div>\n\
-                                    </td>\n\
-                                    <td class="px-5 py-4 border-b border-gray-200 text-sm">\n\
-                                        <select name="capitulos[' + cap.id + '][generado]" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">\n\
-                                            <option value="1"' + (generadoVal == 1 ? ' selected' : '') + '>Pendiente</option>\n\
-                                            <option value="2"' + (generadoVal == 2 ? ' selected' : '') + '>Generado</option>\n\
-                                        </select>\n\
-                                    </td>\n\
-                                </tr>\n\
-                            ';
-                            $tbody.append(tr);
                         });
+                        flatpickr.localize(flatpickr.l10ns.es);
                     }
+                }
+            });
+        }
+
+        if ($diplomadoAbiertoAutocomplete.length) {
+            setupAutocomplete('diplomado_abierto_autocomplete', 'diplomado_abierto_id', 'diplomado_abierto', 3, {
+                displayColumn: "CONCAT(numero, ' - ', (SELECT nombre FROM diplomado WHERE id = diplomado_abierto.diplomado_id))"
+            });
+
+            $('#diplomado_abierto_autocomplete').on('autocompleteselect', function (event, ui) {
+                loadCapitulos(ui.item.id);
+            });
+
+            $('#diplomado_abierto_autocomplete').on('autocompletechange', function (event, ui) {
+                if (!ui.item) {
+                    loadCapitulos(null);
+                }
+            });
+        }
+
+        if (typeof flatpickr !== 'undefined') {
+            $('.fecha-input').each(function () {
+                flatpickr(this, {
+                    dateFormat: "Y-m-d",
+                    altInput: true,
+                    altFormat: "d F, Y",
+                    locale: "es",
                 });
+            });
+            flatpickr.localize(flatpickr.l10ns.es);
+        }
+
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('bulk_docente_autocomplete', 'bulk_docente', 'docente', 3, {
+                displayColumn: "CONCAT(primer_apellido, ', ', primer_nombre)"
             });
         }
 

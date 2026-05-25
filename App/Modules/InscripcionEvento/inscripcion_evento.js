@@ -139,8 +139,13 @@ $(document).ready(function () {
     if (formInscripcionEvento.length) {
         // Llenar selects con la función reusable 'fillSelect'
         if (typeof fillSelect === 'function') {
-            fillSelect('evento_abierto_id', 'evento_abierto', 'evento_abierto_current', 'CONCAT(numero)', 'estatus_id'); // TODO select con union de Tabla
             fillSelect('estatus_inscripcion_id', 'estatus_inscripcion', 'estatus_inscripcion_current');
+        }
+
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('evento_abierto_autocomplete', 'evento_abierto_id', 'evento_abierto', 3, {
+                displayColumn: "CONCAT(numero, ' - ', (SELECT nombre FROM evento WHERE id = evento_abierto.evento_id))"
+            });
         }
 
         // Validación del formulario antes de enviar

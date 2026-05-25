@@ -18,11 +18,9 @@ $is_edit = isset($curso_abierto_data['id']) && !empty($curso_abierto_data['id'])
                     <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($curso_abierto_data['numero'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                 </div>
                 <div>
-                    <label for="curso_id" class="block text-gray-700 text-sm font-bold mb-2">Taller / Curso:</label>
-                    <select id="curso_id" name="curso_id" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-                        <option value="">Seleccione un Curso</option>
-                    </select>
-                    <input type="hidden" name="curso_current" id="curso_current" value="<?php echo $curso_abierto_data['curso_id'] ?? ''; ?>">
+                    <label for="curso_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Taller / Curso:</label>
+                    <input type="text" id="curso_autocomplete" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar por número o nombre..." value="<?php echo htmlspecialchars($curso_abierto_data['curso_nombre'] ?? ''); ?>" required>
+                    <input type="hidden" name="curso_id" id="curso_id" value="<?php echo $curso_abierto_data['curso_id'] ?? ''; ?>">
                 </div>
                 <div>
                     <label for="sede_id" class="block text-gray-700 text-sm font-bold mb-2">Sede:</label>
@@ -39,11 +37,9 @@ $is_edit = isset($curso_abierto_data['id']) && !empty($curso_abierto_data['id'])
                     <input type="hidden" name="estatus_current" id="estatus_current" value="<?php echo $curso_abierto_data['estatus_id'] ?? ''; ?>">
                 </div>
                 <div>
-                    <label for="docente_id" class="block text-gray-700 text-sm font-bold mb-2">Docente/Coordinador:</label>
-                    <select id="docente_id" name="docente_id" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-                        <option value="">Seleccione un Docente/Coordinador</option>
-                    </select>
-                    <input type="hidden" name="docente_current" id="docente_current" value="<?php echo $curso_abierto_data['docente_id'] ?? ''; ?>">
+                    <label for="docente_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Instructor:</label>
+                    <input type="text" id="docente_autocomplete" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar instructor..." value="<?php echo htmlspecialchars($curso_abierto_data['docente_nombre'] ?? ''); ?>" required>
+                    <input type="hidden" name="docente_id" id="docente_id" value="<?php echo $curso_abierto_data['docente_id'] ?? ''; ?>">
                 </div>
                 <div>
                     <label for="fecha" class="block text-gray-700 text-sm font-bold mb-2">Fecha:</label>
