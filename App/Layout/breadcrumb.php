@@ -43,8 +43,11 @@ function generateBreadcrumbs(): array
     ];
 
     $currentUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-    $baseUrlPath = parse_url(BASE_URL, PHP_URL_PATH);
-    $relativeUri = str_replace($baseUrlPath, '', $currentUri);
+    $baseUrlPath = rtrim(parse_url(BASE_URL, PHP_URL_PATH), '/');
+    $relativeUri = $currentUri;
+    if ($baseUrlPath !== '' && strpos($currentUri, $baseUrlPath) === 0) {
+        $relativeUri = substr($currentUri, strlen($baseUrlPath));
+    }
     $relativeUri = trim($relativeUri, '/');
     $segments = explode('/', $relativeUri);
     $module = $segments[0] ?? '';
