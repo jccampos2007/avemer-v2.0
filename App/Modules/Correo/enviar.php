@@ -13,7 +13,7 @@ function correo($titulo, $msj, $correo) {
         $mail->Host       = 'mail.privateemail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'info@grupoavemer.net';
-        $mail->Password   = 'Avemer*g2026';
+        $mail->Password   = 'Grupo2026Avemer..';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
