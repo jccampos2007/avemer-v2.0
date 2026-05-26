@@ -26,6 +26,7 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
         </div>
 
         <form id="form_docentes" action="<?php echo $form_action; ?>" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
             <div id="form_collapsible_wrapper" class="grid transition-all duration-300" style="grid-template-rows: 1fr;">
                 <div id="form_collapsible_content" class="min-h-0" style="overflow: visible;">
             

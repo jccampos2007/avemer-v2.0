@@ -100,6 +100,7 @@ class DiplomadoController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $diplomado_data = []; // Datos vacíos para el formulario
@@ -115,6 +116,7 @@ class DiplomadoController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $diplomado_data = $this->diplomadoModel->getById($id);

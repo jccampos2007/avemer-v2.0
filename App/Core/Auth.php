@@ -14,6 +14,7 @@ class Auth
         $user = $userModel->findByUsername($username);
 
         if ($user && password_verify($password, $user['usuario_pws'])) {
+            session_regenerate_id(true);
             $_SESSION['user_id'] = $user['usuario_id'];
             $_SESSION['username'] = $user['usuario_user'];
             $_SESSION['user_name'] = $user['usuario_nombre'];
@@ -95,6 +96,19 @@ class Auth
             header('Location: ' . BASE_URL . 'login');
             exit();
         }
+    }
+
+    public static function generateCsrfToken(): string
+    {
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['csrf_token'];
+    }
+
+    public static function validateCsrfToken(string $token): bool
+    {
+        return hash_equals($_SESSION['csrf_token'] ?? '', $token);
     }
 
     public static function setFlashMessage(string $type, string $message): void

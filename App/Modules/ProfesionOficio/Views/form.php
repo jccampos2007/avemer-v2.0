@@ -5,6 +5,7 @@ $is_edit = isset($profesion_data['id']) && !empty($profesion_data['id']);
 <div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Profesión u Oficio' : 'Crear Nueva Profesión u Oficio'; ?></h3>
     <form id="form_profesion" action="<?php echo BASE_URL; ?>profesion_oficio/<?php echo ($is_edit) ? 'update/' . htmlspecialchars($profesion_data['id']) : 'store'; ?>" method="POST">
+        <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
                 <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre de la Profesión u Oficio:</label>

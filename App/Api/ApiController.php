@@ -22,8 +22,11 @@ class ApiController
         header('Content-Type: application/json');
 
         $displayColumn = $_GET['displayColumn'] ?? 'nombre';
-        $requestedStatusFilterColumn = $_GET['statusFilter'] ?? null;
-        $where = $requestedStatusFilterColumn ? "WHERE {$_GET['statusFilter']} = '1'" : '';
+        $allowedStatusColumns = ['estatus_activo_id', 'estatus_id'];
+        $statusFilterCol = $_GET['statusFilter'] ?? '';
+        $where = in_array($statusFilterCol, $allowedStatusColumns)
+            ? "WHERE {$statusFilterCol} = '1'"
+            : '';
 
         $allowedTables = [
             'profesion_oficio',

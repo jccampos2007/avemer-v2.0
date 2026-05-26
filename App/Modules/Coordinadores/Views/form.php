@@ -6,6 +6,7 @@ $is_edit = isset($coordinador_data['id']) && !empty($coordinador_data['id']);
 <div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Coordinador' : 'Crear Nuevo Coordinador'; ?></h3>
     <form id="form_coordinadores" action="<?php echo BASE_URL; ?>coordinadores/<?php echo ($is_edit) ? 'update/' . $coordinador_data['id'] : 'create'; ?>" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
                 <label for="ci_pasapote" class="label-form">C.I. / Pasaporte:</label>

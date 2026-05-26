@@ -11,7 +11,7 @@
         </h3>
 
         <form id="formDiplomadoControl" action="<?php echo BASE_URL; ?>diplomadocontrol/<?php echo ($is_edit) ? 'edit/' . $diplomadoAbierto['id'] : 'create'; ?>" method="POST">
-            
+            <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <!-- Selección de Diplomado Abierto -->
                 <div class="md:col-span-2">

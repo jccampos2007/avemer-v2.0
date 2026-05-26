@@ -100,6 +100,7 @@ class InscripcionMaestriaController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $inscripcion_maestria_data = []; // Datos vacíos para el formulario
@@ -115,6 +116,7 @@ class InscripcionMaestriaController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $inscripcion_maestria_data = $this->inscripcionMaestriaModel->getById($id);

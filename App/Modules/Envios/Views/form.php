@@ -13,6 +13,7 @@ $mensaje_val = htmlspecialchars($envios_data['mensaje'] ?? '');
 <div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title; ?></h3>
     <form id="formenvios" action="<?php echo $form_action; ?>" method="POST">
+        <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?php echo $envios_data['id']; ?>">
         <?php endif; ?>

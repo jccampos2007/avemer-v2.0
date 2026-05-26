@@ -30,6 +30,7 @@ class DiplomadoControlController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $docentes = $this->controlModel->getDocentesActivos();
@@ -48,6 +49,7 @@ class DiplomadoControlController extends Controller
     public function edit(int $diplomadoAbiertoId): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($diplomadoAbiertoId);
         } else {
             $diplomadoAbierto = $this->controlModel->findDiplomadoAbierto($diplomadoAbiertoId);

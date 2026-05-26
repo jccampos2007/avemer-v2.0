@@ -41,7 +41,7 @@ $nombre_carta_val = htmlspecialchars($diplomado_abierto_data['nombre_carta'] ?? 
             data-sede-id="<?php echo $sede_id_val; ?>"
             data-estatus-id="<?php echo $estatus_id_val; ?>"
             data-nombre-carta="<?php echo htmlspecialchars($diplomado_abierto_data['nombre_carta'] ?? ''); ?>">
-
+            <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
             <div id="form_collapsible_wrapper" class="grid transition-all duration-300" style="grid-template-rows: 1fr;">
                 <div id="form_collapsible_content" class="min-h-0" style="overflow: visible;">
 

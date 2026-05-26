@@ -2,6 +2,15 @@
 // php_mvc_app/config/app.php
 // Configuración de la aplicación y la base de datos
 
+// Configuración de seguridad de sesión (antes de session_start)
+ini_set('session.use_strict_mode', 1);
+ini_set('session.use_only_cookies', 1);
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_samesite', 'Lax');
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    ini_set('session.cookie_secure', 1);
+}
+
 // Iniciar sesión (necesario para todas las páginas que la usen)
 session_start();
 
@@ -11,10 +20,10 @@ ini_set('pcre.jit', 0);
 // Load .env
 $env = parse_ini_file(__DIR__ . '/../.env');
 
-define('DB_HOST', $env['DB_HOST']);
-define('DB_NAME', $env['DB_NAME']);
-define('DB_USER', $env['DB_USER']);
-define('DB_PASS', $env['DB_PASS']);
+define('DB_HOST', getenv('DB_HOST') ?: ($env['DB_HOST'] ?? 'localhost'));
+define('DB_NAME', getenv('DB_NAME') ?: ($env['DB_NAME'] ?? ''));
+define('DB_USER', getenv('DB_USER') ?: ($env['DB_USER'] ?? 'root'));
+define('DB_PASS', getenv('DB_PASS') ?: ($env['DB_PASS'] ?? ''));
 
 // Constantes para los tipos de usuario
 define('TIPO_USUARIO_ADMIN', 1);

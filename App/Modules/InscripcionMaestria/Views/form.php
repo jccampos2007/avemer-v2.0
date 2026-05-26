@@ -20,7 +20,7 @@ $estatus_inscripcion_id_val = $inscripcion_maestria_data['estatus_inscripcion_id
         data-maestria-abierto-id="<?php echo $maestria_abierto_id_val; ?>"
         data-alumno-id="<?php echo $alumno_id_val; ?>"
         data-estatus-inscripcion-id="<?php echo $estatus_inscripcion_id_val; ?>">
-
+        <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?php echo $inscripcion_maestria_data['id']; ?>">
         <?php endif; ?>

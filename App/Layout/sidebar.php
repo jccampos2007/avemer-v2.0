@@ -367,8 +367,8 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
             </div>
             
             <div class="mt-2 text-center w-full px-2">
-                <p class="text-sm font-medium text-white truncate"><?php echo Auth::user('user_name'); ?></p>
-                <p class="text-xs text-gray-400 truncate"><?php echo Auth::user('nombre_grupo'); ?></p>
+                <p class="text-sm font-medium text-white truncate"><?php echo htmlspecialchars(Auth::user('user_name') ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                <p class="text-xs text-gray-400 truncate"><?php echo htmlspecialchars(Auth::user('nombre_grupo') ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
         </div>
         

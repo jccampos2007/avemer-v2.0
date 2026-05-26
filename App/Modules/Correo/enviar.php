@@ -10,10 +10,10 @@ function correo($titulo, $msj, $correo) {
         $mail = new PHPMailer(true);
         // --- Configuración del Servidor ---
         $mail->isSMTP();                              
-        $mail->Host       = 'mail.privateemail.com';
+        $mail->Host       = getenv('SMTP_HOST') ?: 'mail.privateemail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'info@grupoavemer.net';
-        $mail->Password   = 'Grupo2026Avemer..';
+        $mail->Username   = getenv('SMTP_USER') ?: 'info@grupoavemer.net';
+        $mail->Password   = getenv('SMTP_PASS') ?: 'Avemer*g2026';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
@@ -25,7 +25,6 @@ function correo($titulo, $msj, $correo) {
         $mail->setFrom('info@grupoavemer.net', 'Grupo Avemer');
         $mail->addAddress($correo);
         // $mail->AddBCC('preinscripcion@grupoavemer.com.ve', 'Copia de Correo enviado');
-        $mail->AddBCC('ingdiazjc@gmail.com', 'Bcc jc');
 
         // --- Contenido ---
         $mail->isHTML(true);     

@@ -20,7 +20,7 @@ $buscar_mensajes_val = $correo_data['mensaje_id'] ?? '';
         data-oferta-academica-id="<?php echo $oferta_academica_id_val; ?>"
         data-buscar-mensajes="<?php echo $buscar_mensajes_val; ?>"
         data-tipo-oferta-academica-id="<?php echo $tipo_oferta_academica_id_val; ?>">
-
+        <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
         <!-- Pestañas para tipo_oferta_academica_id -->
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">Tipos:</label>

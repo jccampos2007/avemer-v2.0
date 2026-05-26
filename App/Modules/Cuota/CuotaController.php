@@ -34,6 +34,7 @@ class CuotaController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $cuota_data = []; // Datos vacíos para el formulario de creación
@@ -49,6 +50,7 @@ class CuotaController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $cuota_data = $this->cuotaModel->getById($id);

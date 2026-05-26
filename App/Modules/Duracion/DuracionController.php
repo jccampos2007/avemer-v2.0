@@ -76,6 +76,7 @@ class DuracionController extends Controller
     public function store(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $data = ['nombre' => $this->sanitizeInput($_POST['nombre'])];
 
             try {
@@ -98,6 +99,7 @@ class DuracionController extends Controller
     public function update(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $data = ['nombre' => $this->sanitizeInput($_POST['nombre'])];
 
             try {
@@ -119,6 +121,7 @@ class DuracionController extends Controller
 
     public function delete(int $id): void
     {
+        $this->validateCsrf();
         $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
         try {

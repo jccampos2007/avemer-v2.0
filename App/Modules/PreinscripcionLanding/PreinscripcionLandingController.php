@@ -54,6 +54,7 @@ class PreinscripcionLandingController extends Controller
     public function createAlumno(): void
     {
         header('Content-Type: application/json');
+        $this->validateCsrf();
         
         $pdo = \App\Core\Database::getInstance()->getConnection();
         try {
@@ -153,6 +154,7 @@ class PreinscripcionLandingController extends Controller
     public function processPreinscripcion(): void
     {
         header('Content-Type: application/json');
+        $this->validateCsrf();
         $alumno_id = $_POST['alumno_id'] ?? null;
         $oferta_id = $_POST['oferta_abierta_id'] ?? null;
         $typeId = (int)($_POST['typeId'] ?? '1');

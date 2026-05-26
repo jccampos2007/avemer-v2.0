@@ -63,6 +63,7 @@ class GrupoController extends Controller
     public function store(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $data = [
                 'nombre_grupo' => $this->sanitizeInput($_POST['nombre_grupo']),
                 'descripcion_grupo' => $this->sanitizeInput($_POST['descripcion_grupo']),
@@ -82,6 +83,7 @@ class GrupoController extends Controller
     public function update(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $data = [
                 'nombre_grupo' => $this->sanitizeInput($_POST['nombre_grupo']),
                 'descripcion_grupo' => $this->sanitizeInput($_POST['descripcion_grupo'])
@@ -98,6 +100,7 @@ class GrupoController extends Controller
 
     public function delete(int $id): void
     {
+        $this->validateCsrf();
         if ($this->grupoModel->deleteGroup($id)) {
             echo json_encode(['success' => true, 'message' => 'Grupo eliminado correctamente.']);
         } else {
@@ -138,6 +141,7 @@ class GrupoController extends Controller
     public function savePermissions(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $grupo_id = (int)$_POST['grupo_id'];
             $permissions = $_POST['permissions'] ?? [];
             

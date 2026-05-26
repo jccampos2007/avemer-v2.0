@@ -24,6 +24,7 @@ class CoordinadorController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $this->view('Coordinadores/form', ['coordinador_data' => []]);
@@ -33,6 +34,7 @@ class CoordinadorController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $coordinador_data = $this->coordinadoresModel->findById($id);

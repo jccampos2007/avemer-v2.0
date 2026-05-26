@@ -120,6 +120,7 @@ class CapituloController extends Controller
     public function create(?int $diplomadoId = null): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $diplomado = $this->diplomadoModel->getById($diplomadoId);
@@ -143,6 +144,7 @@ class CapituloController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $capitulo_data = $this->capituloModel->getById($id);

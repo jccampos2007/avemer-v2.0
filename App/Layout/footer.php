@@ -10,6 +10,7 @@
 
 <script type="text/javascript">
     const BASE_URL_JS = "<?php echo BASE_URL; ?>";
+    const CSRF_TOKEN = "<?= Auth::generateCsrfToken() ?>";
 </script>
 <!-- Scripts JS específicos de cada módulo se incluyen directamente en sus vistas -->
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>

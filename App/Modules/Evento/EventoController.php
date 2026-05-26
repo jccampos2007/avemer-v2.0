@@ -33,6 +33,7 @@ class EventoController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $evento_data = []; // Datos vacíos para el formulario
@@ -48,6 +49,7 @@ class EventoController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $evento_data = $this->eventoModel->getById($id);

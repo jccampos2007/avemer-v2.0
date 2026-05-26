@@ -99,6 +99,7 @@ class MaestriaController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $maestria_data = []; // Datos vacíos para el formulario
@@ -114,6 +115,7 @@ class MaestriaController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $maestria_data = $this->maestriaModel->getById($id);

@@ -3,6 +3,7 @@
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Iniciar Sesión</h2>
         <form action="<?php echo BASE_URL; ?>login" method="POST">
+            <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
             <div class="mb-4">
                 <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Usuario:</label>
                 <input type="text" id="username" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>

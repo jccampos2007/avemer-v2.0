@@ -95,6 +95,7 @@ class InscripcionDiplomadoController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $inscripcion_diplomado_data = []; // Datos vacíos para el formulario
@@ -110,6 +111,7 @@ class InscripcionDiplomadoController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $inscripcion_diplomado_data = $this->inscripcionDiplomadoModel->getById($id);
