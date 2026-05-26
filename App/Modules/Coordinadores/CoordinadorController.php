@@ -117,7 +117,7 @@ class CoordinadorController extends Controller
             'tlf_trabajo' => $this->sanitizeInput($_POST['tlf_trabajo']),
             'tlf_celular' => $this->sanitizeInput($_POST['tlf_celular']),
             'fecha_nacimiento' => $this->sanitizeInput($_POST['fecha_nacimiento']),
-            'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : null,
+            'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : 1,
             'direccion' => $this->sanitizeInput($_POST['direccion']),
             'foto' => null,
             'imagen' => null

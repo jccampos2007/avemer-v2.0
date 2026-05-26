@@ -109,7 +109,8 @@ $(document).ready(function () {
 
         if ($diplomadoAbiertoAutocomplete.length) {
             setupAutocomplete('diplomado_abierto_autocomplete', 'diplomado_abierto_id', 'diplomado_abierto', 3, {
-                displayColumn: "CONCAT(numero, ' - ', (SELECT nombre FROM diplomado WHERE id = diplomado_abierto.diplomado_id))"
+                displayColumn: "CONCAT(numero, ' - ', (SELECT nombre FROM diplomado WHERE id = diplomado_abierto.diplomado_id))",
+                status: 'all'
             });
 
             $('#diplomado_abierto_autocomplete').on('autocompleteselect', function (event, ui) {

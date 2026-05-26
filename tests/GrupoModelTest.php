@@ -11,6 +11,8 @@ class GrupoModelTest extends DatabaseTestCase
     {
         parent::setUp();
         $this->model = new GrupoModel();
+        $pdo = $this->getConnection();
+        $pdo->exec("INSERT IGNORE INTO permisos (grupo_id, ventana_id, aplicacion_id, permisos_crear, permisos_modificar, permisos_eliminar, permisos_listar, usuario_idreg, permisos_fechareg) VALUES (999, 999, 999, 1, 1, 1, 1, 1, CURDATE())");
     }
 
     public function test_getGroupById_returns_group(): void
@@ -70,16 +72,20 @@ class GrupoModelTest extends DatabaseTestCase
 
     public function test_deleteGroup_cascades_to_permissions(): void
     {
+        $pdo = $this->getConnection();
+
+        // Remove FK references before deleting the group
+        $pdo->exec("UPDATE usuario SET grupo_id = NULL WHERE grupo_id = 999");
         $this->assertTrue($this->model->deleteGroup(999));
         $this->assertFalse($this->model->getGroupById(999));
 
-        $pdo = $this->getConnection();
         $stmt = $pdo->query("SELECT COUNT(*) FROM permisos WHERE grupo_id = 999");
         $this->assertEquals(0, $stmt->fetchColumn());
 
         // Restore
         $pdo->exec("INSERT IGNORE INTO grupo (grupo_id, nombre_grupo, descripcion_grupo, usuario_idreg, grupo_fechareg) VALUES (999, 'TEST Grupo', 'Test group', 1, CURDATE())");
         $pdo->exec("INSERT IGNORE INTO permisos (grupo_id, ventana_id, aplicacion_id, permisos_crear, permisos_modificar, permisos_eliminar, permisos_listar, usuario_idreg, permisos_fechareg) VALUES (999, 999, 999, 1, 1, 1, 1, 1, CURDATE())");
+        $pdo->exec("UPDATE usuario SET grupo_id = 999 WHERE usuario_id = 999");
     }
 
     public function test_getPermissionsByGroup_returns_permissions(): void

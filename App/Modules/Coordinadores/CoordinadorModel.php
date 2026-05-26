@@ -175,7 +175,7 @@ class CoordinadorModel
             'tlf_trabajo' => $data['tlf_trabajo'],
             'tlf_celular' => $data['tlf_celular'],
             'fecha_nacimiento' => $data['fecha_nacimiento'],
-            'estatus_activo_id' => $data['estatus_activo_id'],
+            'estatus_activo_id' => $data['estatus_activo_id'] ?? 1,
             'direccion' => $data['direccion'],
             'foto' => $data['foto'],
             'imagen' => $data['imagen'],
@@ -210,7 +210,7 @@ class CoordinadorModel
             'tlf_trabajo' => $data['tlf_trabajo'],
             'tlf_celular' => $data['tlf_celular'],
             'fecha_nacimiento' => $data['fecha_nacimiento'],
-            'estatus_activo_id' => $data['estatus_activo_id'],
+            'estatus_activo_id' => $data['estatus_activo_id'] ?? 1,
             'direccion' => $data['direccion'],
             'id' => $id
         ];

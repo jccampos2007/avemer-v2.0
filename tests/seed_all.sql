@@ -38,26 +38,30 @@ INSERT IGNORE INTO capitulo (id, diplomado_id, numero, nombre, descripcion, orde
 VALUES (999, 999, '1', 'TEST Capítulo', 'Test chapter', 1);
 
 -- Coordinator
-INSERT IGNORE INTO coordinador (id, ci_pasapote, primer_nombre, primer_apellido)
-VALUES (999, 'COOR-TEST', 'Coord', 'Test');
+INSERT IGNORE INTO coordinador (id, ci_pasapote, primer_nombre, primer_apellido, estatus_activo_id)
+VALUES (999, 'COOR-TEST', 'Coord', 'Test', 1);
 
--- Group (RBAC)
+-- Root user (must exist first for FK references from other tables)
+INSERT IGNORE INTO usuario (usuario_id, grupo_id, usuario_cedula, usuario_nombre, usuario_apellido, usuario_user, usuario_pws, estatus_activo_id, tipo_usuario, usuario_idreg, usuario_fechareg)
+VALUES (1, NULL, 'admin', 'Admin', 'System', 'admin', 'admin123', 1, 1, 1, CURDATE());
+
+-- Group (RBAC) — references usuario.usuario_id=1
 INSERT IGNORE INTO grupo (grupo_id, nombre_grupo, descripcion_grupo, usuario_idreg, grupo_fechareg)
 VALUES (999, 'TEST Grupo', 'Test group', 1, CURDATE());
 
--- User
+-- Test User — references grupo 999 and usuario 1
 INSERT IGNORE INTO usuario (usuario_id, grupo_id, usuario_cedula, usuario_nombre, usuario_apellido, usuario_user, usuario_pws, estatus_activo_id, tipo_usuario, usuario_idreg, usuario_fechareg)
 VALUES (999, 999, 'V-999', 'Test', 'User', 'testuser', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1, 1, 1, CURDATE());
 
--- Application (for permissions)
+-- Application (for permissions) — references usuario 1
 INSERT IGNORE INTO aplicacion (aplicacion_id, nombre_aplicacion, descripcion_aplicacion, usuario_idreg, aplicacion_fechareg)
 VALUES (999, 'TEST App', 'Test app', 1, CURDATE());
 
--- Window (for permissions)
+-- Window (for permissions) — references usuario 1
 INSERT IGNORE INTO ventana (ventana_id, ventana_titulo, usuario_idreg, key_word)
 VALUES (999, 'TEST Ventana', 1, 'test_window');
 
--- Permissions
+-- Permissions — references grupo 999, ventana 999, aplicacion 999, usuario 1
 INSERT IGNORE INTO permisos (grupo_id, ventana_id, aplicacion_id, permisos_crear, permisos_modificar, permisos_eliminar, permisos_listar, usuario_idreg, permisos_fechareg)
 VALUES (999, 999, 999, 1, 1, 1, 1, 1, CURDATE());
 
@@ -74,8 +78,8 @@ INSERT INTO maestria (id, duracion_id, nombre, numero) VALUES (999, 999, 'TEST M
 ON DUPLICATE KEY UPDATE duracion_id = VALUES(duracion_id), nombre = VALUES(nombre), numero = VALUES(numero);
 
 -- Teacher / Docente
-INSERT IGNORE INTO docente (id, ci_pasapote, primer_nombre, primer_apellido, profesion_oficio_id)
-VALUES (999, 'DOCTEST', 'Doc', 'Test', 999);
+INSERT IGNORE INTO docente (id, ci_pasapote, primer_nombre, primer_apellido, profesion_oficio_id, estatus_activo_id)
+VALUES (999, 'DOCTEST', 'Doc', 'Test', 999, 1);
 
 -- Course
 INSERT IGNORE INTO curso (id, nombre, horas)

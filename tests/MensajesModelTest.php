@@ -54,8 +54,11 @@ class MensajesModelTest extends DatabaseTestCase
 
     public function test_delete_removes_record(): void
     {
+        $pdo = $this->getConnection();
+        $pdo->exec("DELETE FROM buzon WHERE id_mensaje = 999");
         $this->assertTrue($this->model->delete(999));
         $this->assertFalse($this->model->getById(999));
-        $this->getConnection()->exec("INSERT IGNORE INTO mensajehtml (id, titulo, mensaje) VALUES (999, 'TEST Mensaje', 'Test message body')");
+        $pdo->exec("INSERT IGNORE INTO mensajehtml (id, titulo, mensaje) VALUES (999, 'TEST Mensaje', 'Test message body')");
+        $pdo->exec("INSERT IGNORE INTO buzon (id, correo, id_mensaje, estado) VALUES (999, 'test@envio.com', 999, 0)");
     }
 }

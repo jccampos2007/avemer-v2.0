@@ -195,11 +195,20 @@ class ApiController
                 $whereClauses[] = "(" . implode(' OR ', $searchConditions) . ")";
             }
 
-            // Aplicar filtro por estatus activo si la tabla tiene una columna de estado definida
+            // Aplicar filtro por estatus si la tabla tiene una columna de estado definida
             // y si la tabla no es una de las tablas que *definen* estados
+            // Opcional: ?status=all omite el filtro, ?status=N filtra por ese ID, omisión = 1
+            // NULL se trata como activo (incluido en el filtro por defecto)
+            $statusFilter = $_GET['status'] ?? '1';
             if ($statusColumn && !in_array($tableName, ['estatus_activo', 'estatus', 'estatus_inscripcion'])) {
-                $whereClauses[] = "{$statusColumn} = :status_id";
-                $queryParams[':status_id'] = 1; // Asumimos que '1' significa activo
+                if ($statusFilter !== 'all') {
+                    if ((int)$statusFilter === 1) {
+                        $whereClauses[] = "({$statusColumn} = :status_id OR {$statusColumn} IS NULL)";
+                    } else {
+                        $whereClauses[] = "{$statusColumn} = :status_id";
+                    }
+                    $queryParams[':status_id'] = (int)$statusFilter;
+                }
             }
 
             // Construir la cláusula WHERE final
@@ -207,7 +216,7 @@ class ApiController
                 $sql .= " WHERE " . implode(' AND ', $whereClauses);
             }
 
-            $sql .= " LIMIT 10"; // Limitar resultados para autocompletado
+            $sql .= " LIMIT 25"; // Limitar resultados para autocompletado
 
             // Preparar y ejecutar la consulta
             $stmt = $this->pdo->prepare($sql);
