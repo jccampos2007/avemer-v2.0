@@ -45,12 +45,11 @@ function showToast(msg, type) {
     const bg = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-slate-900';
 
     t.querySelector('div').className = 'flex items-center gap-2.5 px-5 py-3 rounded-2xl shadow-xl text-white text-sm font-medium ' + bg;
-    icon.setAttribute('data-lucide', type === 'success' ? 'check-circle-2' : type === 'error' ? 'alert-circle' : 'info');
+    icon.className = 'fa-solid ' + (type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info') + ' text-base';
     $('toast-message').textContent = msg;
 
     t.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
     t.classList.add('opacity-100', 'translate-y-0');
-    lucide.createIcons();
 
     clearTimeout(t._timer);
     t._timer = setTimeout(() => {
@@ -106,8 +105,6 @@ document.addEventListener('DOMContentLoaded', function () {
     $('oferta').textContent = 'Pre-inscripción: ' + modo;
     document.title = 'Pre-inscripción: ' + modo + ' - Sistema de Registro';
     $('tipo-label').textContent = MODO_MAP[modo].label;
-
-    lucide.createIcons();
 
     // Cargar ofertas como paso inicial
     hide('empty-state');
@@ -177,8 +174,6 @@ function showStudentCard(a) {
     btn.disabled = false;
     btn.classList.remove('bg-slate-300', 'text-slate-500', 'cursor-not-allowed');
     btn.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700', 'cursor-pointer', 'shadow-lg', 'shadow-indigo-100');
-
-    lucide.createIcons();
 }
 
 // --- Crear alumno ---
@@ -232,11 +227,10 @@ function loadOfertas() {
     const list = $('ofertas-list');
     list.innerHTML = `
         <div class="text-center py-8 text-slate-400">
-            <i data-lucide="loader-2" class="w-6 h-6 mx-auto mb-2 animate-spin"></i>
+            <i class="fa-solid fa-spinner fa-spin text-2xl mx-auto mb-2 block"></i>
             <p class="text-sm">Cargando ofertas disponibles...</p>
         </div>
     `;
-    lucide.createIcons();
     show('step1-section');
     hide('empty-state');
 
@@ -266,12 +260,12 @@ function loadOfertas() {
                             </div>
                             <div class="flex flex-wrap gap-y-2 gap-x-4 text-xs text-slate-500">
                                 <span class="flex items-center gap-1.5">
-                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                    <i class="fa-solid fa-location-dot text-sm text-slate-400"></i>
                                     ${o.sede_nombre || 'N/A'}
                                 </span>
                                 ${fecha ? `
                                 <span class="flex items-center gap-1.5 font-medium text-slate-700 bg-slate-100/60 px-2 py-0.5 rounded">
-                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
+                                    <i class="fa-solid fa-calendar text-sm text-slate-400"></i>
                                     ${fecha}${fechaFin ? ' al ' + fechaFin : ''}
                                 </span>
                                 ` : ''}
@@ -285,25 +279,22 @@ function loadOfertas() {
 
                     list.appendChild(card);
                 });
-                lucide.createIcons();
             } else {
                 list.innerHTML = `
                     <div class="text-center py-8 text-slate-400 border border-dashed border-slate-200 rounded-2xl">
-                        <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2"></i>
+                        <i class="fa-solid fa-inbox text-3xl mx-auto mb-2 block"></i>
                         <p class="text-sm">No hay ${MODO_MAP[state.modo].label}s disponibles en este momento.</p>
                     </div>
                 `;
-                lucide.createIcons();
             }
         },
         function () {
             list.innerHTML = `
                 <div class="text-center py-8 text-red-400 border border-dashed border-red-200 rounded-2xl">
-                    <i data-lucide="alert-circle" class="w-8 h-8 mx-auto mb-2"></i>
+                    <i class="fa-solid fa-circle-exclamation text-3xl mx-auto mb-2 block"></i>
                     <p class="text-sm">Error al cargar ofertas. Intenta recargar la página.</p>
                 </div>
             `;
-            lucide.createIcons();
         }
     );
 }

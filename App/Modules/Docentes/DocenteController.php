@@ -153,7 +153,7 @@ class DocenteController extends Controller
                 'tlf_habitacion' => $this->sanitizeInput($_POST['tlf_habitacion']),
                 'tlf_trabajo' => $this->sanitizeInput($_POST['tlf_trabajo']),
                 'tlf_celular' => $this->sanitizeInput($_POST['tlf_celular']),
-                'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : null,
+                'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : 1,
                 'fecha_nacimiento' => $this->sanitizeInput($_POST['fecha_nacimiento']),
             ];
 

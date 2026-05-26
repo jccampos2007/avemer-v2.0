@@ -41,8 +41,6 @@ class AlumnoController extends Controller
         $orderDir = $_POST['order'][0]['dir'] ?? 'asc';
         $columns = $_POST['columns'] ?? [];
 
-        error_log("searchValue: " . $searchValue . " orderColumnIndex: " . $orderColumnIndex . " orderDir: " . $orderDir . " length: " . $length . " start: " . $start);
-
         $params = [
             'draw' => $draw,
             'start' => $start,
@@ -130,7 +128,7 @@ class AlumnoController extends Controller
             'calle_avenida' => $this->sanitizeInput($_POST['calle_avenida']),
             'casa_apartamento' => $this->sanitizeInput($_POST['casa_apartamento']),
             'fecha_nacimiento' => $this->sanitizeInput($_POST['fecha_nacimiento']),
-            'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : null,
+            'estatus_activo_id' => !empty($_POST['estatus_activo_id']) ? (int)$this->sanitizeInput($_POST['estatus_activo_id']) : 1,
             'direccion' => $this->sanitizeInput($_POST['direccion']),
             'chk_planilla' => isset($_POST['chk_planilla']) ? 1 : 0,
             'chk_cedula' => isset($_POST['chk_cedula']) ? 1 : 0,

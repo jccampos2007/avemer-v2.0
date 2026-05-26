@@ -100,6 +100,7 @@ class PreinscripcionDiplomadoController extends Controller
             'tlf_habitacion' => $this->sanitizeInput($_POST['tlf_habitacion'] ?? ''),
             'tlf_trabajo' => $this->sanitizeInput($_POST['tlf_trabajo'] ?? ''),
             'tlf_celular' => $this->sanitizeInput($_POST['tlf_celular'] ?? ''),
+            'estatus_activo_id' => 1,
         ];
 
         // Validación básica

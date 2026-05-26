@@ -24,7 +24,8 @@ class Router
         }
 
         // Manejar rutas con parámetros (ej. /users/edit/1)
-        foreach ($this->routes[$method] as $path_pattern => $controller_info) {
+        $methodRoutes = $this->routes[$method] ?? [];
+        foreach ($methodRoutes as $path_pattern => $controller_info) {
             // Convertimos los patrones {param} a expresiones regulares: ({algo})
             $regex = preg_replace('#\{[^/]+\}#', '([^/]+)', $path_pattern);
 
@@ -48,7 +49,7 @@ class Router
         }
 
         // Despachar la ruta si no tiene parámetros o no coincide con el patrón
-        if (array_key_exists($uri, $this->routes[$method])) {
+        if (array_key_exists($uri, $methodRoutes)) {
             list($controllerNamespace, $methodName) = explode('@', $this->routes[$method][$uri]);
             $controllerClass = $controllerNamespace;
 

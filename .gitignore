@@ -41,3 +41,4 @@ Thumbs.db
 
 # environment files
 .env
+.phpunit.result.cache

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Pre-inscripción - Sistema de Registro</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/output.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -42,7 +42,7 @@
             <!-- Estado vacío: sin oferta seleccionada -->
             <div id="empty-state" class="text-center py-8 md:py-12">
                 <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="graduation-cap" class="w-8 h-8 text-slate-400"></i>
+                    <i class="fa-solid fa-graduation-cap text-2xl text-slate-400"></i>
                 </div>
                 <h2 class="text-lg font-bold text-slate-800 mb-1">Selecciona una oferta académica</h2>
                 <p class="text-sm text-slate-400 mb-6 max-w-xs mx-auto">Elige entre los programas disponibles para comenzar tu pre-inscripción.</p>
@@ -60,7 +60,7 @@
 
                 <div id="ofertas-list" class="space-y-3">
                     <div class="text-center py-8 text-slate-400">
-                        <i data-lucide="loader-2" class="w-6 h-6 mx-auto mb-2 animate-spin"></i>
+                        <i class="fa-solid fa-spinner fa-spin text-2xl mx-auto mb-2 block"></i>
                         <p class="text-sm">Cargando ofertas disponibles...</p>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                         Información del Alumno
                     </h2>
                     <span id="alumno-verified-badge" class="flex flex-col items-center text-emerald-600 font-medium bg-emerald-50 px-3 py-1.5 rounded-lg hidden">
-                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        <i class="fa-solid fa-check-circle text-base"></i>
                         <span class="text-[10px] leading-tight">Verificado</span>
                     </span>
                 </div>
@@ -84,35 +84,35 @@
                         <div class="space-y-1">
                             <span class="text-xs text-slate-400 font-medium">Nombre Completo</span>
                             <div class="flex items-center gap-2">
-                                <i data-lucide="user" class="w-4 h-4 text-emerald-600"></i>
+                                <i class="fa-solid fa-user text-base text-emerald-600"></i>
                                 <p id="student-name" class="font-semibold text-slate-800 text-base">—</p>
                             </div>
                         </div>
                         <div class="space-y-1">
                             <span class="text-xs text-slate-400 font-medium">Documento / Pasaporte</span>
                             <div class="flex items-center gap-2">
-                                <i data-lucide="credit-card" class="w-4 h-4 text-emerald-600"></i>
+                                <i class="fa-solid fa-credit-card text-base text-emerald-600"></i>
                                 <p id="student-ci" class="font-medium text-slate-700 text-sm">—</p>
                             </div>
                         </div>
                         <div class="space-y-1">
                             <span class="text-xs text-slate-400 font-medium">Correo Electrónico</span>
                             <div class="flex items-center gap-2">
-                                <i data-lucide="mail" class="w-4 h-4 text-emerald-600"></i>
+                                <i class="fa-solid fa-envelope text-base text-emerald-600"></i>
                                 <p id="student-email" class="font-medium text-slate-700 text-sm break-all">—</p>
                             </div>
                         </div>
                         <div class="space-y-1">
                             <span class="text-xs text-slate-400 font-medium">Celular de Contacto</span>
                             <div class="flex items-center gap-2">
-                                <i data-lucide="phone" class="w-4 h-4 text-emerald-600"></i>
+                                <i class="fa-solid fa-phone text-base text-emerald-600"></i>
                                 <p id="student-phone" class="font-medium text-slate-500 text-sm">No registrado</p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-5 pt-4 border-t border-emerald-100/60 flex justify-end">
                         <button onclick="toggleChangeStudentModal(true)" class="flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-indigo-600 transition-colors bg-white px-3.5 py-1.5 rounded-lg border border-slate-200 hover:border-indigo-100 shadow-sm">
-                            <i data-lucide="arrow-left-right" class="w-3.5 h-3.5"></i>
+                            <i class="fa-solid fa-arrows-left-right text-sm"></i>
                             Cambiar de Alumno
                         </button>
                     </div>
@@ -128,7 +128,7 @@
             <div>
                 <button id="btn-submit" onclick="submitPreinscripcion()" disabled class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-slate-300 text-slate-500 font-bold text-sm rounded-xl cursor-not-allowed transition-all duration-300">
                     <span>Finalizar Pre-inscripción</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <i class="fa-solid fa-arrow-right text-base"></i>
                 </button>
             </div>
         </footer>
@@ -143,20 +143,20 @@
                     <p class="text-xs text-slate-400 mt-1">Ingresa el CI / Pasaporte para comenzar</p>
                 </div>
                 <button onclick="toggleChangeStudentModal(false)" class="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
             <form id="form-search-student" class="space-y-4" onsubmit="return searchStudent(event)">
                 <div>
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">CI / Pasaporte</label>
                     <div class="relative">
-                        <i data-lucide="search" class="w-5 h-5 absolute left-3 top-3 text-slate-400 pointer-events-none"></i>
+                        <i class="fa-solid fa-magnifying-glass text-lg absolute left-3 top-3 text-slate-400 pointer-events-none"></i>
                         <input type="text" id="search-ci-input" placeholder="Ej: 30429336" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" required>
                     </div>
                     <p id="search-error" class="text-red-500 text-xs mt-1 hidden"></p>
                 </div>
                 <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-semibold text-sm rounded-xl hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
-                    <i data-lucide="search" class="w-4 h-4"></i>
+                    <i class="fa-solid fa-magnifying-glass text-base"></i>
                     Buscar alumno
                 </button>
             </form>
@@ -172,7 +172,7 @@
                     <p class="text-xs text-slate-400 mt-1">Completa los datos del alumno para continuar</p>
                 </div>
                 <button onclick="toggleCreateStudentModal(false)" class="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
             <form id="form-create-student" class="space-y-4" onsubmit="return createStudent(event)">
@@ -215,7 +215,7 @@
                         Cancelar
                     </button>
                     <button type="submit" class="py-3 px-6 bg-emerald-600 text-white font-semibold text-sm rounded-xl hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-100 flex items-center gap-2">
-                        <i data-lucide="user-plus" class="w-4 h-4"></i>
+                        <i class="fa-solid fa-user-plus text-base"></i>
                         Guardar y Continuar
                     </button>
                 </div>
@@ -227,7 +227,7 @@
     <div id="modal-success" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-300">
         <div class="bg-white rounded-3xl w-full max-w-md p-6 md:p-8 shadow-2xl border border-slate-100 text-center modal-scale scale-95">
             <div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-100">
-                <i data-lucide="check" class="w-8 h-8 text-emerald-600"></i>
+                <i class="fa-solid fa-check text-2xl text-emerald-600"></i>
             </div>
             <h3 class="text-2xl font-bold text-slate-900 mb-1">¡Pre-inscripción Exitosa!</h3>
             <p class="text-sm text-slate-500 mb-6">Hemos registrado tu solicitud.</p>
@@ -262,7 +262,7 @@
     <div id="modal-confirm" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-300">
         <div class="bg-white rounded-3xl w-full max-w-md p-6 md:p-8 shadow-2xl border border-slate-100 modal-scale scale-95">
             <div class="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-100">
-                <i data-lucide="alert-triangle" class="w-7 h-7 text-amber-600"></i>
+                <i class="fa-solid fa-triangle-exclamation text-3xl text-amber-600"></i>
             </div>
             <h3 class="text-xl font-bold text-slate-900 mb-2 text-center">Confirmar Pre-inscripción</h3>
             <p id="confirm-message" class="text-sm text-slate-500 text-center mb-6">¿Estás seguro de pre-inscribir al alumno seleccionado?</p>
@@ -271,7 +271,7 @@
                     Cancelar
                 </button>
                 <button id="btn-confirm-submit" onclick="executePreinscripcion()" class="flex-1 py-3 bg-indigo-600 text-white font-semibold text-sm rounded-xl hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
-                    <i data-lucide="check" class="w-4 h-4"></i>
+                    <i class="fa-solid fa-check text-base"></i>
                     Confirmar
                 </button>
             </div>
@@ -281,12 +281,11 @@
     <!-- Toast -->
     <div id="toast" class="fixed bottom-6 right-6 z-50 opacity-0 translate-y-2 pointer-events-none transition-all duration-300">
         <div class="flex items-center gap-2.5 px-5 py-3 rounded-2xl shadow-xl text-white text-sm font-medium">
-            <i id="toast-icon" data-lucide="info" class="w-4 h-4"></i>
+            <i id="toast-icon" class="fa-solid fa-circle-info text-base"></i>
             <span id="toast-message">Mensaje</span>
         </div>
     </div>
 
     <script src="asset/js/PreinscripcionLanding/preinscripcion_landing.js"></script>
-    <script>lucide.createIcons();</script>
 </body>
 </html>

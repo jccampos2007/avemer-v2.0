@@ -273,7 +273,7 @@ class AlumnoModel
             'calle_avenida' => $data['calle_avenida'] ?? '',
             'casa_apartamento' => $data['casa_apartamento'] ?? '',
             'fecha_nacimiento' => $data['fecha_nacimiento'] === '' ? null : ($data['fecha_nacimiento'] ?? null),
-            'estatus_activo_id' => $data['estatus_activo_id'],
+            'estatus_activo_id' => $data['estatus_activo_id'] ?? 1,
             'direccion' => $data['direccion'] ?? '',
             'foto' => $data['foto'] ?? null,
             'imagen' => $data['imagen'] ?? null,

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="Phase1">
+            <file>tests/BreadcrumbTest.php</file>
+            <file>tests/RouterTest.php</file>
+            <file>tests/ControllerTest.php</file>
+        </testsuite>
+        <testsuite name="Phase2">
+            <file>tests/AlumnoModelTest.php</file>
+            <file>tests/CursoModelTest.php</file>
+        </testsuite>
+        <testsuite name="Phase3">
+            <file>tests/PreinscripcionLandingControllerIntegrationTest.php</file>
+        </testsuite>
+        <testsuite name="Phase4a">
+            <file>tests/DatabaseTest.php</file>
+            <file>tests/AuthTest.php</file>
+        </testsuite>
+        <testsuite name="Phase4b">
+            <file>tests/BancoModelTest.php</file>
+            <file>tests/CapituloModelTest.php</file>
+            <file>tests/CoordinadorModelTest.php</file>
+            <file>tests/DuracionModelTest.php</file>
+            <file>tests/ProfesionOficioModelTest.php</file>
+            <file>tests/MensajesModelTest.php</file>
+            <file>tests/GrupoModelTest.php</file>
+        </testsuite>
+        <testsuite name="Phase4c">
+            <file>tests/CiudadModelTest.php</file>
+            <file>tests/SedeModelTest.php</file>
+            <file>tests/DocenteModelTest.php</file>
+            <file>tests/CursoAbiertoModelTest.php</file>
+            <file>tests/DiplomadoModelTest.php</file>
+            <file>tests/EventoModelTest.php</file>
+            <file>tests/MaestriaModelTest.php</file>
+        </testsuite>
+        <testsuite name="Phase4d">
+            <file>tests/InscripcionCursoModelTest.php</file>
+            <file>tests/InscripcionDiplomadoModelTest.php</file>
+            <file>tests/InscripcionEventoModelTest.php</file>
+            <file>tests/InscripcionMaestriaModelTest.php</file>
+            <file>tests/EventoAbiertoModelTest.php</file>
+            <file>tests/DiplomadoAbiertoModelTest.php</file>
+            <file>tests/MaestriaAbiertoModelTest.php</file>
+            <file>tests/EnviosModelTest.php</file>
+        </testsuite>
+        <testsuite name="Phase4e">
+            <file>tests/CuotaModelTest.php</file>
+            <file>tests/DiplomadoControlModelTest.php</file>
+            <file>tests/UserModelTest.php</file>
+            <file>tests/DashboardModelTest.php</file>
+            <file>tests/CorreoModelTest.php</file>
+            <file>tests/PreinscripcionDiplomadoModelTest.php</file>
+        </testsuite>
+        <testsuite name="Phase5">
+            <file>tests/DataTableEndpointsIntegrationTest.php</file>
+        </testsuite>
+        <testsuite name="Phase6">
+            <file>tests/AjaxEndpointsIntegrationTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

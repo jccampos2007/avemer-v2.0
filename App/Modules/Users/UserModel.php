@@ -155,7 +155,7 @@ class UserModel
             'apellido' => $data['usuario_apellido'],
             'user' => $data['usuario_user'],
             'pws' => $data['usuario_pws'], // Ya debe venir hasheada
-            'estatus_id' => $data['estatus_activo_id'],
+            'estatus_id' => $data['estatus_activo_id'] ?? 1,
             'grupo_id' => $data['grupo_id'],
             'idreg' => $data['usuario_idreg'],
             'fechareg' => $data['usuario_fechareg'],
