@@ -71,8 +71,6 @@ class MensajesModel
             $queryParams[':length'] = (int) $length;
         }
 
-        error_log($sql);
-
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($queryParams);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

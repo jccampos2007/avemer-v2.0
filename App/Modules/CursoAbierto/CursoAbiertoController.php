@@ -93,8 +93,6 @@ class CursoAbiertoController extends Controller
         $orderDir = $_POST['order'][0]['dir'] ?? 'asc';
         $columns = $_POST['columns'] ?? [];
 
-        error_log("searchValue: " . $searchValue . " orderColumnIndex: " . $orderColumnIndex . " orderDir: " . $orderDir . " length: " . $length . " start: " . $start);
-
         $params = [
             'draw' => $draw,
             'start' => $start,

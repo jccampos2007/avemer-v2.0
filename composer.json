@@ -12,5 +12,17 @@
     ],
     "require": {
         "phpmailer/phpmailer": "^7.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:watch": "watch -n 2 phpunit --colors"
     }
 }
