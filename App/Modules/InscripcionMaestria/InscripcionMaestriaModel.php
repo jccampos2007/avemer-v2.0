@@ -34,9 +34,10 @@ class InscripcionMaestriaModel
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
             0 => 'im.id',
-            1 => 'maestria_abierto_numero', // Alias de la columna unida
-            2 => 'alumno_nombre_completo',   // Alias de la columna unida
-            3 => 'estatus_inscripcion_nombre', // Alias de la columna unida
+            1 => 'maestria_abierto_numero',
+            2 => 'alumno_nombre_completo',
+            3 => 'alumno_telefono',
+            4 => 'estatus_inscripcion_nombre',
         ];
 
         // Construir la consulta base
@@ -47,6 +48,7 @@ class InscripcionMaestriaModel
                 ma.numero AS maestria_abierto_numero, -- Asumimos 'numero' es el campo a mostrar de maestria_abierto
                 im.alumno_id,
                 CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo, -- Asumimos campos en tabla 'alumno'
+                COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) AS alumno_telefono,
                 im.estatus_inscripcion_id,
                 ei.nombre AS estatus_inscripcion_nombre -- Asumimos 'nombre' en tabla 'estatus_inscripcion'
             FROM
@@ -77,10 +79,12 @@ class InscripcionMaestriaModel
         if (!empty($searchValue)) {
             $where[] = "(ma.numero LIKE :search_maestria_abierto "
                 . "OR CONCAT(a.primer_nombre, ' ', a.primer_apellido) LIKE :search_alumno_nombre "
+                . "OR COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) LIKE :search_telefono "
                 . "OR ei.nombre LIKE :search_estatus_inscripcion)";
             $like = '%' . $searchValue . '%';
             $queryParams[':search_maestria_abierto'] = $like;
             $queryParams[':search_alumno_nombre'] = $like;
+            $queryParams[':search_telefono'] = $like;
             $queryParams[':search_estatus_inscripcion'] = $like;
         }
 

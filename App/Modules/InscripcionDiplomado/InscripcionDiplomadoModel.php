@@ -34,9 +34,10 @@ class InscripcionDiplomadoModel
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
             0 => 'id.id',
-            1 => 'diplomado_abierto_numero', // Alias de la columna unida
-            2 => 'alumno_nombre_completo',   // Alias de la columna unida
-            3 => 'estatus_inscripcion_nombre', // Alias de la columna unida
+            1 => 'diplomado_abierto_numero',
+            2 => 'alumno_nombre_completo',
+            3 => 'alumno_telefono',
+            4 => 'estatus_inscripcion_nombre',
         ];
 
         // Construir la consulta base
@@ -47,6 +48,7 @@ class InscripcionDiplomadoModel
                 da.numero AS diplomado_abierto_numero, -- Número del Diplomado Abierto
                 id.alumno_id,
                 CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo, -- Nombre completo del Alumno
+                COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) AS alumno_telefono,
                 id.estatus_inscripcion_id,
                 ei.nombre AS estatus_inscripcion_nombre -- Nombre del Estatus de Inscripción
             FROM
@@ -77,10 +79,12 @@ class InscripcionDiplomadoModel
         if (!empty($searchValue)) {
             $where[] = "(da.numero LIKE :search_diplomado_abierto_numero "
                 . "OR CONCAT(a.primer_nombre, ' ', a.primer_apellido) LIKE :search_alumno_nombre_completo "
+                . "OR COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) LIKE :search_telefono "
                 . "OR ei.nombre LIKE :search_estatus_inscripcion_nombre)";
             $like = '%' . $searchValue . '%';
             $queryParams[':search_diplomado_abierto_numero'] = $like;
             $queryParams[':search_alumno_nombre_completo'] = $like;
+            $queryParams[':search_telefono'] = $like;
             $queryParams[':search_estatus_inscripcion_nombre'] = $like;
         }
 

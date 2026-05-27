@@ -57,7 +57,8 @@ $(document).ready(function () {
                 }, // ID
                 { "data": 1 }, // Número de Diplomado Abierto
                 { "data": 2 }, // Nombre completo del Alumno
-                { "data": 3 }, // Estatus de Inscripción
+                { "data": 3 }, // Teléfono
+                { "data": 4 }, // Estatus de Inscripción
                 { // Columna para Acciones
                     "data": null,
                     "orderable": false,

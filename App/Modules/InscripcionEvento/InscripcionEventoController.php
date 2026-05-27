@@ -65,10 +65,10 @@ class InscripcionEventoController extends Controller
                 // Los nombres de las columnas aquí deben coincidir con los aliases en la consulta SQL del modelo
                 $formattedData[] = [
                     $row['id'],
-                    htmlspecialchars($row['evento_abierto_numero'] ?? 'N/A'), // Número del Evento Abierto
-                    htmlspecialchars($row['alumno_nombre_completo'] ?? 'N/A'), // Nombre completo del Alumno
-                    htmlspecialchars($row['estatus_inscripcion_nombre'] ?? 'N/A'), // Nombre del Estatus de Inscripción
-                    // Columna para acciones (editar/eliminar) - será renderizada en el JS
+                    htmlspecialchars($row['evento_abierto_numero'] ?? 'N/A'),
+                    htmlspecialchars($row['alumno_nombre_completo'] ?? 'N/A'),
+                    htmlspecialchars($row['alumno_telefono'] ?? 'N/A'),
+                    htmlspecialchars($row['estatus_inscripcion_nombre'] ?? 'N/A'),
                     ''
                 ];
             }

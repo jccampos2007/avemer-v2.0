@@ -66,11 +66,11 @@ class InscripcionMaestriaController extends Controller
             foreach ($data['data'] as $row) {
                 // Los nombres de las columnas aquí deben coincidir con los aliases en la consulta SQL del modelo
                 $formattedData[] = [
-                    $row['id'], // Mantener el ID en los datos para referencia interna (ej. para botones de acción)
-                    htmlspecialchars($row['maestria_abierto_numero'] ?? 'N/A'), // Número de Maestría Abierta
-                    htmlspecialchars($row['alumno_nombre_completo'] ?? 'N/A'), // Nombre completo del Alumno
-                    htmlspecialchars($row['estatus_inscripcion_nombre'] ?? 'N/A'), // Nombre del Estatus de Inscripción
-                    // Columna para acciones (editar/eliminar) - será renderizada en el JS
+                    $row['id'],
+                    htmlspecialchars($row['maestria_abierto_numero'] ?? 'N/A'),
+                    htmlspecialchars($row['alumno_nombre_completo'] ?? 'N/A'),
+                    htmlspecialchars($row['alumno_telefono'] ?? 'N/A'),
+                    htmlspecialchars($row['estatus_inscripcion_nombre'] ?? 'N/A'),
                     ''
                 ];
             }

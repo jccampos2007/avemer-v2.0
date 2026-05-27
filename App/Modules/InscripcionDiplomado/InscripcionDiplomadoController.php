@@ -65,6 +65,7 @@ class InscripcionDiplomadoController extends Controller
                     $row['id'],
                     htmlspecialchars($row['diplomado_abierto_numero'] ?? 'N/A'),
                     htmlspecialchars($row['alumno_nombre_completo'] ?? 'N/A'),
+                    htmlspecialchars($row['alumno_telefono'] ?? 'N/A'),
                     htmlspecialchars($row['estatus_inscripcion_nombre'] ?? 'N/A'),
                     ''
                 ];

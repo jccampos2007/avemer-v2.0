@@ -57,7 +57,8 @@ $(document).ready(function () {
                 }, // ID
                 { "data": 1 }, // Evento Abierto (número)
                 { "data": 2 }, // Alumno (nombre completo)
-                { "data": 3 }, // Estatus de Inscripción
+                { "data": 3 }, // Teléfono
+                { "data": 4 }, // Estatus de Inscripción
                 { // Columna de Acciones
                     "data": null,
                     "orderable": false,

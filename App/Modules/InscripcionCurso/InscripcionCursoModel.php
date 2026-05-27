@@ -35,9 +35,10 @@ class InscripcionCursoModel
         // Asegúrate de que estos índices coincidan con el orden de las columnas en tu DataTables JS
         $columnMap = [
             0 => 'ic.id',
-            1 => 'curso_abierto_numero', // Alias de la columna unida
-            2 => 'alumno_nombre_completo', // Alias de la columna unida
-            3 => 'estatus_inscripcion_nombre', // Alias de la columna unida
+            1 => 'curso_abierto_numero',
+            2 => 'alumno_nombre_completo',
+            3 => 'alumno_telefono',
+            4 => 'estatus_inscripcion_nombre',
         ];
 
         // Construir la consulta base
@@ -48,6 +49,7 @@ class InscripcionCursoModel
                 ca.numero AS curso_abierto_numero, -- Asumimos que 'numero' es el campo a mostrar de curso_abierto
                 ic.alumno_id,
                 CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo, -- Asumimos campos en tabla 'alumno'
+                COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) AS alumno_telefono,
                 ic.estatus_inscripcion_id,
                 ei.nombre AS estatus_inscripcion_nombre -- Asumimos 'nombre' en tabla 'estatus_inscripcion'
             FROM
@@ -78,10 +80,12 @@ class InscripcionCursoModel
         if (!empty($searchValue)) {
             $where[] = "(ca.numero LIKE :search_curso_abierto "
                 . "OR CONCAT(a.primer_nombre, ' ', a.primer_apellido) LIKE :search_alumno_nombre "
+                . "OR COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) LIKE :search_telefono "
                 . "OR ei.nombre LIKE :search_estatus_inscripcion)";
             $like = '%' . $searchValue . '%';
             $queryParams[':search_curso_abierto'] = $like;
             $queryParams[':search_alumno_nombre'] = $like;
+            $queryParams[':search_telefono'] = $like;
             $queryParams[':search_estatus_inscripcion'] = $like;
         }
 
