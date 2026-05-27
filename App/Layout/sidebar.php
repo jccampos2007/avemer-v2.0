@@ -13,47 +13,47 @@ $uriSegments = explode('/', $relativeUri);
 $module = $uriSegments[0] ?? '';
 
 // Definición de visibilidad basada en permisos (Keywords exactos de la BD)
-$canSeeAlumnos = Auth::hasPermission('alumnos');
-$canSeeDocentes = Auth::hasPermission('docentes');
-$canSeeCoordinadores = Auth::hasPermission('coordinadores');
+$canSeeAlumnos = \App\Core\Auth::hasPermission('alumnos');
+$canSeeDocentes = \App\Core\Auth::hasPermission('docentes');
+$canSeeCoordinadores = \App\Core\Auth::hasPermission('coordinadores');
 
-$canSeeCursos = Auth::hasPermission('cursos');
-$canSeeCursosAbiertos = Auth::hasPermission('cursos_abiertos');
-$canSeeInscripcionCurso = Auth::hasPermission('inscripcion_curs');
+$canSeeCursos = \App\Core\Auth::hasPermission('cursos');
+$canSeeCursosAbiertos = \App\Core\Auth::hasPermission('cursos_abiertos');
+$canSeeInscripcionCurso = \App\Core\Auth::hasPermission('inscripcion_curs');
 
-$canSeeEvento = Auth::hasPermission('evento');
-$canSeeEventoAbierto = Auth::hasPermission('evento_abierto');
-$canSeeInscripcionEvento = Auth::hasPermission('inscripcion_even');
+$canSeeEvento = \App\Core\Auth::hasPermission('evento');
+$canSeeEventoAbierto = \App\Core\Auth::hasPermission('evento_abierto');
+$canSeeInscripcionEvento = \App\Core\Auth::hasPermission('inscripcion_even');
 
-$canSeeDiplomado = Auth::hasPermission('diplomado');
-$canSeeCapitulo = Auth::hasPermission('capitulo');
-$canSeeDiplomadoAbierto = Auth::hasPermission('diplomado_abiert');
-$canSeeDiplomadoControl = Auth::hasPermission('diplomado_cont');
-$canSeeInscripcionDiplomado = Auth::hasPermission('inscripcion_dipl');
-$canSeePreinscripcionDiplomado = Auth::hasPermission('preinscripcion_d');
+$canSeeDiplomado = \App\Core\Auth::hasPermission('diplomado');
+$canSeeCapitulo = \App\Core\Auth::hasPermission('capitulo');
+$canSeeDiplomadoAbierto = \App\Core\Auth::hasPermission('diplomado_abiert');
+$canSeeDiplomadoControl = \App\Core\Auth::hasPermission('diplomado_cont');
+$canSeeInscripcionDiplomado = \App\Core\Auth::hasPermission('inscripcion_dipl');
+$canSeePreinscripcionDiplomado = \App\Core\Auth::hasPermission('preinscripcion_d');
 
-$canSeeMaestria = Auth::hasPermission('maestria');
-$canSeeMaestriaAbierto = Auth::hasPermission('maestria_abierto');
-$canSeeInscripcionMaestria = Auth::hasPermission('inscripcion_maes');
+$canSeeMaestria = \App\Core\Auth::hasPermission('maestria');
+$canSeeMaestriaAbierto = \App\Core\Auth::hasPermission('maestria_abierto');
+$canSeeInscripcionMaestria = \App\Core\Auth::hasPermission('inscripcion_maes');
 
-$canSeeCuota = Auth::hasPermission('cuota');
-$canSeePago = Auth::hasPermission('pago');
-$canSeeCompensar = Auth::hasPermission('compensar');
-$canSeeCronograma = Auth::hasPermission('cronograma');
+$canSeeCuota = \App\Core\Auth::hasPermission('cuota');
+$canSeePago = \App\Core\Auth::hasPermission('pago');
+$canSeeCompensar = \App\Core\Auth::hasPermission('compensar');
+$canSeeCronograma = \App\Core\Auth::hasPermission('cronograma');
 
-$canSeeListaCorreo = Auth::hasPermission('listacorreo');
-$canSeeMensajes = Auth::hasPermission('mensajes');
-$canSeeListaEnvio = Auth::hasPermission('listaenvio');
+$canSeeListaCorreo = \App\Core\Auth::hasPermission('listacorreo');
+$canSeeMensajes = \App\Core\Auth::hasPermission('mensajes');
+$canSeeListaEnvio = \App\Core\Auth::hasPermission('listaenvio');
 
-$canSeeSede = Auth::hasPermission('sede');
-$canSeeBanco = Auth::hasPermission('banco');
-$canSeeDuracion = Auth::hasPermission('duracion');
-$canSeeProfesion = Auth::hasPermission('profesion_oficio');
+$canSeeSede = \App\Core\Auth::hasPermission('sede');
+$canSeeBanco = \App\Core\Auth::hasPermission('banco');
+$canSeeDuracion = \App\Core\Auth::hasPermission('duracion');
+$canSeeProfesion = \App\Core\Auth::hasPermission('profesion_oficio');
 
-$canSeeCiudad = Auth::hasPermission('estado');
+$canSeeCiudad = \App\Core\Auth::hasPermission('estado');
 
-$canSeeUsers = Auth::hasPermission('users');
-$canSeeGrupo = Auth::hasPermission('grupo');
+$canSeeUsers = \App\Core\Auth::hasPermission('users');
+$canSeeGrupo = \App\Core\Auth::hasPermission('grupo');
 
 // Visibilidad de secciones
 $showRegistro = $canSeeAlumnos || $canSeeDocentes || $canSeeCoordinadores;
@@ -357,7 +357,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
     <!-- Perfil de usuario y Logout -->
     <?php
     // User profile photo (fallback to default avatar)
-    $profileImg = Auth::user('profile_image') ?? null;
+    $profileImg = \App\Core\Auth::user('profile_image') ?? null;
     $avatarPath = $profileImg ? BASE_URL . 'uploads/avatars/' . $profileImg : BASE_URL . 'image/default-avatar.png';
     ?>
     <div class="mt-8 pt-4 border-t border-gray-700">
@@ -367,8 +367,8 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
             </div>
             
             <div class="mt-2 text-center w-full px-2">
-                <p class="text-sm font-medium text-white truncate"><?php echo Auth::user('user_name'); ?></p>
-                <p class="text-xs text-gray-400 truncate"><?php echo Auth::user('nombre_grupo'); ?></p>
+                <p class="text-sm font-medium text-white truncate"><?php echo htmlspecialchars(\App\Core\Auth::user('user_name') ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                <p class="text-xs text-gray-400 truncate"><?php echo htmlspecialchars(\App\Core\Auth::user('nombre_grupo') ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
         </div>
         

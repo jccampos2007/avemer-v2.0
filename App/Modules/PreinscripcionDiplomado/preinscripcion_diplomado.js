@@ -63,7 +63,7 @@ $(document).ready(function () {
         $.ajax({
             url: `${BASE_URL_JS}preinscripcion_diplomado/search_alumno`,
             method: 'POST',
-            data: { ci_pasapote: ciPasapote },
+            data: { ci_pasapote: ciPasapote, csrf_token: CSRF_TOKEN },
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
@@ -129,6 +129,7 @@ $(document).ready(function () {
         $.ajax({
             url: `${BASE_URL_JS}preinscripcion_diplomado/get_diplomados_abiertos`,
             method: 'POST',
+            data: { csrf_token: CSRF_TOKEN },
             dataType: 'json',
             success: function (response) {
                 diplomadosAbiertosList.empty();
@@ -179,7 +180,8 @@ $(document).ready(function () {
                 method: 'POST',
                 data: {
                     alumno_id: alumnoId,
-                    diplomado_abierto_id: diplomadoAbiertoId
+                    diplomado_abierto_id: diplomadoAbiertoId,
+                    csrf_token: CSRF_TOKEN
                 },
                 dataType: 'json',
                 success: function (response) {

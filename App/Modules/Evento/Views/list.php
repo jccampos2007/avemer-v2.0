@@ -2,9 +2,9 @@
 // php_mvc_app/app/Modules/Evento/Views/list.php
 use App\Core\Auth;
 
-$canCreate = Auth::hasPermission('evento', 'crear');
-$canEdit = Auth::hasPermission('evento', 'modificar');
-$canDelete = Auth::hasPermission('evento', 'eliminar');
+$canCreate = \App\Core\Auth::hasPermission('evento', 'crear');
+$canEdit = \App\Core\Auth::hasPermission('evento', 'modificar');
+$canDelete = \App\Core\Auth::hasPermission('evento', 'eliminar');
 ?>
 
 

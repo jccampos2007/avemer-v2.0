@@ -83,6 +83,7 @@ function postJSON(url, data, onSuccess, onError) {
         console.error('Network error');
         onError('Error de conexión al servidor.');
     };
+    data.csrf_token = CSRF_TOKEN;
     const params = new URLSearchParams();
     for (const k in data) params.append(k, data[k]);
     xhr.send(params.toString());

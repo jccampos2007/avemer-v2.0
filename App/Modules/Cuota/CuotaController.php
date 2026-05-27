@@ -34,6 +34,7 @@ class CuotaController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $cuota_data = []; // Datos vacíos para el formulario de creación
@@ -49,6 +50,7 @@ class CuotaController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $cuota_data = $this->cuotaModel->getById($id);
@@ -278,6 +280,7 @@ class CuotaController extends Controller
     public function generateDebt(): void
     {
         Auth::requireLogin();
+        $this->validateCsrf();
 
         if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
             header('HTTP/1.0 403 Forbidden');

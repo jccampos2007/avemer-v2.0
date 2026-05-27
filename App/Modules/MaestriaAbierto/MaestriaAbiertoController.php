@@ -101,6 +101,7 @@ class MaestriaAbiertoController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $maestria_abierto_data = []; // Datos vacíos para el formulario
@@ -116,6 +117,7 @@ class MaestriaAbiertoController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $maestria_abierto_data = $this->maestriaAbiertoModel->getById($id);

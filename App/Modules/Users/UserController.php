@@ -102,6 +102,7 @@ class UserController extends Controller
     public function store(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $data = [
                 'usuario_cedula' => $this->sanitizeInput($_POST['usuario_cedula']),
                 'usuario_nombre' => $this->sanitizeInput($_POST['usuario_nombre']),
@@ -131,6 +132,7 @@ class UserController extends Controller
     public function update(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $data = [
                 'usuario_cedula' => $this->sanitizeInput($_POST['usuario_cedula']),
                 'usuario_nombre' => $this->sanitizeInput($_POST['usuario_nombre']),
@@ -165,6 +167,7 @@ class UserController extends Controller
 
     public function delete(int $id): void
     {
+        $this->validateCsrf();
         try {
             if ($this->userModel->delete($id)) {
                 Auth::setFlashMessage('success', 'Usuario eliminado correctamente.');

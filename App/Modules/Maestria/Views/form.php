@@ -33,6 +33,7 @@ $convenio_val = htmlspecialchars($maestria_data['convenio'] ?? '');
         </div>
 
         <form id="formMaestria" action="<?php echo $form_action; ?>" method="POST">
+            <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
             <div id="form_collapsible_wrapper" class="grid transition-all duration-300" style="grid-template-rows: 1fr;">
                 <div id="form_collapsible_content" class="min-h-0" style="overflow: visible;">
             <?php if ($is_edit): ?>

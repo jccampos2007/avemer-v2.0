@@ -43,7 +43,7 @@ $docente_nombre_val = htmlspecialchars($evento_abierto_data['docente_nombre'] ??
             data-sede-id="<?php echo $sede_id_val; ?>"
             data-estatus-id="<?php echo $estatus_id_val; ?>"
             data-nombre-carta="<?php echo htmlspecialchars($evento_abierto_data['nombre_carta'] ?? ''); ?>">
-
+            <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
             <div id="form_collapsible_wrapper" class="grid transition-all duration-300" style="grid-template-rows: 1fr;">
                 <div id="form_collapsible_content" class="min-h-0" style="overflow: visible;">
 

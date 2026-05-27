@@ -7,6 +7,7 @@ $is_edit = isset($grupo_data['grupo_id']) && !empty($grupo_data['grupo_id']);
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Grupo y Permisos' : 'Crear Nuevo Grupo'; ?></h3>
     
     <form id="form_grupo_page">
+        <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
         <input type="hidden" name="grupo_id" id="grupo_id" value="<?php echo $grupo_data['grupo_id'] ?? ''; ?>">
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

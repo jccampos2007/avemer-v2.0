@@ -39,6 +39,7 @@ class CiudadController extends Controller
     public function store(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $data = [
                 'nombre' => trim($_POST['nombre'] ?? ''),
                 'pais_id' => (int)($_POST['pais_id'] ?? 1)
@@ -73,6 +74,7 @@ class CiudadController extends Controller
     public function update(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $data = [
                 'nombre' => trim($_POST['nombre'] ?? ''),
                 'pais_id' => (int)($_POST['pais_id'] ?? 1)
@@ -94,6 +96,7 @@ class CiudadController extends Controller
 
     public function delete(int $id): void
     {
+        $this->validateCsrf();
         header('Content-Type: application/json');
         
         if ($this->ciudadModel->delete($id)) {

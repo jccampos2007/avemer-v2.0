@@ -13,6 +13,7 @@ $mensaje_val = htmlspecialchars($mensajes_data['mensaje'] ?? '');
 <div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title; ?></h3>
     <form id="formmensajes" action="<?php echo $form_action; ?>" method="POST">
+        <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?php echo $mensajes_data['id']; ?>">
         <?php endif; ?>
@@ -43,5 +44,3 @@ $mensaje_val = htmlspecialchars($mensajes_data['mensaje'] ?? '');
 <!-- JavaScript específico para este módulo -->
 <?php $page_js = 'asset/js/Mensajes/mensajes.js'; ?>
 
-<!-- CKEditor 5 CDN -->
-<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>

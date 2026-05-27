@@ -11,6 +11,7 @@ $is_edit = isset($curso_data['id']) && !empty($curso_data['id']);
         </h3>
         
         <form id="formCurso" action="<?php echo BASE_URL; ?>cursos/<?php echo ($is_edit) ? 'edit/' . $curso_data['id'] : 'create'; ?>" method="POST">
+            <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>

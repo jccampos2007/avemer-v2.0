@@ -55,6 +55,24 @@ class Controller
         return htmlspecialchars(strip_tags(trim($data)));
     }
 
+    protected function validateCsrf(): void
+    {
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+            return;
+        }
+        $token = $_POST['csrf_token'] ?? '';
+        if (Auth::validateCsrfToken($token)) {
+            return;
+        }
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido.']);
+            exit;
+        }
+        Auth::setFlashMessage('error', 'Token CSRF inválido. Intente nuevamente.');
+        $this->redirect($_SERVER['HTTP_REFERER'] ?? 'dashboard');
+    }
+
     protected function renderLanding(string $viewPath): void
     {
         // Construimos la ruta hacia App/Views/

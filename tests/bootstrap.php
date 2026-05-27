@@ -9,10 +9,10 @@ define('MODULES_PATH', APP_ROOT . '/App/Modules/');
 define('CORE_PATH', APP_ROOT . '/App/Core/');
 define('VIEWS_LAYOUT_PATH', APP_ROOT . '/App/Layout/');
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'php_mvc_app_test');
-define('DB_USER', 'admin');
-define('DB_PASS', 'Admin.2026*MySQL');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'php_mvc_app_test');
+define('DB_USER', getenv('DB_USER') ?: 'admin');
+define('DB_PASS', getenv('DB_PASS') ?: 'Admin.2026*MySQL');
 
 define('TIPO_USUARIO_ADMIN', 1);
 define('TIPO_USUARIO_ALUMNO', 2);

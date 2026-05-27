@@ -25,7 +25,7 @@ $(document).ready(function () {
         }
 
         // Habilitar botón de crear
-        createCapituloBtn.removeClass('opacity-50 cursor-not-allowed').attr('href', `${BASE_URL_JS}capitulo/create/${diplomadoId}`);
+        createCapituloBtn.removeClass('opacity-50 cursor-not-allowed').attr('href', `${BASE_URL_JS}capitulo/create`);
 
         dataTableInstance = capituloTable.DataTable({
             "processing": true,
@@ -165,31 +165,71 @@ $(document).ready(function () {
         });
     }
 
-
     // ---------------------------------------------------
     // Lógica para la vista de FORMULARIO (Crear/Editar)
     // ---------------------------------------------------
-    const formCapitulo = $('#formCapitulo'); // Asume que el ID de tu formulario es 'formCapitulo'
+    const formCapitulo = $('#formCapitulo');
     if (formCapitulo.length) {
-        // Inicializar CKEditor 4 para el campo descripcion
-        if (typeof CKEDITOR !== 'undefined') {
-            CKEDITOR.replace('descripcion', {
-                language: 'es',
-                // Puedes personalizar la barra de herramientas aquí si no quieres la 'full'
-                // toolbar: [ ... ]
+        // Inicializar autocomplete para seleccionar diplomado
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('diplomado_autocomplete', 'diplomado_id', 'diplomado', 3, {
+                displayColumn: "CONCAT(siglas, ' - ', nombre)"
             });
+        }
 
-            // Pre-llenar CKEditor 4 en modo edición
-            const currentDescripcion = formCapitulo.data('descripcion');
-            if (currentDescripcion) {
-                CKEDITOR.on('instanceReady', function (event) {
-                    if (event.editor.name === 'descripcion') {
-                        event.editor.setData(currentDescripcion);
+        // Enviar formulario via AJAX solo en modo creación (sin hidden id)
+        if (!$('input[name="id"]', formCapitulo).length) {
+        formCapitulo.on('submit', function (e) {
+            e.preventDefault();
+
+            const $btn = $(this).find('button[type="submit"]');
+            $btn.prop('disabled', true).text('Guardando...');
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        $('#numero').val('');
+                        $('#nombre').val('');
+                        $('#descripcion').val('');
+                        $('#orden').val('');
+                        $('#activo').prop('checked', true);
+                        $('#diplomado_autocomplete').val('');
+                        $('#diplomado_id').val('');
+
+                        const diplomadoId = response.data ? response.data.diplomado_id : null;
+                        if (diplomadoId && typeof initializeCapituloDataTable === 'function') {
+                            initializeCapituloDataTable(diplomadoId);
+                        }
+
+                        showFlashMessage('success', response.message);
+                    } else {
+                        showFlashMessage('error', response.message);
                     }
-                });
+                },
+                error: function (xhr) {
+                    let msg = 'Error al procesar la solicitud.';
+                    try {
+                        const res = JSON.parse(xhr.responseText);
+                        if (res.message) msg = res.message;
+                    } catch (e) {}
+                    showFlashMessage('error', msg);
+                },
+                complete: function () {
+                    $btn.prop('disabled', false).text('Guardar Capítulo');
+                }
+            });
+        });
+
+        // Sincronizar autocomplete del formulario con la lista
+        $('#diplomado_autocomplete').on('autocompleteselect', function (event, ui) {
+            if (typeof initializeCapituloDataTable === 'function') {
+                initializeCapituloDataTable(ui.item.id);
             }
-        } else {
-            console.error('CKEDITOR no está definido. Asegúrate de que la librería de CKEditor 4 esté cargada correctamente.');
+        });
         }
     }
 });

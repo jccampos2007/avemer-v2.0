@@ -19,6 +19,7 @@ class AuthController extends Controller
     public function processLogin(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $username = $this->sanitizeInput($_POST['username']);
             $password = $_POST['password']; // No sanitizar la contraseña antes de verificarla
 

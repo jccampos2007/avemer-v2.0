@@ -100,6 +100,7 @@ class DiplomadoController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $diplomado_data = []; // Datos vacíos para el formulario
@@ -115,6 +116,7 @@ class DiplomadoController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $diplomado_data = $this->diplomadoModel->getById($id);
@@ -148,7 +150,7 @@ class DiplomadoController extends Controller
             $data = [
                 'duracion_id' => !empty($_POST['duracion_id']) ? (int)$this->sanitizeInput($_POST['duracion_id']) : null,
                 'nombre' => $this->sanitizeInput($_POST['nombre']),
-                'descripcion' => $_POST['descripcion'], // CKEditor content, no usar htmlspecialchars directamente aquí
+                'descripcion' => $_POST['descripcion'],
                 'siglas' => $this->sanitizeInput($_POST['siglas']),
                 'costo' => (float)$this->sanitizeInput($_POST['costo']),
                 'inicial' => (float)$this->sanitizeInput($_POST['inicial']),

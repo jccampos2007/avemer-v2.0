@@ -2,9 +2,9 @@
 // php_mvc_app/app/Modules/Cursos/Views/list.php
 use App\Core\Auth;
 
-$canCreate = Auth::hasPermission('cursos', 'crear');
-$canEdit = Auth::hasPermission('cursos', 'modificar');
-$canDelete = Auth::hasPermission('cursos', 'eliminar');
+$canCreate = \App\Core\Auth::hasPermission('cursos', 'crear');
+$canEdit = \App\Core\Auth::hasPermission('cursos', 'modificar');
+$canDelete = \App\Core\Auth::hasPermission('cursos', 'eliminar');
 ?>
 
 

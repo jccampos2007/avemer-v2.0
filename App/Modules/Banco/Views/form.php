@@ -5,6 +5,7 @@ $is_edit = isset($banco_data['id']) && !empty($banco_data['id']);
 <div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Banco' : 'Crear Nuevo Banco'; ?></h3>
     <form id="form_banco" action="<?php echo BASE_URL; ?>banco/<?php echo ($is_edit) ? 'update/' . htmlspecialchars($banco_data['id']) : 'store'; ?>" method="POST">
+        <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
                 <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre del Banco:</label>

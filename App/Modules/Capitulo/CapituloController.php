@@ -114,26 +114,27 @@ class CapituloController extends Controller
 
     /**
      * Exibe el formulario para crear un nuevo registro de Capítulo.
-     * Requiere un diplomado_id.
-     * @param int $diplomadoId El ID del diplomado al que pertenece el capítulo.
      */
-    public function create(?int $diplomadoId = null): void
+    public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->processForm();
-        } else {
-            $diplomado = $this->diplomadoModel->getById($diplomadoId);
-            if (!$diplomado) {
-                Auth::setFlashMessage('error', 'Diplomado no encontrado para crear capítulo.');
-                $this->redirect('capitulo'); // Redirigir a la lista general de capítulos
+            $this->validateCsrf();
+            $result = $this->processForm();
+
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                echo json_encode($result);
+                exit();
             }
 
-            $capitulo_data = [
-                'diplomado_id' => $diplomadoId,
-                'diplomado_nombre' => $diplomado['nombre'] // Asumiendo que el modelo de Diplomado devuelve el nombre
-            ];
-            $this->view('Capitulo/form', ['capitulo_data' => $capitulo_data]);
+            $this->redirect('capitulo/create');
         }
+
+        $capitulo_data = [
+            'diplomado_id' => '',
+            'diplomado_nombre' => ''
+        ];
+        $this->view('Capitulo/form', ['capitulo_data' => $capitulo_data]);
     }
 
     /**
@@ -143,79 +144,75 @@ class CapituloController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->processForm($id);
-        } else {
-            $capitulo_data = $this->capituloModel->getById($id);
-            if (!$capitulo_data) {
-                Auth::setFlashMessage('error', 'Capítulo no encontrado.');
-                $this->redirect('capitulo');
-            }
-            // Para la edición, también necesitamos el nombre del diplomado para mostrarlo
-            $diplomado = $this->diplomadoModel->getById($capitulo_data['diplomado_id']);
-            if ($diplomado) {
-                $capitulo_data['diplomado_nombre'] = $diplomado['nombre'];
-            } else {
-                $capitulo_data['diplomado_nombre'] = 'Diplomado Desconocido';
-            }
-
-            $this->view('Capitulo/form', ['capitulo_data' => $capitulo_data]);
+            $this->validateCsrf();
+            $result = $this->processForm($id);
+            $this->redirect($result['success'] ? 'capitulo' : 'capitulo/edit/' . $id);
         }
+
+        $capitulo_data = $this->capituloModel->getById($id);
+        if (!$capitulo_data) {
+            Auth::setFlashMessage('error', 'Capítulo no encontrado.');
+            $this->redirect('capitulo');
+        }
+        $diplomado = $this->diplomadoModel->getById($capitulo_data['diplomado_id']);
+        if ($diplomado) {
+            $capitulo_data['diplomado_nombre'] = $diplomado['nombre'];
+        } else {
+            $capitulo_data['diplomado_nombre'] = 'Diplomado Desconocido';
+        }
+
+        $this->view('Capitulo/form', ['capitulo_data' => $capitulo_data]);
     }
 
     /**
      * Procesa los datos del formulario (crear o actualizar).
      * @param int|null $id El ID del registro si es una actualización, null si es una creación.
+     * @return array Resultado con success, message y data opcional.
      */
-    private function processForm(?int $id = null): void
+    private function processForm(?int $id = null): array
     {
         try {
-            // Validação básica y sanitización
             $data = [
                 'diplomado_id' => !empty($_POST['diplomado_id']) ? (int)$this->sanitizeInput($_POST['diplomado_id']) : null,
                 'numero' => $this->sanitizeInput($_POST['numero']),
                 'nombre' => $this->sanitizeInput($_POST['nombre']),
-                'descripcion' => $_POST['descripcion'], // CKEditor content, no usar htmlspecialchars directamente aquí
-                'activo' => isset($_POST['activo']) ? 1 : 0, // Checkbox
+                'descripcion' => $_POST['descripcion'] ?? '',
+                'activo' => (int)($_POST['activo'] ?? 1),
                 'orden' => !empty($_POST['orden']) ? (int)$this->sanitizeInput($_POST['orden']) : 0,
             ];
 
-            // Validação de campos obrigatórios
-            if (empty($data['diplomado_id']) || empty($data['numero']) || empty($data['nombre']) || empty($data['descripcion']) || !isset($data['activo']) || !isset($data['orden'])) {
-                Auth::setFlashMessage('error', 'Todos los campos obligatorios deben ser completados.');
-                $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create/' . $data['diplomado_id']; // Redirigir con diplomado_id
-                $this->redirect($redirectPath);
-                return;
+            if (empty($data['diplomado_id']) || empty($data['numero']) || empty($data['nombre']) || !isset($data['activo']) || !isset($data['orden'])) {
+                $message = 'Todos los campos obligatorios deben ser completados.';
+                Auth::setFlashMessage('error', $message);
+                return ['success' => false, 'message' => $message];
             }
 
             $success = false;
             if ($id) {
-                // Actualizar
                 $success = $this->capituloModel->update($id, $data);
                 $message = $success ? 'Capítulo actualizado con éxito.' : 'Error al actualizar el Capítulo.';
             } else {
-                // Crear
                 $success = $this->capituloModel->create($data);
                 $message = $success ? 'Capítulo creado con éxito.' : 'Error al crear el Capítulo.';
             }
 
-            if ($success) {
-                Auth::setFlashMessage('success', $message);
-                $this->redirect('capitulo?diplomado_id=' . $data['diplomado_id']); // Redirigir a la lista filtrada
-            } else {
-                Auth::setFlashMessage('error', $message);
-                $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create/' . $data['diplomado_id'];
-                $this->redirect($redirectPath);
-            }
+            Auth::setFlashMessage($success ? 'success' : 'error', $message);
+
+            return [
+                'success' => $success,
+                'message' => $message,
+                'data' => $success ? $data : null
+            ];
         } catch (\PDOException $e) {
             error_log('Error de BD en processForm (Capitulo): ' . $e->getMessage());
-            Auth::setFlashMessage('error', 'Error de base de datos: ' . $e->getMessage());
-            $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create/' . ($_POST['diplomado_id'] ?? '');
-            $this->redirect($redirectPath);
+            $message = 'Error de base de datos: ' . $e->getMessage();
+            Auth::setFlashMessage('error', $message);
+            return ['success' => false, 'message' => $message];
         } catch (\Exception $e) {
             error_log('Error en processForm (Capitulo): ' . $e->getMessage());
-            Auth::setFlashMessage('error', 'Ocurrió un error: ' . $e->getMessage());
-            $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create/' . ($_POST['diplomado_id'] ?? '');
-            $this->redirect($redirectPath);
+            $message = 'Ocurrió un error: ' . $e->getMessage();
+            Auth::setFlashMessage('error', $message);
+            return ['success' => false, 'message' => $message];
         }
     }
 

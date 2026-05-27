@@ -39,6 +39,7 @@ class PreinscripcionDiplomadoController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processPreinscripcion(); // Cambiado a processPreinscripcion para mayor claridad
         } else {
             $data = [
@@ -89,6 +90,7 @@ class PreinscripcionDiplomadoController extends Controller
     public function createAlumno(): void
     {
         header('Content-Type: application/json');
+        $this->validateCsrf();
 
         $data = [
             'ci_pasapote' => $this->sanitizeInput($_POST['ci_pasapote'] ?? ''),

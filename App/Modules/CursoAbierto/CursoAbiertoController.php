@@ -25,6 +25,7 @@ class CursoAbiertoController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $this->view('CursoAbierto/form', ['curso_abierto_data' => []]); // Ruta de vista relativa al módulo
@@ -34,6 +35,7 @@ class CursoAbiertoController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $curso_abierto_data = $this->cursoAbiertoModel->findById($id);

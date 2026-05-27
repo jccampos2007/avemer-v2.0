@@ -34,6 +34,7 @@ class CorreoController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $correo_data = []; // Datos vacíos para el formulario de creación
@@ -250,6 +251,7 @@ class CorreoController extends Controller
     public function sendChecked(): void
     {
         Auth::requireLogin();
+        $this->validateCsrf();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
             header('HTTP/1.0 403 Forbidden');
             echo json_encode(['success' => false, 'message' => 'Acceso denegado.']);

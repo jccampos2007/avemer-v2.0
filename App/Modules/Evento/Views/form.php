@@ -35,6 +35,7 @@ $inicial_val = htmlspecialchars($evento_data['inicial'] ?? '0.00');
         </div>
         
         <form id="formEvento" action="<?php echo $form_action; ?>" method="POST" data-duracion-id="<?php echo $duracion_id_val; ?>">
+            <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
             <div id="form_collapsible_wrapper" class="grid transition-all duration-300" style="grid-template-rows: 1fr;">
                 <div id="form_collapsible_content" class="min-h-0" style="overflow: visible;">
 

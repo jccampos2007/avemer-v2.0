@@ -32,6 +32,7 @@ class DocenteController extends Controller
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm();
         } else {
             $docente_data = []; // Datos vacíos para el formulario
@@ -47,6 +48,7 @@ class DocenteController extends Controller
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $this->processForm($id);
         } else {
             $docente_data = $this->docenteModel->findById($id);

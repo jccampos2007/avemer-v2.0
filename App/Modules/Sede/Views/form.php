@@ -5,6 +5,7 @@ $is_edit = isset($sede_data['id']) && !empty($sede_data['id']);
 <div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo ($is_edit) ? 'Editar Sede' : 'Crear Nueva Sede'; ?></h3>
     <form id="form_sede" action="<?php echo BASE_URL; ?>sede/<?php echo ($is_edit) ? 'update/' . htmlspecialchars($sede_data['id']) : 'store'; ?>" method="POST">
+        <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <div class="md:col-span-2 lg:col-span-4">
                 <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre de la Sede:</label>

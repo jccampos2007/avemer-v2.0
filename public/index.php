@@ -153,7 +153,7 @@ $router->add('GET', '/diplomado/delete/{id}', DiplomadoController::class . '@del
 $router->add('POST', '/diplomado/data', DiplomadoController::class . '@getDiplomadoData');
 
 $router->add('GET', '/capitulo', CapituloController::class . '@index');
-$router->add('GET', '/capitulo/create/{diplomadoId}', CapituloController::class . '@create');
+$router->add('GET', '/capitulo/create', CapituloController::class . '@create');
 $router->add('POST', '/capitulo/create', CapituloController::class . '@create');
 $router->add('GET', '/capitulo/edit/{id}', CapituloController::class . '@edit');
 $router->add('POST', '/capitulo/edit/{id}', CapituloController::class . '@edit');

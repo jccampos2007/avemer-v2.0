@@ -12,6 +12,7 @@ $randomValue = rand(1000, 9999);
     <div id="searchAlumnoSection" class="mb-8 p-6 border rounded-lg bg-gray-50">
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Paso 1: Seleccionar o Crear Alumno</h2>
         <form id="searchAlumnoForm" class="mb-4">
+            <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
             <label for="ci_pasapote_search" class="block text-gray-700 text-sm font-bold mb-2">Buscar Alumno por CI/Pasaporte:</label>
             <div class="flex">
                 <input type="text" id="ci_pasapote_search" name="ci_pasapote_search" class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej. V-12345678" required>
@@ -32,6 +33,7 @@ $randomValue = rand(1000, 9999);
 
         <!-- Formulario para Crear Nuevo Alumno -->
         <form id="createAlumnoForm" class="hidden p-4 border border-yellow-300 bg-yellow-50 rounded-lg">
+            <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
             <h3 class="text-lg font-bold text-yellow-800 mb-2">Crear Nuevo Alumno:</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div>
