@@ -62,7 +62,8 @@ $(document).ready(function () {
                 }, // ID (mantener en los datos para referencia, pero ocultarlo)
                 { "data": 1 }, // Maestría Abierta (número)
                 { "data": 2 }, // Alumno (nombre completo)
-                { "data": 3 }, // Estatus de Inscripción
+                { "data": 3 }, // Teléfono
+                { "data": 4 }, // Estatus de Inscripción
                 { // Columna de Acciones
                     "data": null,
                     "orderable": false,
