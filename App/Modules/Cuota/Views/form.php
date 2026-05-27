@@ -23,7 +23,7 @@ $fecha_vencimiento_val = htmlspecialchars($cuota_data['fecha_vencimiento'] ?? ''
     <form id="formCuota" action="<?php echo $form_action; ?>" method="POST"
         data-oferta-academica-id="<?php echo $oferta_academica_id_val; ?>"
         data-tipo-oferta-academica-id="<?php echo $tipo_oferta_academica_id_val; ?>">
-        <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
+        <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?php echo $cuota_data['id']; ?>">
         <?php endif; ?>

@@ -25,7 +25,7 @@ $(document).ready(function () {
         }
 
         // Habilitar botón de crear
-        createCapituloBtn.removeClass('opacity-50 cursor-not-allowed').attr('href', `${BASE_URL_JS}capitulo/create/${diplomadoId}`);
+        createCapituloBtn.removeClass('opacity-50 cursor-not-allowed').attr('href', `${BASE_URL_JS}capitulo/create`);
 
         dataTableInstance = capituloTable.DataTable({
             "processing": true,
@@ -169,8 +169,15 @@ $(document).ready(function () {
     // ---------------------------------------------------
     // Lógica para la vista de FORMULARIO (Crear/Editar)
     // ---------------------------------------------------
-    const formCapitulo = $('#formCapitulo'); // Asume que el ID de tu formulario es 'formCapitulo'
+    const formCapitulo = $('#formCapitulo');
     if (formCapitulo.length) {
+        // Inicializar autocomplete para seleccionar diplomado
+        if (typeof setupAutocomplete === 'function') {
+            setupAutocomplete('diplomado_autocomplete', 'diplomado_id', 'diplomado', 3, {
+                displayColumn: "CONCAT(siglas, ' - ', nombre)"
+            });
+        }
+
         // Inicializar CKEditor 4 para el campo descripcion
         if (typeof CKEDITOR !== 'undefined') {
             CKEDITOR.replace('descripcion', {

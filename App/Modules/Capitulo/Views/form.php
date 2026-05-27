@@ -3,7 +3,7 @@
 
 // Se espera la variable $capitulo_data (vacía para crear, con datos para editar)
 $is_edit = isset($capitulo_data['id']) && !empty($capitulo_data['id']);
-$form_action = $is_edit ? BASE_URL . 'capitulo/edit/' . $capitulo_data['id'] : BASE_URL . 'capitulo/create/';
+$form_action = $is_edit ? BASE_URL . 'capitulo/edit/' . $capitulo_data['id'] : BASE_URL . 'capitulo/create';
 $page_title = $is_edit ? 'Editar Capítulo' : 'Crear Nuevo Capítulo';
 
 // Datos para pre-llenar los campos
@@ -18,18 +18,16 @@ $orden_val = htmlspecialchars($capitulo_data['orden'] ?? '');
 <div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title ?></h3>
     <form id="formCapitulo" action="<?php echo $form_action; ?>" method="POST">
-        <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
+        <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?php echo $capitulo_data['id']; ?>">
         <?php endif; ?>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div class="lg:col-span-4 md:col-span-2">
-                <label for="diplomado_id" class="block text-gray-700 text-sm font-bold mb-2">Diplomado:</label>
-                <!-- Campo de diplomado: oculto y pre-llenado, o deshabilitado para mostrar -->
-                <input type="text" id="diplomado_display_name" value="<?php echo $diplomado_nombre_val; ?>"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100 cursor-not-allowed" readonly>
-                <input type="hidden" id="diplomado_id" name="diplomado_id" value="<?php echo $diplomado_id_val; ?>">
+                <label for="diplomado_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Diplomado:</label>
+                <input type="text" id="diplomado_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar diplomado..." value="<?php echo $diplomado_nombre_val; ?>" required>
+                <input type="hidden" name="diplomado_id" id="diplomado_id" value="<?php echo $diplomado_id_val; ?>">
             </div>
 
             <div>

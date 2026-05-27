@@ -453,7 +453,8 @@ $(document).ready(function () {
                     monto_cuota: currentCuotaMontoForDebt,
                     // También puedes enviar tipo_oferta_id y oferta_academica_id si es necesario en el backend
                     tipo_oferta_id: currentTipoOfertaIdForDebt,
-                    oferta_id: currentOfertaIdForDebt
+                    oferta_id: currentOfertaIdForDebt,
+                    csrf_token: CSRF_TOKEN
                 },
                 dataType: 'json',
                 success: function (response) {

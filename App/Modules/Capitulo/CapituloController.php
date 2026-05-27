@@ -114,24 +114,16 @@ class CapituloController extends Controller
 
     /**
      * Exibe el formulario para crear un nuevo registro de Capítulo.
-     * Requiere un diplomado_id.
-     * @param int $diplomadoId El ID del diplomado al que pertenece el capítulo.
      */
-    public function create(?int $diplomadoId = null): void
+    public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrf();
             $this->processForm();
         } else {
-            $diplomado = $this->diplomadoModel->getById($diplomadoId);
-            if (!$diplomado) {
-                Auth::setFlashMessage('error', 'Diplomado no encontrado para crear capítulo.');
-                $this->redirect('capitulo'); // Redirigir a la lista general de capítulos
-            }
-
             $capitulo_data = [
-                'diplomado_id' => $diplomadoId,
-                'diplomado_nombre' => $diplomado['nombre'] // Asumiendo que el modelo de Diplomado devuelve el nombre
+                'diplomado_id' => '',
+                'diplomado_nombre' => ''
             ];
             $this->view('Capitulo/form', ['capitulo_data' => $capitulo_data]);
         }
@@ -184,7 +176,7 @@ class CapituloController extends Controller
             // Validação de campos obrigatórios
             if (empty($data['diplomado_id']) || empty($data['numero']) || empty($data['nombre']) || empty($data['descripcion']) || !isset($data['activo']) || !isset($data['orden'])) {
                 Auth::setFlashMessage('error', 'Todos los campos obligatorios deben ser completados.');
-                $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create/' . $data['diplomado_id']; // Redirigir con diplomado_id
+                $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create';
                 $this->redirect($redirectPath);
                 return;
             }
@@ -205,18 +197,18 @@ class CapituloController extends Controller
                 $this->redirect('capitulo?diplomado_id=' . $data['diplomado_id']); // Redirigir a la lista filtrada
             } else {
                 Auth::setFlashMessage('error', $message);
-                $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create/' . $data['diplomado_id'];
+                $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create';
                 $this->redirect($redirectPath);
             }
         } catch (\PDOException $e) {
             error_log('Error de BD en processForm (Capitulo): ' . $e->getMessage());
             Auth::setFlashMessage('error', 'Error de base de datos: ' . $e->getMessage());
-            $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create/' . ($_POST['diplomado_id'] ?? '');
+            $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create';
             $this->redirect($redirectPath);
         } catch (\Exception $e) {
             error_log('Error en processForm (Capitulo): ' . $e->getMessage());
             Auth::setFlashMessage('error', 'Ocurrió un error: ' . $e->getMessage());
-            $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create/' . ($_POST['diplomado_id'] ?? '');
+            $redirectPath = $id ? 'capitulo/edit/' . $id : 'capitulo/create';
             $this->redirect($redirectPath);
         }
     }

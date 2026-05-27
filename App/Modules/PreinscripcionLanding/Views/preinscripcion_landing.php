@@ -15,7 +15,7 @@
     </style>
     <script type="text/javascript">
         const BASE_URL_JS = "<?php echo BASE_URL; ?>";
-        const CSRF_TOKEN = "<?= Auth::generateCsrfToken() ?>";
+        const CSRF_TOKEN = "<?= \App\Core\Auth::generateCsrfToken() ?>";
     </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex items-center justify-center p-4 md:p-8">
@@ -148,7 +148,7 @@
                 </button>
             </div>
             <form id="form-search-student" class="space-y-4" onsubmit="return searchStudent(event)">
-                <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
+                <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
                 <div>
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">CI / Pasaporte</label>
                     <div class="relative">
@@ -178,7 +178,7 @@
                 </button>
             </div>
             <form id="form-create-student" class="space-y-4" onsubmit="return createStudent(event)">
-                <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
+                <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">CI / Pasaporte *</label>

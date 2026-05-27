@@ -2,9 +2,9 @@
 // php_mvc_app/app/Modules/Coordinadores/list.php
 use App\Core\Auth;
 
-$canCreate = Auth::hasPermission('coordinadores', 'crear');
-$canEdit = Auth::hasPermission('coordinadores', 'modificar');
-$canDelete = Auth::hasPermission('coordinadores', 'eliminar');
+$canCreate = \App\Core\Auth::hasPermission('coordinadores', 'crear');
+$canEdit = \App\Core\Auth::hasPermission('coordinadores', 'modificar');
+$canDelete = \App\Core\Auth::hasPermission('coordinadores', 'eliminar');
 ?>
 
 

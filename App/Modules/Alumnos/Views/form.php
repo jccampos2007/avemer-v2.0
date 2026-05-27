@@ -25,7 +25,7 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
         </div>
 
         <form id="form_alumnos" action="<?php echo BASE_URL; ?>alumnos/<?php echo ($is_edit) ? 'edit/' . $alumno_data['id'] : 'create'; ?>" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="csrf_token" value="<?= Auth::generateCsrfToken() ?>">
+            <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
             <div id="form_collapsible_wrapper" class="grid transition-all duration-300" style="grid-template-rows: 1fr;">
                 <div id="form_collapsible_content" class="min-h-0" style="overflow: visible;">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">

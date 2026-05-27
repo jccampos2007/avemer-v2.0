@@ -1,9 +1,9 @@
 <?php
 use App\Core\Auth;
 
-$canCreate = Auth::hasPermission('estado', 'crear');
-$canEdit = Auth::hasPermission('estado', 'modificar');
-$canDelete = Auth::hasPermission('estado', 'eliminar');
+$canCreate = \App\Core\Auth::hasPermission('estado', 'crear');
+$canEdit = \App\Core\Auth::hasPermission('estado', 'modificar');
+$canDelete = \App\Core\Auth::hasPermission('estado', 'eliminar');
 ?>
 
 

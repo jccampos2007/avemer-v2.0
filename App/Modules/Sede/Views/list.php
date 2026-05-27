@@ -2,9 +2,9 @@
 // php_mvc_app/App/Modules/Sede/list.php
 use App\Core\Auth;
 
-$canCreate = Auth::hasPermission('sede', 'crear');
-$canEdit = Auth::hasPermission('sede', 'modificar');
-$canDelete = Auth::hasPermission('sede', 'eliminar');
+$canCreate = \App\Core\Auth::hasPermission('sede', 'crear');
+$canEdit = \App\Core\Auth::hasPermission('sede', 'modificar');
+$canDelete = \App\Core\Auth::hasPermission('sede', 'eliminar');
 ?>
 
 <div class="flex flex-col md:flex-row md:items-center md:justify-between bg-white p-6 rounded-lg shadow-sm border border-gray-150 mb-6">
