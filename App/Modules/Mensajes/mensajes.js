@@ -14,29 +14,12 @@ $(document).ready(function () {
         // Desactivar la validación nativa del navegador para evitar errores con campos ocultos
         formMensajes.attr('novalidate', true);
 
-        // Inicializar CKEditor para el campo mensaje
-        ClassicEditor
-            .create(document.querySelector('#mensaje'), {
-                language: 'es'
-            })
-            .then(editor => {
-                window.mensajeEditor = editor;
-                console.log('Editor de mensaje inicializado correctamente.');
-            })
-            .catch(error => {
-                console.error('Error al inicializar el editor de mensaje:', error);
-            });
-
         // Manejo del envío del formulario
         formMensajes.on('submit', function (event) {
-            if (window.mensajeEditor) {
-                window.mensajeEditor.updateSourceElement();
-            }
-
-            const mensajeContent = window.mensajeEditor ? window.mensajeEditor.getData() : '';
+            const mensajeContent = $('#mensaje').val().trim();
             const tituloVal = $('#titulo').val().trim();
 
-            if (tituloVal === '' || mensajeContent.trim() === '') {
+            if (tituloVal === '' || mensajeContent === '') {
                 const msg = 'Por favor, complete los campos obligatorios (Título y Mensaje).';
                 if (typeof showFlashMessage === 'function') {
                     showFlashMessage('error', msg);

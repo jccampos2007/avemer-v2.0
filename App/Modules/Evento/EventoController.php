@@ -146,7 +146,7 @@ class EventoController extends Controller
             $data = [
                 'duracion_id' => !empty($_POST['duracion_id']) ? (int)$this->sanitizeInput($_POST['duracion_id']) : null,
                 'nombre' => $this->sanitizeInput($_POST['nombre']),
-                'descripcion' => $_POST['descripcion'], // Se conserva tal como está para soportar CKEditor
+                'descripcion' => $_POST['descripcion'],
                 'siglas' => $this->sanitizeInput($_POST['siglas']),
                 'costo' => (float)$this->sanitizeInput($_POST['costo']),
                 'inicial' => (float)$this->sanitizeInput($_POST['inicial']),

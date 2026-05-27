@@ -150,7 +150,7 @@ class DiplomadoController extends Controller
             $data = [
                 'duracion_id' => !empty($_POST['duracion_id']) ? (int)$this->sanitizeInput($_POST['duracion_id']) : null,
                 'nombre' => $this->sanitizeInput($_POST['nombre']),
-                'descripcion' => $_POST['descripcion'], // CKEditor content, no usar htmlspecialchars directamente aquí
+                'descripcion' => $_POST['descripcion'],
                 'siglas' => $this->sanitizeInput($_POST['siglas']),
                 'costo' => (float)$this->sanitizeInput($_POST['costo']),
                 'inicial' => (float)$this->sanitizeInput($_POST['inicial']),
