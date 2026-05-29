@@ -54,11 +54,11 @@ $inicial_val = htmlspecialchars($curso_abierto_data['inicial'] ?? '0.00');
                     <input type="text" id="convenio" name="convenio" value="<?php echo htmlspecialchars($curso_abierto_data['convenio'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
                 <div>
-                    <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo ($):</label>
+                    <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo:</label>
                     <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $costo_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
                 </div>
                 <div>
-                    <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial ($):</label>
+                    <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial:</label>
                     <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo $inicial_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
                 </div>
                 <div class="lg:col-span-4 md:col-span-2">

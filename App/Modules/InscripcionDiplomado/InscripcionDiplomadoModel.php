@@ -36,8 +36,7 @@ class InscripcionDiplomadoModel
             0 => 'id.id',
             1 => 'diplomado_abierto_numero',
             2 => 'alumno_nombre_completo',
-            3 => 'alumno_telefono',
-            4 => 'estatus_inscripcion_nombre',
+            3 => 'estatus_inscripcion_nombre',
         ];
 
         // Construir la consulta base
@@ -47,8 +46,10 @@ class InscripcionDiplomadoModel
                 id.diplomado_abierto_id,
                 da.numero AS diplomado_abierto_numero, -- Número del Diplomado Abierto
                 id.alumno_id,
-                CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo, -- Nombre completo del Alumno
-                COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) AS alumno_telefono,
+                CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
+                a.ci_pasapote,
+                a.tlf_celular AS alumno_telefono,
+                a.correo,
                 id.estatus_inscripcion_id,
                 ei.nombre AS estatus_inscripcion_nombre -- Nombre del Estatus de Inscripción
             FROM
@@ -79,12 +80,16 @@ class InscripcionDiplomadoModel
         if (!empty($searchValue)) {
             $where[] = "(da.numero LIKE :search_diplomado_abierto_numero "
                 . "OR CONCAT(a.primer_nombre, ' ', a.primer_apellido) LIKE :search_alumno_nombre_completo "
-                . "OR COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) LIKE :search_telefono "
+                . "OR a.ci_pasapote LIKE :search_ci "
+                . "OR a.tlf_celular LIKE :search_telefono "
+                . "OR a.correo LIKE :search_correo "
                 . "OR ei.nombre LIKE :search_estatus_inscripcion_nombre)";
             $like = '%' . $searchValue . '%';
             $queryParams[':search_diplomado_abierto_numero'] = $like;
             $queryParams[':search_alumno_nombre_completo'] = $like;
+            $queryParams[':search_ci'] = $like;
             $queryParams[':search_telefono'] = $like;
+            $queryParams[':search_correo'] = $like;
             $queryParams[':search_estatus_inscripcion_nombre'] = $like;
         }
 
