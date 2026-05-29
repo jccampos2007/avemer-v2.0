@@ -397,6 +397,60 @@ function newExportAction(e, dt, button, config) {
     // Disparar la petición AJAX interna con la nueva longitud (-1)
     dt.ajax.reload();
 }
+/**
+ * Renderiza la celda de la columna "Alumno" en las tablas de inscripciones.
+ * Muestra nombre, cédula, teléfono (link), email (link) y botón copiar.
+ */
+function renderAlumnoColumn(type, row) {
+    var nombre = row[2] || '';
+    var ci = row[3] || '';
+    var telefono = row[4] || '';
+    var correo = row[5] || '';
+    if (type === 'display') {
+        var telHref = telefono.replace(/[^0-9+]/g, '');
+        var copyText = nombre + '\nC.I.: ' + ci + '\nTel: ' + telefono + '\nEmail: ' + correo;
+        var copyBtn = '<button class="btn-copy-alumno" data-copy="' + copyText.replace(/"/g, '&quot;') + '" title="Copiar datos" style="background:none;border:none;cursor:pointer;color:#6b7280;padding:0 4px;vertical-align:middle"><i class="fas fa-copy"></i></button>';
+        var html = '<div class="alumno-info" style="line-height:1.8">';
+        html += '<span class="font-bold">' + nombre + '</span> ' + copyBtn + '<br>';
+        html += 'C.I.: ' + ci + '<br>';
+        if (telefono && telefono !== 'N/A') {
+            html += '<a href="tel:' + telHref + '" style="text-decoration:none;color:#2563eb">' + telefono + '</a><br>';
+        } else {
+            html += telefono + '<br>';
+        }
+        if (correo && correo !== 'N/A') {
+            html += '<a href="mailto:' + encodeURIComponent(correo) + '" style="text-decoration:none;color:#2563eb">' + correo + '</a>';
+        } else {
+            html += correo;
+        }
+        html += '</div>';
+        return html;
+    }
+    return nombre + ' - C.I.: ' + ci + ' - Tel: ' + telefono + ' - Email: ' + correo;
+}
+
+/**
+ * Configura el manejador de clic para el botón de copiar datos del alumno.
+ * @param {string} tableSelector - Selector jQuery de la tabla DataTable.
+ */
+function setupAlumnoCopyHandler(tableSelector) {
+    $(tableSelector).on("click", ".btn-copy-alumno", function (e) {
+        e.stopPropagation();
+        var text = $(this).data('copy');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+                Swal.fire({title: 'Copiado', text: 'Datos copiados al portapapeles', icon: 'success', timer: 1500, showConfirmButton: false});
+            });
+        } else {
+            var $temp = $('<textarea>');
+            $('body').append($temp);
+            $temp.val(text).select();
+            document.execCommand('copy');
+            $temp.remove();
+            Swal.fire({title: 'Copiado', text: 'Datos copiados al portapapeles', icon: 'success', timer: 1500, showConfirmButton: false});
+        }
+    });
+}
 
 /**
  * Configura un autocomplete de jQuery UI con búsqueda AJAX.

@@ -37,8 +37,7 @@ class InscripcionEventoModel
             0 => 'ie.id',
             1 => 'evento_abierto_numero',
             2 => 'alumno_nombre_completo',
-            3 => 'alumno_telefono',
-            4 => 'estatus_inscripcion_nombre',
+            3 => 'estatus_inscripcion_nombre',
         ];
 
         // Construir la consulta base
@@ -48,8 +47,10 @@ class InscripcionEventoModel
                 ie.evento_abierto_id,
                 ea.numero AS evento_abierto_numero, -- Asumimos que 'numero' es el campo a mostrar de evento_abierto
                 ie.alumno_id,
-                CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo, -- Asumimos campos en tabla 'alumno'
+                CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
+                a.ci_pasapote,
                 COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) AS alumno_telefono,
+                a.correo,
                 ie.estatus_inscripcion_id,
                 ei.nombre AS estatus_inscripcion_nombre -- Asumimos 'nombre' en tabla 'estatus_inscripcion'
             FROM
@@ -81,12 +82,16 @@ class InscripcionEventoModel
         if (!empty($searchValue)) {
             $where[] = "(ea.numero LIKE :search_evento_abierto "
                 . "OR CONCAT(a.primer_nombre, ' ', a.primer_apellido) LIKE :search_alumno_nombre "
+                . "OR a.ci_pasapote LIKE :search_ci "
                 . "OR COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) LIKE :search_telefono "
+                . "OR a.correo LIKE :search_correo "
                 . "OR ei.nombre LIKE :search_estatus_inscripcion)";
             $like = '%' . $searchValue . '%';
             $queryParams[':search_evento_abierto'] = $like;
             $queryParams[':search_alumno_nombre'] = $like;
+            $queryParams[':search_ci'] = $like;
             $queryParams[':search_telefono'] = $like;
+            $queryParams[':search_correo'] = $like;
             $queryParams[':search_estatus_inscripcion'] = $like;
         }
 

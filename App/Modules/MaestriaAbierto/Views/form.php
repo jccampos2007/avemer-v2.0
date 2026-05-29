@@ -98,12 +98,12 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
                 </div>
 
                 <div>
-                    <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo ($):</label>
+                    <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo:</label>
                     <input type="number" step="0.01" id="costo" name="costo" value="<?php echo htmlspecialchars($maestria_abierto_data['costo'] ?? '0'); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="0">
                 </div>
 
                 <div>
-                    <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial ($):</label>
+                    <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial:</label>
                     <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo htmlspecialchars($maestria_abierto_data['inicial'] ?? '0'); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="0">
                 </div>
 

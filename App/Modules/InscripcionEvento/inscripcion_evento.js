@@ -19,7 +19,7 @@ $(document).ready(function () {
                     className: 'buttons-excel',
                     title: 'Listado de Inscripciones de Eventos',
                     exportOptions: {
-                        columns: [1, 2, 3] // Exportar únicamente Número, Alumno, Estatus
+                        columns: [1, 2]
                     },
                     action: newExportAction
                 },
@@ -29,7 +29,7 @@ $(document).ready(function () {
                     className: 'buttons-pdf',
                     title: 'Listado de Inscripciones de Eventos',
                     exportOptions: {
-                        columns: [1, 2, 3] // Exportar únicamente Número, Alumno y Estatus
+                        columns: [1, 2]
                     },
                     action: newExportAction,
                     customize: function (doc) {
@@ -54,19 +54,22 @@ $(document).ready(function () {
                     data: 0,
                     visible: false,
                     searchable: false
-                }, // ID
-                { "data": 1 }, // Evento Abierto (número)
-                { "data": 2 }, // Alumno (nombre completo)
-                { "data": 3 }, // Teléfono
-                { "data": 4 }, // Estatus de Inscripción
-                { // Columna de Acciones
+                },
+                { "data": 1 },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return renderAlumnoColumn(type, row);
+                    }
+                },
+                { "data": 6 },
+                {
                     "data": null,
                     "orderable": false,
                     "searchable": false,
                     "width": "1%",
                     "className": "actions-column",
                     "render": function (data, type, row) {
-                        const id = row[0]; // El ID está en la primera columna (índice 0)
                         return `
                             <a href="inscripcion_evento/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
                             <a href="inscripcion_evento/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
@@ -79,6 +82,8 @@ $(document).ready(function () {
             },
             "autoWidth": false
         });
+        setupAlumnoCopyHandler('#inscripcionEventoTable');
+
         // MANEJADOR DE ELIMINACIÓN CON CONFIRMACIÓN (SweetAlert2)
         inscripcionEventoTable.on("click", ".btn-action-delete", function (e) {
             e.preventDefault();
