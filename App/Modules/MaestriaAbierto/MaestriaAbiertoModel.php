@@ -40,8 +40,8 @@ class MaestriaAbiertoModel
             4 => 'estatus_nombre',    
             5 => 'docente_nombre_completo', 
             6 => 'ma.fecha',
-            7 => 'ma.convenio',
-            8 => 'ma.nombre_carta',
+            7 => 'ma.costo',
+            8 => 'ma.inicial',
         ];
 
         // Construir la consulta filtrando solo los que no están eliminados (ma.deleted_at IS NULL)
@@ -57,7 +57,9 @@ class MaestriaAbiertoModel
                 e.nombre AS estatus_nombre,
                 ma.docente_id,
                 CONCAT(d.primer_nombre, ' ', d.primer_apellido) AS docente_nombre_completo,
-                ma.fecha
+                ma.fecha,
+                ma.costo,
+                ma.inicial
             FROM
                 {$this->table} ma
             LEFT JOIN
@@ -211,26 +213,7 @@ class MaestriaAbiertoModel
      */
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (numero, maestria_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio) VALUES (:numero, :maestria_id, :sede_id, :estatus_id, :docente_id, :fecha, :nombre_carta, :convenio)";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':numero' => $data['numero'],
-            ':maestria_id' => $data['maestria_id'],
-            ':sede_id' => $data['sede_id'],
-            ':estatus_id' => $data['estatus_id'],
-            ':docente_id' => $data['docente_id'],
-            ':fecha' => $data['fecha'],
-            ':nombre_carta' => $data['nombre_carta'],
-            ':convenio' => $data['convenio'] ?? null
-        ]);
-    }
-
-    /**
-     * Actualiza un registro existente en maestria_abierto.
-     */
-    public function update(int $id, array $data): bool
-    {
-        $sql = "UPDATE {$this->table} SET numero = :numero, maestria_id = :maestria_id, sede_id = :sede_id, estatus_id = :estatus_id, docente_id = :docente_id, fecha = :fecha, nombre_carta = :nombre_carta, convenio = :convenio WHERE id = :id";
+        $sql = "INSERT INTO {$this->table} (numero, maestria_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio, costo, inicial) VALUES (:numero, :maestria_id, :sede_id, :estatus_id, :docente_id, :fecha, :nombre_carta, :convenio, :costo, :inicial)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':numero' => $data['numero'],
@@ -241,6 +224,29 @@ class MaestriaAbiertoModel
             ':fecha' => $data['fecha'],
             ':nombre_carta' => $data['nombre_carta'],
             ':convenio' => $data['convenio'] ?? null,
+            ':costo' => $data['costo'] ?? 0,
+            ':inicial' => $data['inicial'] ?? 0
+        ]);
+    }
+
+    /**
+     * Actualiza un registro existente en maestria_abierto.
+     */
+    public function update(int $id, array $data): bool
+    {
+        $sql = "UPDATE {$this->table} SET numero = :numero, maestria_id = :maestria_id, sede_id = :sede_id, estatus_id = :estatus_id, docente_id = :docente_id, fecha = :fecha, nombre_carta = :nombre_carta, convenio = :convenio, costo = :costo, inicial = :inicial WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':numero' => $data['numero'],
+            ':maestria_id' => $data['maestria_id'],
+            ':sede_id' => $data['sede_id'],
+            ':estatus_id' => $data['estatus_id'],
+            ':docente_id' => $data['docente_id'],
+            ':fecha' => $data['fecha'],
+            ':nombre_carta' => $data['nombre_carta'],
+            ':convenio' => $data['convenio'] ?? null,
+            ':costo' => $data['costo'] ?? 0,
+            ':inicial' => $data['inicial'] ?? 0,
             ':id' => $id
         ]);
     }
