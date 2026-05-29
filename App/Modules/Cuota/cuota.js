@@ -241,6 +241,7 @@ $(document).ready(function () {
         ofertaInfoBox.addClass('hidden');
         diplomadoControlSection.addClass('hidden');
         controlInfoBox.addClass('hidden');
+        cancelEditMode();
         loadAcademicOffers(tabId);
     });
 
@@ -248,6 +249,7 @@ $(document).ready(function () {
     ofertaAcademicaSelect.on('change', function () {
         const selectedOfertaId = $(this).val();
         const selectedTipoOfertaId = tipoOfertaAcademicaIdInput.val();
+        cancelEditMode();
         loadOfertaInfo(selectedTipoOfertaId, selectedOfertaId);
         loadCuotasList(selectedTipoOfertaId, selectedOfertaId);
     });
@@ -310,8 +312,7 @@ $(document).ready(function () {
         $('#cancel-edit-btn').removeClass('hidden');
     });
 
-    // Cancelar edición inline
-    $('#cancel-edit-btn').on('click', function () {
+    function cancelEditMode() {
         $('#nombre, #monto').val('');
         if (typeof flatpickr !== 'undefined') {
             var fp = document.querySelector('#fecha_vencimiento')?._flatpickr;
@@ -321,8 +322,11 @@ $(document).ready(function () {
         }
         $('#cuota_edit_id').val('');
         $('#btn-submit-cuota').text('Guardar Cuota');
-        $(this).addClass('hidden');
-    });
+        $('#cancel-edit-btn').addClass('hidden');
+    }
+
+    // Cancelar edición inline
+    $('#cancel-edit-btn').on('click', cancelEditMode);
 
     // Inicialización
     if (formCuota.length) {
@@ -369,16 +373,7 @@ $(document).ready(function () {
                     if (response.success) {
                         showAlert(response.message, 'success');
                         loadCuotasList(tipoOfertaAcademicaId, ofertaAcademicaId);
-                        $('#nombre, #monto').val('');
-                        if (typeof flatpickr !== 'undefined') {
-                            const fp = document.querySelector('#fecha_vencimiento')?._flatpickr;
-                            if (fp) fp.clear();
-                        } else {
-                            $('#fecha_vencimiento').val('');
-                        }
-                        $('#cuota_edit_id').val('');
-                        $('#btn-submit-cuota').text('Guardar Cuota');
-                        $('#cancel-edit-btn').addClass('hidden');
+                        cancelEditMode();
                         if (tipoOfertaAcademicaId == 2 && ofertaAcademicaId) {
                             loadDiplomadoControles(ofertaAcademicaId);
                         }
