@@ -110,7 +110,7 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
                     <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="32">
                 </div>
                 <div class="w-1/4">
-                    <label for="monto" class="block text-gray-700 text-sm font-bold mb-2">Monto ($):</label>
+                    <label for="monto" class="block text-gray-700 text-sm font-bold mb-2">Monto:</label>
                     <input type="number" step="0.01" id="monto" name="monto" value="<?php echo $monto_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
                 </div>
                 <div class="w-1/4">
