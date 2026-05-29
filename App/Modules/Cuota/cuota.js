@@ -207,8 +207,8 @@ $(document).ready(function () {
                                 "searchable": false,
                                 "render": function (data, type, row) {
                                     return `
-                                        <a href="cuota/edit/${row.id}" class="btn btn-default"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
-                                        <a href="cuota/delete/${row.id}" class="btn btn-default"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
+                                        <button class="edit-cuota-btn btn btn-default" data-id="${row.id}"><i class="fas fa-edit fs-5 text-blue-600"></i></button>
+                                        <button class="delete-cuota-btn btn btn-default" data-id="${row.id}"><i class="fas fa-trash-alt fs-5 text-red-600"></i></button>
                                     `;
                                 }
                             }
@@ -291,6 +291,34 @@ $(document).ready(function () {
         }
     });
 
+    // Edición inline: poblar formulario desde la fila
+    $(document).on('click', '.edit-cuota-btn', function () {
+        var tr = $(this).closest('tr');
+        if (!cuotasDataTable) return;
+        var row = cuotasDataTable.row(tr).data();
+
+        $('#nombre').val(row.nombre);
+        $('#monto').val(row.monto);
+        $('#fecha_vencimiento').val(row.fecha_vencimiento);
+        $('#cuota_edit_id').val(row.id);
+        $('#btn-submit-cuota').text('Actualizar Cuota');
+        $('#cancel-edit-btn').removeClass('hidden');
+    });
+
+    // Cancelar edición inline
+    $('#cancel-edit-btn').on('click', function () {
+        $('#nombre, #monto').val('');
+        if (typeof flatpickr !== 'undefined') {
+            var fp = document.querySelector('#fecha_vencimiento')?._flatpickr;
+            if (fp) fp.clear();
+        } else {
+            $('#fecha_vencimiento').val('');
+        }
+        $('#cuota_edit_id').val('');
+        $('#btn-submit-cuota').text('Guardar Cuota');
+        $(this).addClass('hidden');
+    });
+
     // Inicialización
     if (formCuota.length) {
         const initialTipoOfertaId = formCuota.data('tipo-oferta-academica-id');
@@ -313,8 +341,8 @@ $(document).ready(function () {
             event.preventDefault();
 
             const formData = $(this).serialize();
-            const actionUrl = $(this).attr('action');
-            const isEdit = $(this).find('input[name="id"]').length > 0;
+            const editId = $('#cuota_edit_id').val();
+            const actionUrl = editId ? `${BASE_URL_JS}cuota/edit/${editId}` : `${BASE_URL_JS}cuota/create`;
 
             const nombre = $('#nombre').val().trim();
             const monto = $('#monto').val().trim();
@@ -336,15 +364,16 @@ $(document).ready(function () {
                     if (response.success) {
                         showAlert(response.message, 'success');
                         loadCuotasList(tipoOfertaAcademicaId, ofertaAcademicaId);
-                        if (!isEdit) {
-                            $('#nombre, #monto').val('');
-                            if (typeof flatpickr !== 'undefined') {
-                                const fp = document.querySelector('#fecha_vencimiento')?._flatpickr;
-                                if (fp) fp.clear();
-                            } else {
-                                $('#fecha_vencimiento').val('');
-                            }
+                        $('#nombre, #monto').val('');
+                        if (typeof flatpickr !== 'undefined') {
+                            const fp = document.querySelector('#fecha_vencimiento')?._flatpickr;
+                            if (fp) fp.clear();
+                        } else {
+                            $('#fecha_vencimiento').val('');
                         }
+                        $('#cuota_edit_id').val('');
+                        $('#btn-submit-cuota').text('Guardar Cuota');
+                        $('#cancel-edit-btn').addClass('hidden');
                         if (tipoOfertaAcademicaId == 2 && ofertaAcademicaId) {
                             loadDiplomadoControles(ofertaAcademicaId);
                         }

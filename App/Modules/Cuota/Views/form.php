@@ -1,27 +1,22 @@
 <?php
-$is_edit = isset($cuota_data['id']) && !empty($cuota_data['id']);
-$form_action = $is_edit ? BASE_URL . 'cuota/edit/' . htmlspecialchars($cuota_data['id']) : BASE_URL . 'cuota/create';
-$page_title = $is_edit ? 'Editar Cuota' : 'Crear Nueva Cuota';
-
-$nombre_val = htmlspecialchars($cuota_data['nombre'] ?? '');
-$monto_val = htmlspecialchars($cuota_data['monto'] ?? '');
+$page_title = 'Crear Nueva Cuota';
+$nombre_val = '';
+$monto_val = '';
 $oferta_academica_id_val = $cuota_data['oferta_academica_id'] ?? '';
 $tipo_oferta_academica_id_val = $cuota_data['tipo_oferta_academica_id'] ?? '1';
-$fecha_vencimiento_val = htmlspecialchars($cuota_data['fecha_vencimiento'] ?? '');
-$diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
+$fecha_vencimiento_val = '';
+$diplomado_control_id_val = '';
 ?>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" />
 <div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title; ?></h3>
-    <form id="formCuota" action="<?php echo $form_action; ?>" method="POST"
+    <form id="formCuota" action="<?php echo BASE_URL; ?>cuota/create" method="POST"
         data-oferta-academica-id="<?php echo $oferta_academica_id_val; ?>"
         data-tipo-oferta-academica-id="<?php echo $tipo_oferta_academica_id_val; ?>"
         data-diplomado-control-id="<?php echo $diplomado_control_id_val; ?>">
         <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
-        <?php if ($is_edit): ?>
-            <input type="hidden" name="id" value="<?php echo $cuota_data['id']; ?>">
-        <?php endif; ?>
+        <input type="hidden" id="cuota_edit_id" name="cuota_edit_id" value="">
 
         <!-- SECCIÓN 1: TIPO DE OFERTA + APERTURA + INFO -->
         <div class="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-200">
@@ -121,9 +116,14 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
         </div>
 
         <div class="flex items-center justify-between mt-6">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                <?php echo ($is_edit) ? 'Actualizar Cuota' : 'Guardar Cuota'; ?>
-            </button>
+            <div class="flex gap-2">
+                <button type="submit" id="btn-submit-cuota" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Guardar Cuota
+                </button>
+                <button type="button" id="cancel-edit-btn" class="hidden bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Cancelar edición
+                </button>
+            </div>
             <a href="<?php echo BASE_URL; ?>cuota" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
                 Cancelar
             </a>
