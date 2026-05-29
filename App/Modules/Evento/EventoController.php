@@ -111,8 +111,6 @@ class EventoController extends Controller
                     htmlspecialchars($row['nombre']),
                     htmlspecialchars($row['duracion_nombre'] ?? 'N/A'),
                     htmlspecialchars($row['descripcion']),
-                    htmlspecialchars($row['costo']),
-                    htmlspecialchars($row['inicial']),
                     ''
                 ];
             }
@@ -148,12 +146,10 @@ class EventoController extends Controller
                 'nombre' => $this->sanitizeInput($_POST['nombre']),
                 'descripcion' => $_POST['descripcion'],
                 'siglas' => $this->sanitizeInput($_POST['siglas']),
-                'costo' => (float)$this->sanitizeInput($_POST['costo']),
-                'inicial' => (float)$this->sanitizeInput($_POST['inicial']),
             ];
 
             // Validación de campos obligatorios
-            if (empty($data['duracion_id']) || empty($data['nombre']) || empty($data['descripcion']) || empty($data['siglas']) || !isset($data['costo']) || !isset($data['inicial'])) {
+            if (empty($data['duracion_id']) || empty($data['nombre']) || empty($data['descripcion']) || empty($data['siglas'])) {
                 Auth::setFlashMessage('error', 'Todos los campos son obligatorios.');
                 $redirectPath = $id ? 'evento/edit/' . $id : 'evento/create';
                 $this->redirect($redirectPath);

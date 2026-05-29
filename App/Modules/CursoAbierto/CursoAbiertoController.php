@@ -143,6 +143,8 @@ class CursoAbiertoController extends Controller
             'fecha' => $this->sanitizeInput($_POST['fecha']),
             'nombre_carta' => $_POST['nombre_carta'],
             'convenio' => $this->sanitizeInput($_POST['convenio']),
+            'costo' => (float)$this->sanitizeInput($_POST['costo']),
+            'inicial' => (float)$this->sanitizeInput($_POST['inicial']),
         ];
 
         try {

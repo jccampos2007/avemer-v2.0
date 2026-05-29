@@ -144,12 +144,10 @@ $(document).ready(function () {
             const duracionId = $('#duracion_id').val();
             const nombre = $('#nombre').val().trim();
             const siglas = $('#siglas').val().trim();
-            const costo = $('#costo').val();
-            const inicial = $('#inicial').val();
             const descripcion = $('#descripcion').val();
 
             // if (duracionId === '' || nombre === '' || descripcion === '' || siglas === '') {
-            //     showFlashMessage('error', 'Por favor, complete todos los campos obligatorios y asegúrese de que Costo e Inicial sean números válidos.');
+            //     showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
             //     event.preventDefault(); // Detiene el envío del formulario
             // }
         });

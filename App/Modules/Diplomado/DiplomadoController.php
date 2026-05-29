@@ -68,8 +68,6 @@ class DiplomadoController extends Controller
                     htmlspecialchars($row['nombre']),
                     htmlspecialchars($row['descripcion']),
                     htmlspecialchars($row['siglas']),
-                    htmlspecialchars($row['costo']),
-                    htmlspecialchars($row['inicial']),
                     // Columna para acciones (editar/eliminar) - será renderizada en el JS
                     ''
                 ];
@@ -152,12 +150,10 @@ class DiplomadoController extends Controller
                 'nombre' => $this->sanitizeInput($_POST['nombre']),
                 'descripcion' => $_POST['descripcion'],
                 'siglas' => $this->sanitizeInput($_POST['siglas']),
-                'costo' => (float)$this->sanitizeInput($_POST['costo']),
-                'inicial' => (float)$this->sanitizeInput($_POST['inicial']),
             ];
 
             // Validación de campos obligatorios
-            if (empty($data['duracion_id']) || empty($data['nombre']) || empty($data['siglas']) || !isset($data['costo']) || !isset($data['inicial'])) {
+            if (empty($data['duracion_id']) || empty($data['nombre']) || empty($data['siglas'])) {
                 Auth::setFlashMessage('error', 'Todos los campos son obligatorios.');
                 $redirectPath = $id ? 'diplomado/edit/' . $id : 'diplomado/create';
                 $this->redirect($redirectPath);

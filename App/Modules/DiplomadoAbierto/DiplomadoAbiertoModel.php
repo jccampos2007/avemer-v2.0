@@ -56,7 +56,9 @@ class DiplomadoAbiertoModel
                 st.nombre AS estatus_nombre,
                 da.fecha_inicio,
                 da.fecha_fin,
-                da.nombre_carta
+                da.nombre_carta,
+                da.costo,
+                da.inicial
             FROM
                 {$this->table} da
             LEFT JOIN
@@ -198,25 +200,7 @@ class DiplomadoAbiertoModel
      */
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (numero, diplomado_id, sede_id, estatus_id, fecha_inicio, fecha_fin, nombre_carta) VALUES (:numero, :diplomado_id, :sede_id, :estatus_id, :fecha_inicio, :fecha_fin, :nombre_carta)";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':numero' => $data['numero'],
-            ':diplomado_id' => $data['diplomado_id'],
-            ':sede_id' => $data['sede_id'],
-            ':estatus_id' => $data['estatus_id'],
-            ':fecha_inicio' => $data['fecha_inicio'],
-            ':fecha_fin' => $data['fecha_fin'],
-            ':nombre_carta' => $data['nombre_carta']
-        ]);
-    }
-
-    /**
-     * Actualiza un registro existente en diplomado_abierto.
-     */
-    public function update(int $id, array $data): bool
-    {
-        $sql = "UPDATE {$this->table} SET numero = :numero, diplomado_id = :diplomado_id, sede_id = :sede_id, estatus_id = :estatus_id, fecha_inicio = :fecha_inicio, fecha_fin = :fecha_fin, nombre_carta = :nombre_carta WHERE id = :id";
+        $sql = "INSERT INTO {$this->table} (numero, diplomado_id, sede_id, estatus_id, fecha_inicio, fecha_fin, nombre_carta, costo, inicial) VALUES (:numero, :diplomado_id, :sede_id, :estatus_id, :fecha_inicio, :fecha_fin, :nombre_carta, :costo, :inicial)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':numero' => $data['numero'],
@@ -226,6 +210,28 @@ class DiplomadoAbiertoModel
             ':fecha_inicio' => $data['fecha_inicio'],
             ':fecha_fin' => $data['fecha_fin'],
             ':nombre_carta' => $data['nombre_carta'],
+            ':costo' => $data['costo'],
+            ':inicial' => $data['inicial']
+        ]);
+    }
+
+    /**
+     * Actualiza un registro existente en diplomado_abierto.
+     */
+    public function update(int $id, array $data): bool
+    {
+        $sql = "UPDATE {$this->table} SET numero = :numero, diplomado_id = :diplomado_id, sede_id = :sede_id, estatus_id = :estatus_id, fecha_inicio = :fecha_inicio, fecha_fin = :fecha_fin, nombre_carta = :nombre_carta, costo = :costo, inicial = :inicial WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':numero' => $data['numero'],
+            ':diplomado_id' => $data['diplomado_id'],
+            ':sede_id' => $data['sede_id'],
+            ':estatus_id' => $data['estatus_id'],
+            ':fecha_inicio' => $data['fecha_inicio'],
+            ':fecha_fin' => $data['fecha_fin'],
+            ':nombre_carta' => $data['nombre_carta'],
+            ':costo' => $data['costo'],
+            ':inicial' => $data['inicial'],
             ':id' => $id
         ]);
     }

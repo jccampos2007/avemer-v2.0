@@ -26,7 +26,7 @@ class DiplomadoControlModelTest extends DatabaseTestCase
     private function insertTestRecord(): int
     {
         $pdo = $this->getConnection();
-        $pdo->exec("INSERT IGNORE INTO diplomado_control (diplomado_abierto_id, capitulo_id, docente_id, fecha, mensualidad, generado) VALUES (999, 999, 999, CURDATE(), 100, 1)");
+        $pdo->exec("INSERT IGNORE INTO diplomado_control (diplomado_abierto_id, capitulo_id, docente_id, fecha, mensualidad) VALUES (999, 999, 999, CURDATE(), 100)");
         return (int)$pdo->query("SELECT id FROM diplomado_control WHERE diplomado_abierto_id = 999 AND capitulo_id = 999")->fetchColumn();
     }
 
@@ -84,7 +84,6 @@ class DiplomadoControlModelTest extends DatabaseTestCase
             'docente_id' => 999,
             'fecha' => date('Y-m-d'),
             'mensualidad' => 200,
-            'generado' => 1,
         ]));
         $this->testId = $this->insertTestRecord();
         $controls = $this->model->getControlesPorDiplomadoAbierto(999);

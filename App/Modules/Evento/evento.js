@@ -162,11 +162,9 @@ $(document).ready(function () {
             const nombre = $('#nombre').val().trim();
             const descripcion = $('#descripcion').val().trim();
             const siglas = $('#siglas').val().trim();
-            const costo = $('#costo').val(); // No trim() para números, pero valida si es numérico
-            const inicial = $('#inicial').val(); // No trim() para números, pero valida si es numérico
 
-            if (!duracionId || nombre === '' || descripcion === '' || siglas === '' || isNaN(costo) || isNaN(inicial)) {
-                showFlashMessage('error', 'Por favor, complete todos los campos obligatorios y asegúrese de que Costo e Inicial sean números válidos.');
+            if (!duracionId || nombre === '' || descripcion === '' || siglas === '') {
+                showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
                 event.preventDefault(); // Detiene el envío del formulario
             }
         });

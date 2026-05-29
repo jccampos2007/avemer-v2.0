@@ -26,7 +26,7 @@ class CuotaModelTest extends DatabaseTestCase
     private function insertTestRecord(): int
     {
         $pdo = $this->getConnection();
-        $pdo->exec("INSERT INTO cuota (nombre, monto, oferta_academica_id, tipo_oferta_academica_id, diplomado_curso_id, tipo_modalidad_id, generado, fecha_vencimiento, fecha) VALUES ('TEST Cuota', 500, 999, 2, 1, 1, 0, '2026-12-31', CURDATE())");
+        $pdo->exec("INSERT INTO cuota (nombre, monto, oferta_academica_id, tipo_oferta_academica_id, generado, fecha_vencimiento, fecha) VALUES ('TEST Cuota', 500, 999, 2, 0, '2026-12-31', CURDATE())");
         return (int)$pdo->lastInsertId();
     }
 
@@ -43,16 +43,37 @@ class CuotaModelTest extends DatabaseTestCase
         $this->assertFalse($this->model->getById(999999));
     }
 
-    public function test_create_throws_exception_due_to_missing_required_columns(): void
+    public function test_create_inserts_record(): void
     {
-        $this->expectException(\PDOException::class);
-        $this->model->create([
+        $result = $this->model->create([
             'nombre' => 'Test',
             'monto' => 100,
             'oferta_academica_id' => 999,
             'tipo_oferta_academica_id' => 2,
             'fecha_vencimiento' => '2026-12-31',
         ]);
+        $this->assertTrue($result);
+        $pdo = $this->getConnection();
+        $id = $pdo->query("SELECT id FROM cuota WHERE nombre = 'Test'")->fetchColumn();
+        $this->assertNotFalse($id);
+        $pdo->exec("DELETE FROM cuota WHERE id = " . (int)$id);
+    }
+
+    public function test_create_with_diplomado_control(): void
+    {
+        $result = $this->model->create([
+            'nombre' => 'Test DC',
+            'monto' => 200,
+            'oferta_academica_id' => 999,
+            'tipo_oferta_academica_id' => 2,
+            'diplomado_control_id' => 1,
+            'fecha_vencimiento' => '2026-12-31',
+        ]);
+        $this->assertTrue($result);
+        $pdo = $this->getConnection();
+        $id = $pdo->query("SELECT id FROM cuota WHERE nombre = 'Test DC'")->fetchColumn();
+        $this->assertNotFalse($id);
+        $pdo->exec("DELETE FROM cuota WHERE id = " . (int)$id);
     }
 
     public function test_update_modifies_record(): void
@@ -65,7 +86,6 @@ class CuotaModelTest extends DatabaseTestCase
             'monto' => 600,
             'oferta_academica_id' => 999,
             'tipo_oferta_academica_id' => 2,
-            'generado' => 1,
             'fecha_vencimiento' => '2026-12-31',
         ]));
         $r = $this->model->getById($this->testId);
@@ -112,6 +132,26 @@ class CuotaModelTest extends DatabaseTestCase
         $this->assertNotEmpty($result);
     }
 
+    public function test_getOfertaInfo_returns_costo_inicial(): void
+    {
+        $info = $this->model->getOfertaInfo(2, 999);
+        $this->assertNotNull($info);
+        $this->assertArrayHasKey('costo', $info);
+        $this->assertArrayHasKey('inicial', $info);
+        $this->assertArrayHasKey('oferta_nombre', $info);
+    }
+
+    public function test_getOfertaInfo_returns_null_for_invalid_type(): void
+    {
+        $this->assertNull($this->model->getOfertaInfo(99, 999));
+    }
+
+    public function test_getDiplomadoControles_returns_array(): void
+    {
+        $controles = $this->model->getDiplomadoControles(999);
+        $this->assertIsArray($controles);
+    }
+
     public function test_getCuotasByOffer_returns_cuotas(): void
     {
         $this->testId = $this->insertTestRecord();
@@ -119,7 +159,6 @@ class CuotaModelTest extends DatabaseTestCase
         $this->assertIsArray($result);
         $this->assertNotEmpty($result);
         $this->assertSame('TEST Cuota', $result[0]['nombre']);
-        $this->assertSame('TEST Diplomado', $result[0]['oferta_nombre']);
     }
 
     public function test_getCuotasByOffer_returns_empty_for_invalid_type(): void

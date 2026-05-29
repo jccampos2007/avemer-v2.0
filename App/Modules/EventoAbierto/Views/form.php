@@ -16,6 +16,8 @@ $fecha_fin_val = htmlspecialchars($evento_abierto_data['fecha_fin'] ?? '');
 $nombre_carta_val = htmlspecialchars($evento_abierto_data['nombre_carta'] ?? ''); // Contenido HTML de CKEditor
 $docente_id_val = $evento_abierto_data['docente_id'] ?? '';
 $docente_nombre_val = htmlspecialchars($evento_abierto_data['docente_nombre'] ?? '');
+$costo_val = htmlspecialchars($evento_abierto_data['costo'] ?? '0.00');
+$inicial_val = htmlspecialchars($evento_abierto_data['inicial'] ?? '0.00');
 ?>
 <div class="w-full space-y-6">
 
@@ -94,6 +96,14 @@ $docente_nombre_val = htmlspecialchars($evento_abierto_data['docente_nombre'] ??
                 <div>
                     <label for="fecha_fin" class="block text-gray-700 text-sm font-bold mb-2">Fecha Fin:</label>
                     <input type="text" id="fecha_fin" name="fecha_fin" value="<?php echo $fecha_fin_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required placeholder="YYYY-MM-DD">
+                </div>
+                <div>
+                    <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo:</label>
+                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $costo_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
+                </div>
+                <div>
+                    <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial:</label>
+                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo $inicial_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
                 </div>
 
                 <div class="lg:col-span-4 md:col-span-2">

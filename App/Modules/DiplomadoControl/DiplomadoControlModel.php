@@ -30,8 +30,8 @@ class DiplomadoControlModel
                 (
                     SELECT COUNT(*) 
                     FROM diplomado_control dc 
-                    WHERE dc.diplomado_abierto_id = da.id AND dc.generado = 2
-                ) AS controles_generados
+                    WHERE dc.diplomado_abierto_id = da.id
+                ) AS controles_configurados
             FROM diplomado_abierto da
             JOIN diplomado d ON da.diplomado_id = d.id
             JOIN estatus e ON da.estatus_id = e.id
@@ -117,14 +117,13 @@ class DiplomadoControlModel
     {
         $sql = "
             INSERT INTO {$this->table} 
-            (diplomado_abierto_id, capitulo_id, docente_id, fecha, mensualidad, generado) 
+            (diplomado_abierto_id, capitulo_id, docente_id, fecha, mensualidad) 
             VALUES 
-            (:diplomado_abierto_id, :capitulo_id, :docente_id, :fecha, :mensualidad, :generado)
+            (:diplomado_abierto_id, :capitulo_id, :docente_id, :fecha, :mensualidad)
             ON DUPLICATE KEY UPDATE
                 docente_id = VALUES(docente_id),
                 fecha = VALUES(fecha),
-                mensualidad = VALUES(mensualidad),
-                generado = VALUES(generado)
+                mensualidad = VALUES(mensualidad)
         ";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
@@ -132,8 +131,7 @@ class DiplomadoControlModel
             'capitulo_id' => $data['capitulo_id'],
             'docente_id' => $data['docente_id'],
             'fecha' => $data['fecha'],
-            'mensualidad' => $data['mensualidad'],
-            'generado' => $data['generado'] ?? 1
+            'mensualidad' => $data['mensualidad']
         ]);
     }
 
@@ -168,7 +166,7 @@ class DiplomadoControlModel
 
         $orderBy = 'ORDER BY da.id DESC';
         if (!empty($order)) {
-            $columns = ['oferta_numero', 'diplomado_nombre', 'estatus_oferta', 'total_controles', 'controles_generados'];
+            $columns = ['oferta_numero', 'diplomado_nombre', 'estatus_oferta', 'total_controles', 'controles_configurados'];
             $colIdx = $order[0]['column'];
             $colDir = strtoupper($order[0]['dir']) === 'ASC' ? 'ASC' : 'DESC';
             if (isset($columns[$colIdx])) {
@@ -194,8 +192,8 @@ class DiplomadoControlModel
                 (
                     SELECT COUNT(*) 
                     FROM diplomado_control dc 
-                    WHERE dc.diplomado_abierto_id = da.id AND dc.generado = 2
-                ) AS controles_generados
+                    WHERE dc.diplomado_abierto_id = da.id
+                ) AS controles_configurados
             FROM diplomado_abierto da
             JOIN diplomado d ON da.diplomado_id = d.id
             JOIN estatus e ON da.estatus_id = e.id

@@ -259,6 +259,8 @@ $router->add('POST', '/cuota/generateDebt', CuotaController::class . '@generateD
 $router->add('GET', '/cuota/getCuotasByOfferData', CuotaController::class . '@getCuotasByOfferData');
 $router->add('GET', '/cuota/getAcademicOffersByType', CuotaController::class . '@getAcademicOffersByType');
 $router->add('GET', '/cuota/getStudentsForDebtGeneration', CuotaController::class . '@getStudentsForDebtGeneration');
+$router->add('GET', '/cuota/getOfertaInfoAjax', CuotaController::class . '@getOfertaInfoAjax');
+$router->add('GET', '/cuota/getDiplomadoControlesAjax', CuotaController::class . '@getDiplomadoControlesAjax');
 
 $router->add('GET', '/pago', PagoController::class . '@index');
 $router->add('GET', '/compensar', CompensarController::class . '@index');

@@ -54,7 +54,9 @@ class EventoAbiertoModel
                 CONCAT(d.primer_apellido, ', ', d.primer_nombre) AS docente_nombre_completo,
                 ea.fecha_inicio,
                 ea.fecha_fin,
-                ea.nombre_carta
+                ea.nombre_carta,
+                ea.costo,
+                ea.inicial
             FROM
                 {$this->table} ea
             LEFT JOIN
@@ -213,23 +215,7 @@ class EventoAbiertoModel
 
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (numero, evento_id, sede_id, estatus_id, docente_id, fecha_inicio, fecha_fin, nombre_carta) VALUES (:numero, :evento_id, :sede_id, :estatus_id, :docente_id, :fecha_inicio, :fecha_fin, :nombre_carta)";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':numero' => $data['numero'],
-            ':evento_id' => $data['evento_id'],
-            ':sede_id' => $data['sede_id'],
-            ':estatus_id' => $data['estatus_id'],
-            ':docente_id' => $data['docente_id'],
-            ':fecha_inicio' => $data['fecha_inicio'],
-            ':fecha_fin' => $data['fecha_fin'],
-            ':nombre_carta' => $data['nombre_carta']
-        ]);
-    }
-
-    public function update(int $id, array $data): bool
-    {
-        $sql = "UPDATE {$this->table} SET numero = :numero, evento_id = :evento_id, sede_id = :sede_id, estatus_id = :estatus_id, docente_id = :docente_id, fecha_inicio = :fecha_inicio, fecha_fin = :fecha_fin, nombre_carta = :nombre_carta WHERE id = :id";
+        $sql = "INSERT INTO {$this->table} (numero, evento_id, sede_id, estatus_id, docente_id, fecha_inicio, fecha_fin, nombre_carta, costo, inicial) VALUES (:numero, :evento_id, :sede_id, :estatus_id, :docente_id, :fecha_inicio, :fecha_fin, :nombre_carta, :costo, :inicial)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':numero' => $data['numero'],
@@ -240,6 +226,26 @@ class EventoAbiertoModel
             ':fecha_inicio' => $data['fecha_inicio'],
             ':fecha_fin' => $data['fecha_fin'],
             ':nombre_carta' => $data['nombre_carta'],
+            ':costo' => $data['costo'],
+            ':inicial' => $data['inicial']
+        ]);
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        $sql = "UPDATE {$this->table} SET numero = :numero, evento_id = :evento_id, sede_id = :sede_id, estatus_id = :estatus_id, docente_id = :docente_id, fecha_inicio = :fecha_inicio, fecha_fin = :fecha_fin, nombre_carta = :nombre_carta, costo = :costo, inicial = :inicial WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':numero' => $data['numero'],
+            ':evento_id' => $data['evento_id'],
+            ':sede_id' => $data['sede_id'],
+            ':estatus_id' => $data['estatus_id'],
+            ':docente_id' => $data['docente_id'],
+            ':fecha_inicio' => $data['fecha_inicio'],
+            ':fecha_fin' => $data['fecha_fin'],
+            ':nombre_carta' => $data['nombre_carta'],
+            ':costo' => $data['costo'],
+            ':inicial' => $data['inicial'],
             ':id' => $id
         ]);
     }
