@@ -47,7 +47,7 @@ class InscripcionCursoModel
                 ic.alumno_id,
                 CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
                 a.ci_pasapote,
-                COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) AS alumno_telefono,
+                a.tlf_celular AS alumno_telefono,
                 a.correo,
                 ic.estatus_inscripcion_id,
                 ei.nombre AS estatus_inscripcion_nombre -- Asumimos 'nombre' en tabla 'estatus_inscripcion'
@@ -80,7 +80,7 @@ class InscripcionCursoModel
             $where[] = "(ca.numero LIKE :search_curso_abierto "
                 . "OR CONCAT(a.primer_nombre, ' ', a.primer_apellido) LIKE :search_alumno_nombre "
                 . "OR a.ci_pasapote LIKE :search_ci "
-                . "OR COALESCE(a.tlf_celular, a.tlf_habitacion, a.tlf_trabajo) LIKE :search_telefono "
+                . "OR a.tlf_celular LIKE :search_telefono "
                 . "OR a.correo LIKE :search_correo "
                 . "OR ei.nombre LIKE :search_estatus_inscripcion)";
             $like = '%' . $searchValue . '%';
