@@ -34,7 +34,7 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
                 <input type="hidden" name="id" value="<?php echo $diplomado_data['id'] ?? ''; ?>">
             <?php endif; ?>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 <div>
                     <label for="duracion_id" class="block text-gray-700 text-sm font-bold mb-2">Duración:</label>
                     <select id="duracion_id" name="duracion_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
@@ -54,15 +54,7 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
                     <input type="text" id="siglas" name="siglas" value="<?php echo htmlspecialchars($diplomado_data['siglas'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="8">
                 </div>
 
-                <div>
-                    <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo:</label>
-                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo htmlspecialchars($diplomado_data['costo'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
-                </div>
-                <div>
-                    <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial:</label>
-                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo htmlspecialchars($diplomado_data['inicial'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
-                </div>
-                <div class="lg:col-span-4 md:col-span-2">
+                <div class="lg:col-span-3 md:col-span-2">
                     <label for="descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
                     <textarea id="descripcion" name="descripcion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5"><?php echo $diplomado_data['descripcion'] ?? ''; ?></textarea>
                 </div>

@@ -172,10 +172,12 @@ class EventoAbiertoController extends Controller
                 'fecha_inicio' => $this->sanitizeInput($_POST['fecha_inicio']),
                 'fecha_fin' => $this->sanitizeInput($_POST['fecha_fin']),
                 'nombre_carta' => $_POST['nombre_carta'], // CKEditor content, no usar htmlspecialchars directamente aquí
+                'costo' => (float)$this->sanitizeInput($_POST['costo']),
+                'inicial' => (float)$this->sanitizeInput($_POST['inicial']),
             ];
 
             // Validación de campos obligatorios
-            if (empty($data['numero']) || empty($data['evento_id']) || empty($data['sede_id']) || empty($data['estatus_id']) || empty($data['fecha_inicio']) || empty($data['fecha_fin']) || empty($data['nombre_carta'])) {
+            if (empty($data['numero']) || empty($data['evento_id']) || empty($data['sede_id']) || empty($data['estatus_id']) || empty($data['fecha_inicio']) || empty($data['fecha_fin']) || empty($data['nombre_carta']) || !isset($data['costo']) || !isset($data['inicial'])) {
                 Auth::setFlashMessage('error', 'Todos los campos son obligatorios.');
                 $redirectPath = $id ? 'evento_abierto/edit/' . $id : 'evento_abierto/create';
                 $this->redirect($redirectPath);

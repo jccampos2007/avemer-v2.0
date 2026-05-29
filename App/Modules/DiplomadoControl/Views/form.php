@@ -41,8 +41,47 @@
                 </div>
             </div>
 
+            <!-- INFORMACIÓN DE COSTO E INICIAL -->
+            <div id="infoCostoInicial" class="<?php echo $is_edit ? '' : 'hidden'; ?> mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Costo del Diplomado</span>
+                        <p class="text-lg font-bold text-gray-800">
+                            <span class="costo-value">$<?php echo $is_edit ? number_format((float)$diplomadoAbierto['costo'], 2) : '0.00'; ?></span>
+                        </p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Inicial</span>
+                        <p class="text-lg font-bold text-gray-800">
+                            <span class="inicial-value">$<?php echo $is_edit ? number_format((float)$diplomadoAbierto['inicial'], 2) : '0.00'; ?></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <?php if ($is_edit && empty($controles)): ?>
+            <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin cap\u00edtulos',
+                    text: 'Este diplomado no tiene cap\u00edtulos cargados.',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d97706',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Ir a cargar cap\u00edtulos',
+                    cancelButtonText: 'Cerrar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.open('<?php echo BASE_URL; ?>capitulo/create', '_blank');
+                    }
+                });
+            });
+            </script>
+            <?php endif; ?>
+
             <!-- TARJETA DE CAPÍTULOS Y DETALLES -->
-            <div class="mt-8 border-t pt-6">
+            <div id="seccionTablaCapitulos" class="mt-8 border-t pt-6">
                 <h4 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                     Distribución de Capítulos, Instructores y Tarifas
@@ -56,7 +95,6 @@
                                 <th class="px-5 py-3 border-b border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Fecha Ejecución</th>
                                 <th class="px-5 py-3 border-b border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Instructor Asignado</th>
                                 <th class="px-5 py-3 border-b border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Mensualidad</th>
-                                <th class="px-5 py-3 border-b border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Estatus</th>
                             </tr>
                         </thead>
                         <tbody id="tbodyCapitulos">
@@ -88,17 +126,11 @@
                                                 <input type="number" step="0.01" name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][mensualidad]" value="<?php echo $ctrl['mensualidad']; ?>" class="mensualidad-input pl-5 pr-2 py-1.5 w-full border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" min="0">
                                             </div>
                                         </td>
-                                        <td class="px-5 py-4 border-b border-gray-200 text-sm">
-                                            <select name="capitulos[<?php echo $ctrl['capitulo_id']; ?>][generado]" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">
-                                                <option value="1" <?php echo ($ctrl['generado'] == 1) ? 'selected' : ''; ?>>Pendiente</option>
-                                                <option value="2" <?php echo ($ctrl['generado'] == 2) ? 'selected' : ''; ?>>Generado</option>
-                                            </select>
-                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr id="rowPlaceholder">
-                                    <td colspan="5" class="px-5 py-8 text-center text-gray-500">
+                                    <td colspan="4" class="px-5 py-8 text-center text-gray-500">
                                         Por favor, seleccione una oferta de diplomado abierto arriba para desplegar sus capítulos asociados.
                                     </td>
                                 </tr>

@@ -1,5 +1,4 @@
 <?php
-// app/Modules/Cuota/CuotaController.php
 namespace App\Modules\Cuota;
 
 use App\Core\Controller;
@@ -12,41 +11,26 @@ class CuotaController extends Controller
 
     public function __construct()
     {
-        Auth::requireLogin(); // Asegura que el usuario esté logueado
+        Auth::requireLogin();
         $this->cuotaModel = new CuotaModel();
     }
 
-    /**
-     * Muestra la lista de registros de Cuota (opcional, si tienes una vista de lista).
-     * Por ahora, solo redirigiremos a la creación/edición.
-     */
     public function index(): void
     {
-        // Puedes implementar una vista de lista similar a DiplomadoAbierto/list.php si es necesario.
-        // Por ahora, solo redirigimos a la creación para simplificar el ejemplo.
         $this->redirect('cuota/create');
     }
 
-    /**
-     * Exibe el formulario para crear un nuevo registro de Cuota
-     * o procesa el envío del formulario.
-     */
     public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrf();
             $this->processForm();
         } else {
-            $cuota_data = []; // Datos vacíos para el formulario de creación
+            $cuota_data = [];
             $this->view('Cuota/form', ['cuota_data' => $cuota_data]);
         }
     }
 
-    /**
-     * Exibe el formulario para editar un registro de Cuota existente
-     * o procesa el envío del formulario.
-     * @param int $id El ID del registro a editar.
-     */
     public function edit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -62,27 +46,24 @@ class CuotaController extends Controller
         }
     }
 
-    /**
-     * Procesa los datos del formulario (crear o actualizar).
-     * @param int|null $id El ID del registro si es una actualización, null si es una creación.
-     */
     private function processForm(?int $id = null): void
     {
-        // Determinar si la solicitud es AJAX
         $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
         try {
-            // Validación básica y sanitización
+            $diplomadoControlId = !empty($_POST['diplomado_control_id'])
+                ? (int)$this->sanitizeInput($_POST['diplomado_control_id'])
+                : null;
+
             $data = [
                 'nombre' => $this->sanitizeInput($_POST['nombre']),
                 'monto' => (float)$this->sanitizeInput($_POST['monto']),
                 'oferta_academica_id' => (int)$this->sanitizeInput($_POST['oferta_academica_id']),
                 'tipo_oferta_academica_id' => (int)$this->sanitizeInput($_POST['tipo_oferta_academica_id']),
-                'generado' => isset($_POST['generado']) ? (int)$this->sanitizeInput($_POST['generado']) : 0,
+                'diplomado_control_id' => $diplomadoControlId,
                 'fecha_vencimiento' => $this->sanitizeInput($_POST['fecha_vencimiento']),
             ];
 
-            // Validación de campos obligatorios
             if (
                 empty($data['nombre']) || empty($data['monto']) || empty($data['oferta_academica_id']) ||
                 empty($data['tipo_oferta_academica_id']) || empty($data['fecha_vencimiento'])
@@ -101,11 +82,9 @@ class CuotaController extends Controller
 
             $success = false;
             if ($id) {
-                // Actualizar
                 $success = $this->cuotaModel->update($id, $data);
                 $message = $success ? 'Cuota actualizada con éxito.' : 'Error al actualizar la Cuota.';
             } else {
-                // Crear
                 $success = $this->cuotaModel->create($data);
                 $message = $success ? 'Cuota creada con éxito.' : 'Error al crear la Cuota.';
             }
@@ -113,7 +92,7 @@ class CuotaController extends Controller
             if ($success) {
                 if ($isAjax) {
                     header('Content-Type: application/json');
-                    echo json_encode(['success' => true, 'message' => $message, 'data' => $data]); // Devolver los datos para actualizar la UI
+                    echo json_encode(['success' => true, 'message' => $message, 'data' => $data]);
                     exit();
                 } else {
                     Auth::setFlashMessage('success', $message);
@@ -155,10 +134,6 @@ class CuotaController extends Controller
         }
     }
 
-    /**
-     * Endpoint AJAX para obtener ofertas académicas por tipo.
-     * tipo_oferta_academica_id: 1=Curso, 2=Diplomado, 3=Evento, 4=Maestria
-     */
     public function getAcademicOffersByType(): void
     {
         Auth::requireLogin();
@@ -186,9 +161,6 @@ class CuotaController extends Controller
                 case '4':
                     $data = $this->cuotaModel->getMaestrias();
                     break;
-                default:
-                    // Si no se especifica un tipo válido, devuelve un array vacío
-                    break;
             }
             header('Content-Type: application/json');
             echo json_encode(['success' => true, 'data' => $data]);
@@ -201,11 +173,69 @@ class CuotaController extends Controller
         }
     }
 
-    /**
-     * Endpoint AJAX para obtener cuotas por tipo de oferta y ID de oferta.
-     * @param int $tipoOfertaId
-     * @param int $ofertaId
-     */
+    public function getOfertaInfoAjax(): void
+    {
+        Auth::requireLogin();
+
+        if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+            header('HTTP/1.0 403 Forbidden');
+            echo json_encode(['error' => 'Acceso denegado.']);
+            exit();
+        }
+
+        $tipoOfertaId = $_GET['tipo_oferta_id'] ?? null;
+        $ofertaId = $_GET['oferta_id'] ?? null;
+
+        if (empty($tipoOfertaId) || empty($ofertaId)) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Faltan parámetros.']);
+            exit();
+        }
+
+        try {
+            $info = $this->cuotaModel->getOfertaInfo((int)$tipoOfertaId, (int)$ofertaId);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'data' => $info]);
+            exit();
+        } catch (\PDOException $e) {
+            error_log('Error de BD en getOfertaInfoAjax (Cuota): ' . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Error de base de datos.']);
+            exit();
+        }
+    }
+
+    public function getDiplomadoControlesAjax(): void
+    {
+        Auth::requireLogin();
+
+        if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+            header('HTTP/1.0 403 Forbidden');
+            echo json_encode(['error' => 'Acceso denegado.']);
+            exit();
+        }
+
+        $diplomadoAbiertoId = $_GET['diplomado_abierto_id'] ?? null;
+
+        if (empty($diplomadoAbiertoId)) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Falta ID de diplomado abierto.']);
+            exit();
+        }
+
+        try {
+            $controles = $this->cuotaModel->getDiplomadoControles((int)$diplomadoAbiertoId);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'data' => $controles]);
+            exit();
+        } catch (\PDOException $e) {
+            error_log('Error de BD en getDiplomadoControlesAjax (Cuota): ' . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Error de base de datos.']);
+            exit();
+        }
+    }
+
     public function getCuotasByOfferData(): void
     {
         Auth::requireLogin();
@@ -238,9 +268,6 @@ class CuotaController extends Controller
         }
     }
 
-    /**
-     * Endpoint AJAX para obtener los alumnos asociados a una oferta académica.
-     */
     public function getStudentsForDebtGeneration(): void
     {
         Auth::requireLogin();
@@ -274,9 +301,6 @@ class CuotaController extends Controller
         }
     }
 
-    /**
-     * Endpoint AJAX para generar la deuda para los alumnos seleccionados.
-     */
     public function generateDebt(): void
     {
         Auth::requireLogin();
@@ -314,9 +338,9 @@ class CuotaController extends Controller
                     'alumno_id' => (int)$alumnoId,
                     'cuota_id' => (int)$cuotaId,
                     'monto' => (float)$montoCuota,
-                    'tipo' => 1, // 1: Débito (Deuda)
-                    'estatus' => 1, // 1: Deuda generada
-                    'id_transaccion_origen' => null // No hay origen para una deuda inicial
+                    'tipo' => 1,
+                    'estatus' => 1,
+                    'id_transaccion_origen' => null
                 ];
                 if ($this->cuotaModel->insertTransaction($transactionData)) {
                     $generatedCount++;
@@ -351,13 +375,8 @@ class CuotaController extends Controller
         }
     }
 
-    /**
-     * Elimina un registro de Cuota.
-     * @param int $id El ID del registro a eliminar.
-     */
     public function delete(int $id): void
     {
-        // Para solicitudes AJAX de eliminación, responder con JSON
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
             try {
                 if ($this->cuotaModel->delete($id)) {
@@ -372,9 +391,8 @@ class CuotaController extends Controller
                 header('Content-Type: application/json');
                 echo json_encode(['success' => false, 'message' => 'Error de base de datos al eliminar Cuota: ' . $e->getMessage()]);
             }
-            exit(); // Terminar la ejecución para la solicitud AJAX
+            exit();
         } else {
-            // Comportamiento original para solicitudes no-AJAX (redireccionamiento)
             try {
                 if ($this->cuotaModel->delete($id)) {
                     Auth::setFlashMessage('success', 'Cuota eliminada con éxito.');

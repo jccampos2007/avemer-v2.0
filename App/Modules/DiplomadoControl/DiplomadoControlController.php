@@ -78,8 +78,7 @@ class DiplomadoControlController extends Controller
                         'capitulo_nombre' => $cap['nombre'],
                         'docente_id' => null,
                         'fecha' => '',
-                        'mensualidad' => 0.0,
-                        'generado' => 1
+                        'mensualidad' => 0.0
                     ];
                 }
             }
@@ -123,8 +122,7 @@ class DiplomadoControlController extends Controller
                     'capitulo_id' => (int)$capituloId,
                     'docente_id' => $docenteId ?: null,
                     'fecha' => $fecha ?: date('Y-m-d'),
-                    'mensualidad' => !empty($campos['mensualidad']) ? (float)$campos['mensualidad'] : 0.0,
-                    'generado' => !empty($campos['generado']) ? (int)$campos['generado'] : 1
+                    'mensualidad' => !empty($campos['mensualidad']) ? (float)$campos['mensualidad'] : 0.0
                 ];
 
                 if ($this->controlModel->upsertControl($data)) {
@@ -173,42 +171,47 @@ class DiplomadoControlController extends Controller
             exit();
         }
 
-        // Primero verificar si ya existen controles guardados
+        // Obtener todos los capítulos base y los controles existentes
+        $capitulos = $this->controlModel->getCapitulosPorDiplomado($diplomadoAbierto['diplomado_id']);
         $controles = $this->controlModel->getControlesPorDiplomadoAbierto($diplomadoAbiertoId);
-        
-        if (!empty($controles)) {
-            // Mapear para que el JS use 'id' como el id del capítulo, igual que en el caso base
-            $result = [];
-            foreach ($controles as $ctrl) {
+
+        // Indexar controles por capitulo_id para merge rápido
+        $controlesIndexados = [];
+        foreach ($controles as $ctrl) {
+            $controlesIndexados[$ctrl['capitulo_id']] = $ctrl;
+        }
+
+        // Merge: si el capítulo tiene control, usar sus datos; si no, defaults vacíos
+        $result = [];
+        foreach ($capitulos as $cap) {
+            if (isset($controlesIndexados[$cap['id']])) {
+                $ctrl = $controlesIndexados[$cap['id']];
                 $result[] = [
                     'id' => $ctrl['capitulo_id'],
                     'numero' => $ctrl['capitulo_numero'],
                     'nombre' => $ctrl['capitulo_nombre'],
                     'docente_id' => $ctrl['docente_id'],
                     'fecha' => $ctrl['fecha'] ?? '',
-                    'mensualidad' => $ctrl['mensualidad'] ?? 0.0,
-                    'generado' => $ctrl['generado'] ?? 1
+                    'mensualidad' => $ctrl['mensualidad'] ?? 0.0
+                ];
+            } else {
+                $result[] = [
+                    'id' => $cap['id'],
+                    'numero' => $cap['numero'],
+                    'nombre' => $cap['nombre'],
+                    'docente_id' => null,
+                    'fecha' => '',
+                    'mensualidad' => 0.0
                 ];
             }
-            echo json_encode($result);
-            exit();
         }
-
-        // Si no hay controles, retornar los capítulos base con valores por defecto
-        $capitulos = $this->controlModel->getCapitulosPorDiplomado($diplomadoAbierto['diplomado_id']);
-        $result = [];
-        foreach ($capitulos as $cap) {
-            $result[] = [
-                'id' => $cap['id'],
-                'numero' => $cap['numero'],
-                'nombre' => $cap['nombre'],
-                'docente_id' => null,
-                'fecha' => '',
-                'mensualidad' => 0.0,
-                'generado' => 1
-            ];
-        }
-        echo json_encode($result);
+        echo json_encode([
+            'costo' => (float)$diplomadoAbierto['costo'],
+            'inicial' => (float)$diplomadoAbierto['inicial'],
+            'diplomado_id' => (int)$diplomadoAbierto['diplomado_id'],
+            'diplomado_nombre' => $diplomadoAbierto['diplomado_nombre'],
+            'capitulos' => $result
+        ]);
         exit();
     }
 
@@ -244,7 +247,7 @@ class DiplomadoControlController extends Controller
                 $row['diplomado_nombre'],
                 $row['estatus_oferta'],
                 $row['total_controles'],
-                $row['controles_generados']
+                $row['controles_configurados']
             ];
         }
         $result['data'] = $data;

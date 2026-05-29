@@ -86,6 +86,8 @@ class CursoAbiertoModelTest extends DatabaseTestCase
             'fecha' => '2026-06-01',
             'nombre_carta' => 'Test Create',
             'convenio' => null,
+            'costo' => 150.00,
+            'inicial' => 50.00,
         ]);
         $this->assertTrue($result);
 
@@ -106,6 +108,8 @@ class CursoAbiertoModelTest extends DatabaseTestCase
             'fecha' => '2026-01-01',
             'nombre_carta' => 'Updated',
             'convenio' => null,
+            'costo' => 200.00,
+            'inicial' => 75.00,
         ]));
         $this->assertSame('CA-UPD', $this->model->findById(999)['numero']);
         $this->model->update(999, [
@@ -117,6 +121,8 @@ class CursoAbiertoModelTest extends DatabaseTestCase
             'fecha' => '2026-01-01',
             'nombre_carta' => 'Test Carta',
             'convenio' => 'CONV-001',
+            'costo' => 150.00,
+            'inicial' => 50.00,
         ]);
     }
 

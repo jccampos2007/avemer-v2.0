@@ -66,7 +66,7 @@ $(document).ready(function () {
                     className: 'buttons-excel',
                     title: 'Listado de Cursos Abiertos',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6] // Exportar únicamente Número, Curso, Sede, Estatus, Docente y Fecha
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8] // Exportar Número, Curso, Sede, Estatus, Docente, Fecha, Costo e Inicial
                     },
                     action: newExportAction
                 },
@@ -76,12 +76,12 @@ $(document).ready(function () {
                     className: 'buttons-pdf',
                     title: 'Listado de Cursos Abiertos',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6] // Exportar únicamente Número, Curso, Sede, Estatus, Docente y Fecha
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8] // Exportar Número, Curso, Sede, Estatus, Docente, Fecha, Costo e Inicial
                     },
                     action: newExportAction,
                     customize: function (doc) {
                         // Personalizaciones estéticas básicas para el PDF
-                        doc.content[1].table.widths = ['5%', '20%', '20%', '15%', '20%', '20%'];
+                        doc.content[1].table.widths = ['5%', '15%', '15%', '12%', '12%', '15%', '10%', '8%', '8%'];
                         doc.styles.tableHeader.fillColor = '#1e3a8a'; // Color azul corporativo
                         doc.styles.tableHeader.color = '#ffffff';
                     }
@@ -104,11 +104,13 @@ $(document).ready(function () {
                     searchable: false
                 }, // Columna 0: ID
                 { "data": 1 }, // Columna 1: Número
-                { "data": 2 }, // Columna 2: Curso ID (debería ser el nombre del curso)
-                { "data": 3 }, // Columna 3: Sede ID (debería ser el nombre de la sede)
-                { "data": 4 }, // Columna 4: Estatus ID (debería ser el nombre del estatus)
-                { "data": 5 }, // Columna 5: Docente ID (debería ser el nombre del docente/coordinador)
+                { "data": 2 }, // Columna 2: Nombre del curso/taller
+                { "data": 3 }, // Columna 3: Sede
+                { "data": 4 }, // Columna 4: Estatus
+                { "data": 5 }, // Columna 5: Instructor
                 { "data": 6 }, // Columna 6: Fecha
+                { "data": 7, className: "text-right font-medium" }, // Columna 7: Costo
+                { "data": 8, className: "text-right font-medium" }, // Columna 8: Inicial
                 {
                     data: null,
                     orderable: false,

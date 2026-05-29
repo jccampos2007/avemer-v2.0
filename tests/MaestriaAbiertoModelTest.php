@@ -62,6 +62,8 @@ class MaestriaAbiertoModelTest extends DatabaseTestCase
             'fecha' => '2026-01-01',
             'nombre_carta' => 'Test Master',
             'convenio' => null,
+            'costo' => 5000,
+            'inicial' => 1000,
         ]);
         $this->assertTrue($result);
 
@@ -82,6 +84,8 @@ class MaestriaAbiertoModelTest extends DatabaseTestCase
             'fecha' => '2026-01-01',
             'nombre_carta' => 'Updated',
             'convenio' => null,
+            'costo' => 6000,
+            'inicial' => 1200,
         ]));
         $this->assertSame('MA-UPD', $this->model->getById(999)['numero']);
         $this->model->update(999, [
@@ -93,6 +97,8 @@ class MaestriaAbiertoModelTest extends DatabaseTestCase
             'fecha' => '2026-01-01',
             'nombre_carta' => 'Test Master Carta',
             'convenio' => null,
+            'costo' => 5000,
+            'inicial' => 1000,
         ]);
     }
 

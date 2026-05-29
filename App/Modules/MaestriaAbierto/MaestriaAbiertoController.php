@@ -72,6 +72,8 @@ class MaestriaAbiertoController extends Controller
                     htmlspecialchars($row['estatus_nombre'] ?? 'N/A'),
                     htmlspecialchars($row['docente_nombre_completo'] ?? 'N/A'),
                     htmlspecialchars($row['fecha']),
+                    number_format((float)$row['costo'], 2),
+                    number_format((float)$row['inicial'], 2),
                     ''
                 ];
             }
@@ -173,6 +175,8 @@ class MaestriaAbiertoController extends Controller
                 'fecha' => $this->sanitizeInput($_POST['fecha']),
                 'nombre_carta' => $_POST['nombre_carta'] ?? '', // CKEditor ya maneja el HTML, solo sanitiza si es necesario
                 'convenio' => $this->sanitizeInput($_POST['convenio']),
+                'costo' => !empty($_POST['costo']) ? (float)$this->sanitizeInput($_POST['costo']) : 0,
+                'inicial' => !empty($_POST['inicial']) ? (float)$this->sanitizeInput($_POST['inicial']) : 0,
             ];
 
             // Validación de campos obligatorios

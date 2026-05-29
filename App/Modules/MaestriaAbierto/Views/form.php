@@ -97,6 +97,16 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
                     <input type="text" id="convenio" name="convenio" value="<?php echo $convenio_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="32">
                 </div>
 
+                <div>
+                    <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo ($):</label>
+                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo htmlspecialchars($maestria_abierto_data['costo'] ?? '0'); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="0">
+                </div>
+
+                <div>
+                    <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial ($):</label>
+                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo htmlspecialchars($maestria_abierto_data['inicial'] ?? '0'); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="0">
+                </div>
+
                 <div class="lg:col-span-4 md:col-span-2">
                     <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
                     <textarea id="nombre_carta" name="nombre_carta" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5"><?php echo $nombre_carta_val; ?></textarea>

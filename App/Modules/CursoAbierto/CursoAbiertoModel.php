@@ -20,7 +20,7 @@ class CursoAbiertoModel
      */
     public function getAll(): array
     {
-        $stmt = $this->pdo->query("SELECT id, numero, curso_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio FROM {$this->table} WHERE deleted_at IS NULL ORDER BY id DESC");
+        $stmt = $this->pdo->query("SELECT id, numero, curso_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio, costo, inicial FROM {$this->table} WHERE deleted_at IS NULL ORDER BY id DESC");
         return $stmt->fetchAll();
     }
 
@@ -49,8 +49,8 @@ class CursoAbiertoModel
             4 => 'estatus_nombre',
             5 => 'docente_nombre',
             6 => 'fecha',
-            7 => 'nombre_carta',
-            8 => 'ca.convenio',
+            7 => 'ca.costo',
+            8 => 'ca.inicial',
         ];
 
         // Construir la consulta base
@@ -61,7 +61,9 @@ class CursoAbiertoModel
             c.nombre AS curso_nombre,
             s.nombre AS sede_nombre,
             e.nombre AS estatus_nombre,
-            CONCAT(d.primer_apellido, ', ', d.primer_nombre) AS docente_nombre
+            CONCAT(d.primer_apellido, ', ', d.primer_nombre) AS docente_nombre,
+            ca.costo,
+            ca.inicial
         FROM
             {$this->table} ca
                 LEFT JOIN
@@ -147,6 +149,8 @@ class CursoAbiertoModel
                 htmlspecialchars($row['estatus_nombre'] ?? ''),
                 htmlspecialchars($row['docente_nombre'] ?? ''),
                 htmlspecialchars($row['fecha']),
+                number_format((float)($row['costo'] ?? 0), 2),
+                number_format((float)($row['inicial'] ?? 0), 2),
                 ''
             ];
         }
@@ -215,7 +219,7 @@ class CursoAbiertoModel
 
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (numero, curso_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio) VALUES (:numero, :curso_id, :sede_id, :estatus_id, :docente_id, :fecha, :nombre_carta, :convenio)";
+        $sql = "INSERT INTO {$this->table} (numero, curso_id, sede_id, estatus_id, docente_id, fecha, nombre_carta, convenio, costo, inicial) VALUES (:numero, :curso_id, :sede_id, :estatus_id, :docente_id, :fecha, :nombre_carta, :convenio, :costo, :inicial)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'numero' => $data['numero'],
@@ -226,12 +230,14 @@ class CursoAbiertoModel
             'fecha' => $data['fecha'],
             'nombre_carta' => $data['nombre_carta'],
             'convenio' => $data['convenio'],
+            'costo' => $data['costo'],
+            'inicial' => $data['inicial'],
         ]);
     }
 
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE {$this->table} SET numero = :numero, curso_id = :curso_id, sede_id = :sede_id, estatus_id = :estatus_id, docente_id = :docente_id, fecha = :fecha, nombre_carta = :nombre_carta, convenio = :convenio WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET numero = :numero, curso_id = :curso_id, sede_id = :sede_id, estatus_id = :estatus_id, docente_id = :docente_id, fecha = :fecha, nombre_carta = :nombre_carta, convenio = :convenio, costo = :costo, inicial = :inicial WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $params = [
             'numero' => $data['numero'],
@@ -242,6 +248,8 @@ class CursoAbiertoModel
             'fecha' => $data['fecha'],
             'nombre_carta' => $data['nombre_carta'],
             'convenio' => $data['convenio'],
+            'costo' => $data['costo'],
+            'inicial' => $data['inicial'],
             'id' => $id
         ];
         return $stmt->execute($params);

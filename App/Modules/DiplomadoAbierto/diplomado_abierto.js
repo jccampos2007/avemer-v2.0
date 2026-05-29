@@ -190,10 +190,10 @@ $(document).ready(function () {
             const estatusId = $('#estatus_id').val();
             const fechaInicio = $('#fecha_inicio').val().trim();
             const fechaFin = $('#fecha_fin').val().trim();
-            const nombreCartaContent = (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances.nombre_carta) ? CKEDITOR.instances.nombre_carta.getData().trim() : '';
+            const costo = $('#costo').val();
+            const inicial = $('#inicial').val();
 
-            // TODO validaciones
-            // if (numero === '' || !diplomadoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '' || nombreCartaContent === '') {
+            // if (numero === '' || !diplomadoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '' || costo === '' || inicial === '') {
             //     showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
             //     event.preventDefault(); // Detiene el envío del formulario
             // }

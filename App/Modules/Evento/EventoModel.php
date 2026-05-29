@@ -32,8 +32,6 @@ class EventoModel
             2 => 'e.nombre',
             3 => 'e.descripcion',
             4 => 'e.siglas',
-            5 => 'e.costo',
-            6 => 'e.inicial',
         ];
 
         // Filtro base: Excluir los eliminados lógicamente (e.deleted_at IS NULL)
@@ -44,9 +42,7 @@ class EventoModel
                 d.nombre AS duracion_nombre,
                 e.nombre,
                 e.descripcion,
-                e.siglas,
-                e.costo,
-                e.inicial
+                e.siglas
             FROM
                 {$this->table} e
             LEFT JOIN
@@ -73,16 +69,12 @@ class EventoModel
             $where[] = "(e.nombre LIKE :search_nombre "
                 . "OR e.descripcion LIKE :search_descripcion "
                 . "OR e.siglas LIKE :search_siglas "
-                . "OR e.costo LIKE :search_costo "
-                . "OR e.inicial LIKE :search_inicial "
                 . "OR d.nombre LIKE :search_duracion_nombre)";
             
             $like = '%' . $searchValue . '%';
             $queryParams[':search_nombre'] = $like;
             $queryParams[':search_descripcion'] = $like;
             $queryParams[':search_siglas'] = $like;
-            $queryParams[':search_costo'] = $like;
-            $queryParams[':search_inicial'] = $like;
             $queryParams[':search_duracion_nombre'] = $like;
         }
 
@@ -178,29 +170,25 @@ class EventoModel
 
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (duracion_id, nombre, descripcion, siglas, costo, inicial) VALUES (:duracion_id, :nombre, :descripcion, :siglas, :costo, :inicial)";
+        $sql = "INSERT INTO {$this->table} (duracion_id, nombre, descripcion, siglas) VALUES (:duracion_id, :nombre, :descripcion, :siglas)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':duracion_id' => $data['duracion_id'],
             ':nombre' => $data['nombre'],
             ':descripcion' => $data['descripcion'],
-            ':siglas' => $data['siglas'],
-            ':costo' => $data['costo'],
-            ':inicial' => $data['inicial']
+            ':siglas' => $data['siglas']
         ]);
     }
 
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE {$this->table} SET duracion_id = :duracion_id, nombre = :nombre, descripcion = :descripcion, siglas = :siglas, costo = :costo, inicial = :inicial WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET duracion_id = :duracion_id, nombre = :nombre, descripcion = :descripcion, siglas = :siglas WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':duracion_id' => $data['duracion_id'],
             ':nombre' => $data['nombre'],
             ':descripcion' => $data['descripcion'],
             ':siglas' => $data['siglas'],
-            ':costo' => $data['costo'],
-            ':inicial' => $data['inicial'],
             ':id' => $id
         ]);
     }

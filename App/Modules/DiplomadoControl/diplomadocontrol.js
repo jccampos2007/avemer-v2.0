@@ -9,15 +9,22 @@ $(document).ready(function () {
         var $bulkMensualidad = $('#bulk_mensualidad');
         var $btnApplyBulk = $('#btnApplyBulk');
 
+        var $infoCostoInicial = $('#infoCostoInicial');
+        var $infoCosto = $('#infoCostoInicial .costo-value');
+        var $infoInicial = $('#infoCostoInicial .inicial-value');
+        var $seccionTablaCapitulos = $('#seccionTablaCapitulos');
+
         function loadCapitulos(diplomadoAbiertoId) {
             if (!diplomadoAbiertoId) {
                 $tbody.html('\
                     <tr id="rowPlaceholder">\
-                        <td colspan="5" class="px-5 py-8 text-center text-gray-500">\
+                        <td colspan="4" class="px-5 py-8 text-center text-gray-500">\
                             Por favor, seleccione una oferta de diplomado abierto arriba para desplegar sus cap\u00edtulos asociados.\
                         </td>\
                     </tr>\
                 ');
+                $infoCostoInicial.addClass('hidden');
+                $seccionTablaCapitulos.addClass('hidden');
                 return;
             }
 
@@ -26,18 +33,33 @@ $(document).ready(function () {
                 method: 'GET',
                 dataType: 'json',
                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                success: function (capitulos) {
+                success: function (resp) {
+                    $infoCosto.text('$' + parseFloat(resp.costo || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+                    $infoInicial.text('$' + parseFloat(resp.inicial || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+                    $infoCostoInicial.removeClass('hidden');
+
+                    var capitulos = resp.capitulos || [];
                     if (capitulos.length === 0) {
-                        $tbody.html('\
-                            <tr>\
-                                <td colspan="5" class="px-5 py-8 text-center text-amber-600 font-semibold">\
-                                    Este diplomado no posee cap\u00edtulos asociados o cargados en la base de datos base.\
-                                </td>\
-                            </tr>\
-                        ');
+                        $seccionTablaCapitulos.addClass('hidden');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Sin cap\u00edtulos',
+                            text: 'Este diplomado no tiene cap\u00edtulos cargados.',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d97706',
+                            cancelButtonColor: '#6b7280',
+                            confirmButtonText: 'Ir a cargar cap\u00edtulos',
+                            cancelButtonText: 'Cerrar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.open(BASE_URL_JS + 'capitulo/create', '_blank');
+                            }
+                        });
                         return;
                     }
 
+
+                    $seccionTablaCapitulos.removeClass('hidden');
                     $tbody.empty();
                     var today = new Date().toISOString().split('T')[0];
 
@@ -57,7 +79,6 @@ $(document).ready(function () {
 
                         var fechaVal = cap.fecha || '';
                         var mensualidadVal = cap.mensualidad !== undefined ? parseFloat(cap.mensualidad).toFixed(2) : '0.00';
-                        var generadoVal = cap.generado || 1;
 
                         var tr = '\
                             <tr class="hover:bg-gray-50/50 transition">\
@@ -80,12 +101,6 @@ $(document).ready(function () {
                                         </div>\
                                         <input type="number" step="0.01" name="capitulos[' + cap.id + '][mensualidad]" value="' + mensualidadVal + '" class="mensualidad-input pl-5 pr-2 py-1.5 w-full border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none" min="0">\
                                     </div>\
-                                </td>\
-                                <td class="px-5 py-4 border-b border-gray-200 text-sm">\
-                                    <select name="capitulos[' + cap.id + '][generado]" class="px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:outline-none">\
-                                        <option value="1"' + (generadoVal == 1 ? ' selected' : '') + '>Pendiente</option>\
-                                        <option value="2"' + (generadoVal == 2 ? ' selected' : '') + '>Generado</option>\
-                                    </select>\
                                 </td>\
                             </tr>\
                         ';
@@ -192,7 +207,7 @@ $(document).ready(function () {
                 "type": "POST",
                 "error": function (xhr, error, thrown) {
                     console.log("Error en la solicitud AJAX de DataTables:", error, thrown);
-                    showFlashMessage('error', 'Error al cargar los datos.');
+                    Swal.fire('Error', 'Error al cargar los datos.', 'error');
                 }
             },
             "columns": [
@@ -224,11 +239,11 @@ $(document).ready(function () {
                     responsivePriority: 4,
                     render: function (data, type, row) {
                         var total = parseInt(row[4]) || 0;
-                        var generados = parseInt(row[5]) || 0;
+                        var configurados = parseInt(row[5]) || 0;
                         if (total > 0) {
                             return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">' +
                                 '<svg class="w-3.5 h-3.5 mr-1 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l5-5z" clip-rule="evenodd"></path></svg>' +
-                                'Configurado (' + generados + '/' + total + ' Cap\u00edtulos)' +
+                                'Configurado (' + configurados + '/' + total + ' Cap\u00edtulos)' +
                                 '</span>';
                         }
                         return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">' +

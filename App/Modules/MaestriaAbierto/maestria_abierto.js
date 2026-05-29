@@ -19,7 +19,7 @@ $(document).ready(function () {
                     className: 'buttons-excel',
                     title: 'Listado de Maestrías Abiertas',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6] // Exportar únicamente Número, Maestría, Sede, Estatus, Docente y Fecha
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
                     },
                     action: newExportAction
                 },
@@ -29,7 +29,7 @@ $(document).ready(function () {
                     className: 'buttons-pdf',
                     title: 'Listado de Maestrías Abiertas',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6] // Exportar únicamente Número, Maestría, Sede, Estatus, Docente y Fecha
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8]
                     },
                     action: newExportAction,
                     customize: function (doc) {
@@ -46,12 +46,7 @@ $(document).ready(function () {
                 "error": function (xhr, error, thrown) {
                     console.error("Error en la solicitud AJAX de DataTables:", error, thrown);
                     console.error("Respuesta del servidor:", xhr.responseText);
-                    // Usar showFlashMessage si está disponible, de lo contrario alert
-                    if (typeof showFlashMessage === 'function') {
-                        showFlashMessage('error', 'Error al cargar los datos de maestrías abiertas. Por favor, revisa la consola para más detalles.');
-                    } else {
-                        showFlashMessage('error', 'Error al cargar los datos de maestrías abiertas. Por favor, revisa la consola para más detalles.');
-                    }
+                    Swal.fire('Error', 'Error al cargar los datos de maestrías abiertas.', 'error');
                 }
             },
             "columns": [
@@ -66,6 +61,8 @@ $(document).ready(function () {
                 { "data": 4 }, // Estatus (nombre)
                 { "data": 5 }, // Docente (nombre completo)
                 { "data": 6 }, // Fecha
+                { "data": 7 }, // Costo
+                { "data": 8 }, // Inicial
                 { // Columna de Acciones
                     "data": null,
                     "orderable": false,
@@ -202,13 +199,8 @@ $(document).ready(function () {
             const nombreCartaContent = (typeof window.nombreCartaEditor !== 'undefined') ? window.nombreCartaEditor.getData().trim() : '';
 
             if (numero === '' || !maestriaId || !sedeId || !estatusId || !docenteId || fecha === '' || nombreCartaContent === '') {
-                // Usar showFlashMessage si está disponible, de lo contrario alert
-                if (typeof showFlashMessage === 'function') {
-                    showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
-                } else {
-                    showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
-                }
-                event.preventDefault(); // Detiene el envío del formulario
+                Swal.fire('Error', 'Por favor, complete todos los campos obligatorios.', 'error');
+                event.preventDefault();
             }
         });
     }

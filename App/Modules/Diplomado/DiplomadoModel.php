@@ -38,8 +38,6 @@ class DiplomadoModel
             2 => 'd.nombre',
             3 => 'd.descripcion',
             4 => 'd.siglas',
-            5 => 'd.costo',
-            6 => 'd.inicial',
         ];
 
         // Construir la consulta base filtrando solo diplomados activos (d.deleted_at IS NULL)
@@ -50,9 +48,7 @@ class DiplomadoModel
                 dr.nombre AS duracion_nombre,
                 d.nombre,
                 d.descripcion,
-                d.siglas,
-                d.costo,
-                d.inicial
+                d.siglas
             FROM
                 {$this->table} d
             LEFT JOIN
@@ -203,15 +199,13 @@ class DiplomadoModel
      */
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO {$this->table} (duracion_id, nombre, descripcion, siglas, costo, inicial) VALUES (:duracion_id, :nombre, :descripcion, :siglas, :costo, :inicial)";
+        $sql = "INSERT INTO {$this->table} (duracion_id, nombre, descripcion, siglas) VALUES (:duracion_id, :nombre, :descripcion, :siglas)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':duracion_id' => $data['duracion_id'],
             ':nombre' => $data['nombre'],
             ':descripcion' => $data['descripcion'],
-            ':siglas' => $data['siglas'],
-            ':costo' => $data['costo'],
-            ':inicial' => $data['inicial']
+            ':siglas' => $data['siglas']
         ]);
     }
 
@@ -220,15 +214,13 @@ class DiplomadoModel
      */
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE {$this->table} SET duracion_id = :duracion_id, nombre = :nombre, descripcion = :descripcion, siglas = :siglas, costo = :costo, inicial = :inicial WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET duracion_id = :duracion_id, nombre = :nombre, descripcion = :descripcion, siglas = :siglas WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':duracion_id' => $data['duracion_id'],
             ':nombre' => $data['nombre'],
             ':descripcion' => $data['descripcion'],
             ':siglas' => $data['siglas'],
-            ':costo' => $data['costo'],
-            ':inicial' => $data['inicial'],
             ':id' => $id
         ]);
     }
