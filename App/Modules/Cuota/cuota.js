@@ -207,8 +207,8 @@ $(document).ready(function () {
                                 "searchable": false,
                                 "render": function (data, type, row) {
                                     return `
-                                        <button class="edit-cuota-btn btn btn-default" data-id="${row.id}"><i class="fas fa-edit fs-5 text-blue-600"></i></button>
-                                        <button class="delete-cuota-btn btn btn-default" data-id="${row.id}"><i class="fas fa-trash-alt fs-5 text-red-600"></i></button>
+                                        <button class="edit-cuota-btn btn-action btn-action-edit" data-id="${row.id}" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="delete-cuota-btn btn-action btn-action-delete" data-id="${row.id}" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
                                     `;
                                 }
                             }
@@ -299,7 +299,12 @@ $(document).ready(function () {
 
         $('#nombre').val(row.nombre);
         $('#monto').val(row.monto);
-        $('#fecha_vencimiento').val(row.fecha_vencimiento);
+        var fp = document.querySelector('#fecha_vencimiento')?._flatpickr;
+        if (fp) {
+            fp.setDate(row.fecha_vencimiento);
+        } else {
+            $('#fecha_vencimiento').val(row.fecha_vencimiento);
+        }
         $('#cuota_edit_id').val(row.id);
         $('#btn-submit-cuota').text('Actualizar Cuota');
         $('#cancel-edit-btn').removeClass('hidden');
