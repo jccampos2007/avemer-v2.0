@@ -154,4 +154,32 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
     </div>
 </div>
 
+<!-- Modal Generar Deuda -->
+<div id="generateDebtModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[80vh] flex flex-col">
+        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+            <h3 class="text-lg font-bold text-gray-800">Generar Deuda</h3>
+            <button type="button" id="closeDebtModal" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+        </div>
+        <div class="p-4 overflow-y-auto flex-1">
+            <div id="students-list-message" class="mb-4 text-sm text-gray-600 hidden"></div>
+            <table id="studentsListTable" class="min-w-full leading-normal display responsive nowrap" style="width:100%">
+                <thead>
+                    <tr class="bg-gray-100 text-gray-600 uppercase text-xs leading-normal">
+                        <th class="py-3 px-6 text-left"><input type="checkbox" id="selectAllStudents"></th>
+                        <th class="py-3 px-6 text-left">Nombre</th>
+                        <th class="py-3 px-6 text-left">Apellido</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700 text-sm font-light">
+                </tbody>
+            </table>
+        </div>
+        <div class="flex items-center justify-end gap-2 p-4 border-t border-gray-200">
+            <button type="button" id="closeDebtModalBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">Cancelar</button>
+            <button type="button" id="confirmGenerateDebtBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded" disabled>Generar Deuda Seleccionados</button>
+        </div>
+    </div>
+</div>
+
 <?php $page_js = 'asset/js/Cuota/cuota.js'; ?>

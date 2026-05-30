@@ -18,8 +18,18 @@ $(document).ready(function () {
     const btnIrControles = $('#btn-ir-controles');
     const cuotasListTable = $('#cuotasListTable');
     const cuotasListMessage = $('#cuotas-list-message');
+    const generateDebtModal = $('#generateDebtModal');
+    const closeDebtModal = $('#closeDebtModal');
+    const closeDebtModalBtn = $('#closeDebtModalBtn');
+    const studentsListTable = $('#studentsListTable');
+    const studentsListMessage = $('#students-list-message');
+    const selectAllStudentsCheckbox = $('#selectAllStudents');
+    const confirmGenerateDebtBtn = $('#confirmGenerateDebtBtn');
 
     let cuotasDataTable = null;
+    let studentsDataTable = null;
+    let currentCuotaIdForDebt = null;
+    let currentCuotaMontoForDebt = null;
 
     function showAlert(message, type = 'error') {
         Swal.fire(type === 'success' ? 'Éxito' : 'Error', message, type);
@@ -206,10 +216,14 @@ $(document).ready(function () {
                                 "orderable": false,
                                 "searchable": false,
                                 "render": function (data, type, row) {
-                                    return `
-                                        <a href="cuota/edit/${row.id}" class="btn btn-default"><i class="fas fa-edit fs-5 text-blue-600"></i></a>
-                                        <a href="cuota/delete/${row.id}" class="btn btn-default"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>
-                                    `;
+                                    const editBtn = `<a href="cuota/edit/${row.id}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>`;
+                                    const deleteBtn = `<a href="cuota/delete/${row.id}" class="btn btn-default" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
+                                    const generado = parseInt(row.generado || 0);
+                                    if (generado === 1) {
+                                        return `${editBtn} ${deleteBtn} <button type="button" class="btn btn-default" title="Deuda ya generada" disabled><i class="fas fa-check-circle fs-5 text-green-600"></i></button>`;
+                                    } else {
+                                        return `${editBtn} ${deleteBtn} <button type="button" class="btn-generar-deuda btn btn-default" title="Generar deuda" data-cuota-id="${row.id}" data-monto="${row.monto}"><i class="fas fa-file-invoice-dollar fs-5 text-orange-500"></i></button>`;
+                                    }
                                 }
                             }
                         ],
@@ -369,6 +383,137 @@ $(document).ready(function () {
             });
             flatpickr.localize(flatpickr.l10ns.es);
         }
+
+        // --- Modal Generar Deuda ---
+
+        $(document).on('click', '.btn-generar-deuda', function () {
+            const cuotaId = $(this).data('cuota-id');
+            const monto = $(this).data('monto');
+            const tipoOfertaId = tipoOfertaAcademicaIdInput.val();
+            const ofertaId = ofertaAcademicaSelect.val();
+
+            if (!cuotaId || !monto || !tipoOfertaId || !ofertaId) {
+                showAlert('Faltan datos para generar la deuda.', 'error');
+                return;
+            }
+
+            currentCuotaIdForDebt = cuotaId;
+            currentCuotaMontoForDebt = monto;
+
+            $('#students-list-message').addClass('hidden');
+            confirmGenerateDebtBtn.prop('disabled', true).text('Generar Deuda Seleccionados');
+
+            $.ajax({
+                url: `${BASE_URL_JS}cuota/getStudentsForDebtGeneration`,
+                type: 'GET',
+                data: { tipo_oferta_id: tipoOfertaId, oferta_id: ofertaId, cuota_id: cuotaId },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success && response.data && response.data.length > 0) {
+                        if (studentsDataTable) {
+                            studentsDataTable.destroy();
+                            studentsListTable.find('tbody').empty();
+                        }
+                        selectAllStudentsCheckbox.prop('checked', false);
+                        studentsDataTable = studentsListTable.DataTable({
+                            data: response.data,
+                            responsive: true,
+                            searching: false,
+                            paging: false,
+                            info: false,
+                            columns: [
+                                {
+                                    data: null,
+                                    orderable: false,
+                                    searchable: false,
+                                    render: function (data, type, row) {
+                                        return `<input type="checkbox" class="student-checkbox" data-alumno-id="${row.alumno_id}">`;
+                                    }
+                                },
+                                { data: 'alumno_nombre' },
+                                { data: 'alumno_apellido' }
+                            ],
+                            language: {
+                                url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json'
+                            },
+                            autoWidth: false,
+                            drawCallback: function () {
+                                selectAllStudentsCheckbox.prop('checked', false);
+                                confirmGenerateDebtBtn.prop('disabled', true);
+                            }
+                        });
+                        generateDebtModal.removeClass('hidden');
+                    } else {
+                        showAlert('No hay alumnos inscritos en esta oferta.', 'info');
+                    }
+                },
+                error: function () {
+                    showAlert('Error al cargar los alumnos.', 'error');
+                }
+            });
+        });
+
+        // Cerrar modal
+        closeDebtModal.add(closeDebtModalBtn).on('click', function () {
+            generateDebtModal.addClass('hidden');
+            if (studentsDataTable) {
+                studentsDataTable.destroy();
+                studentsListTable.find('tbody').empty();
+            }
+            selectAllStudentsCheckbox.prop('checked', false);
+        });
+
+        // Seleccionar/Deseleccionar todos
+        selectAllStudentsCheckbox.on('change', function () {
+            $('.student-checkbox').prop('checked', $(this).is(':checked'));
+        });
+
+        // Habilitar botón cuando hay al menos un checkbox marcado
+        $(document).on('change', '.student-checkbox', function () {
+            const anyChecked = $('.student-checkbox:checked').length > 0;
+            confirmGenerateDebtBtn.prop('disabled', !anyChecked);
+        });
+
+        // Confirmar generación de deuda
+        confirmGenerateDebtBtn.on('click', function () {
+            const selectedAlumnoIds = [];
+            $('.student-checkbox:checked').each(function () {
+                selectedAlumnoIds.push($(this).data('alumno-id'));
+            });
+
+            if (selectedAlumnoIds.length === 0) {
+                showAlert('Seleccione al menos un alumno.', 'info');
+                return;
+            }
+
+            confirmGenerateDebtBtn.prop('disabled', true).text('Generando Deuda...');
+
+            $.ajax({
+                url: `${BASE_URL_JS}cuota/generateDebt`,
+                type: 'POST',
+                data: {
+                    cuota_id: currentCuotaIdForDebt,
+                    alumno_ids: selectedAlumnoIds,
+                    monto_cuota: currentCuotaMontoForDebt
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        showAlert(response.message, 'success');
+                        generateDebtModal.addClass('hidden');
+                        loadCuotasList(tipoOfertaAcademicaIdInput.val(), ofertaAcademicaSelect.val());
+                    } else {
+                        showAlert('Error: ' + response.message, 'error');
+                    }
+                },
+                error: function () {
+                    showAlert('Error al procesar la generación de deuda.', 'error');
+                },
+                complete: function () {
+                    confirmGenerateDebtBtn.prop('disabled', false).text('Generar Deuda Seleccionados');
+                }
+            });
+        });
 
         // Eliminar cuota
         $(document).on('click', '.delete-cuota-btn', function (e) {
