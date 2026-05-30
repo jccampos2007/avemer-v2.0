@@ -73,12 +73,14 @@ SET @sql = IF(@col > 0, 'ALTER TABLE diplomado_control DROP COLUMN generado', 'S
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- ============================================================================
--- 6. Limpieza de columnas redundantes en pago (pago_cuota es el único vínculo)
+-- 6. Simplificar pago: cuota_id directo (permite abonos), dropear pago_cuota
 -- ============================================================================
+-- Re-agregar cuota_id (se dropeó en paso anterior del script, pero es idempotente)
 SET @col = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'pago' AND COLUMN_NAME = 'cuota_id');
-SET @sql = IF(@col > 0, 'ALTER TABLE pago DROP COLUMN cuota_id', 'SELECT 1');
+SET @sql = IF(@col = 0, 'ALTER TABLE pago ADD COLUMN cuota_id int NOT NULL', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
+-- Dropear otras columnas redundantes (excepto cuota_id que sí usamos)
 SET @col = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'pago' AND COLUMN_NAME = 'oferta_academica_id');
 SET @sql = IF(@col > 0, 'ALTER TABLE pago DROP COLUMN oferta_academica_id', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
@@ -95,10 +97,21 @@ SET @col = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA =
 SET @sql = IF(@col > 0, 'ALTER TABLE pago DROP COLUMN alumno_id', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
+-- Dropear pago_cuota (ya no necesitamos pivote)
+DROP TABLE IF EXISTS pago_cuota;
+
 -- transaccion.pago_id es nullable y sin código que lo use
 SET @col = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'transaccion' AND COLUMN_NAME = 'pago_id');
 SET @sql = IF(@col > 0, 'ALTER TABLE transaccion DROP COLUMN pago_id', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- ============================================================================
+-- 7. Agregar formas de pago faltantes (Efectivo, Pago Movil, Dolares, Zelle)
+-- ============================================================================
+INSERT IGNORE INTO forma_pago (id, nombre) VALUES (4, 'Efectivo');
+INSERT IGNORE INTO forma_pago (id, nombre) VALUES (5, 'Pago Movil');
+INSERT IGNORE INTO forma_pago (id, nombre) VALUES (6, 'Dolares');
+INSERT IGNORE INTO forma_pago (id, nombre) VALUES (7, 'Zelle');
 
 -- ============================================================================
 -- VERIFICACIÓN
@@ -127,11 +140,18 @@ SELECT 'maestria_abierto', IF(COUNT(*) = 2, 'OK', 'FALTAN') FROM information_sch
 UNION ALL
 SELECT 'evento_abierto', IF(COUNT(*) = 2, 'OK', 'FALTAN') FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'evento_abierto' AND COLUMN_NAME IN ('costo','inicial');
 
-SELECT '✅ columnas eliminadas de pago:' AS estado;
-SELECT 'ninguna columna redundante' AS resultado FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'pago' AND COLUMN_NAME IN ('cuota_id','oferta_academica_id','tipo_oferta_academica_id','diplomado_control_id','alumno_id')
-UNION ALL
-SELECT IF(COUNT(*) = 0, 'OK: ninguna columna redundante en pago', 'ALERTA') FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'pago' AND COLUMN_NAME IN ('cuota_id','oferta_academica_id','tipo_oferta_academica_id','diplomado_control_id','alumno_id')
-UNION ALL
-SELECT IF(COUNT(*) = 1, 'OK: pago_cuota existe', 'FALTA: pago_cuota') FROM information_schema.TABLES WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'pago_cuota'
-UNION ALL
-SELECT IF(COUNT(*) = 0, 'OK: transaccion.pago_id eliminado', 'EXISTE AÚN') FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'transaccion' AND COLUMN_NAME = 'pago_id';
+SELECT '✅ pago columnas:' AS estado;
+DESCRIBE pago;
+
+SELECT '✅ pago_cuota eliminada:' AS estado;
+SELECT IF(COUNT(*) = 0, 'OK', 'EXISTE AÚN') AS resultado
+FROM information_schema.TABLES
+WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'pago_cuota';
+
+SELECT '✅ forma_pago:' AS estado;
+SELECT * FROM forma_pago;
+
+SELECT '✅ transaccion.pago_id eliminado:' AS estado;
+SELECT IF(COUNT(*) = 0, 'OK', 'EXISTE AÚN') AS resultado
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'transaccion' AND COLUMN_NAME = 'pago_id';
