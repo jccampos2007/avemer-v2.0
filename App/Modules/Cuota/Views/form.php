@@ -162,13 +162,17 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
             <button type="button" id="closeDebtModal" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
         </div>
         <div class="p-4 overflow-y-auto flex-1">
+            <div id="debt-offer-info" class="hidden mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
+                <span class="font-bold text-blue-800">Oferta:</span> <span id="debt-oferta-label" class="text-blue-700"></span>
+                <span class="font-bold text-blue-800 ml-4">Monto:</span> <span id="debt-monto-label" class="text-blue-700"></span>
+            </div>
             <div id="students-list-message" class="mb-4 text-sm text-gray-600 hidden"></div>
             <table id="studentsListTable" class="min-w-full leading-normal display responsive nowrap" style="width:100%">
                 <thead>
                     <tr class="bg-gray-100 text-gray-600 uppercase text-xs leading-normal">
                         <th class="py-3 px-6 text-left"><input type="checkbox" id="selectAllStudents"></th>
-                        <th class="py-3 px-6 text-left">Nombre</th>
-                        <th class="py-3 px-6 text-left">Apellido</th>
+                        <th class="py-3 px-6 text-left">Nombre Completo</th>
+                        <th class="py-3 px-6 text-left">Cédula</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700 text-sm font-light">

@@ -210,8 +210,8 @@ class CuotaModel
         $sql = "
             SELECT
                 a.id AS alumno_id,
-                a.primer_nombre AS alumno_nombre,
-                a.primer_apellido AS alumno_apellido
+                CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
+                a.ci_pasapote AS alumno_ci
             FROM
                 alumno a
             JOIN

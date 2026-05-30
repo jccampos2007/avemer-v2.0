@@ -25,6 +25,9 @@ $(document).ready(function () {
     const studentsListMessage = $('#students-list-message');
     const selectAllStudentsCheckbox = $('#selectAllStudents');
     const confirmGenerateDebtBtn = $('#confirmGenerateDebtBtn');
+    const debtOfferInfo = $('#debt-offer-info');
+    const debtOfertaLabel = $('#debt-oferta-label');
+    const debtMontoLabel = $('#debt-monto-label');
 
     let cuotasDataTable = null;
     let studentsDataTable = null;
@@ -418,6 +421,11 @@ $(document).ready(function () {
                             studentsListTable.find('tbody').empty();
                         }
                         selectAllStudentsCheckbox.prop('checked', false);
+
+                        debtOfertaLabel.text(response.oferta_label || '—');
+                        debtMontoLabel.text(`$${parseFloat(currentCuotaMontoForDebt || 0).toFixed(2)}`);
+                        debtOfferInfo.removeClass('hidden');
+
                         studentsDataTable = studentsListTable.DataTable({
                             data: response.data,
                             responsive: true,
@@ -433,8 +441,8 @@ $(document).ready(function () {
                                         return `<input type="checkbox" class="student-checkbox" data-alumno-id="${row.alumno_id}">`;
                                     }
                                 },
-                                { data: 'alumno_nombre' },
-                                { data: 'alumno_apellido' }
+                                { data: 'alumno_nombre_completo' },
+                                { data: 'alumno_ci' }
                             ],
                             language: {
                                 url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json'
@@ -459,6 +467,7 @@ $(document).ready(function () {
         // Cerrar modal
         closeDebtModal.add(closeDebtModalBtn).on('click', function () {
             generateDebtModal.addClass('hidden');
+            debtOfferInfo.addClass('hidden');
             if (studentsDataTable) {
                 studentsDataTable.destroy();
                 studentsListTable.find('tbody').empty();

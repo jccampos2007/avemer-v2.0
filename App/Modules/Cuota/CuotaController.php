@@ -290,8 +290,15 @@ class CuotaController extends Controller
 
         try {
             $students = $this->cuotaModel->getStudentsByOffer((int)$tipoOfertaId, (int)$ofertaId);
+            $offerInfo = $this->cuotaModel->getOfertaInfo((int)$tipoOfertaId, (int)$ofertaId);
+            $ofertaLabel = $offerInfo['oferta_label'] ?? '';
             header('Content-Type: application/json');
-            echo json_encode(['success' => true, 'data' => $students, 'cuota_id' => (int)$cuotaId]);
+            echo json_encode([
+                'success' => true,
+                'data' => $students,
+                'cuota_id' => (int)$cuotaId,
+                'oferta_label' => $ofertaLabel
+            ]);
             exit();
         } catch (\PDOException $e) {
             error_log('Error de BD en getStudentsForDebtGeneration (Cuota): ' . $e->getMessage());
