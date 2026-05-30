@@ -27,12 +27,13 @@ $(document).ready(function () {
     const confirmGenerateDebtBtn = $('#confirmGenerateDebtBtn');
     const debtOfferInfo = $('#debt-offer-info');
     const debtOfertaLabel = $('#debt-oferta-label');
-    const debtMontoLabel = $('#debt-monto-label');
+    const debtCuotaLabel = $('#debt-cuota-label');
 
     let cuotasDataTable = null;
     let studentsDataTable = null;
     let currentCuotaIdForDebt = null;
     let currentCuotaMontoForDebt = null;
+    let currentCuotaNombreForDebt = null;
 
     function showAlert(message, type = 'error') {
         Swal.fire(type === 'success' ? 'Éxito' : 'Error', message, type);
@@ -228,7 +229,7 @@ $(document).ready(function () {
                                     if (generado === 1) {
                                         return `${actions}<button type="button" class="btn-action" title="Deuda ya generada" disabled><i class="fas fa-check-circle text-green-600"></i></button></div>`;
                                     } else {
-                                        return `${actions}<button type="button" class="btn-action btn-action-generar btn-generar-deuda" title="Generar deuda" data-cuota-id="${row.id}" data-monto="${row.monto}"><i class="fas fa-file-invoice-dollar"></i></button></div>`;
+                                        return `${actions}<button type="button" class="btn-action btn-action-generar btn-generar-deuda" title="Generar deuda" data-cuota-id="${row.id}" data-nombre="${row.nombre}" data-monto="${row.monto}"><i class="fas fa-file-invoice-dollar"></i></button></div>`;
                                     }
                                 }
                             }
@@ -394,6 +395,7 @@ $(document).ready(function () {
 
         $(document).on('click', '.btn-generar-deuda', function () {
             const cuotaId = $(this).data('cuota-id');
+            const nombre = $(this).data('nombre');
             const monto = $(this).data('monto');
             const tipoOfertaId = tipoOfertaAcademicaIdInput.val();
             const ofertaId = ofertaAcademicaSelect.val();
@@ -405,6 +407,7 @@ $(document).ready(function () {
 
             currentCuotaIdForDebt = cuotaId;
             currentCuotaMontoForDebt = monto;
+            currentCuotaNombreForDebt = nombre;
 
             $('#students-list-message').addClass('hidden');
             confirmGenerateDebtBtn.prop('disabled', true).text('Generar Deuda Seleccionados');
@@ -423,7 +426,7 @@ $(document).ready(function () {
                         selectAllStudentsCheckbox.prop('checked', false);
 
                         debtOfertaLabel.text(response.oferta_label || '—');
-                        debtMontoLabel.text(`$${parseFloat(currentCuotaMontoForDebt || 0).toFixed(2)}`);
+                        debtCuotaLabel.text(currentCuotaNombreForDebt || '—');
                         debtOfferInfo.removeClass('hidden');
 
                         studentsDataTable = studentsListTable.DataTable({
@@ -442,7 +445,16 @@ $(document).ready(function () {
                                     }
                                 },
                                 { data: 'alumno_nombre_completo' },
-                                { data: 'alumno_ci' }
+                                { data: 'alumno_ci' },
+                                {
+                                    data: null,
+                                    orderable: false,
+                                    searchable: false,
+                                    className: 'text-center font-semibold',
+                                    render: function () {
+                                        return `$${parseFloat(currentCuotaMontoForDebt || 0).toFixed(2)}`;
+                                    }
+                                }
                             ],
                             language: {
                                 url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json'

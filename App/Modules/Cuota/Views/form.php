@@ -164,7 +164,7 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
         <div class="p-4 overflow-y-auto flex-1">
             <div id="debt-offer-info" class="hidden mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
                 <span class="font-bold text-blue-800">Oferta:</span> <span id="debt-oferta-label" class="text-blue-700"></span>
-                <span class="font-bold text-blue-800 ml-4">Monto:</span> <span id="debt-monto-label" class="text-blue-700"></span>
+                <span class="font-bold text-blue-800 ml-4">Cuota:</span> <span id="debt-cuota-label" class="text-blue-700"></span>
             </div>
             <div id="students-list-message" class="mb-4 text-sm text-gray-600 hidden"></div>
             <table id="studentsListTable" class="min-w-full leading-normal display responsive nowrap" style="width:100%">
@@ -173,6 +173,7 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
                         <th class="py-3 px-6 text-left"><input type="checkbox" id="selectAllStudents"></th>
                         <th class="py-3 px-6 text-left">Nombre Completo</th>
                         <th class="py-3 px-6 text-left">Cédula</th>
+                        <th class="py-3 px-6 text-center">Monto</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700 text-sm font-light">
