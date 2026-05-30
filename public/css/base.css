@@ -165,6 +165,17 @@ table.dataTable td.actions-column {
     color: #b91c1c !important;
 }
 
+.btn-action-generar {
+    color: #f97316 !important;
+    border-color: #fed7aa !important;
+}
+
+.btn-action-generar:hover {
+    background-color: #fff7ed !important;
+    border-color: #fdba74 !important;
+    color: #ea580c !important;
+}
+
 /* === Botones Exportar (responsive: ocultar texto en mobile) === */
 .export-label {
     display: inline;

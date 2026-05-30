@@ -215,14 +215,17 @@ $(document).ready(function () {
                                 "data": null,
                                 "orderable": false,
                                 "searchable": false,
+                                "width": "1%",
+                                "className": "actions-column",
                                 "render": function (data, type, row) {
-                                    const editBtn = `<a href="cuota/edit/${row.id}" class="btn btn-default" title="Editar"><i class="fas fa-edit fs-5 text-blue-600"></i></a>`;
-                                    const deleteBtn = `<a href="cuota/delete/${row.id}" class="btn btn-default" title="Eliminar"><i class="fas fa-trash-alt fs-5 text-red-600"></i></a>`;
+                                    const editBtn = `<a href="cuota/edit/${row.id}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>`;
+                                    const deleteBtn = `<a href="cuota/delete/${row.id}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>`;
                                     const generado = parseInt(row.generado || 0);
+                                    const actions = `<div class="flex gap-2 justify-center">${editBtn}${deleteBtn}`;
                                     if (generado === 1) {
-                                        return `${editBtn} ${deleteBtn} <button type="button" class="btn btn-default" title="Deuda ya generada" disabled><i class="fas fa-check-circle fs-5 text-green-600"></i></button>`;
+                                        return `${actions}<button type="button" class="btn-action" title="Deuda ya generada" disabled><i class="fas fa-check-circle text-green-600"></i></button></div>`;
                                     } else {
-                                        return `${editBtn} ${deleteBtn} <button type="button" class="btn-generar-deuda btn btn-default" title="Generar deuda" data-cuota-id="${row.id}" data-monto="${row.monto}"><i class="fas fa-file-invoice-dollar fs-5 text-orange-500"></i></button>`;
+                                        return `${actions}<button type="button" class="btn-action btn-action-generar btn-generar-deuda" title="Generar deuda" data-cuota-id="${row.id}" data-monto="${row.monto}"><i class="fas fa-file-invoice-dollar"></i></button></div>`;
                                     }
                                 }
                             }
@@ -516,9 +519,9 @@ $(document).ready(function () {
         });
 
         // Eliminar cuota
-        $(document).on('click', '.delete-cuota-btn', function (e) {
+        $(document).on('click', '.btn-action-delete', function (e) {
             e.preventDefault();
-            const cuotaId = $(this).data('id');
+            const url = $(this).attr('href');
             Swal.fire({
                 title: '¿Está seguro?',
                 text: '¡No podrá revertir esto!',
@@ -531,7 +534,7 @@ $(document).ready(function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `${BASE_URL_JS}cuota/delete/${cuotaId}`,
+                        url: url,
                         type: 'POST',
                         dataType: 'json',
                         success: function (response) {
