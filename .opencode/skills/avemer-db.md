@@ -29,13 +29,15 @@ cuota
 pago
   ├── forma_pago_id           → forma_pago.id
   ├── banco_id                → banco.id
-  └── cuota_id                → cuota.id  (permite duplicados = abonos)
+  ├── cuota_id                → cuota.id  (permite duplicados = abonos)
+  └── alumno_id               → alumno.id  (quién pagó)
 
 transaccion
   ├── alumno_id               → alumno.id
   ├── cuota_id                → cuota.id
   ├── tipo (int)              → 1=Debito (deuda), 2=Credito (pago)
-  └── estatus (int)           → 1=Activo/Pendiente
+  ├── estatus (int)           → 1=Activo/Pendiente
+  └── id_transaccion_origen   → transaccion.id (nullable, link crédito→débito)
 ```
 
 ## tipo_oferta_academica Enum
@@ -87,6 +89,39 @@ ALTER TABLE mi_tabla DROP COLUMN IF EXISTS mi_columna;
 ```
 
 Migration scripts go in `/var/www/html/php_mvc_app/plan_mejoras/`.
+
+## Debt Generation
+
+### Transacción entries
+Debt (tipo=1) is stored in `transaccion` referencing `cuota.id`:
+```sql
+INSERT INTO transaccion (alumno_id, cuota_id, tipo, monto, fecha, estatus)
+VALUES (:alumno_id, :cuota_id, 1, :monto, NOW(), 1);
+```
+
+### Detecting existing debt
+When loading students for the debt modal, LEFT JOIN transaccion to flag quienes ya tienen deuda:
+```sql
+SELECT a.id AS alumno_id, ..., CASE WHEN t.id IS NOT NULL THEN 1 ELSE 0 END AS tiene_deuda
+FROM alumno a
+LEFT JOIN transaccion t ON a.id = t.alumno_id AND t.cuota_id = :cuota_id AND t.tipo = 1
+```
+Only students with `tiene_deuda = 0` should be selectable in the frontend.
+
+### Re-generation
+The "Generar deuda" button is **always visible** in the cuota actions column.
+The debt modal pre-checks students without debt and disables those with existing debt.
+Backend verifies with `hasExistingDebt()` before inserting to avoid duplicates.
+
+### Pagos (credits)
+When a pago is registered, a `transaccion` tipo=2 (credito) entry is created automatically:
+- `pago.alumno_id` → who paid
+- `pago.cuota_id` → which cuota
+- `transaccion.tipo = 2` → credit entry
+- Both `pago` and `transaccion` share the same `alumno_id` + `cuota_id`
+
+Pago form: select alumno → cuotas filtradas por deudas pendientes del alumno → payment details.
+The monto auto-fills from the cuota amount but can be overridden (abonos parciales).
 
 ## Column Conventions
 

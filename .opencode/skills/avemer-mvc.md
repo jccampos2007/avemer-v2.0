@@ -128,3 +128,26 @@ Controller calls `$this->view('ModuleName/viewName', ['key' => $val])`.
 The view file `App/Modules/ModuleName/Views/viewName.php` receives `$key`.
 
 Views use layout defined in `App/Layout/` (header, sidebar, footer are automatic).
+
+## Git Workflow
+
+### Branch naming
+| Type | Prefix | Purpose |
+|------|--------|---------|
+| New feature | `feature/` | Nueva funcionalidad |
+| Bug fix / adjustment | `fix/` | Corrección o ajuste a algo existente |
+
+### Integration
+- Merge directo a `main` vía Pull Request
+- Commits en español, descriptivos
+
+### Deploy
+```bash
+git add . && git commit -m "mensaje descriptivo" && git push
+```
+
+## Tailwind Build
+
+```bash
+npx tailwindcss -i public/css/input.css -o public/css/output.css
+```

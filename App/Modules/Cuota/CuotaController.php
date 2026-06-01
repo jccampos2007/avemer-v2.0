@@ -289,7 +289,7 @@ class CuotaController extends Controller
         }
 
         try {
-            $students = $this->cuotaModel->getStudentsByOffer((int)$tipoOfertaId, (int)$ofertaId);
+            $students = $this->cuotaModel->getStudentsByOffer((int)$tipoOfertaId, (int)$ofertaId, (int)$cuotaId);
             $offerInfo = $this->cuotaModel->getOfertaInfo((int)$tipoOfertaId, (int)$ofertaId);
             $ofertaLabel = $offerInfo['oferta_label'] ?? '';
             header('Content-Type: application/json');
@@ -341,6 +341,10 @@ class CuotaController extends Controller
             }
 
             foreach ($alumnoIds as $alumnoId) {
+                if ($this->cuotaModel->hasExistingDebt((int)$alumnoId, (int)$cuotaId)) {
+                    $errors[] = "El alumno ID {$alumnoId} ya tiene deuda generada.";
+                    continue;
+                }
                 $transactionData = [
                     'alumno_id' => (int)$alumnoId,
                     'cuota_id' => (int)$cuotaId,
@@ -354,10 +358,6 @@ class CuotaController extends Controller
                 } else {
                     $errors[] = "Error al generar deuda para alumno ID: {$alumnoId}";
                 }
-            }
-
-            if ($generatedCount > 0) {
-                $this->cuotaModel->updateCuotaGenerado((int)$cuotaId, 1);
             }
 
             if (empty($errors)) {

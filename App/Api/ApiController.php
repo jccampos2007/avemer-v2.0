@@ -101,7 +101,7 @@ class ApiController
                 'search_columns' => ['primer_nombre', 'primer_apellido']
             ],
             'alumno' => [
-                'display_columns' => ['primer_nombre', 'primer_apellido', 'CONCAT(primer_apellido, ", ", primer_nombre)'],
+                'display_columns' => ['primer_nombre', 'primer_apellido', 'CONCAT(primer_apellido, ", ", primer_nombre)', "CONCAT(primer_nombre, ' ', primer_apellido, ', C.I:', ci_pasapote)"],
                 'search_columns' => ['primer_nombre', 'primer_apellido', 'ci_pasapote'], // Puedes añadir más columnas de búsqueda
                 'status_column' => 'estatus_activo_id'
             ],

@@ -26,7 +26,6 @@ function generateBreadcrumbs(): array
         'inscripcion_maestria'   => 'Inscripción',
         'cuota'                  => 'Cuotas',
         'pago'                   => 'Pagos',
-        'compensar'              => 'Compensar',
         'cronograma'             => 'Cronograma',
         'sede'                   => 'Sedes',
         'banco'                  => 'Bancos',

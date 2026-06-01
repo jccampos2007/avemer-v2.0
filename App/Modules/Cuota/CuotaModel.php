@@ -181,7 +181,7 @@ class CuotaModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getStudentsByOffer(int $tipoOfertaId, int $ofertaId): array
+    public function getStudentsByOffer(int $tipoOfertaId, int $ofertaId, int $cuotaId): array
     {
         $inscripcionTableName = '';
         $ofertaIdColumnName = '';
@@ -211,20 +211,34 @@ class CuotaModel
             SELECT
                 a.id AS alumno_id,
                 CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
-                a.ci_pasapote AS alumno_ci
+                a.ci_pasapote AS alumno_ci,
+                CASE WHEN t.id IS NOT NULL THEN 1 ELSE 0 END AS tiene_deuda
             FROM
                 alumno a
             JOIN
                 {$inscripcionTableName} i ON a.id = i.alumno_id
+            LEFT JOIN
+                transaccion t ON a.id = t.alumno_id AND t.cuota_id = :cuota_id AND t.tipo = 1
             WHERE
                 i.{$ofertaIdColumnName} = :oferta_id
             ORDER BY
                 a.primer_nombre ASC, a.primer_apellido ASC
         ";
         $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':cuota_id', $cuotaId, PDO::PARAM_INT);
         $stmt->bindParam(':oferta_id', $ofertaId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function hasExistingDebt(int $alumnoId, int $cuotaId): bool
+    {
+        $sql = "SELECT COUNT(*) FROM transaccion WHERE alumno_id = :alumno_id AND cuota_id = :cuota_id AND tipo = 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':alumno_id', $alumnoId, PDO::PARAM_INT);
+        $stmt->bindParam(':cuota_id', $cuotaId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
     }
 
     public function insertTransaction(array $data): bool

@@ -39,10 +39,9 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
             </div>
 
             <div class="mb-4">
-                <label for="oferta_academica_id" class="block text-gray-700 text-sm font-bold mb-2">Oferta Académica (Apertura):</label>
-                <select id="oferta_academica_id" name="oferta_academica_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    <option value="">Seleccione una Oferta Académica</option>
-                </select>
+                <label for="oferta_academica_nombre" class="block text-gray-700 text-sm font-bold mb-2">Oferta Académica (Apertura):</label>
+                <input type="text" id="oferta_academica_nombre" placeholder="Busque una oferta académica" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" autocomplete="off">
+                <input type="hidden" id="oferta_academica_id" name="oferta_academica_id">
             </div>
 
             <div id="oferta-info-box" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 p-3 bg-white rounded border border-blue-200">
@@ -173,6 +172,7 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
                         <th class="py-3 px-6 text-left"><input type="checkbox" id="selectAllStudents"></th>
                         <th class="py-3 px-6 text-left">Nombre Completo</th>
                         <th class="py-3 px-6 text-left">Cédula</th>
+                        <th class="py-3 px-6 text-center">Deuda</th>
                         <th class="py-3 px-6 text-center">Monto</th>
                     </tr>
                 </thead>

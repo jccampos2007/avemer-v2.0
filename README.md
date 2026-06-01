@@ -98,7 +98,6 @@ php_mvc_app/
 │       ├── Banco/
 │       ├── Capitulo/
 │       ├── Ciudad/
-│       ├── Compensar/
 │       ├── Coordinadores/
 │       ├── Correo/
 │       ├── Cronograma/
@@ -175,7 +174,6 @@ php_mvc_app/
 | `/inscripcion_maestria` | InscripcionMaestria | Inscripción a maestrías |
 | `/cuota` | Cuota | Gestión de cuotas |
 | `/pago` | Pagos | Registro de pagos |
-| `/compensar` | Compensar | Compensaciones |
 | `/cronograma` | Cronograma | Cronograma de pagos |
 | `/correo` | Correo | Listas de correo |
 | `/mensajes` | Mensajes | Envío de mensajes |

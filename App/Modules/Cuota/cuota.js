@@ -3,7 +3,8 @@ console.log('cuota.js cargado.');
 $(document).ready(function () {
     const formCuota = $('#formCuota');
     const tipoOfertaAcademicaIdInput = $('#tipo_oferta_academica_id');
-    const ofertaAcademicaSelect = $('#oferta_academica_id');
+    const ofertaAcademicaInput = $('#oferta_academica_nombre');
+    const ofertaAcademicaHidden = $('#oferta_academica_id');
     const ofertaInfoBox = $('#oferta-info-box');
     const infoCosto = $('#info-costo');
     const infoInicial = $('#info-inicial');
@@ -28,12 +29,15 @@ $(document).ready(function () {
     const debtOfferInfo = $('#debt-offer-info');
     const debtOfertaLabel = $('#debt-oferta-label');
     const debtCuotaLabel = $('#debt-cuota-label');
+    const csrfToken = $('input[name="csrf_token"]').val();
 
     let cuotasDataTable = null;
     let studentsDataTable = null;
     let currentCuotaIdForDebt = null;
     let currentCuotaMontoForDebt = null;
     let currentCuotaNombreForDebt = null;
+    let offerSourceData = [];
+    let isInlineEdit = false;
 
     function showAlert(message, type = 'error') {
         Swal.fire(type === 'success' ? 'Éxito' : 'Error', message, type);
@@ -45,9 +49,23 @@ $(document).ready(function () {
             .text(message);
     }
 
-    // Cargar ofertas académicas en el select
+    function resetFormToCreate() {
+        isInlineEdit = false;
+        $('input[name="id"]').remove();
+        formCuota.attr('action', `${BASE_URL_JS}cuota/create`);
+        $('#nombre, #monto').val('');
+        if (typeof flatpickr !== 'undefined') {
+            const fp = document.querySelector('#fecha_vencimiento')?._flatpickr;
+            if (fp) fp.clear();
+        } else {
+            $('#fecha_vencimiento').val('');
+        }
+    }
+
+    // Cargar ofertas académicas en el autocomplete
     function loadAcademicOffers(typeId, selectedId = null) {
-        ofertaAcademicaSelect.empty().append('<option value="">Cargando...</option>');
+        ofertaAcademicaInput.val('');
+        ofertaAcademicaHidden.val('');
         ofertaInfoBox.addClass('hidden');
         diplomadoControlSection.addClass('hidden');
         controlInfoBox.addClass('hidden');
@@ -58,25 +76,24 @@ $(document).ready(function () {
             data: { type_id: typeId },
             dataType: 'json',
             success: function (response) {
-                ofertaAcademicaSelect.empty();
-                ofertaAcademicaSelect.append('<option value="">Seleccione una Oferta Académica</option>');
-                if (response.success && response.data.length > 0) {
-                    $.each(response.data, function (index, item) {
-                        const isSelected = (selectedId && item.id == selectedId) ? 'selected' : '';
-                        ofertaAcademicaSelect.append(`<option value="${item.id}" ${isSelected}>${item.nombre}</option>`);
-                    });
-                } else {
-                    ofertaAcademicaSelect.append('<option value="">No hay ofertas disponibles para este tipo</option>');
-                }
+                offerSourceData = response.success && response.data ? response.data : [];
+                const names = offerSourceData.map(item => item.nombre);
+                ofertaAcademicaInput.autocomplete('option', 'source', names);
+
                 if (selectedId) {
-                    ofertaAcademicaSelect.val(selectedId).trigger('change');
+                    const selected = offerSourceData.find(item => item.id == selectedId);
+                    if (selected) {
+                        ofertaAcademicaInput.val(selected.nombre);
+                        ofertaAcademicaHidden.val(selected.id);
+                        loadOfertaInfo(typeId, selected.id);
+                        loadCuotasList(typeId, selected.id);
+                    }
                 } else {
                     if (cuotasDataTable) cuotasDataTable.clear().draw();
                     showCuotasListMessage('Seleccione una oferta académica para ver las cuotas asociadas.', 'info');
                 }
             },
             error: function () {
-                ofertaAcademicaSelect.empty().append('<option value="">Error al cargar ofertas</option>');
                 showAlert('Error al cargar las ofertas académicas.', 'error');
             }
         });
@@ -183,6 +200,7 @@ $(document).ready(function () {
         }
 
         showCuotasListMessage('Cargando cuotas...', 'info');
+        if (cuotasDataTable) cuotasDataTable.clear().draw();
 
         $.ajax({
             url: `${BASE_URL_JS}cuota/getCuotasByOfferData`,
@@ -190,7 +208,10 @@ $(document).ready(function () {
             data: { tipo_oferta_id: tipoOfertaId, oferta_id: ofertaId },
             dataType: 'json',
             success: function (response) {
-                if (cuotasDataTable) cuotasDataTable.destroy();
+                if (cuotasDataTable) {
+                    cuotasDataTable.destroy();
+                    cuotasDataTable = null;
+                }
 
                 if (response.success && response.data.length > 0) {
                     cuotasListMessage.addClass('hidden');
@@ -222,15 +243,8 @@ $(document).ready(function () {
                                 "width": "1%",
                                 "className": "actions-column",
                                 "render": function (data, type, row) {
-                                    const editBtn = `<a href="cuota/edit/${row.id}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>`;
-                                    const deleteBtn = `<a href="cuota/delete/${row.id}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>`;
-                                    const generado = parseInt(row.generado || 0);
-                                    const actions = `<div class="flex gap-2 justify-center">${editBtn}${deleteBtn}`;
-                                    if (generado === 1) {
-                                        return `${actions}<button type="button" class="btn-action" title="Deuda ya generada" disabled><i class="fas fa-check-circle text-green-600"></i></button></div>`;
-                                    } else {
-                                        return `${actions}<button type="button" class="btn-action btn-action-generar btn-generar-deuda" title="Generar deuda" data-cuota-id="${row.id}" data-nombre="${row.nombre}" data-monto="${row.monto}"><i class="fas fa-file-invoice-dollar"></i></button></div>`;
-                                    }
+                                    const editBtn = `<button type="button" class="btn-action btn-action-edit-inline" title="Editar" data-cuota-id="${row.id}"><i class="fas fa-edit"></i></button>`;
+                                    return `<div class="flex gap-2 justify-center">${editBtn}<button type="button" class="btn-action btn-action-generar btn-generar-deuda" title="Generar deuda" data-cuota-id="${row.id}" data-nombre="${row.nombre}" data-monto="${row.monto}"><i class="fas fa-file-invoice-dollar"></i></button></div>`;
                                 }
                             }
                         ],
@@ -241,12 +255,10 @@ $(document).ready(function () {
                     });
                 } else {
                     showCuotasListMessage('No hay cuotas creadas para esta oferta académica.', 'info');
-                    if (cuotasDataTable) cuotasDataTable.clear().draw();
                 }
             },
             error: function () {
                 showAlert('Error al cargar las cuotas.', 'error');
-                if (cuotasDataTable) cuotasDataTable.clear().draw();
             }
         });
     }
@@ -262,15 +274,8 @@ $(document).ready(function () {
         ofertaInfoBox.addClass('hidden');
         diplomadoControlSection.addClass('hidden');
         controlInfoBox.addClass('hidden');
+        if (isInlineEdit) resetFormToCreate();
         loadAcademicOffers(tabId);
-    });
-
-    // Evento: cambio de oferta académica
-    ofertaAcademicaSelect.on('change', function () {
-        const selectedOfertaId = $(this).val();
-        const selectedTipoOfertaId = tipoOfertaAcademicaIdInput.val();
-        loadOfertaInfo(selectedTipoOfertaId, selectedOfertaId);
-        loadCuotasList(selectedTipoOfertaId, selectedOfertaId);
     });
 
     // Evento: cambio de control de diplomado
@@ -293,7 +298,7 @@ $(document).ready(function () {
             $.ajax({
                 url: `${BASE_URL_JS}cuota/getDiplomadoControlesAjax`,
                 type: 'GET',
-                data: { diplomado_abierto_id: ofertaAcademicaSelect.val() },
+                data: { diplomado_abierto_id: ofertaAcademicaHidden.val() },
                 dataType: 'json',
                 success: function (response) {
                     if (response.success && response.data) {
@@ -314,6 +319,28 @@ $(document).ready(function () {
 
     // Inicialización
     if (formCuota.length) {
+        // Inicialización del autocomplete para oferta académica
+        ofertaAcademicaInput.autocomplete({
+            source: [],
+            minLength: 0,
+            select: function (event, ui) {
+                const item = offerSourceData.find(i => i.nombre === ui.item.value);
+                if (item) {
+                    $(this).val(ui.item.value);
+                    ofertaAcademicaHidden.val(item.id);
+                    const tipoId = tipoOfertaAcademicaIdInput.val();
+                    loadOfertaInfo(tipoId, item.id);
+                    loadCuotasList(tipoId, item.id);
+                }
+                return false;
+            },
+            change: function (event, ui) {
+                if (!ui.item) ofertaAcademicaHidden.val('');
+            }
+        }).focus(function () {
+            $(this).autocomplete('search', '');
+        });
+
         const initialTipoOfertaId = formCuota.data('tipo-oferta-academica-id');
         const initialOfertaAcademicaId = formCuota.data('oferta-academica-id');
 
@@ -322,7 +349,7 @@ $(document).ready(function () {
             currentActiveTabButton.trigger('click');
             if (initialOfertaAcademicaId) {
                 setTimeout(() => {
-                    ofertaAcademicaSelect.val(initialOfertaAcademicaId).trigger('change');
+                    loadAcademicOffers(initialTipoOfertaId, initialOfertaAcademicaId);
                 }, 300);
             }
         } else {
@@ -357,7 +384,9 @@ $(document).ready(function () {
                     if (response.success) {
                         showAlert(response.message, 'success');
                         loadCuotasList(tipoOfertaAcademicaId, ofertaAcademicaId);
-                        if (!isEdit) {
+                        if (isInlineEdit) {
+                            resetFormToCreate();
+                        } else if (!isEdit) {
                             $('#nombre, #monto').val('');
                             if (typeof flatpickr !== 'undefined') {
                                 const fp = document.querySelector('#fecha_vencimiento')?._flatpickr;
@@ -380,6 +409,34 @@ $(document).ready(function () {
             });
         });
 
+        // Editar cuota inline (carga datos en el formulario)
+        $(document).on('click', '.btn-action-edit-inline', function () {
+            const tr = $(this).closest('tr');
+            const row = cuotasDataTable ? cuotasDataTable.row(tr).data() : null;
+            if (!row) return;
+
+            $('#nombre').val(row.nombre);
+            $('#monto').val(row.monto);
+
+            if (typeof flatpickr !== 'undefined') {
+                const fp = document.querySelector('#fecha_vencimiento')?._flatpickr;
+                if (fp) fp.setDate(row.fecha_vencimiento);
+            } else {
+                $('#fecha_vencimiento').val(row.fecha_vencimiento);
+            }
+
+            if (!$('input[name="id"]').length) {
+                formCuota.append(`<input type="hidden" name="id" value="${row.id}">`);
+            } else {
+                $('input[name="id"]').val(row.id);
+            }
+
+            formCuota.attr('action', `${BASE_URL_JS}cuota/edit/${row.id}`);
+            isInlineEdit = true;
+
+            $('html, body').animate({ scrollTop: formCuota.offset().top - 20 }, 500);
+        });
+
         // Flatpickr
         if (typeof flatpickr !== 'undefined') {
             flatpickr("#fecha_vencimiento", {
@@ -398,7 +455,7 @@ $(document).ready(function () {
             const nombre = $(this).data('nombre');
             const monto = $(this).data('monto');
             const tipoOfertaId = tipoOfertaAcademicaIdInput.val();
-            const ofertaId = ofertaAcademicaSelect.val();
+            const ofertaId = ofertaAcademicaHidden.val();
 
             if (!cuotaId || !monto || !tipoOfertaId || !ofertaId) {
                 showAlert('Faltan datos para generar la deuda.', 'error');
@@ -419,13 +476,14 @@ $(document).ready(function () {
                 dataType: 'json',
                 success: function (response) {
                     if (response.success && response.data && response.data.length > 0) {
-                        if (studentsDataTable) {
-                            studentsDataTable.destroy();
-                            studentsListTable.find('tbody').empty();
-                        }
-                        selectAllStudentsCheckbox.prop('checked', false);
+                    if (studentsDataTable) {
+                        studentsDataTable.destroy();
+                        studentsDataTable = null;
+                        studentsListTable.find('tbody').empty();
+                    }
+                    selectAllStudentsCheckbox.prop('checked', false);
 
-                        debtOfertaLabel.text(response.oferta_label || '—');
+                    debtOfertaLabel.text(response.oferta_label || '—');
                         debtCuotaLabel.text(currentCuotaNombreForDebt || '—');
                         debtOfferInfo.removeClass('hidden');
 
@@ -441,11 +499,25 @@ $(document).ready(function () {
                                     orderable: false,
                                     searchable: false,
                                     render: function (data, type, row) {
-                                        return `<input type="checkbox" class="student-checkbox" data-alumno-id="${row.alumno_id}">`;
+                                        const tieneDeuda = parseInt(row.tiene_deuda || 0);
+                                        if (tieneDeuda) {
+                                            return `<input type="checkbox" class="student-checkbox" data-alumno-id="${row.alumno_id}" disabled>`;
+                                        }
+                                        return `<input type="checkbox" class="student-checkbox" data-alumno-id="${row.alumno_id}" checked>`;
                                     }
                                 },
                                 { data: 'alumno_nombre_completo' },
                                 { data: 'alumno_ci' },
+                                {
+                                    data: null,
+                                    orderable: false,
+                                    searchable: false,
+                                    className: 'text-center',
+                                    render: function (data, type, row) {
+                                        const tieneDeuda = parseInt(row.tiene_deuda || 0);
+                                        return tieneDeuda ? '<span class="text-green-600 font-semibold text-xs">✓ Generada</span>' : '<span class="text-gray-400 text-xs">—</span>';
+                                    }
+                                },
                                 {
                                     data: null,
                                     orderable: false,
@@ -462,7 +534,8 @@ $(document).ready(function () {
                             autoWidth: false,
                             drawCallback: function () {
                                 selectAllStudentsCheckbox.prop('checked', false);
-                                confirmGenerateDebtBtn.prop('disabled', true);
+                                const anyCheckable = $('.student-checkbox:not(:disabled)').length > 0;
+                                confirmGenerateDebtBtn.prop('disabled', !anyCheckable);
                             }
                         });
                         generateDebtModal.removeClass('hidden');
@@ -482,18 +555,22 @@ $(document).ready(function () {
             debtOfferInfo.addClass('hidden');
             if (studentsDataTable) {
                 studentsDataTable.destroy();
+                studentsDataTable = null;
                 studentsListTable.find('tbody').empty();
             }
             selectAllStudentsCheckbox.prop('checked', false);
         });
 
-        // Seleccionar/Deseleccionar todos
+        // Seleccionar/Deseleccionar todos (solo afecta alumnos sin deuda)
         selectAllStudentsCheckbox.on('change', function () {
-            $('.student-checkbox').prop('checked', $(this).is(':checked'));
+            const checked = $(this).is(':checked');
+            $('.student-checkbox').not(':disabled').prop('checked', checked);
+            const anyChecked = $('.student-checkbox:checked').length > 0;
+            confirmGenerateDebtBtn.prop('disabled', !anyChecked);
         });
 
         // Habilitar botón cuando hay al menos un checkbox marcado
-        $(document).on('change', '.student-checkbox', function () {
+        $(document).on('click', '.student-checkbox', function () {
             const anyChecked = $('.student-checkbox:checked').length > 0;
             confirmGenerateDebtBtn.prop('disabled', !anyChecked);
         });
@@ -518,14 +595,15 @@ $(document).ready(function () {
                 data: {
                     cuota_id: currentCuotaIdForDebt,
                     alumno_ids: selectedAlumnoIds,
-                    monto_cuota: currentCuotaMontoForDebt
+                    monto_cuota: currentCuotaMontoForDebt,
+                    csrf_token: csrfToken
                 },
                 dataType: 'json',
                 success: function (response) {
                     if (response.success) {
                         showAlert(response.message, 'success');
                         generateDebtModal.addClass('hidden');
-                        loadCuotasList(tipoOfertaAcademicaIdInput.val(), ofertaAcademicaSelect.val());
+                        loadCuotasList(tipoOfertaAcademicaIdInput.val(), ofertaAcademicaHidden.val());
                     } else {
                         showAlert('Error: ' + response.message, 'error');
                     }
@@ -539,39 +617,5 @@ $(document).ready(function () {
             });
         });
 
-        // Eliminar cuota
-        $(document).on('click', '.btn-action-delete', function (e) {
-            e.preventDefault();
-            const url = $(this).attr('href');
-            Swal.fire({
-                title: '¿Está seguro?',
-                text: '¡No podrá revertir esto!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        dataType: 'json',
-                        success: function (response) {
-                            if (response.success) {
-                                showAlert(response.message, 'success');
-                                loadCuotasList(tipoOfertaAcademicaIdInput.val(), ofertaAcademicaSelect.val());
-                            } else {
-                                showAlert('Error al eliminar: ' + response.message, 'error');
-                            }
-                        },
-                        error: function () {
-                            showAlert('Error al intentar eliminar la cuota.', 'error');
-                        }
-                    });
-                }
-            });
-        });
     }
 });

@@ -167,7 +167,7 @@ $(document).ready(function () {
         });
 
         setupAutocomplete('alumno_autocomplete', 'alumno_id', 'alumno', 3, {
-            displayColumn: 'CONCAT(primer_apellido, ", ", primer_nombre)'
+            displayColumn: "CONCAT(primer_nombre, ' ', primer_apellido, ', C.I:', ci_pasapote)"
         });
     }
 });

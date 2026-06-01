@@ -38,7 +38,6 @@ $canSeeInscripcionMaestria = \App\Core\Auth::hasPermission('inscripcion_maes');
 
 $canSeeCuota = \App\Core\Auth::hasPermission('cuota');
 $canSeePago = \App\Core\Auth::hasPermission('pago');
-$canSeeCompensar = \App\Core\Auth::hasPermission('compensar');
 $canSeeCronograma = \App\Core\Auth::hasPermission('cronograma');
 
 $canSeeListaCorreo = \App\Core\Auth::hasPermission('listacorreo');
@@ -61,7 +60,7 @@ $showTalleres = $canSeeCursos || $canSeeCursosAbiertos || $canSeeInscripcionCurs
 $showEventos = $canSeeEvento || $canSeeEventoAbierto || $canSeeInscripcionEvento;
 $showDiplomados = $canSeeDiplomado || $canSeeCapitulo || $canSeeDiplomadoAbierto || $canSeeDiplomadoControl || $canSeeInscripcionDiplomado || $canSeePreinscripcionDiplomado;
 $showMaestrias = $canSeeMaestria || $canSeeMaestriaAbierto || $canSeeInscripcionMaestria;
-$showPagos = $canSeeCuota || $canSeePago || $canSeeCompensar || $canSeeCronograma;
+$showPagos = $canSeeCuota || $canSeePago || $canSeeCronograma;
 $showMensajes = $canSeeListaCorreo || $canSeeMensajes || $canSeeListaEnvio;
 $showMantenimiento = $canSeeSede || $canSeeBanco || $canSeeDuracion || $canSeeProfesion || $canSeeCiudad;
 $showSeguridad = $canSeeUsers || $canSeeGrupo;
@@ -72,7 +71,7 @@ $isTalleresActive = in_array($module, ['cursos', 'cursos_abiertos', 'inscripcion
 $isEventosActive = in_array($module, ['evento', 'evento_abierto', 'inscripcion_evento']);
 $isDiplomadosActive = in_array($module, ['diplomado', 'capitulo', 'diplomado_abierto', 'diplomadocontrol', 'inscripcion_diplomado', 'preinscripcion_diplomado']);
 $isMaestriasActive = in_array($module, ['maestria', 'maestria_abierto', 'inscripcion_maestria']);
-$isPagosActive = in_array($module, ['cuota', 'pago', 'compensar', 'cronograma']);
+$isPagosActive = in_array($module, ['cuota', 'pago', 'cronograma']);
 $isMensajesActive = in_array($module, ['listacorreo', 'correo', 'mensajes', 'listaenvio', 'envios']);
 $isMantenimientoActive = in_array($module, ['sede', 'banco', 'duracion', 'profesion_oficio', 'ciudad']);
 $isSeguridadActive = in_array($module, ['users', 'grupo']);
@@ -259,9 +258,6 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
                         <?php endif; ?>
                         <?php if ($canSeePago): ?>
                         <li><a href="<?php echo BASE_URL; ?>pago" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'pago') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-cash-register mr-2"></i> Pagos</a></li>
-                        <?php endif; ?>
-                        <?php if ($canSeeCompensar): ?>
-                        <li><a href="<?php echo BASE_URL; ?>compensar" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'compensar') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-exchange-alt mr-2"></i> Compensar</a></li>
                         <?php endif; ?>
                         <?php if ($canSeeCronograma): ?>
                         <li><a href="<?php echo BASE_URL; ?>cronograma" class="block py-1.5 px-3 rounded hover:bg-gray-600 transition <?php echo ($module == 'cronograma') ? 'bg-gray-600 text-white font-bold' : ''; ?>"><i class="fa fa-calendar-alt mr-2"></i> Cronograma</a></li>
