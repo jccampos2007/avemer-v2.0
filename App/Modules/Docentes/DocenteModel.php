@@ -213,9 +213,10 @@ class DocenteModel
 
     public function create(array $data): bool
     {
+        $this->validateUnique($data);
         // Se eliminan los campos calle_avenida, casa_apartamento, nombre_universidad, nombre_especialidad, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida
         // Se regresa el campo direccion
-        $sql = "INSERT INTO docente (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen)";
+        $sql = "INSERT INTO docente (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :tipo_documento, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'profesion_oficio_id' => $data['profesion_oficio_id'],
@@ -223,6 +224,7 @@ class DocenteModel
             'nacionalidad_id' => $data['nacionalidad_id'],
             'usuario_id' => $_SESSION['user_id'],
             'ci_pasapote' => $data['ci_pasapote'],
+            'tipo_documento' => $data['tipo_documento'] ?? null,
             'primer_nombre' => $data['primer_nombre'],
             'segundo_nombre' => $data['segundo_nombre'],
             'primer_apellido' => $data['primer_apellido'],
@@ -234,16 +236,17 @@ class DocenteModel
             'fecha_nacimiento' => $data['fecha_nacimiento'],
             'estatus_activo_id' => $data['estatus_activo_id'] ?? 1,
             'direccion' => $data['direccion'],
-            'foto' => $data['foto'],
-            'imagen' => $data['imagen'],
+            'foto' => $data['foto'] ?? null,
+            'imagen' => $data['imagen'] ?? null,
         ]);
     }
 
     public function update(int $id, array $data): bool
     {
+        $this->validateUnique($data, $id);
         // Se eliminan los campos calle_avenida, casa_apartamento, nombre_universidad, nombre_especialidad, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida
         // Se regresa el campo direccion
-        $sql = "UPDATE docente SET profesion_oficio_id = :profesion_oficio_id, estado_id = :estado_id, nacionalidad_id = :nacionalidad_id, usuario_id = :usuario_id, ci_pasapote = :ci_pasapote, primer_nombre = :primer_nombre, segundo_nombre = :segundo_nombre, primer_apellido = :primer_apellido, segundo_apellido = :segundo_apellido, correo = :correo, tlf_habitacion = :tlf_habitacion, tlf_trabajo = :tlf_trabajo, tlf_celular = :tlf_celular, fecha_nacimiento = :fecha_nacimiento, estatus_activo_id = :estatus_activo_id, direccion = :direccion";
+        $sql = "UPDATE docente SET profesion_oficio_id = :profesion_oficio_id, estado_id = :estado_id, nacionalidad_id = :nacionalidad_id, usuario_id = :usuario_id, ci_pasapote = :ci_pasapote, tipo_documento = :tipo_documento, primer_nombre = :primer_nombre, segundo_nombre = :segundo_nombre, primer_apellido = :primer_apellido, segundo_apellido = :segundo_apellido, correo = :correo, tlf_habitacion = :tlf_habitacion, tlf_trabajo = :tlf_trabajo, tlf_celular = :tlf_celular, fecha_nacimiento = :fecha_nacimiento, estatus_activo_id = :estatus_activo_id, direccion = :direccion";
 
         // Solo actualiza BLOBs si se envió un nuevo archivo
         if ($data['foto'] !== null) $sql .= ", foto = :foto";
@@ -258,6 +261,7 @@ class DocenteModel
             'nacionalidad_id' => $data['nacionalidad_id'],
             'usuario_id' => $_SESSION['user_id'],
             'ci_pasapote' => $data['ci_pasapote'],
+            'tipo_documento' => $data['tipo_documento'] ?? null,
             'primer_nombre' => $data['primer_nombre'],
             'segundo_nombre' => $data['segundo_nombre'],
             'primer_apellido' => $data['primer_apellido'],
@@ -282,5 +286,39 @@ class DocenteModel
     {
         $stmt = $this->pdo->prepare("DELETE FROM docente WHERE id = :id");
         return $stmt->execute(['id' => $id]);
+    }
+
+    private function validateUnique(array $data, ?int $excludeId = null): void
+    {
+        $ci = $data['ci_pasapote'] ?? '';
+        $correo = $data['correo'] ?? '';
+        
+        if (!empty($ci)) {
+            $sqlCi = "SELECT id FROM docente WHERE ci_pasapote = :ci";
+            $paramsCi = ['ci' => $ci];
+            if ($excludeId) {
+                $sqlCi .= " AND id != :id";
+                $paramsCi['id'] = $excludeId;
+            }
+            $stmtCi = $this->pdo->prepare($sqlCi);
+            $stmtCi->execute($paramsCi);
+            if ($stmtCi->fetch()) {
+                throw new \PDOException("La cédula/pasaporte ya se encuentra registrada.");
+            }
+        }
+
+        if (!empty($correo)) {
+            $sqlCorreo = "SELECT id FROM docente WHERE correo = :correo";
+            $paramsCorreo = ['correo' => $correo];
+            if ($excludeId) {
+                $sqlCorreo .= " AND id != :id";
+                $paramsCorreo['id'] = $excludeId;
+            }
+            $stmtCorreo = $this->pdo->prepare($sqlCorreo);
+            $stmtCorreo->execute($paramsCorreo);
+            if ($stmtCorreo->fetch()) {
+                throw new \PDOException("El correo electrónico ya se encuentra registrado.");
+            }
+        }
     }
 }

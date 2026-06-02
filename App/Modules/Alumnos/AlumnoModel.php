@@ -254,7 +254,8 @@ class AlumnoModel
 
     public function create(array $data) // : bool
     {
-        $sql = "INSERT INTO {$this->table} (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, calle_avenida, casa_apartamento, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida, nombre_universidad, nombre_especialidad) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :calle_avenida, :casa_apartamento, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen, :chk_planilla, :chk_cedula, :chk_notas, :chk_titulo, :chk_partida, :nombre_universidad, :nombre_especialidad)";
+        $this->validateUnique($data);
+        $sql = "INSERT INTO {$this->table} (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, calle_avenida, casa_apartamento, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida, nombre_universidad, nombre_especialidad) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :tipo_documento, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :calle_avenida, :casa_apartamento, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen, :chk_planilla, :chk_cedula, :chk_notas, :chk_titulo, :chk_partida, :nombre_universidad, :nombre_especialidad)";
         $stmt = $this->pdo->prepare($sql);
         $success = $stmt->execute([
             'profesion_oficio_id' => $data['profesion_oficio_id'],
@@ -262,6 +263,7 @@ class AlumnoModel
             'nacionalidad_id' => $data['nacionalidad_id'],
             'usuario_id' => $_SESSION['user_id'] ?? 0,
             'ci_pasapote' => $data['ci_pasapote'],
+            'tipo_documento' => $data['tipo_documento'] ?? null,
             'primer_nombre' => $data['primer_nombre'],
             'segundo_nombre' => $data['segundo_nombre'],
             'primer_apellido' => $data['primer_apellido'],
@@ -294,7 +296,8 @@ class AlumnoModel
 
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE {$this->table} SET profesion_oficio_id = :profesion_oficio_id, estado_id = :estado_id, nacionalidad_id = :nacionalidad_id, usuario_id = :usuario_id, ci_pasapote = :ci_pasapote, primer_nombre = :primer_nombre, segundo_nombre = :segundo_nombre, primer_apellido = :primer_apellido, segundo_apellido = :segundo_apellido, correo = :correo, tlf_habitacion = :tlf_habitacion, tlf_trabajo = :tlf_trabajo, tlf_celular = :tlf_celular, calle_avenida = :calle_avenida, casa_apartamento = :casa_apartamento, fecha_nacimiento = :fecha_nacimiento, estatus_activo_id = :estatus_activo_id, direccion = :direccion, chk_planilla = :chk_planilla, chk_cedula = :chk_cedula, chk_notas = :chk_notas, chk_titulo = :chk_titulo, chk_partida = :chk_partida, nombre_universidad = :nombre_universidad, nombre_especialidad = :nombre_especialidad";
+        $this->validateUnique($data, $id);
+        $sql = "UPDATE {$this->table} SET profesion_oficio_id = :profesion_oficio_id, estado_id = :estado_id, nacionalidad_id = :nacionalidad_id, usuario_id = :usuario_id, ci_pasapote = :ci_pasapote, tipo_documento = :tipo_documento, primer_nombre = :primer_nombre, segundo_nombre = :segundo_nombre, primer_apellido = :primer_apellido, segundo_apellido = :segundo_apellido, correo = :correo, tlf_habitacion = :tlf_habitacion, tlf_trabajo = :tlf_trabajo, tlf_celular = :tlf_celular, calle_avenida = :calle_avenida, casa_apartamento = :casa_apartamento, fecha_nacimiento = :fecha_nacimiento, estatus_activo_id = :estatus_activo_id, direccion = :direccion, chk_planilla = :chk_planilla, chk_cedula = :chk_cedula, chk_notas = :chk_notas, chk_titulo = :chk_titulo, chk_partida = :chk_partida, nombre_universidad = :nombre_universidad, nombre_especialidad = :nombre_especialidad";
 
         // Solo actualiza BLOBs si se envió un nuevo archivo
         if ($data['foto'] !== null) $sql .= ", foto = :foto";
@@ -309,6 +312,7 @@ class AlumnoModel
             'nacionalidad_id' => $data['nacionalidad_id'],
             'usuario_id' => $_SESSION['user_id'],
             'ci_pasapote' => $data['ci_pasapote'],
+            'tipo_documento' => $data['tipo_documento'] ?? null,
             'primer_nombre' => $data['primer_nombre'],
             'segundo_nombre' => $data['segundo_nombre'],
             'primer_apellido' => $data['primer_apellido'],
@@ -342,5 +346,39 @@ class AlumnoModel
     {
         $stmt = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = :id");
         return $stmt->execute(['id' => $id]);
+    }
+
+    private function validateUnique(array $data, ?int $excludeId = null): void
+    {
+        $ci = $data['ci_pasapote'] ?? '';
+        $correo = $data['correo'] ?? '';
+        
+        if (!empty($ci)) {
+            $sqlCi = "SELECT id FROM {$this->table} WHERE ci_pasapote = :ci";
+            $paramsCi = ['ci' => $ci];
+            if ($excludeId) {
+                $sqlCi .= " AND id != :id";
+                $paramsCi['id'] = $excludeId;
+            }
+            $stmtCi = $this->pdo->prepare($sqlCi);
+            $stmtCi->execute($paramsCi);
+            if ($stmtCi->fetch()) {
+                throw new \PDOException("La cédula/pasaporte ya se encuentra registrada.");
+            }
+        }
+
+        if (!empty($correo)) {
+            $sqlCorreo = "SELECT id FROM {$this->table} WHERE correo = :correo";
+            $paramsCorreo = ['correo' => $correo];
+            if ($excludeId) {
+                $sqlCorreo .= " AND id != :id";
+                $paramsCorreo['id'] = $excludeId;
+            }
+            $stmtCorreo = $this->pdo->prepare($sqlCorreo);
+            $stmtCorreo->execute($paramsCorreo);
+            if ($stmtCorreo->fetch()) {
+                throw new \PDOException("El correo electrónico ya se encuentra registrado.");
+            }
+        }
     }
 }

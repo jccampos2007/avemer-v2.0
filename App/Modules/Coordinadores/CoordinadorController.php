@@ -27,7 +27,9 @@ class CoordinadorController extends Controller
             $this->validateCsrf();
             $this->processForm();
         } else {
-            $this->view('Coordinadores/form', ['coordinador_data' => []]);
+            $coordinador_data = $_SESSION['form_data'] ?? [];
+            unset($_SESSION['form_data']);
+            $this->view('Coordinadores/form', ['coordinador_data' => $coordinador_data]);
         }
     }
 
@@ -37,7 +39,8 @@ class CoordinadorController extends Controller
             $this->validateCsrf();
             $this->processForm($id);
         } else {
-            $coordinador_data = $this->coordinadoresModel->findById($id);
+            $coordinador_data = $_SESSION['form_data'] ?? $this->coordinadoresModel->findById($id);
+            unset($_SESSION['form_data']);
             if (!$coordinador_data) {
                 Auth::setFlashMessage('error', 'Coordinador no encontrado.');
                 $this->redirect('coordinadores');
@@ -150,12 +153,17 @@ class CoordinadorController extends Controller
                 $this->redirect('coordinadores');
             } else {
                 Auth::setFlashMessage('error', $message);
+                if ($id) $data['id'] = $id;
+                $_SESSION['form_data'] = $data;
                 $redirectPath = $id ? 'coordinadores/edit/' . $id : 'coordinadores/create';
                 $this->redirect($redirectPath);
             }
         } catch (\PDOException $e) {
             Auth::setFlashMessage('error', 'Error de base de datos al actualizar coordinador: ' . $e->getMessage());
-            $this->redirect('coordinadores/edit/' . $id);
+            if ($id) $data['id'] = $id;
+            $_SESSION['form_data'] = $data;
+            $redirectPath = $id ? 'coordinadores/edit/' . $id : 'coordinadores/create';
+            $this->redirect($redirectPath);
         }
     }
 

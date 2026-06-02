@@ -192,6 +192,18 @@ $(document).ready(function () {
             const fechaFin = $('#fecha_fin').val().trim();
             const costo = $('#costo').val();
             const inicial = $('#inicial').val();
+            const nombreCartaContent = window.nombreCartaEditor ? window.nombreCartaEditor.getData().trim() : '';
+
+            if (nombreCartaContent === '') {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campo requerido',
+                    text: 'El campo "Nombre Carta" es obligatorio. Por favor, complete la información.',
+                    confirmButtonColor: '#3085d6'
+                });
+                return;
+            }
 
             // if (numero === '' || !diplomadoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '' || costo === '' || inicial === '') {
             //     showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');

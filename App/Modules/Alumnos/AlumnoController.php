@@ -88,8 +88,9 @@ class AlumnoController extends Controller
             $this->validateCsrf();
             $this->processForm();
         } else {
-            $Alumno_data = []; // Datos vacíos para el formulario
-            $this->view('Alumnos/form', ['Alumno_data' => $Alumno_data]);
+            $alumno_data = $_SESSION['form_data'] ?? [];
+            unset($_SESSION['form_data']);
+            $this->view('Alumnos/form', ['alumno_data' => $alumno_data]);
         }
     }
 
@@ -99,7 +100,8 @@ class AlumnoController extends Controller
             $this->validateCsrf();
             $this->processForm($id);
         } else {
-            $alumno_data = $this->alumnoModel->findById($id);
+            $alumno_data = $_SESSION['form_data'] ?? $this->alumnoModel->findById($id);
+            unset($_SESSION['form_data']);
             if (!$alumno_data) {
                 Auth::setFlashMessage('error', 'Alumno no encontrado.');
                 $this->redirect('alumnos');
@@ -166,11 +168,15 @@ class AlumnoController extends Controller
                 $this->redirect('alumnos');
             } else {
                 Auth::setFlashMessage('error', $message);
+                if ($id) $data['id'] = $id;
+                $_SESSION['form_data'] = $data;
                 $redirectPath = $id ? 'alumnos/edit/' . $id : 'alumnos/create';
                 $this->redirect($redirectPath);
             }
         } catch (\PDOException $e) {
             Auth::setFlashMessage('error', 'Error de base de datos al guardar alumno: ' . $e->getMessage());
+            if ($id) $data['id'] = $id;
+            $_SESSION['form_data'] = $data;
             $redirectPath = $id ? 'alumnos/edit/' . $id : 'alumnos/create';
             $this->redirect($redirectPath);
         }

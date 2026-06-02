@@ -35,7 +35,8 @@ class DocenteController extends Controller
             $this->validateCsrf();
             $this->processForm();
         } else {
-            $docente_data = []; // Datos vacíos para el formulario
+            $docente_data = $_SESSION['form_data'] ?? [];
+            unset($_SESSION['form_data']);
             $this->view('Docentes/form', ['docente_data' => $docente_data]);
         }
     }
@@ -51,7 +52,8 @@ class DocenteController extends Controller
             $this->validateCsrf();
             $this->processForm($id);
         } else {
-            $docente_data = $this->docenteModel->findById($id);
+            $docente_data = $_SESSION['form_data'] ?? $this->docenteModel->findById($id);
+            unset($_SESSION['form_data']);
             if (!$docente_data) {
                 Auth::setFlashMessage('error', 'Registro de Docente no encontrado.');
                 $this->redirect('docentes');
@@ -171,6 +173,8 @@ class DocenteController extends Controller
             // Validación de campos obligatorios
             if (empty($data['ci_pasapote']) || empty($data['primer_nombre']) || empty($data['primer_apellido'])) {
                 Auth::setFlashMessage('error', 'Cédula/Pasaporte, Primer Nombre y Primer Apellido son obligatorios.');
+                if ($id) $data['id'] = $id;
+                $_SESSION['form_data'] = $data;
                 $redirectPath = $id ? 'docentes/edit/' . $id : 'docentes/create';
                 $this->redirect($redirectPath);
                 return;
@@ -192,17 +196,23 @@ class DocenteController extends Controller
                 $this->redirect('docentes'); // Redirigir a la lista
             } else {
                 Auth::setFlashMessage('error', $message);
+                if ($id) $data['id'] = $id;
+                $_SESSION['form_data'] = $data;
                 $redirectPath = $id ? 'docentes/edit/' . $id : 'docentes/create';
                 $this->redirect($redirectPath); // Redirigir de vuelta al formulario
             }
         } catch (\PDOException $e) {
             error_log('Error de BD en processForm (Docente): ' . $e->getMessage());
             Auth::setFlashMessage('error', 'Error de base de datos: ' . $e->getMessage());
+            if ($id) $data['id'] = $id;
+            $_SESSION['form_data'] = $data;
             $redirectPath = $id ? 'docentes/edit/' . $id : 'docentes/create';
             $this->redirect($redirectPath);
         } catch (\Exception $e) {
             error_log('Error en processForm (Docente): ' . $e->getMessage());
             Auth::setFlashMessage('error', 'Ocurrió un error: ' . $e->getMessage());
+            if ($id) $data['id'] = $id;
+            $_SESSION['form_data'] = $data;
             $redirectPath = $id ? 'docentes/edit/' . $id : 'docentes/create';
             $this->redirect($redirectPath);
         }

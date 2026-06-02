@@ -200,7 +200,18 @@ $(document).ready(function () {
             const fechaFin = $('#fecha_fin').val().trim();
             const nombreCartaContent = nombreCartaEditor ? nombreCartaEditor.getData().trim() : ''; // Obtener contenido de CKEditor
 
-            if (numero === '' || !eventoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '' || nombreCartaContent === '') {
+            if (nombreCartaContent === '') {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campo requerido',
+                    text: 'El campo "Nombre Carta" es obligatorio. Por favor, complete la información.',
+                    confirmButtonColor: '#3085d6'
+                });
+                return;
+            }
+
+            if (numero === '' || !eventoId || !sedeId || !estatusId || fechaInicio === '' || fechaFin === '') {
                 showFlashMessage('error', 'Por favor, complete todos los campos obligatorios.');
                 event.preventDefault(); // Detiene el envío del formulario
             }

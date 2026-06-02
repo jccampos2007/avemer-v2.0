@@ -48,6 +48,12 @@ $(document).ready(function () {
 
             if (nombreCartaContent.trim() === '') {
                 event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campo requerido',
+                    text: 'El campo "Nombre Carta" es obligatorio. Por favor, complete la información.',
+                    confirmButtonColor: '#3085d6'
+                });
             }
         });
 

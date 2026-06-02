@@ -198,7 +198,18 @@ $(document).ready(function () {
             const fecha = $('#fecha').val().trim();
             const nombreCartaContent = (typeof window.nombreCartaEditor !== 'undefined') ? window.nombreCartaEditor.getData().trim() : '';
 
-            if (numero === '' || !maestriaId || !sedeId || !estatusId || !docenteId || fecha === '' || nombreCartaContent === '') {
+            if (nombreCartaContent === '') {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campo requerido',
+                    text: 'El campo "Nombre Carta" es obligatorio. Por favor, complete la información.',
+                    confirmButtonColor: '#3085d6'
+                });
+                return;
+            }
+
+            if (numero === '' || !maestriaId || !sedeId || !estatusId || !docenteId || fecha === '') {
                 Swal.fire('Error', 'Por favor, complete todos los campos obligatorios.', 'error');
                 event.preventDefault();
             }
