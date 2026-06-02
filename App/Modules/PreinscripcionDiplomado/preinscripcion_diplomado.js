@@ -97,17 +97,31 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
-                    showFlashMessage('success', response.message);
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: response.message,
+                        timer: 2500,
+                        showConfirmButton: false
+                    });
                     showAlumnoDetails(response.alumno);
                     createAlumnoForm.hide();
 
                 } else {
-                    showFlashMessage('error', response.message || 'Error al crear alumno.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message || 'Error al crear alumno.'
+                    });
                 }
             },
             error: function (xhr, status, error) {
                 console.error('Error AJAX al crear alumno:', status, error, xhr.responseText);
-                showFlashMessage('error', 'Error de conexión al crear alumno.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión',
+                    text: 'No se pudo conectar al servidor al intentar crear el alumno.'
+                });
             }
         });
     });
@@ -170,34 +184,64 @@ $(document).ready(function () {
         const diplomadoAbiertoId = selectedDiplomadoAbiertoIdInput.val();
 
         if (!alumnoId || !diplomadoAbiertoId) {
-            showFlashMessage('error', 'Por favor, seleccione un alumno y un diplomado abierto.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Atención',
+                text: 'Por favor, seleccione un alumno y un diplomado abierto.'
+            });
             return;
         }
 
-        if (confirm('¿Estás seguro de que quieres pre-inscribir a este alumno en el diplomado seleccionado?')) {
-            $.ajax({
-                url: `${BASE_URL_JS}preinscripcion_diplomado/create`, // Envía al mismo endpoint POST de creación
-                method: 'POST',
-                data: {
-                    alumno_id: alumnoId,
-                    diplomado_abierto_id: diplomadoAbiertoId,
-                    csrf_token: CSRF_TOKEN
-                },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.success) {
-                        showFlashMessage('success', response.message);
-                        showAlumnoSearch(); // Reiniciar el formulario después de la pre-inscripción exitosa
-                    } else {
-                        showFlashMessage('error', response.message);
+        Swal.fire({
+            icon: 'question',
+            title: '¿Confirmar Pre-inscripción?',
+            text: '¿Estás seguro de que quieres pre-inscribir a este alumno en el diplomado seleccionado?',
+            showCancelButton: true,
+            confirmButtonColor: '#7c3aed',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, Pre-inscribir',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `${BASE_URL_JS}preinscripcion_diplomado/create`, // Envía al mismo endpoint POST de creación
+                    method: 'POST',
+                    data: {
+                        alumno_id: alumnoId,
+                        diplomado_abierto_id: diplomadoAbiertoId,
+                        csrf_token: CSRF_TOKEN
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Pre-inscripción Exitosa!',
+                                text: response.message,
+                                timer: 2500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                showAlumnoSearch(); // Reiniciar el formulario después de la pre-inscripción exitosa
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error AJAX al pre-inscribir:', status, error, xhr.responseText);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error de conexión',
+                            text: 'No se pudo conectar al servidor al realizar la pre-inscripción.'
+                        });
                     }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error AJAX al pre-inscribir:', status, error, xhr.responseText);
-                    showFlashMessage('error', 'Error de conexión al realizar la pre-inscripción.');
-                }
-            });
-        }
+                });
+            }
+        });
     });
 
     // --- Inicialización al cargar la página ---

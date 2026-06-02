@@ -208,37 +208,65 @@ class PagoModel
 
     public function getCuotasByAlumno(int $alumnoId): array
     {
+        // Cuotas de cursos/diplomados/eventos (vía transaccion tipo=1)
+        // UNION cuotas de maestrías (vía inscripcion_maestria)
         $sql = "SELECT DISTINCT c.id, c.nombre, c.monto, c.fecha_vencimiento,
                        toa.nombre AS tipo_oferta_nombre
                 FROM transaccion t
                 JOIN cuota c ON t.cuota_id = c.id
                 JOIN tipo_oferta_academica toa ON c.tipo_oferta_academica_id = toa.id
-                WHERE t.alumno_id = :alumno_id AND t.tipo = 1 AND t.estatus = 1
-                ORDER BY c.nombre ASC";
+                WHERE t.alumno_id = :alumno_id1 AND t.tipo = 1 AND t.estatus = 1
+
+                UNION
+
+                SELECT DISTINCT c.id, c.nombre, c.monto, c.fecha_vencimiento,
+                       toa.nombre AS tipo_oferta_nombre
+                FROM inscripcion_maestria im
+                JOIN cuota c ON c.oferta_academica_id = im.maestria_abierto_id
+                               AND c.tipo_oferta_academica_id = 4
+                JOIN tipo_oferta_academica toa ON toa.id = c.tipo_oferta_academica_id
+                WHERE im.alumno_id = :alumno_id2
+
+                ORDER BY nombre ASC";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':alumno_id' => $alumnoId]);
+        $stmt->execute([':alumno_id1' => $alumnoId, ':alumno_id2' => $alumnoId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getCuotasByAlumnoPendientes(int $alumnoId): array
     {
-        $sql = "SELECT DISTINCT c.id, c.nombre, c.monto, c.fecha_vencimiento,
+        // Subconsulta de pagos realizados (tipo=2) para calcular saldo
+        $pagadoSubquery = "SELECT t2.cuota_id, t2.alumno_id, SUM(t2.monto) AS total_pagado
+                           FROM transaccion t2
+                           WHERE t2.tipo = 2
+                           GROUP BY t2.cuota_id, t2.alumno_id";
+
+        // Cuotas de cursos/diplomados/eventos (vía transaccion tipo=1) con saldo pendiente
+        $sql = "SELECT c.id, c.nombre, c.monto, c.fecha_vencimiento,
                        toa.nombre AS tipo_oferta_nombre,
                        c.monto - COALESCE(pagado.total_pagado, 0) AS saldo_pendiente
-                FROM transaccion t
-                JOIN cuota c ON t.cuota_id = c.id
-                JOIN tipo_oferta_academica toa ON c.tipo_oferta_academica_id = toa.id
-                LEFT JOIN (
-                    SELECT t2.cuota_id, t2.alumno_id, SUM(t2.monto) AS total_pagado
-                    FROM transaccion t2
-                    WHERE t2.tipo = 2
-                    GROUP BY t2.cuota_id, t2.alumno_id
-                ) pagado ON pagado.cuota_id = t.cuota_id AND pagado.alumno_id = t.alumno_id
-                WHERE t.alumno_id = :alumno_id AND t.tipo = 1 AND t.estatus = 1
+                FROM (
+                    SELECT DISTINCT t.cuota_id, t.alumno_id
+                    FROM transaccion t
+                    WHERE t.alumno_id = :alumno_id1 AND t.tipo = 1 AND t.estatus = 1
+
+                    UNION
+
+                    SELECT DISTINCT c2.id AS cuota_id, im.alumno_id
+                    FROM inscripcion_maestria im
+                    JOIN cuota c2 ON c2.oferta_academica_id = im.maestria_abierto_id
+                                  AND c2.tipo_oferta_academica_id = 4
+                    WHERE im.alumno_id = :alumno_id2
+                ) AS fuente
+                JOIN cuota c ON c.id = fuente.cuota_id
+                JOIN tipo_oferta_academica toa ON toa.id = c.tipo_oferta_academica_id
+                LEFT JOIN ({$pagadoSubquery}) pagado
+                       ON pagado.cuota_id = fuente.cuota_id
+                      AND pagado.alumno_id = fuente.alumno_id
                 HAVING saldo_pendiente > 0
                 ORDER BY c.nombre ASC";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':alumno_id' => $alumnoId]);
+        $stmt->execute([':alumno_id1' => $alumnoId, ':alumno_id2' => $alumnoId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
