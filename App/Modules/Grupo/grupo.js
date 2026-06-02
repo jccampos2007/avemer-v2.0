@@ -146,7 +146,8 @@ $(document).ready(function () {
                 type: 'POST',
                 data: {
                     grupo_id: currentGroupId,
-                    permissions: permissions
+                    permissions: permissions,
+                    csrf_token: $('input[name="csrf_token"]').val()
                 },
                 success: function (response) {
                     const res = JSON.parse(response);

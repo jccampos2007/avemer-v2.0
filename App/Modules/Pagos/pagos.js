@@ -3,7 +3,7 @@ $(document).ready(function () {
     const formPago = $('#formPago');
     if (formPago.length) {
         if (typeof flatpickr !== 'undefined') {
-            $('#fecha').flatpickr({ dateFormat: 'Y-m-d', locale: 'es' });
+            $('#fecha').flatpickr({ dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'es' });
         }
 
         function loadCuotasByAlumno(alumnoId) {
@@ -124,7 +124,15 @@ $(document).ready(function () {
                 { data: 4 },
                 { data: 5 },
                 { data: 6, className: 'text-right font-semibold' },
-                { data: 7 },
+                {
+                    data: 7,
+                    render: function (data, type) {
+                        if (type === 'display' && data) {
+                            return data.split('-').reverse().join('/');
+                        }
+                        return data || '';
+                    }
+                },
                 {
                     data: 8,
                     orderable: true,

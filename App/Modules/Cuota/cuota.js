@@ -234,8 +234,24 @@ $(document).ready(function () {
                                     return '—';
                                 }
                             },
-                            { "data": "fecha_vencimiento" },
-                            { "data": "fecha" },
+                            {
+                                "data": "fecha_vencimiento",
+                                "render": function (data, type) {
+                                    if (type === 'display' && data) {
+                                        return data.split('-').reverse().join('/');
+                                    }
+                                    return data || '';
+                                }
+                            },
+                            {
+                                "data": "fecha",
+                                "render": function (data, type) {
+                                    if (type === 'display' && data) {
+                                        return data.split('-').reverse().join('/');
+                                    }
+                                    return data || '';
+                                }
+                            },
                             {
                                 "data": null,
                                 "orderable": false,
@@ -306,7 +322,8 @@ $(document).ready(function () {
                         if (control) {
                             infoCapitulo.text(`${control.capitulo_numero} - ${control.capitulo_nombre}`);
                             infoCostoCapitulo.text(`$${parseFloat(control.costo || 0).toFixed(2)}`);
-                            infoControlFecha.text(control.control_fecha || '—');
+                            const rawFecha = control.control_fecha || '';
+                            infoControlFecha.text(rawFecha ? rawFecha.split('-').reverse().join('/') : '—');
                             controlInfoBox.removeClass('hidden');
                         }
                     }
@@ -442,7 +459,7 @@ $(document).ready(function () {
             flatpickr("#fecha_vencimiento", {
                 dateFormat: "Y-m-d",
                 altInput: true,
-                altFormat: "d F, Y",
+                altFormat: "d/m/Y",
                 locale: "es",
             });
             flatpickr.localize(flatpickr.l10ns.es);

@@ -27,6 +27,7 @@ function generateBreadcrumbs(): array
         'cuota'                  => 'Cuotas',
         'pago'                   => 'Pagos',
         'cronograma'             => 'Cronograma',
+        'asistencia'             => 'Asistencia',
         'sede'                   => 'Sedes',
         'banco'                  => 'Bancos',
         'duracion'               => 'Duraciones',

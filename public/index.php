@@ -19,6 +19,18 @@ use App\Modules\Coordinadores\CoordinadorController;
 use App\Modules\Correo\CorreoController;
 use App\Modules\Cronograma\CronogramaController;
 use App\Modules\Cuota\CuotaController;
+use App\Modules\CursoAbierto\CursoAbiertoController;
+use App\Modules\Cursos\CursoController;
+use App\Modules\Dashboard\DashboardController;
+use App\Modules\Diplomado\DiplomadoController;
+use App\Modules\DiplomadoAbierto\DiplomadoAbiertoController;
+use App\Modules\DiplomadoControl\DiplomadoControlController;
+use App\Modules\Docentes\DocenteController;
+use App\Modules\Duracion\DuracionController;
+use App\Modules\Envios\EnviosController;
+use App\Modules\Evento\EventoController;
+use App\Modules\EventoAbierto\EventoAbiertoController;
+use App\Modules\Grupo\GrupoController;
 use App\Modules\InscripcionCurso\InscripcionCursoController;
 use App\Modules\InscripcionDiplomado\InscripcionDiplomadoController;
 use App\Modules\InscripcionEvento\InscripcionEventoController;
@@ -27,6 +39,7 @@ use App\Modules\Maestria\MaestriaController;
 use App\Modules\MaestriaAbierto\MaestriaAbiertoController;
 use App\Modules\Mensajes\MensajesController;
 use App\Modules\Pagos\PagoController;
+use App\Modules\Asistencia\AsistenciaController;
 use App\Modules\PreinscripcionDiplomado\PreinscripcionDiplomadoController;
 use App\Modules\PreinscripcionLanding\PreinscripcionLandingController;
 use App\Modules\ProfesionOficio\ProfesionOficioController;
@@ -260,6 +273,14 @@ $router->add('GET', '/pago/getCuotasByAlumnoAjax', PagoController::class . '@get
 $router->add('POST', '/pago/confirm/{id}', PagoController::class . '@confirm');
 $router->add('POST', '/pago/softDelete/{id}', PagoController::class . '@softDelete');
 $router->add('GET', '/cronograma', CronogramaController::class . '@index');
+
+$router->add('GET', '/asistencia', AsistenciaController::class . '@index');
+$router->add('GET', '/asistencia/getAcademicOffersByType', AsistenciaController::class . '@getAcademicOffersByType');
+$router->add('GET', '/asistencia/getOfertaInfoAjax', AsistenciaController::class . '@getOfertaInfoAjax');
+$router->add('GET', '/asistencia/initAsistencia', AsistenciaController::class . '@initAsistencia');
+$router->add('GET', '/asistencia/getAlumnosAjax', AsistenciaController::class . '@getAlumnosAjax');
+$router->add('POST', '/asistencia/save', AsistenciaController::class . '@saveAsistencia');
+$router->add('POST', '/asistencia/getData', AsistenciaController::class . '@getData');
 
 // ==========================================
 // 10. MANTENIMIENTOS Y PARAMÉTRICAS (GEOGRAFÍA/SEDES/BANCOS)
