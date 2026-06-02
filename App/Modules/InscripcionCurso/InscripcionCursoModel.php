@@ -46,7 +46,7 @@ class InscripcionCursoModel
                 ca.numero AS curso_abierto_numero, -- Asumimos que 'numero' es el campo a mostrar de curso_abierto
                 ic.alumno_id,
                 CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
-                a.ci_pasapote,
+                a.ci_pasapote, a.tipo_documento,
                 a.tlf_celular AS alumno_telefono,
                 a.correo,
                 ic.estatus_inscripcion_id,

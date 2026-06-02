@@ -47,7 +47,7 @@ class InscripcionMaestriaModel
                 ma.numero AS maestria_abierto_numero, -- Asumimos 'numero' es el campo a mostrar de maestria_abierto
                 im.alumno_id,
                 CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
-                a.ci_pasapote,
+                a.ci_pasapote, a.tipo_documento,
                 a.tlf_celular AS alumno_telefono,
                 a.correo,
                 im.estatus_inscripcion_id,

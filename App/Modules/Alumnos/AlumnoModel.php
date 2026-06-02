@@ -46,7 +46,7 @@ class AlumnoModel
         ];
 
         // Construir la consulta base
-        $sql = "SELECT id, foto, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM {$this->table}";
+        $sql = "SELECT id, foto, ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM {$this->table}";
         $countSql = "SELECT COUNT(*) FROM alumno";
         $where = [];
         $queryParams = [];
@@ -128,7 +128,7 @@ class AlumnoModel
             $formattedData[] = [
                 $row['id'],
                 $foto_base64,
-                $row['ci_pasapote'],
+                ($row['tipo_documento'] ?? '') . $row['ci_pasapote'],
                 htmlspecialchars($row['primer_nombre'] . ' ' . $row['segundo_nombre'] . ' ' . $row['primer_apellido'] . ' ' . $row['segundo_apellido']),
                 $row['correo'],
                 ''

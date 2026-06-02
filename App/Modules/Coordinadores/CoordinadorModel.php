@@ -47,7 +47,7 @@ class CoordinadorModel
 
         // Construir la consulta base
         // Se eliminan los campos calle_avenida, casa_apartamento, nombre_universidad, nombre_especialidad
-        $sql = "SELECT id, foto, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM coordinador";
+        $sql = "SELECT id, foto, ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM coordinador";
         $countSql = "SELECT COUNT(*) FROM coordinador";
         $where = [];
         $queryParams = [];
@@ -125,7 +125,7 @@ class CoordinadorModel
             $formattedData[] = [
                 $row['id'],
                 $foto_base64,
-                $row['ci_pasapote'],
+                ($row['tipo_documento'] ?? '') . $row['ci_pasapote'],
                 htmlspecialchars($row['primer_nombre'] . ' ' . $row['segundo_nombre'] . ' ' . $row['primer_apellido'] . ' ' . $row['segundo_apellido']),
                 $row['correo'],
                 ''

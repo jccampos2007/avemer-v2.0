@@ -47,7 +47,7 @@ class InscripcionDiplomadoModel
                 da.numero AS diplomado_abierto_numero, -- Número del Diplomado Abierto
                 id.alumno_id,
                 CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
-                a.ci_pasapote,
+                a.ci_pasapote, a.tipo_documento,
                 a.tlf_celular AS alumno_telefono,
                 a.correo,
                 id.estatus_inscripcion_id,
