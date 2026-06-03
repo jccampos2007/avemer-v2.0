@@ -153,7 +153,7 @@
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">CI / Pasaporte</label>
                     <div class="relative">
                         <i class="fa-solid fa-magnifying-glass text-lg absolute left-3 top-3 text-slate-400 pointer-events-none"></i>
-                        <input type="text" id="search-ci-input" placeholder="Ej: 30429336" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" required>
+                        <input type="text" id="search-ci-input" placeholder="Ej: 30429336" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                     <p id="search-error" class="text-red-500 text-xs mt-1 hidden"></p>
                 </div>
@@ -189,7 +189,7 @@
                                 <option value="P">P</option>
                                 <option value="J">J</option>
                             </select>
-                            <input type="text" id="new-ci" name="new_ci_pasapote" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-sm font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" required>
+                            <input type="text" id="new-ci" name="new_ci_pasapote" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-sm font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                     </div>
                     <div>

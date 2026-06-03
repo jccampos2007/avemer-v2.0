@@ -15,7 +15,7 @@ $randomValue = rand(1000, 9999);
             <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
             <label for="ci_pasapote_search" class="block text-gray-700 text-sm font-bold mb-2">Buscar Alumno por CI/Pasaporte:</label>
             <div class="flex">
-                <input type="text" id="ci_pasapote_search" name="ci_pasapote_search" class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej. V-12345678" required>
+                <input type="text" id="ci_pasapote_search" name="ci_pasapote_search" class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej. 12345678" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r focus:outline-none focus:shadow-outline">Buscar</button>
             </div>
             <p id="search_result_message" class="mt-2 text-sm"></p>
@@ -48,7 +48,7 @@ $randomValue = rand(1000, 9999);
                     </div>
                     <div class="flex-1">
                         <label for="new_ci_pasapote" class="block text-gray-700 text-sm font-bold mb-2">CI/Pasaporte:</label>
-                        <input type="text" id="new_ci_pasapote" name="ci_pasapote" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <input type="text" id="new_ci_pasapote" name="ci_pasapote" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                 </div>
                 <div>

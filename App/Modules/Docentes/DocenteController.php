@@ -179,6 +179,14 @@ class DocenteController extends Controller
                 $this->redirect($redirectPath);
                 return;
             }
+            if (!ctype_digit($data['ci_pasapote'])) {
+                Auth::setFlashMessage('error', 'El CI/Pasaporte solo debe contener números.');
+                if ($id) $data['id'] = $id;
+                $_SESSION['form_data'] = $data;
+                $redirectPath = $id ? 'docentes/edit/' . $id : 'docentes/create';
+                $this->redirect($redirectPath);
+                return;
+            }
 
             $success = false;
             if ($id) {

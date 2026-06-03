@@ -40,7 +40,7 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
                             <option value="P" <?= ($docente_data['tipo_documento'] ?? '') == 'P' ? 'selected' : '' ?>>P</option>
                             <option value="J" <?= ($docente_data['tipo_documento'] ?? '') == 'J' ? 'selected' : '' ?>>J</option>
                         </select>
-                        <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($docente_data['ci_pasapote'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($docente_data['ci_pasapote'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                 </div>
                 <div>

@@ -17,7 +17,7 @@ $is_edit = isset($coordinador_data['id']) && !empty($coordinador_data['id']);
                         <option value="P" <?= ($coordinador_data['tipo_documento'] ?? '') == 'P' ? 'selected' : '' ?>>P</option>
                         <option value="J" <?= ($coordinador_data['tipo_documento'] ?? '') == 'J' ? 'selected' : '' ?>>J</option>
                     </select>
-                    <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($coordinador_data['ci_pasapote'] ?? ''); ?>" class="input-form flex-1 focus:outline-none focus:shadow-outline" required>
+                    <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($coordinador_data['ci_pasapote'] ?? ''); ?>" class="input-form flex-1 focus:outline-none focus:shadow-outline" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 </div>
             </div>
             <div>

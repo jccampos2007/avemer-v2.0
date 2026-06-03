@@ -63,6 +63,10 @@ class PreinscripcionDiplomadoController extends Controller
             echo json_encode(['success' => false, 'message' => 'CI/Pasaporte no puede estar vacío.']);
             exit();
         }
+        if (!ctype_digit($ciPasaporte)) {
+            echo json_encode(['success' => false, 'message' => 'El CI/Pasaporte solo debe contener números.']);
+            exit();
+        }
 
         try {
             $alumno = $this->alumnoModel->findByCiPasaporte($ciPasaporte);
@@ -105,6 +109,11 @@ class PreinscripcionDiplomadoController extends Controller
             'tlf_celular' => $this->sanitizeInput($_POST['tlf_celular'] ?? ''),
             'estatus_activo_id' => 1,
         ];
+
+        if (!ctype_digit($data['ci_pasapote'])) {
+            echo json_encode(['success' => false, 'message' => 'El CI/Pasaporte solo debe contener números.']);
+            exit();
+        }
 
         // Validación básica
         if (empty($data['ci_pasapote']) || empty($data['primer_nombre']) || empty($data['primer_apellido'])) {

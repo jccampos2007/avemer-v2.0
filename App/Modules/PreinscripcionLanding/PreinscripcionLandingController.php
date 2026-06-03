@@ -26,6 +26,10 @@ class PreinscripcionLandingController extends Controller
             echo json_encode(['success' => false, 'message' => 'El CI/Pasaporte no puede estar vacío.']);
             exit();
         }
+        if (!ctype_digit($ci)) {
+            echo json_encode(['success' => false, 'message' => 'El CI/Pasaporte solo debe contener números.']);
+            exit();
+        }
 
         try {
             $pdo = \App\Core\Database::getInstance()->getConnection();
@@ -58,11 +62,17 @@ class PreinscripcionLandingController extends Controller
         
         $pdo = \App\Core\Database::getInstance()->getConnection();
         try {
+            $ciPasapote = $this->sanitizeInput($_POST['new_ci_pasapote'] ?? '');
+            if (!ctype_digit($ciPasapote)) {
+                echo json_encode(['success' => false, 'message' => 'El CI/Pasaporte solo debe contener números.']);
+                exit();
+            }
+
             $sql = "INSERT INTO alumno (ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_celular, estatus_activo_id) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                $this->sanitizeInput($_POST['new_ci_pasapote'] ?? ''),
+                $ciPasapote,
                 $_POST['new_tipo_documento'] ?? 'V',
                 $this->sanitizeInput($_POST['new_primer_nombre'] ?? ''),
                 $this->sanitizeInput($_POST['new_segundo_nombre'] ?? ''),

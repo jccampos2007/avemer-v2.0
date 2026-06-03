@@ -129,6 +129,15 @@ class CoordinadorController extends Controller
             'imagen' => null
         ];
 
+        if (!ctype_digit($data['ci_pasapote'])) {
+            Auth::setFlashMessage('error', 'El CI/Pasaporte solo debe contener números.');
+            if ($id) $data['id'] = $id;
+            $_SESSION['form_data'] = $data;
+            $redirectPath = $id ? 'coordinadores/edit/' . $id : 'coordinadores/create';
+            $this->redirect($redirectPath);
+            return;
+        }
+
         // Manejo de archivos BLOB (foto, imagen) para actualización
         if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
             $data['foto'] = file_get_contents($_FILES['foto']['tmp_name']);

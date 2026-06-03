@@ -38,7 +38,7 @@ $is_edit = isset($alumno_data['id']) && !empty($alumno_data['id']);
                                     <option value="P" <?= ($alumno_data['tipo_documento'] ?? '') == 'P' ? 'selected' : '' ?>>P</option>
                                     <option value="J" <?= ($alumno_data['tipo_documento'] ?? '') == 'J' ? 'selected' : '' ?>>J</option>
                                 </select>
-                                <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($alumno_data['ci_pasapote'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($alumno_data['ci_pasapote'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             </div>
                         </div>
                         <div>
