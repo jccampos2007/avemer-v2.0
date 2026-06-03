@@ -40,6 +40,7 @@ use App\Modules\MaestriaAbierto\MaestriaAbiertoController;
 use App\Modules\Mensajes\MensajesController;
 use App\Modules\Pagos\PagoController;
 use App\Modules\Asistencia\AsistenciaController;
+use App\Modules\Cobranza\CobranzaController;
 use App\Modules\PreinscripcionDiplomado\PreinscripcionDiplomadoController;
 use App\Modules\PreinscripcionLanding\PreinscripcionLandingController;
 use App\Modules\ProfesionOficio\ProfesionOficioController;
@@ -273,6 +274,9 @@ $router->add('GET', '/pago/getCuotasByAlumnoAjax', PagoController::class . '@get
 $router->add('POST', '/pago/confirm/{id}', PagoController::class . '@confirm');
 $router->add('POST', '/pago/softDelete/{id}', PagoController::class . '@softDelete');
 $router->add('GET', '/cronograma', CronogramaController::class . '@index');
+
+$router->add('GET', '/cobranza', CobranzaController::class . '@index');
+$router->add('POST', '/cobranza/getData', CobranzaController::class . '@getData');
 
 $router->add('GET', '/asistencia', AsistenciaController::class . '@index');
 $router->add('GET', '/asistencia/getAcademicOffersByType', AsistenciaController::class . '@getAcademicOffersByType');
