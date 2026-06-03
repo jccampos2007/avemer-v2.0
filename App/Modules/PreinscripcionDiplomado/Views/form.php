@@ -13,9 +13,9 @@ $randomValue = rand(1000, 9999);
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Paso 1: Seleccionar o Crear Alumno</h2>
         <form id="searchAlumnoForm" class="mb-4">
             <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
-            <label for="ci_pasapote_search" class="block text-gray-700 text-sm font-bold mb-2">Buscar Alumno por CI/Pasaporte:</label>
+            <label for="ci_pasaporte_search" class="block text-gray-700 text-sm font-bold mb-2">Buscar Alumno por CI/Pasaporte:</label>
             <div class="flex">
-                <input type="text" id="ci_pasapote_search" name="ci_pasapote_search" class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej. 12345678" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <input type="text" id="ci_pasaporte_search" name="ci_pasaporte_search" class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej. 12345678" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r focus:outline-none focus:shadow-outline">Buscar</button>
             </div>
             <p id="search_result_message" class="mt-2 text-sm"></p>
@@ -24,7 +24,7 @@ $randomValue = rand(1000, 9999);
         <!-- Detalles del Alumno Encontrado -->
         <div id="alumnoDetails" class="hidden p-4 border border-green-300 bg-green-50 rounded-lg">
             <h3 class="text-lg font-bold text-green-800 mb-2">Alumno Seleccionado:</h3>
-            <p><strong>CI/Pasaporte:</strong> <span id="alumno_ci_pasapote"></span></p>
+            <p><strong>CI/Pasaporte:</strong> <span id="alumno_ci_pasaporte"></span></p>
             <p><strong>Nombre Completo:</strong> <span id="alumno_nombre_completo"></span></p>
             <p><strong>Correo:</strong> <span id="alumno_correo"></span></p>
             <p><strong>Celular:</strong> <span id="alumno_celular"></span></p>
@@ -47,8 +47,8 @@ $randomValue = rand(1000, 9999);
                         </select>
                     </div>
                     <div class="flex-1">
-                        <label for="new_ci_pasapote" class="block text-gray-700 text-sm font-bold mb-2">CI/Pasaporte:</label>
-                        <input type="text" id="new_ci_pasapote" name="ci_pasapote" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <label for="new_ci_pasaporte" class="block text-gray-700 text-sm font-bold mb-2">CI/Pasaporte:</label>
+                        <input type="text" id="new_ci_pasaporte" name="ci_pasaporte" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                 </div>
                 <div>

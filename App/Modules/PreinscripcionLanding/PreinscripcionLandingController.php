@@ -19,7 +19,7 @@ class PreinscripcionLandingController extends Controller
     {
         header('Content-Type: application/json');
 
-        $ci = trim($_POST['ci_pasapote'] ?? '');
+        $ci = trim($_POST['ci_pasaporte'] ?? '');
         $ci = str_replace('.', '', $ci);
 
         if (empty($ci)) {
@@ -33,7 +33,7 @@ class PreinscripcionLandingController extends Controller
 
         try {
             $pdo = \App\Core\Database::getInstance()->getConnection();
-            $stmt = $pdo->prepare("SELECT * FROM alumno WHERE REPLACE(ci_pasapote, '.', '') = ? LIMIT 1");
+            $stmt = $pdo->prepare("SELECT * FROM alumno WHERE REPLACE(ci_pasaporte, '.', '') = ? LIMIT 1");
             $stmt->execute([$ci]);
             $alumno = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -62,13 +62,13 @@ class PreinscripcionLandingController extends Controller
         
         $pdo = \App\Core\Database::getInstance()->getConnection();
         try {
-            $ciPasapote = $this->sanitizeInput($_POST['new_ci_pasapote'] ?? '');
+            $ciPasapote = $this->sanitizeInput($_POST['new_ci_pasaporte'] ?? '');
             if (!ctype_digit($ciPasapote)) {
                 echo json_encode(['success' => false, 'message' => 'El CI/Pasaporte solo debe contener números.']);
                 exit();
             }
 
-            $sql = "INSERT INTO alumno (ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_celular, estatus_activo_id) 
+            $sql = "INSERT INTO alumno (ci_pasaporte, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_celular, estatus_activo_id) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
@@ -268,7 +268,7 @@ class PreinscripcionLandingController extends Controller
                     $alumnoInfo = $stmtAlumno->fetch(PDO::FETCH_ASSOC);
 
                     if ($alumnoInfo && $offerInfo) {
-                       $ci = htmlspecialchars($alumnoInfo['ci_pasapote'] ?? '');
+                       $ci = htmlspecialchars($alumnoInfo['ci_pasaporte'] ?? '');
                        $alumnoName = htmlspecialchars(($alumnoInfo['primer_nombre'] ?? '') . ' ' . ($alumnoInfo['primer_apellido'] ?? ''));
                        $alumnoCorreo = htmlspecialchars($alumnoInfo['correo'] ?? '');
                        $alumnoTlf = htmlspecialchars($alumnoInfo['tlf_celular'] ?? '');

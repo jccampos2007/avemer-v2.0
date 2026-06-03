@@ -42,7 +42,7 @@ class EventoAbiertoModelTest extends DatabaseTestCase
         $inscritos = $this->model->getInscritos(999);
         $this->assertIsArray($inscritos);
         $this->assertNotEmpty($inscritos);
-        $this->assertSame('99999901', $inscritos[0]['ci_pasapote']);
+        $this->assertSame('99999901', $inscritos[0]['ci_pasaporte']);
     }
 
     public function test_countInscritos_returns_count(): void

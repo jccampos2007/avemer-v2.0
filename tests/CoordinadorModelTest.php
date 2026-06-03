@@ -30,7 +30,7 @@ class CoordinadorModelTest extends DatabaseTestCase
         $coords = $this->model->getAll();
         $this->assertIsArray($coords);
         $this->assertNotEmpty($coords);
-        $cis = array_column($coords, 'ci_pasapote');
+        $cis = array_column($coords, 'ci_pasaporte');
         $this->assertContains('COOR-TEST', $cis);
     }
 
@@ -40,7 +40,7 @@ class CoordinadorModelTest extends DatabaseTestCase
             'profesion_oficio_id' => 999,
             'estado_id' => 999,
             'nacionalidad_id' => 999,
-            'ci_pasapote' => 'COOR-CREATE',
+            'ci_pasaporte' => 'COOR-CREATE',
             'primer_nombre' => 'Create',
             'segundo_nombre' => '',
             'primer_apellido' => 'Coord',
@@ -58,7 +58,7 @@ class CoordinadorModelTest extends DatabaseTestCase
         $this->assertTrue($result);
 
         $pdo = $this->getConnection();
-        $stmt = $pdo->query("SELECT id FROM coordinador WHERE ci_pasapote = 'COOR-CREATE'");
+        $stmt = $pdo->query("SELECT id FROM coordinador WHERE ci_pasaporte = 'COOR-CREATE'");
         $id = $stmt->fetchColumn();
         $this->assertNotFalse($id);
 
@@ -71,7 +71,7 @@ class CoordinadorModelTest extends DatabaseTestCase
             'profesion_oficio_id' => 999,
             'estado_id' => 999,
             'nacionalidad_id' => 999,
-            'ci_pasapote' => 'COOR-TEST',
+            'ci_pasaporte' => 'COOR-TEST',
             'primer_nombre' => 'Updated',
             'segundo_nombre' => '',
             'primer_apellido' => 'Coord',
@@ -96,7 +96,7 @@ class CoordinadorModelTest extends DatabaseTestCase
             'profesion_oficio_id' => 999,
             'estado_id' => 999,
             'nacionalidad_id' => 999,
-            'ci_pasapote' => 'COOR-TEST',
+            'ci_pasaporte' => 'COOR-TEST',
             'primer_nombre' => 'Coord',
             'segundo_nombre' => '',
             'primer_apellido' => 'Test',
@@ -119,6 +119,6 @@ class CoordinadorModelTest extends DatabaseTestCase
         $this->assertNull($this->model->findById(999));
 
         $pdo = $this->getConnection();
-        $pdo->exec("INSERT IGNORE INTO coordinador (id, ci_pasapote, primer_nombre, primer_apellido) VALUES (999, 'COOR-TEST', 'Coord', 'Test')");
+        $pdo->exec("INSERT IGNORE INTO coordinador (id, ci_pasaporte, primer_nombre, primer_apellido) VALUES (999, 'COOR-TEST', 'Coord', 'Test')");
     }
 }

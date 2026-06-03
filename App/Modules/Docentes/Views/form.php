@@ -32,7 +32,7 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
-                    <label for="ci_pasapote" class="block text-gray-700 text-sm font-bold mb-2">C.I. / Pasaporte:</label>
+                    <label for="ci_pasaporte" class="block text-gray-700 text-sm font-bold mb-2">C.I. / Pasaporte:</label>
                     <div class="flex gap-2">
                         <select id="tipo_documento" name="tipo_documento" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-20">
                             <option value="V" <?= ($docente_data['tipo_documento'] ?? 'V') == 'V' ? 'selected' : '' ?>>V</option>
@@ -40,7 +40,7 @@ $form_action = $is_edit ? BASE_URL . 'docentes/edit/' . $docente_data['id'] : BA
                             <option value="P" <?= ($docente_data['tipo_documento'] ?? '') == 'P' ? 'selected' : '' ?>>P</option>
                             <option value="J" <?= ($docente_data['tipo_documento'] ?? '') == 'J' ? 'selected' : '' ?>>J</option>
                         </select>
-                        <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($docente_data['ci_pasapote'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <input type="text" id="ci_pasaporte" name="ci_pasaporte" value="<?php echo htmlspecialchars($docente_data['ci_pasaporte'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                 </div>
                 <div>

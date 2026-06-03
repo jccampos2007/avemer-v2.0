@@ -18,7 +18,7 @@ class DocenteModelTest extends DatabaseTestCase
         $items = $this->model->getAll();
         $this->assertIsArray($items);
         $this->assertNotEmpty($items);
-        $cis = array_column($items, 'ci_pasapote');
+        $cis = array_column($items, 'ci_pasaporte');
         $this->assertContains('DOCTEST', $cis);
     }
 
@@ -26,7 +26,7 @@ class DocenteModelTest extends DatabaseTestCase
     {
         $d = $this->model->findById(999);
         $this->assertIsArray($d);
-        $this->assertSame('DOCTEST', $d['ci_pasapote']);
+        $this->assertSame('DOCTEST', $d['ci_pasaporte']);
         $this->assertSame('Doc', $d['primer_nombre']);
     }
 

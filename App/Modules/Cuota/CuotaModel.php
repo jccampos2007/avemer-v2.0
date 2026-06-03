@@ -211,7 +211,7 @@ class CuotaModel
             SELECT
                 a.id AS alumno_id,
                 CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
-                CONCAT(COALESCE(a.tipo_documento, ''), a.ci_pasapote) AS alumno_ci,
+                CONCAT(COALESCE(a.tipo_documento, ''), a.ci_pasaporte) AS alumno_ci,
                 CASE WHEN t.id IS NOT NULL THEN 1 ELSE 0 END AS tiene_deuda
             FROM
                 alumno a

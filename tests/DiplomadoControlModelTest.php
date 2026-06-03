@@ -73,7 +73,7 @@ class DiplomadoControlModelTest extends DatabaseTestCase
         $result = $this->model->getDocentesActivos();
         $this->assertIsArray($result);
         $this->assertNotEmpty($result);
-        $this->assertContains('DOCTEST', array_column($result, 'ci_pasapote'));
+        $this->assertContains('DOCTEST', array_column($result, 'ci_pasaporte'));
     }
 
     public function test_upsertControl_inserts_and_updates(): void

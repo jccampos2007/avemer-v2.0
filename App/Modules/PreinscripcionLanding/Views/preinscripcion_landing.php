@@ -189,7 +189,7 @@
                                 <option value="P">P</option>
                                 <option value="J">J</option>
                             </select>
-                            <input type="text" id="new-ci" name="new_ci_pasapote" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-sm font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <input type="text" id="new-ci" name="new_ci_pasaporte" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-sm font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                     </div>
                     <div>

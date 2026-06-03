@@ -145,7 +145,7 @@ $(document).ready(function () {
                                 }
                             },
                             { "data": "correo" },
-                            { "data": "ci_pasapote" },
+                            { "data": "ci_pasaporte" },
                             { "data": "nombre" },
                             { "data": "nombre_oferta" }
                         ],

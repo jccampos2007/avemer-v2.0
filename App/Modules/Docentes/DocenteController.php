@@ -146,7 +146,7 @@ class DocenteController extends Controller
                 'profesion_oficio_id' => !empty($_POST['profesion_oficio_id']) ? (int)$this->sanitizeInput($_POST['profesion_oficio_id']) : null,
                 'estado_id' => !empty($_POST['estado_id']) ? (int)$this->sanitizeInput($_POST['estado_id']) : null,
                 'nacionalidad_id' => !empty($_POST['nacionalidad_id']) ? (int)$this->sanitizeInput($_POST['nacionalidad_id']) : null,
-                'ci_pasapote' => $this->sanitizeInput($_POST['ci_pasapote']),
+                'ci_pasaporte' => $this->sanitizeInput($_POST['ci_pasaporte']),
                 'tipo_documento' => $_POST['tipo_documento'] ?? null,
                 'primer_nombre' => $this->sanitizeInput($_POST['primer_nombre']),
                 'segundo_nombre' => $this->sanitizeInput($_POST['segundo_nombre']),
@@ -171,7 +171,7 @@ class DocenteController extends Controller
             }
 
             // Validación de campos obligatorios
-            if (empty($data['ci_pasapote']) || empty($data['primer_nombre']) || empty($data['primer_apellido'])) {
+            if (empty($data['ci_pasaporte']) || empty($data['primer_nombre']) || empty($data['primer_apellido'])) {
                 Auth::setFlashMessage('error', 'Cédula/Pasaporte, Primer Nombre y Primer Apellido son obligatorios.');
                 if ($id) $data['id'] = $id;
                 $_SESSION['form_data'] = $data;
@@ -179,7 +179,7 @@ class DocenteController extends Controller
                 $this->redirect($redirectPath);
                 return;
             }
-            if (!ctype_digit($data['ci_pasapote'])) {
+            if (!ctype_digit($data['ci_pasaporte'])) {
                 Auth::setFlashMessage('error', 'El CI/Pasaporte solo debe contener números.');
                 if ($id) $data['id'] = $id;
                 $_SESSION['form_data'] = $data;

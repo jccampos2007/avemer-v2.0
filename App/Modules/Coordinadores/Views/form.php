@@ -9,7 +9,7 @@ $is_edit = isset($coordinador_data['id']) && !empty($coordinador_data['id']);
         <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
-                <label for="ci_pasapote" class="label-form">C.I. / Pasaporte:</label>
+                <label for="ci_pasaporte" class="label-form">C.I. / Pasaporte:</label>
                 <div class="flex gap-2">
                     <select id="tipo_documento" name="tipo_documento" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-20">
                         <option value="V" <?= ($coordinador_data['tipo_documento'] ?? 'V') == 'V' ? 'selected' : '' ?>>V</option>
@@ -17,7 +17,7 @@ $is_edit = isset($coordinador_data['id']) && !empty($coordinador_data['id']);
                         <option value="P" <?= ($coordinador_data['tipo_documento'] ?? '') == 'P' ? 'selected' : '' ?>>P</option>
                         <option value="J" <?= ($coordinador_data['tipo_documento'] ?? '') == 'J' ? 'selected' : '' ?>>J</option>
                     </select>
-                    <input type="text" id="ci_pasapote" name="ci_pasapote" value="<?php echo htmlspecialchars($coordinador_data['ci_pasapote'] ?? ''); ?>" class="input-form flex-1 focus:outline-none focus:shadow-outline" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <input type="text" id="ci_pasaporte" name="ci_pasaporte" value="<?php echo htmlspecialchars($coordinador_data['ci_pasaporte'] ?? ''); ?>" class="input-form flex-1 focus:outline-none focus:shadow-outline" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 </div>
             </div>
             <div>

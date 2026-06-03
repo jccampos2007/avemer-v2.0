@@ -18,7 +18,7 @@ class PreinscripcionLandingControllerIntegrationTest extends ControllerIntegrati
     public function test_searchAlumno_found_without_photo(): void
     {
         $output = $this->callController(self::CONTROLLER, 'searchAlumno', [
-            'ci_pasapote' => '99999901',
+            'ci_pasaporte' => '99999901',
         ]);
 
         $response = json_decode($output, true);
@@ -31,7 +31,7 @@ class PreinscripcionLandingControllerIntegrationTest extends ControllerIntegrati
     public function test_searchAlumno_found_with_photo_base64_encoded(): void
     {
         $output = $this->callController(self::CONTROLLER, 'searchAlumno', [
-            'ci_pasapote' => '99999902',
+            'ci_pasaporte' => '99999902',
         ]);
 
         $response = json_decode($output, true);
@@ -47,7 +47,7 @@ class PreinscripcionLandingControllerIntegrationTest extends ControllerIntegrati
     public function test_searchAlumno_not_found(): void
     {
         $output = $this->callController(self::CONTROLLER, 'searchAlumno', [
-            'ci_pasapote' => '00000000',
+            'ci_pasaporte' => '00000000',
         ]);
 
         $response = json_decode($output, true);
@@ -59,7 +59,7 @@ class PreinscripcionLandingControllerIntegrationTest extends ControllerIntegrati
     public function test_searchAlumno_empty_ci(): void
     {
         $output = $this->callController(self::CONTROLLER, 'searchAlumno', [
-            'ci_pasapote' => '',
+            'ci_pasaporte' => '',
         ]);
 
         $response = json_decode($output, true);
@@ -71,7 +71,7 @@ class PreinscripcionLandingControllerIntegrationTest extends ControllerIntegrati
     public function test_searchAlumno_with_dots_in_ci(): void
     {
         $output = $this->callController(self::CONTROLLER, 'searchAlumno', [
-            'ci_pasapote' => '99.999.901',
+            'ci_pasaporte' => '99.999.901',
         ]);
 
         $response = json_decode($output, true);
@@ -87,7 +87,7 @@ class PreinscripcionLandingControllerIntegrationTest extends ControllerIntegrati
         $ci = "INT-$suffix";
 
         $output = $this->callController(self::CONTROLLER, 'createAlumno', [
-            'new_ci_pasapote' => $ci,
+            'new_ci_pasaporte' => $ci,
             'new_primer_nombre' => 'Integration',
             'new_segundo_nombre' => '',
             'new_primer_apellido' => 'Test',
@@ -105,7 +105,7 @@ class PreinscripcionLandingControllerIntegrationTest extends ControllerIntegrati
 
         // Cleanup
         $pdo = \App\Core\Database::getInstance()->getConnection();
-        $pdo->exec("DELETE FROM alumno WHERE ci_pasapote = " . $pdo->quote($ci));
+        $pdo->exec("DELETE FROM alumno WHERE ci_pasaporte = " . $pdo->quote($ci));
     }
 
     public function test_getOfertasAbiertas_returns_cursos(): void

@@ -190,8 +190,8 @@ class AjaxEndpointsIntegrationTest extends ControllerIntegrationTestCase
     public static function preinscripcionDiplomadoEndpointProvider(): array
     {
         return [
-            'searchAlumno_found' => ['searchAlumno', ['ci_pasapote' => '99999901'], 'Preinsc searchAlumno found'],
-            'searchAlumno_not_found' => ['searchAlumno', ['ci_pasapote' => 'NONEXISTENT'], 'Preinsc searchAlumno not found'],
+            'searchAlumno_found' => ['searchAlumno', ['ci_pasaporte' => '99999901'], 'Preinsc searchAlumno found'],
+            'searchAlumno_not_found' => ['searchAlumno', ['ci_pasaporte' => 'NONEXISTENT'], 'Preinsc searchAlumno not found'],
             'getDiplomadosAbiertosForPreinscripcion' => ['getDiplomadosAbiertosForPreinscripcion', [], 'Preinsc getDiplomadosAbiertos'],
         ];
     }

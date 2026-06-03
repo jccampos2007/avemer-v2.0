@@ -155,7 +155,7 @@ $(document).ready(function () {
         }
 
         setupAutocomplete('alumno_autocomplete', 'alumno_id', 'alumno', 3, {
-            displayColumn: "CONCAT(primer_nombre, ' ', primer_apellido, ', CI:', COALESCE(tipo_documento,''), ci_pasapote)"
+            displayColumn: "CONCAT(primer_nombre, ' ', primer_apellido, ', CI:', COALESCE(tipo_documento,''), ci_pasaporte)"
         });
     }
 });

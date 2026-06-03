@@ -260,7 +260,7 @@ class DiplomadoAbiertoModel
         $sql = "SELECT 
                     idip.id AS inscripcion_id,
                     idip.fecha AS fecha_inscripcion,
-                    a.ci_pasapote, a.tipo_documento,
+                    a.ci_pasaporte, a.tipo_documento,
                     CONCAT(a.primer_nombre, ' ', COALESCE(a.segundo_nombre, ''), ' ', a.primer_apellido, ' ', COALESCE(a.segundo_apellido, '')) AS alumno_nombre,
                     a.correo,
                     ei.nombre AS estatus_inscripcion

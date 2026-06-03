@@ -47,7 +47,7 @@ class InscripcionDiplomadoModel
                 da.numero AS diplomado_abierto_numero, -- Número del Diplomado Abierto
                 id.alumno_id,
                 CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
-                a.ci_pasapote, a.tipo_documento,
+                a.ci_pasaporte, a.tipo_documento,
                 a.tlf_celular AS alumno_telefono,
                 a.correo,
                 id.estatus_inscripcion_id,
@@ -80,7 +80,7 @@ class InscripcionDiplomadoModel
         if (!empty($searchValue)) {
             $where[] = "(da.numero LIKE :search_diplomado_abierto_numero "
                 . "OR CONCAT(a.primer_nombre, ' ', a.primer_apellido) LIKE :search_alumno_nombre_completo "
-                . "OR a.ci_pasapote LIKE :search_ci "
+                . "OR a.ci_pasaporte LIKE :search_ci "
                 . "OR a.tlf_celular LIKE :search_telefono "
                 . "OR a.correo LIKE :search_correo "
                 . "OR ei.nombre LIKE :search_estatus_inscripcion_nombre)";

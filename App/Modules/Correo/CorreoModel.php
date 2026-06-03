@@ -131,7 +131,7 @@ class CorreoModel
         }
 
         $sql = "
-            SELECT a.correo, a.ci_pasapote, a.tipo_documento, concat(a.primer_nombre,' - ',a.primer_apellido) as nombre, ofer.nombre as nombre_oferta
+            SELECT a.correo, a.ci_pasaporte, a.tipo_documento, concat(a.primer_nombre,' - ',a.primer_apellido) as nombre, ofer.nombre as nombre_oferta
             FROM $offerTableName tab 
                 INNER JOIN alumno a on tab.alumno_id = a.id 
                 $sqlWhereClause :oferta_id";

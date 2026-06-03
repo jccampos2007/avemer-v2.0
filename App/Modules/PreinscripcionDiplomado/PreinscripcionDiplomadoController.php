@@ -57,7 +57,7 @@ class PreinscripcionDiplomadoController extends Controller
     {
         header('Content-Type: application/json');
 
-        $ciPasaporte = $this->sanitizeInput($_POST['ci_pasapote'] ?? '');
+        $ciPasaporte = $this->sanitizeInput($_POST['ci_pasaporte'] ?? '');
 
         if (empty($ciPasaporte)) {
             echo json_encode(['success' => false, 'message' => 'CI/Pasaporte no puede estar vacío.']);
@@ -97,7 +97,7 @@ class PreinscripcionDiplomadoController extends Controller
         $this->validateCsrf();
 
         $data = [
-            'ci_pasapote' => $this->sanitizeInput($_POST['ci_pasapote'] ?? ''),
+            'ci_pasaporte' => $this->sanitizeInput($_POST['ci_pasaporte'] ?? ''),
             'tipo_documento' => $_POST['tipo_documento'] ?? 'V',
             'primer_nombre' => $this->sanitizeInput($_POST['primer_nombre'] ?? ''),
             'segundo_nombre' => $this->sanitizeInput($_POST['segundo_nombre'] ?? ''),
@@ -110,20 +110,20 @@ class PreinscripcionDiplomadoController extends Controller
             'estatus_activo_id' => 1,
         ];
 
-        if (!ctype_digit($data['ci_pasapote'])) {
+        if (!ctype_digit($data['ci_pasaporte'])) {
             echo json_encode(['success' => false, 'message' => 'El CI/Pasaporte solo debe contener números.']);
             exit();
         }
 
         // Validación básica
-        if (empty($data['ci_pasapote']) || empty($data['primer_nombre']) || empty($data['primer_apellido'])) {
+        if (empty($data['ci_pasaporte']) || empty($data['primer_nombre']) || empty($data['primer_apellido'])) {
             echo json_encode(['success' => false, 'message' => 'CI/Pasaporte, Primer Nombre y Primer Apellido son obligatorios para crear un alumno.']);
             exit();
         }
 
         try {
             // Verificar si ya existe un alumno con ese CI/Pasaporte
-            if ($this->alumnoModel->findByCiPasaporte($data['ci_pasapote'])) {
+            if ($this->alumnoModel->findByCiPasaporte($data['ci_pasaporte'])) {
                 echo json_encode(['success' => false, 'message' => 'Ya existe un alumno con este CI/Pasaporte.']);
                 exit();
             }

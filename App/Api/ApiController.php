@@ -101,8 +101,8 @@ class ApiController
                 'search_columns' => ['primer_nombre', 'primer_apellido']
             ],
             'alumno' => [
-                'display_columns' => ['primer_nombre', 'primer_apellido', 'CONCAT(primer_apellido, ", ", primer_nombre)', "CONCAT(primer_nombre, ' ', primer_apellido, ', CI:', COALESCE(tipo_documento,''), ci_pasapote)"],
-                'search_columns' => ['primer_nombre', 'primer_apellido', 'ci_pasapote'], // Puedes añadir más columnas de búsqueda
+                'display_columns' => ['primer_nombre', 'primer_apellido', 'CONCAT(primer_apellido, ", ", primer_nombre)', "CONCAT(primer_nombre, ' ', primer_apellido, ', CI:', COALESCE(tipo_documento,''), ci_pasaporte)"],
+                'search_columns' => ['primer_nombre', 'primer_apellido', 'ci_pasaporte'], // Puedes añadir más columnas de búsqueda
                 'status_column' => 'estatus_activo_id'
             ],
             // New tables for autocomplete

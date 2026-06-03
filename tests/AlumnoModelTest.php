@@ -60,7 +60,7 @@ class AlumnoModelTest extends DatabaseTestCase
         $this->assertIsArray($alumnos);
         $this->assertNotEmpty($alumnos);
 
-        $cis = array_column($alumnos, 'ci_pasapote');
+        $cis = array_column($alumnos, 'ci_pasaporte');
         $this->assertContains('99999901', $cis);
         $this->assertContains('99999902', $cis);
     }
@@ -68,7 +68,7 @@ class AlumnoModelTest extends DatabaseTestCase
     public function test_create_inserts_and_returns_id(): void
     {
         $id = $this->model->create([
-            'ci_pasapote' => 'TEST-CREATE-01',
+            'ci_pasaporte' => 'TEST-CREATE-01',
             'primer_nombre' => 'Created',
             'segundo_nombre' => '',
             'primer_apellido' => 'Test',

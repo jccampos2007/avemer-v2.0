@@ -225,7 +225,7 @@ class AsistenciaModel
 
         $sql = "SELECT a.id AS alumno_id,
                        CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre,
-                       a.ci_pasapote AS alumno_ci,
+                       a.ci_pasaporte AS alumno_ci,
                        COALESCE(ad.presente, 0) AS asiste
                 FROM {$m['inscripcion']} i
                 JOIN alumno a ON i.alumno_id = a.id

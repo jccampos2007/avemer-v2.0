@@ -112,7 +112,7 @@ class CoordinadorController extends Controller
             'profesion_oficio_id' => !empty($_POST['profesion_oficio_id']) ? (int)$this->sanitizeInput($_POST['profesion_oficio_id']) : null,
             'estado_id' => !empty($_POST['estado_id']) ? (int)$this->sanitizeInput($_POST['estado_id']) : null,
             'nacionalidad_id' => !empty($_POST['nacionalidad_id']) ? (int)$this->sanitizeInput($_POST['nacionalidad_id']) : null,
-            'ci_pasapote' => $this->sanitizeInput($_POST['ci_pasapote']),
+            'ci_pasaporte' => $this->sanitizeInput($_POST['ci_pasaporte']),
             'tipo_documento' => $_POST['tipo_documento'] ?? null,
             'primer_nombre' => $this->sanitizeInput($_POST['primer_nombre']),
             'segundo_nombre' => $this->sanitizeInput($_POST['segundo_nombre']),
@@ -129,7 +129,7 @@ class CoordinadorController extends Controller
             'imagen' => null
         ];
 
-        if (!ctype_digit($data['ci_pasapote'])) {
+        if (!ctype_digit($data['ci_pasaporte'])) {
             Auth::setFlashMessage('error', 'El CI/Pasaporte solo debe contener números.');
             if ($id) $data['id'] = $id;
             $_SESSION['form_data'] = $data;

@@ -17,7 +17,7 @@ class AlumnoModel
 
     public function getAll(): array
     {
-        $stmt = $this->pdo->query("SELECT id, ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM alumno ORDER BY id DESC");
+        $stmt = $this->pdo->query("SELECT id, ci_pasaporte, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM alumno ORDER BY id DESC");
         return $stmt->fetchAll();
     }
 
@@ -40,27 +40,27 @@ class AlumnoModel
         // Mapeo de índices de columna a nombres de columna reales en la base de datos
         $columnMap = [
             0 => 'id',
-            1 => 'ci_pasapote',
+            1 => 'ci_pasaporte',
             2 => 'primer_nombre', // Se usará para búsqueda combinada de nombre completo
             3 => 'correo',
         ];
 
         // Construir la consulta base
-        $sql = "SELECT id, foto, ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM {$this->table}";
+        $sql = "SELECT id, foto, ci_pasaporte, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM {$this->table}";
         $countSql = "SELECT COUNT(*) FROM alumno";
         $where = [];
         $queryParams = [];
 
         // Búsqueda global
         if (!empty($searchValue)) {
-            $where[] = "(ci_pasapote LIKE :ci_pasapote "
+            $where[] = "(ci_pasaporte LIKE :ci_pasaporte "
                 . "OR primer_nombre LIKE :primer_nombre "
                 . "OR segundo_nombre LIKE :segundo_nombre "
                 . "OR primer_apellido LIKE :primer_apellido "
                 . "OR segundo_apellido LIKE :segundo_apellido "
                 . "OR correo LIKE :correo)";
             $like = '%' . $searchValue . '%';
-            $queryParams[':ci_pasapote'] = $like;
+            $queryParams[':ci_pasaporte'] = $like;
             $queryParams[':primer_nombre'] = $like;
             $queryParams[':segundo_nombre'] = $like;
             $queryParams[':primer_apellido'] = $like;
@@ -128,7 +128,7 @@ class AlumnoModel
             $formattedData[] = [
                 $row['id'],
                 $foto_base64,
-                ($row['tipo_documento'] ?? '') . $row['ci_pasapote'],
+                ($row['tipo_documento'] ?? '') . $row['ci_pasaporte'],
                 htmlspecialchars($row['primer_nombre'] . ' ' . $row['segundo_nombre'] . ' ' . $row['primer_apellido'] . ' ' . $row['segundo_apellido']),
                 $row['correo'],
                 ''
@@ -165,9 +165,9 @@ class AlumnoModel
         $ciPasaporte = trim($ciPasaporte);
         $ciPasaporte = str_replace('.', '', $ciPasaporte);
 
-        $sql = "SELECT * FROM {$this->table} WHERE REPLACE(ci_pasapote, '.', '') = :ci_pasapote";
+        $sql = "SELECT * FROM {$this->table} WHERE REPLACE(ci_pasaporte, '.', '') = :ci_pasaporte";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':ci_pasapote', $ciPasaporte, PDO::PARAM_STR);
+        $stmt->bindParam(':ci_pasaporte', $ciPasaporte, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -255,14 +255,14 @@ class AlumnoModel
     public function create(array $data) // : bool
     {
         $this->validateUnique($data);
-        $sql = "INSERT INTO {$this->table} (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, calle_avenida, casa_apartamento, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida, nombre_universidad, nombre_especialidad) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :tipo_documento, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :calle_avenida, :casa_apartamento, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen, :chk_planilla, :chk_cedula, :chk_notas, :chk_titulo, :chk_partida, :nombre_universidad, :nombre_especialidad)";
+        $sql = "INSERT INTO {$this->table} (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasaporte, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, calle_avenida, casa_apartamento, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida, nombre_universidad, nombre_especialidad) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasaporte, :tipo_documento, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :calle_avenida, :casa_apartamento, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen, :chk_planilla, :chk_cedula, :chk_notas, :chk_titulo, :chk_partida, :nombre_universidad, :nombre_especialidad)";
         $stmt = $this->pdo->prepare($sql);
         $success = $stmt->execute([
             'profesion_oficio_id' => $data['profesion_oficio_id'] ?? null,
             'estado_id' => $data['estado_id'] ?? null,
             'nacionalidad_id' => $data['nacionalidad_id'] ?? null,
             'usuario_id' => $_SESSION['user_id'] ?? 0,
-            'ci_pasapote' => $data['ci_pasapote'],
+            'ci_pasaporte' => $data['ci_pasaporte'],
             'tipo_documento' => $data['tipo_documento'] ?? null,
             'primer_nombre' => $data['primer_nombre'],
             'segundo_nombre' => $data['segundo_nombre'],
@@ -297,7 +297,7 @@ class AlumnoModel
     public function update(int $id, array $data): bool
     {
         $this->validateUnique($data, $id);
-        $sql = "UPDATE {$this->table} SET profesion_oficio_id = :profesion_oficio_id, estado_id = :estado_id, nacionalidad_id = :nacionalidad_id, usuario_id = :usuario_id, ci_pasapote = :ci_pasapote, tipo_documento = :tipo_documento, primer_nombre = :primer_nombre, segundo_nombre = :segundo_nombre, primer_apellido = :primer_apellido, segundo_apellido = :segundo_apellido, correo = :correo, tlf_habitacion = :tlf_habitacion, tlf_trabajo = :tlf_trabajo, tlf_celular = :tlf_celular, calle_avenida = :calle_avenida, casa_apartamento = :casa_apartamento, fecha_nacimiento = :fecha_nacimiento, estatus_activo_id = :estatus_activo_id, direccion = :direccion, chk_planilla = :chk_planilla, chk_cedula = :chk_cedula, chk_notas = :chk_notas, chk_titulo = :chk_titulo, chk_partida = :chk_partida, nombre_universidad = :nombre_universidad, nombre_especialidad = :nombre_especialidad";
+        $sql = "UPDATE {$this->table} SET profesion_oficio_id = :profesion_oficio_id, estado_id = :estado_id, nacionalidad_id = :nacionalidad_id, usuario_id = :usuario_id, ci_pasaporte = :ci_pasaporte, tipo_documento = :tipo_documento, primer_nombre = :primer_nombre, segundo_nombre = :segundo_nombre, primer_apellido = :primer_apellido, segundo_apellido = :segundo_apellido, correo = :correo, tlf_habitacion = :tlf_habitacion, tlf_trabajo = :tlf_trabajo, tlf_celular = :tlf_celular, calle_avenida = :calle_avenida, casa_apartamento = :casa_apartamento, fecha_nacimiento = :fecha_nacimiento, estatus_activo_id = :estatus_activo_id, direccion = :direccion, chk_planilla = :chk_planilla, chk_cedula = :chk_cedula, chk_notas = :chk_notas, chk_titulo = :chk_titulo, chk_partida = :chk_partida, nombre_universidad = :nombre_universidad, nombre_especialidad = :nombre_especialidad";
 
         // Solo actualiza BLOBs si se envió un nuevo archivo
         if ($data['foto'] !== null) $sql .= ", foto = :foto";
@@ -311,7 +311,7 @@ class AlumnoModel
             'estado_id' => $data['estado_id'],
             'nacionalidad_id' => $data['nacionalidad_id'],
             'usuario_id' => $_SESSION['user_id'],
-            'ci_pasapote' => $data['ci_pasapote'],
+            'ci_pasaporte' => $data['ci_pasaporte'],
             'tipo_documento' => $data['tipo_documento'] ?? null,
             'primer_nombre' => $data['primer_nombre'],
             'segundo_nombre' => $data['segundo_nombre'],
@@ -350,11 +350,11 @@ class AlumnoModel
 
     private function validateUnique(array $data, ?int $excludeId = null): void
     {
-        $ci = $data['ci_pasapote'] ?? '';
+        $ci = $data['ci_pasaporte'] ?? '';
         $correo = $data['correo'] ?? '';
         
         if (!empty($ci)) {
-            $sqlCi = "SELECT id FROM {$this->table} WHERE ci_pasapote = :ci";
+            $sqlCi = "SELECT id FROM {$this->table} WHERE ci_pasaporte = :ci";
             $paramsCi = ['ci' => $ci];
             if ($excludeId) {
                 $sqlCi .= " AND id != :id";

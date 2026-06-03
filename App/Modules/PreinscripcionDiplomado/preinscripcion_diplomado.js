@@ -19,7 +19,7 @@ $(document).ready(function () {
         alumnoDetailsSection.hide();
         createAlumnoForm.hide();
         diplomadosAbiertosSection.hide();
-        $('#ci_pasapote_search').val('');
+        $('#ci_pasaporte_search').val('');
         $('#search_result_message').text('');
         currentAlumnoId = null;
         selectedAlumnoIdInput.val('');
@@ -27,7 +27,7 @@ $(document).ready(function () {
 
     function showAlumnoDetails(alumno) {
         alumnoDetailsSection.show();
-        $('#alumno_ci_pasapote').text(alumno.ci_pasapote);
+        $('#alumno_ci_pasaporte').text(alumno.ci_pasaporte);
         $('#alumno_nombre_completo').text(`${alumno.primer_nombre} ${alumno.segundo_nombre || ''} ${alumno.primer_apellido} ${alumno.segundo_apellido || ''}`);
         $('#alumno_correo').text(alumno.correo || 'N/A');
         $('#alumno_celular').text(alumno.tlf_celular || 'N/A');
@@ -41,7 +41,7 @@ $(document).ready(function () {
 
     function showCreateAlumnoForm(ciPasapote = '') {
         createAlumnoForm.show();
-        $('#new_ci_pasapote').val(ciPasapote);
+        $('#new_ci_pasaporte').val(ciPasapote);
         searchAlumnoForm.hide();
         alumnoDetailsSection.hide();
         diplomadosAbiertosSection.hide();
@@ -52,7 +52,7 @@ $(document).ready(function () {
     // --- Búsqueda de Alumno ---
     searchAlumnoForm.on('submit', function (e) {
         e.preventDefault();
-        const ciPasapote = $('#ci_pasapote_search').val().trim();
+        const ciPasapote = $('#ci_pasaporte_search').val().trim();
         if (ciPasapote === '') {
             $('#search_result_message').text('Por favor, ingrese un CI/Pasaporte.').removeClass('text-green-600').addClass('text-red-600');
             return;
@@ -63,7 +63,7 @@ $(document).ready(function () {
         $.ajax({
             url: `${BASE_URL_JS}preinscripcion_diplomado/search_alumno`,
             method: 'POST',
-            data: { ci_pasapote: ciPasapote, csrf_token: CSRF_TOKEN },
+            data: { ci_pasaporte: ciPasapote, csrf_token: CSRF_TOKEN },
             dataType: 'json',
             success: function (response) {
                 if (response.success) {

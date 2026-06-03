@@ -128,7 +128,7 @@ function searchStudent(e) {
     errEl.classList.add('hidden');
     $('form-search-student').querySelector('button[type=submit]').disabled = true;
 
-    postJSON(API + 'search_alumno', { ci_pasapote: ci },
+    postJSON(API + 'search_alumno', { ci_pasaporte: ci },
         function (res) {
             if (res.success && res.found) {
                 closeModal('modal-search-student');
@@ -160,7 +160,7 @@ function showStudentCard(a) {
         .filter(Boolean).join(' ');
 
     $('student-name').textContent = nombre || '—';
-    $('student-ci').textContent = a.ci_pasapote || '—';
+    $('student-ci').textContent = a.ci_pasaporte || '—';
     $('student-email').textContent = a.correo || '—';
     $('student-phone').textContent = a.tlf_celular || 'No registrado';
 
@@ -185,7 +185,7 @@ function createStudent(e) {
     btn.disabled = true;
 
     const data = {
-        new_ci_pasapote:       $('new-ci').value.trim(),
+        new_ci_pasaporte:       $('new-ci').value.trim(),
         new_tipo_documento:    $('new-tipo-documento').value,
         new_primer_nombre:     $('new-primer-nombre').value.trim(),
         new_segundo_nombre:    $('new-segundo-nombre').value.trim(),
@@ -196,7 +196,7 @@ function createStudent(e) {
         new_tlf_habitacion:    $('new-tlf-habitacion').value.trim()
     };
 
-    if (!data.new_ci_pasapote || !data.new_primer_nombre || !data.new_primer_apellido) {
+    if (!data.new_ci_pasaporte || !data.new_primer_nombre || !data.new_primer_apellido) {
         showToast('Completa los campos obligatorios.', 'error');
         btn.disabled = false;
         return false;

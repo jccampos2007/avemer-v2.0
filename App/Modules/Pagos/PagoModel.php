@@ -32,7 +32,7 @@ class PagoModel
             5 => 'ep.nombre',
         ];
 
-        $sql = "SELECT p.id, a.primer_nombre, a.primer_apellido, a.ci_pasapote, a.tipo_documento,
+        $sql = "SELECT p.id, a.primer_nombre, a.primer_apellido, a.ci_pasaporte, a.tipo_documento,
                        a.tlf_celular, a.correo,
                        c.nombre AS cuota_nombre, fp.nombre AS forma_pago_nombre,
                        b.nombre AS banco_nombre, p.numero_control, p.monto, p.fecha,
@@ -59,7 +59,7 @@ class PagoModel
 
         if (!empty($searchValue)) {
             $where[] = "(a.primer_nombre LIKE :search OR a.primer_apellido LIKE :search2
-                        OR a.ci_pasapote LIKE :search_ci OR a.correo LIKE :search_correo
+                        OR a.ci_pasaporte LIKE :search_ci OR a.correo LIKE :search_correo
                         OR c.nombre LIKE :search3 OR fp.nombre LIKE :search4
                         OR COALESCE(b.nombre, '') LIKE :search5 OR COALESCE(p.numero_control, '') LIKE :search6)";
             $like = '%' . $searchValue . '%';
@@ -111,7 +111,7 @@ class PagoModel
             $formattedData[] = [
                 $row['id'],
                 htmlspecialchars($row['alumno_nombre_completo'] ?? ''),
-                ($row['tipo_documento'] ?? '') . $row['ci_pasapote'],
+                ($row['tipo_documento'] ?? '') . $row['ci_pasaporte'],
                 htmlspecialchars($row['tlf_celular'] ?? ''),
                 htmlspecialchars($row['correo'] ?? ''),
                 htmlspecialchars(trim(
@@ -299,7 +299,7 @@ class PagoModel
 
     public function getAlumnos(): array
     {
-        $sql = "SELECT a.id, CONCAT(a.primer_nombre, ' ', a.primer_apellido, ' - CI: ', COALESCE(a.tipo_documento,''), a.ci_pasapote) AS nombre_completo
+        $sql = "SELECT a.id, CONCAT(a.primer_nombre, ' ', a.primer_apellido, ' - CI: ', COALESCE(a.tipo_documento,''), a.ci_pasaporte) AS nombre_completo
                 FROM alumno a ORDER BY a.primer_nombre ASC";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

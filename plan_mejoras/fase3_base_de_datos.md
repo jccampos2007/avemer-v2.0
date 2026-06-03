@@ -60,7 +60,7 @@ ON DELETE RESTRICT;
 ### Columnas prioritarias
 | Tabla | Columna | Tipo de índice | Razón |
 |---|---|---|---|
-| `alumno` | `ci_pasapote` | INDEX | Búsqueda LIKE frecuente |
+| `alumno` | `ci_pasaporte` | INDEX | Búsqueda LIKE frecuente |
 | `alumno` | `estatus_activo_id` | INDEX | Filtro por estatus |
 | `usuario` | `grupo_id` | INDEX | JOIN con grupo en sidebar |
 | `inscripcion_curso` | `alumno_id` | INDEX | JOIN + WHERE |

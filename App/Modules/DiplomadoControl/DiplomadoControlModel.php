@@ -100,7 +100,7 @@ class DiplomadoControlModel
     public function getDocentesActivos(): array
     {
         $sql = "
-            SELECT id, ci_pasapote, primer_nombre, primer_apellido 
+            SELECT id, ci_pasaporte, primer_nombre, primer_apellido 
             FROM docente 
             ORDER BY primer_apellido ASC, primer_nombre ASC
         ";

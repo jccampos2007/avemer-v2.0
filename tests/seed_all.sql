@@ -38,7 +38,7 @@ INSERT IGNORE INTO capitulo (id, diplomado_id, numero, nombre, descripcion, orde
 VALUES (999, 999, '1', 'TEST Capítulo', 'Test chapter', 1);
 
 -- Coordinator
-INSERT IGNORE INTO coordinador (id, ci_pasapote, primer_nombre, primer_apellido, estatus_activo_id)
+INSERT IGNORE INTO coordinador (id, ci_pasaporte, primer_nombre, primer_apellido, estatus_activo_id)
 VALUES (999, 'COOR-TEST', 'Coord', 'Test', 1);
 
 -- Root user (must exist first for FK references from other tables)
@@ -78,7 +78,7 @@ INSERT INTO maestria (id, duracion_id, nombre, numero) VALUES (999, 999, 'TEST M
 ON DUPLICATE KEY UPDATE duracion_id = VALUES(duracion_id), nombre = VALUES(nombre), numero = VALUES(numero);
 
 -- Teacher / Docente
-INSERT IGNORE INTO docente (id, ci_pasapote, primer_nombre, primer_apellido, profesion_oficio_id, estatus_activo_id)
+INSERT IGNORE INTO docente (id, ci_pasaporte, primer_nombre, primer_apellido, profesion_oficio_id, estatus_activo_id)
 VALUES (999, 'DOCTEST', 'Doc', 'Test', 999, 1);
 
 -- Course
@@ -102,10 +102,10 @@ INSERT IGNORE INTO maestria_abierto (id, numero, maestria_id, sede_id, estatus_i
 VALUES (999, 'MA-001', 999, 999, 1, 999, '2026-01-01', 'Test Master Carta');
 
 -- Students
-INSERT IGNORE INTO alumno (id, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_celular, profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, estatus_activo_id, created_at)
+INSERT IGNORE INTO alumno (id, ci_pasaporte, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_celular, profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, estatus_activo_id, created_at)
 VALUES (999901, '99999901', 'Test', 'SinFoto', 'Alumno', 'Uno', 'test1@test.com', '04120000001', 999, 999, 999, 1, 1, NOW());
 
-INSERT IGNORE INTO alumno (id, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_celular, foto, profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, estatus_activo_id, created_at)
+INSERT IGNORE INTO alumno (id, ci_pasaporte, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_celular, foto, profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, estatus_activo_id, created_at)
 VALUES (999902, '99999902', 'Test', 'ConFoto', 'Alumno', 'Dos', 'test2@test.com', '04120000002', '89504e470d0a1a0a0000000d494844520000', 999, 999, 999, 1, 1, NOW());
 
 -- Enrollment (diplomado)

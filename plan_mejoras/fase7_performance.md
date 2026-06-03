@@ -120,7 +120,7 @@ Si se necesita paginación completa, implementar `getPaginated()` como en los de
 ### Columnas de alta frecuencia
 ```sql
 -- Búsqueda de alumnos por CI + estatus (autocomplete)
-ALTER TABLE alumno ADD INDEX idx_ci_estatus (ci_pasapote, estatus_activo_id);
+ALTER TABLE alumno ADD INDEX idx_ci_estatus (ci_pasaporte, estatus_activo_id);
 
 -- Búsqueda de inscripciones por evento + alumno
 ALTER TABLE inscripcion_evento ADD INDEX idx_evento_alumno (evento_abierto_id, alumno_id);
