@@ -222,7 +222,7 @@ $(document).ready(function () {
                         "paging": false,
                         "info": false,
                         "columns": [
-                            { "data": "id" },
+                            { "data": "id", "visible": false, "searchable": false },
                             { "data": "nombre" },
                             { "data": "monto" },
                             {
