@@ -258,9 +258,9 @@ class AlumnoModel
         $sql = "INSERT INTO {$this->table} (profesion_oficio_id, estado_id, nacionalidad_id, usuario_id, ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_trabajo, tlf_celular, calle_avenida, casa_apartamento, fecha_nacimiento, estatus_activo_id, direccion, foto, imagen, chk_planilla, chk_cedula, chk_notas, chk_titulo, chk_partida, nombre_universidad, nombre_especialidad) VALUES (:profesion_oficio_id, :estado_id, :nacionalidad_id, :usuario_id, :ci_pasapote, :tipo_documento, :primer_nombre, :segundo_nombre, :primer_apellido, :segundo_apellido, :correo, :tlf_habitacion, :tlf_trabajo, :tlf_celular, :calle_avenida, :casa_apartamento, :fecha_nacimiento, :estatus_activo_id, :direccion, :foto, :imagen, :chk_planilla, :chk_cedula, :chk_notas, :chk_titulo, :chk_partida, :nombre_universidad, :nombre_especialidad)";
         $stmt = $this->pdo->prepare($sql);
         $success = $stmt->execute([
-            'profesion_oficio_id' => $data['profesion_oficio_id'],
-            'estado_id' => $data['estado_id'],
-            'nacionalidad_id' => $data['nacionalidad_id'],
+            'profesion_oficio_id' => $data['profesion_oficio_id'] ?? null,
+            'estado_id' => $data['estado_id'] ?? null,
+            'nacionalidad_id' => $data['nacionalidad_id'] ?? null,
             'usuario_id' => $_SESSION['user_id'] ?? 0,
             'ci_pasapote' => $data['ci_pasapote'],
             'tipo_documento' => $data['tipo_documento'] ?? null,
@@ -274,7 +274,7 @@ class AlumnoModel
             'tlf_celular' => $data['tlf_celular'],
             'calle_avenida' => $data['calle_avenida'] ?? '',
             'casa_apartamento' => $data['casa_apartamento'] ?? '',
-            'fecha_nacimiento' => $data['fecha_nacimiento'] === '' ? null : ($data['fecha_nacimiento'] ?? null),
+            'fecha_nacimiento' => ($data['fecha_nacimiento'] ?? '') === '' ? null : $data['fecha_nacimiento'],
             'estatus_activo_id' => $data['estatus_activo_id'] ?? 1,
             'direccion' => $data['direccion'] ?? '',
             'foto' => $data['foto'] ?? null,

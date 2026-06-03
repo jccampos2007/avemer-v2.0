@@ -1,11 +1,11 @@
-// app/Modules/Correo/Views/js/correo.js
 console.log('correo.js cargado.');
 
 $(document).ready(function () {
     const formCorreo = $('#formCorreo');
     const tipoOfertaAcademicaIdInput = $('#tipo_oferta_academica_id');
-    const ofertaAcademicaSelect = $('#oferta_academica_id');
-    const mensajesSelect = $('#mensaje_id'); // Asegúrate de que este ID sea el correcto
+    const ofertaAcademicaInput = $('#oferta_academica_nombre');
+    const ofertaAcademicaHidden = $('#oferta_academica_id');
+    const mensajesSelect = $('#mensaje_id');
     const correosListTable = $('#correosListTable');
     const correosListMessage = $('#correos-list-message');
     const generateDebtModal = $('#generateDebtModal');
@@ -15,19 +15,17 @@ $(document).ready(function () {
     const selectAllStudentsCheckbox = $('#selectAllStudents');
     const confirmGenerateDebtBtn = $('#confirmGenerateDebtBtn');
 
-    let correosDataTable = null; // Variable para la instancia de DataTables
-    let studentsDataTable = null; // Variable para la instancia de DataTables de alumnos
+    let correosDataTable = null;
+    let studentsDataTable = null;
     let currentCorreoIdForDebt = null;
     let currentCorreoMontoForDebt = null;
     let currentTipoOfertaIdForDebt = null;
     let currentOfertaIdForDebt = null;
+    let offerSourceData = [];
 
-    // Log para depuración: Verificar valores iniciales de los data-atributos
     console.log('Initial Tipo Oferta ID (from form data-attribute):', formCorreo.data('tipo-oferta-academica-id'));
     console.log('Initial Oferta Académica ID (from form data-attribute):', formCorreo.data('oferta-academica-id'));
 
-
-    // Función auxiliar para mostrar alertas, usando showFlashMessage si está disponible, o showFlashMessage('error', ) por defecto.
     function showAlert(message, type = 'error') {
         if (typeof showFlashMessage === 'function') {
             showFlashMessage(type, message);
@@ -36,23 +34,21 @@ $(document).ready(function () {
         }
     }
 
-    // Función para mostrar mensajes en la sección de la lista de correos
     function showCorreosListMessage(message, type = 'info') {
         correosListMessage.removeClass('hidden text-green-600 text-red-600 text-blue-600')
             .addClass(`text-${type}-600`)
             .text(message);
     }
 
-    // Función para mostrar mensajes en la sección de la lista de alumnos del modal
     function showStudentsListMessage(message, type = 'info') {
         studentsListMessage.removeClass('hidden text-green-600 text-red-600 text-blue-600')
             .addClass(`text-${type}-600`)
             .text(message);
     }
 
-    // Función para cargar las ofertas académicas en el select
     function loadAcademicOffers(typeId, selectedId = null) {
-        ofertaAcademicaSelect.empty().append('<option value="">Cargando...</option>');
+        ofertaAcademicaInput.val('');
+        ofertaAcademicaHidden.val('');
 
         $.ajax({
             url: `${BASE_URL_JS}correo/getAcademicOffersByType`,
@@ -60,37 +56,30 @@ $(document).ready(function () {
             data: { type_id: typeId },
             dataType: 'json',
             success: function (response) {
-                ofertaAcademicaSelect.empty();
-                ofertaAcademicaSelect.append('<option value="">Seleccione una Oferta Académica</option>');
-                if (response.success && response.data.length > 0) {
-                    $.each(response.data, function (index, item) {
-                        const isSelected = (selectedId && item.id == selectedId) ? 'selected' : '';
-                        ofertaAcademicaSelect.append(`<option value="${item.id}" ${isSelected}>${item.nombre}</option>`);
-                    });
-                } else {
-                    ofertaAcademicaSelect.append('<option value="">No hay ofertas disponibles para este tipo</option>');
-                }
-                // Si ya hay una oferta académica seleccionada (ej. en edición), cargar las correos
+                offerSourceData = response.success && response.data ? response.data : [];
+                const names = offerSourceData.map(item => item.nombre);
+                ofertaAcademicaInput.autocomplete('option', 'source', names);
+
                 if (selectedId) {
-                    loadCorreosList(typeId, selectedId);
+                    const selected = offerSourceData.find(item => item.id == selectedId);
+                    if (selected) {
+                        ofertaAcademicaInput.val(selected.nombre);
+                        ofertaAcademicaHidden.val(selected.id);
+                        loadCorreosList(typeId, selected.id);
+                    }
                 } else {
-                    // Limpiar la tabla si no hay oferta seleccionada
                     if (correosDataTable) {
                         correosDataTable.clear().draw();
                     }
                     showCorreosListMessage('Seleccione una oferta académica para ver las correos asociadas.', 'info');
                 }
             },
-            error: function (xhr, status, error) {
-                console.error('Error al cargar ofertas académicas:', error);
-                console.error('Respuesta del servidor:', xhr.responseText);
-                ofertaAcademicaSelect.empty().append('<option value="">Error al cargar ofertas</option>');
+            error: function () {
                 showAlert('Error al cargar las ofertas académicas.', 'error');
             }
         });
     }
 
-        // Función para cargar los mensajes en el select
     function loadMensajesOffers(selectedId = null) {        
         mensajesSelect.empty().append('<option value="">Cargando...</option>');
 
@@ -99,30 +88,24 @@ $(document).ready(function () {
             type: 'GET',
             dataType: 'json',
             success: function (response) {
-                
                 mensajesSelect.empty();
                 mensajesSelect.append('<option value="">Seleccione un Mensaje</option>');
                 if (response.success && response.data.length > 0) {
                     $.each(response.data, function (index, item) {
                         const isSelected = (selectedId && item.id == selectedId) ? 'selected' : '';
-                        
                         mensajesSelect.append(`<option value="${item.id}" ${isSelected}>${item.titulo}</option>`);
                     });
                 } else {
                     mensajesSelect.append('<option value="">No hay mensajes disponibles</option>');
                 }
-                
             },
-            error: function (xhr, status, error) {
-                console.error('Error al cargar ofertas académicas:', error);
-                console.error('Respuesta del servidor:', xhr.responseText);
-                ofertaAcademicaSelect.empty().append('<option value="">Error al cargar ofertas</option>');
-                showAlert('Error al cargar las ofertas académicas.', 'error');
+            error: function () {
+                mensajesSelect.empty().append('<option value="">Error al cargar mensajes</option>');
+                showAlert('Error al cargar los mensajes.', 'error');
             }
         });
     }
 
-    // Función para cargar y mostrar la lista de correos
     function loadCorreosList(tipoOfertaId, ofertaId) {
         if (!tipoOfertaId || !ofertaId) {
             if (correosDataTable) {
@@ -141,19 +124,19 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (response) {
                 if (correosDataTable) {
-                    correosDataTable.destroy(); // Destruir la instancia existente
+                    correosDataTable.destroy();
                 }
 
                 if (response.success && response.data.length > 0) {
-                    correosListMessage.addClass('hidden'); // Ocultar mensaje si hay datos
+                    correosListMessage.addClass('hidden');
                     correosDataTable = correosListTable.DataTable({
                         "data": response.data,
                         "responsive": false,
-                        "searching": false, // No se necesita búsqueda en esta tabla específica
-                        "paging": false,    // No se necesita paginación
-                        "info": false,      // No se necesita información de paginación
+                        "searching": false,
+                        "paging": false,
+                        "info": false,
                         "columns": [
-                                {
+                            {
                                 "data": null,
                                 "orderable": false,
                                 "searchable": false,
@@ -178,9 +161,7 @@ $(document).ready(function () {
                     }
                 }
             },
-            error: function (xhr, status, error) {
-                console.error('Error al cargar la lista de correos:', error);
-                console.error('Respuesta del servidor:', xhr.responseText);
+            error: function () {
                 showAlert('Error al cargar las correos. Por favor, intente de nuevo.', 'error');
                 if (correosDataTable) {
                     correosDataTable.clear().draw();
@@ -189,47 +170,51 @@ $(document).ready(function () {
         });
     }
 
-    // Manejador de clic para las pestañas
     $('.tab-button').on('click', function () {
         const tabId = $(this).data('tab-id');
 
-        // Actualizar el valor del input oculto
         tipoOfertaAcademicaIdInput.val(tabId);
 
-        // Actualizar clases de las pestañas para el estilo activo
         $('.tab-button').removeClass('bg-blue-600 text-white font-bold').addClass('bg-gray-200 text-gray-700');
         $(this).addClass('bg-blue-600 text-white font-bold').removeClass('bg-gray-200 text-gray-700');
 
-        // Cargar las ofertas académicas para la pestaña seleccionada
         loadAcademicOffers(tabId);
         loadMensajesOffers();
     });
 
-    // Manejador de cambio para el select de oferta_academica_id
-    ofertaAcademicaSelect.on('change', function () {
-        const selectedOfertaId = $(this).val();
-        const selectedTipoOfertaId = tipoOfertaAcademicaIdInput.val();
-        loadCorreosList(selectedTipoOfertaId, selectedOfertaId);
-    });
-
-    // Inicializar la pestaña activa y cargar las ofertas al cargar la página
     if (formCorreo.length) {
-        const initialTipoOfertaId = formCorreo.data('tipo-oferta-academica-id'); // Volver a obtener por si acaso
-        const initialOfertaAcademicaId = formCorreo.data('oferta-academica-id'); // Volver a obtener por si acaso
+        ofertaAcademicaInput.autocomplete({
+            source: [],
+            minLength: 0,
+            select: function (event, ui) {
+                const item = offerSourceData.find(i => i.nombre === ui.item.value);
+                if (item) {
+                    $(this).val(ui.item.value);
+                    ofertaAcademicaHidden.val(item.id);
+                    const tipoId = tipoOfertaAcademicaIdInput.val();
+                    loadCorreosList(tipoId, item.id);
+                }
+                return false;
+            },
+            change: function (event, ui) {
+                if (!ui.item) ofertaAcademicaHidden.val('');
+            }
+        }).focus(function () {
+            $(this).autocomplete('search', '');
+        });
+
+        const initialTipoOfertaId = formCorreo.data('tipo-oferta-academica-id');
+        const initialOfertaAcademicaId = formCorreo.data('oferta-academica-id');
 
         const currentActiveTabButton = $(`.tab-button[data-tab-id="${initialTipoOfertaId}"]`);
         if (currentActiveTabButton.length) {
             currentActiveTabButton.trigger('click');
-            // Después de cargar las opciones, pre-seleccionar si es un formulario de edición
             if (initialOfertaAcademicaId) {
-                // Pequeño retraso para asegurar que las opciones se han cargado
-                // La carga de la lista de correos se hará en el callback de loadAcademicOffers
                 setTimeout(() => {
-                    ofertaAcademicaSelect.val(initialOfertaAcademicaId).trigger('change');
-                }, 200);
+                    loadAcademicOffers(initialTipoOfertaId, initialOfertaAcademicaId);
+                }, 300);
             }
         } else {
-            // Si no hay un tipo pre-seleccionado, activa la primera pestaña (Curso)
             $('.tab-button[data-tab-id="1"]').trigger('click');
         }
 
@@ -238,8 +223,6 @@ $(document).ready(function () {
                 return $(this).val();
             }).get();
 
-            // console.log(correosSeleccionados);
-            
             if (correosSeleccionados.length === 0) {
                 showAlert('Por favor selecciona al menos un correo.', 'info');
                 return;
@@ -266,14 +249,12 @@ $(document).ready(function () {
                         showAlert('Error: ' + response.message, 'error');
                     }
                 },
-                error: function (xhr, status, error) {
-                    console.error('Error al enviar correos:', error);
-                    showAlert('Error al enviar los correos. Intenta de nuevo.', 'error');
+                error: function () {
+                    showAlert('Error al enviar correos. Intenta de nuevo.', 'error');
                 }
             });
         });
 
-        // Inicializar Flatpickr para los campos de fecha
         if (typeof flatpickr !== 'undefined') {
             flatpickr("#fecha_vencimiento", {
                 dateFormat: "Y-m-d",
@@ -286,7 +267,6 @@ $(document).ready(function () {
             console.warn("Flatpickr no está cargado. Asegúrate de incluir su CDN.");
         }
 
-        // Manejador para el botón de eliminar correo (delegado)
         $(document).on('click', '.delete-correo-btn', function (e) {
             e.preventDefault();
             const correoId = $(this).data('id');
@@ -299,15 +279,13 @@ $(document).ready(function () {
                         if (response.success) {
                             showAlert(response.message, 'success');
                             const currentTipoOfertaId = tipoOfertaAcademicaIdInput.val();
-                            const currentOfertaId = ofertaAcademicaSelect.val();
+                            const currentOfertaId = ofertaAcademicaHidden.val();
                             loadCorreosList(currentTipoOfertaId, currentOfertaId);
                         } else {
                             showAlert('Error al eliminar: ' + response.message, 'error');
                         }
                     },
-                    error: function (xhr, status, error) {
-                        console.error('Error al eliminar la correo:', error);
-                        console.error('Respuesta del servidor:', xhr.responseText);
+                    error: function () {
                         showAlert('Error al intentar eliminar la correo.', 'error');
                     }
                 });
@@ -316,23 +294,20 @@ $(document).ready(function () {
 
         // --- Lógica del Modal de Generación de Deuda ---
 
-        // Cerrar modal
         closeDebtModalBtn.on('click', function () {
             generateDebtModal.addClass('hidden');
             if (studentsDataTable) {
-                studentsDataTable.destroy(); // Destruir la instancia de DataTables de alumnos al cerrar
-                studentsListTable.find('tbody').empty(); // Limpiar el cuerpo de la tabla
+                studentsDataTable.destroy();
+                studentsListTable.find('tbody').empty();
             }
-            selectAllStudentsCheckbox.prop('checked', false); // Desmarcar "Seleccionar todos"
+            selectAllStudentsCheckbox.prop('checked', false);
         });
 
-        // Seleccionar/Deseleccionar todos los alumnos
         selectAllStudentsCheckbox.on('change', function () {
             const isChecked = $(this).is(':checked');
             $('.student-checkbox').prop('checked', isChecked);
         });
 
-        // Manejador para el botón de confirmar generación de deuda
         confirmGenerateDebtBtn.on('click', function () {
             const selectedAlumnoIds = [];
             $('.student-checkbox:checked').each(function () {
@@ -349,7 +324,6 @@ $(document).ready(function () {
                 return;
             }
 
-            // Deshabilitar botón para evitar múltiples envíos
             confirmGenerateDebtBtn.prop('disabled', true).text('Generando Deuda...');
 
             $.ajax({
@@ -359,7 +333,6 @@ $(document).ready(function () {
                     correo_id: currentCorreoIdForDebt,
                     alumno_ids: selectedAlumnoIds,
                     monto_correo: currentCorreoMontoForDebt,
-                    // También puedes enviar tipo_oferta_id y oferta_academica_id si es necesario en el backend
                     tipo_oferta_id: currentTipoOfertaIdForDebt,
                     oferta_id: currentOfertaIdForDebt
                 },
@@ -367,20 +340,17 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response.success) {
                         showAlert(response.message, 'success');
-                        generateDebtModal.addClass('hidden'); // Cerrar modal
-                        // Recargar la lista de correos para actualizar el estado 'generado'
-                        loadCorreosList(tipoOfertaAcademicaIdInput.val(), ofertaAcademicaSelect.val());
+                        generateDebtModal.addClass('hidden');
+                        loadCorreosList(tipoOfertaAcademicaIdInput.val(), ofertaAcademicaHidden.val());
                     } else {
                         showAlert('Error al generar deuda: ' + response.message, 'error');
                     }
                 },
-                error: function (xhr, status, error) {
-                    console.error('Error al generar la deuda:', error);
-                    console.error('Respuesta del servidor:', xhr.responseText);
+                error: function () {
                     showAlert('Error al procesar la solicitud de generación de deuda.', 'error');
                 },
                 complete: function () {
-                    confirmGenerateDebtBtn.prop('disabled', false).text('Generar Deuda Seleccionados'); // Habilitar botón
+                    confirmGenerateDebtBtn.prop('disabled', false).text('Generar Deuda Seleccionados');
                 }
             });
         });

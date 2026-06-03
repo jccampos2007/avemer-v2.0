@@ -94,6 +94,7 @@ class PreinscripcionDiplomadoController extends Controller
 
         $data = [
             'ci_pasapote' => $this->sanitizeInput($_POST['ci_pasapote'] ?? ''),
+            'tipo_documento' => $_POST['tipo_documento'] ?? 'V',
             'primer_nombre' => $this->sanitizeInput($_POST['primer_nombre'] ?? ''),
             'segundo_nombre' => $this->sanitizeInput($_POST['segundo_nombre'] ?? ''),
             'primer_apellido' => $this->sanitizeInput($_POST['primer_apellido'] ?? ''),

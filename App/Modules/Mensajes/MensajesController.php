@@ -135,7 +135,7 @@ class MensajesController extends Controller
             // Validación básica y sanitización
             $data = [
                 'titulo' => $this->sanitizeInput($_POST['titulo']),
-                'mensaje' => $this->sanitizeInput($_POST['mensaje'] ?? ''),
+                'mensaje' => $_POST['mensaje'],
             ];
 
             // Validación de campos obligatorios

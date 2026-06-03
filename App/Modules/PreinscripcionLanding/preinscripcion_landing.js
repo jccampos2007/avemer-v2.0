@@ -186,6 +186,7 @@ function createStudent(e) {
 
     const data = {
         new_ci_pasapote:       $('new-ci').value.trim(),
+        new_tipo_documento:    $('new-tipo-documento').value,
         new_primer_nombre:     $('new-primer-nombre').value.trim(),
         new_segundo_nombre:    $('new-segundo-nombre').value.trim(),
         new_primer_apellido:   $('new-primer-apellido').value.trim(),

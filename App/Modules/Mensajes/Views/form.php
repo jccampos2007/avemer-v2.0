@@ -12,7 +12,7 @@ $mensaje_val = htmlspecialchars($mensajes_data['mensaje'] ?? '');
 ?>
 <div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title; ?></h3>
-    <form id="formmensajes" action="<?php echo $form_action; ?>" method="POST">
+    <form id="formmensajes" action="<?php echo $form_action; ?>" method="POST" data-mensaje="<?= $mensaje_val ?>">
         <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?php echo $mensajes_data['id']; ?>">
@@ -26,7 +26,7 @@ $mensaje_val = htmlspecialchars($mensajes_data['mensaje'] ?? '');
 
             <div class="lg:col-span-4 md:col-span-2">
                 <label for="mensaje" class="block text-gray-700 text-sm font-bold mb-2">Mensaje:</label>
-                <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="256"><?= isset($mensajes_data['mensaje']) ? htmlspecialchars($mensajes_data['mensaje']) : '' ?></textarea>
+                <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="10"><?= isset($mensajes_data['mensaje']) ? htmlspecialchars($mensajes_data['mensaje']) : '' ?></textarea>
             </div>
         </div>
 
@@ -40,6 +40,9 @@ $mensaje_val = htmlspecialchars($mensajes_data['mensaje'] ?? '');
         </div>
     </form>
 </div>
+
+<!-- CKEditor 5 CDN -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
 <!-- JavaScript específico para este módulo -->
 <?php $page_js = 'asset/js/Mensajes/mensajes.js'; ?>

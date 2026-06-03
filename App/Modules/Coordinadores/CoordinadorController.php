@@ -113,6 +113,7 @@ class CoordinadorController extends Controller
             'estado_id' => !empty($_POST['estado_id']) ? (int)$this->sanitizeInput($_POST['estado_id']) : null,
             'nacionalidad_id' => !empty($_POST['nacionalidad_id']) ? (int)$this->sanitizeInput($_POST['nacionalidad_id']) : null,
             'ci_pasapote' => $this->sanitizeInput($_POST['ci_pasapote']),
+            'tipo_documento' => $_POST['tipo_documento'] ?? null,
             'primer_nombre' => $this->sanitizeInput($_POST['primer_nombre']),
             'segundo_nombre' => $this->sanitizeInput($_POST['segundo_nombre']),
             'primer_apellido' => $this->sanitizeInput($_POST['primer_apellido']),

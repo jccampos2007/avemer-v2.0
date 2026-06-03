@@ -182,7 +182,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">CI / Pasaporte *</label>
-                        <input type="text" id="new-ci" name="new_ci_pasapote" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-sm font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" required>
+                        <div class="flex gap-2">
+                            <select id="new-tipo-documento" name="new_tipo_documento" class="w-20 bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 text-sm font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
+                                <option value="V" selected>V</option>
+                                <option value="E">E</option>
+                                <option value="P">P</option>
+                                <option value="J">J</option>
+                            </select>
+                            <input type="text" id="new-ci" name="new_ci_pasapote" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-sm font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" required>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Primer Nombre *</label>

@@ -36,9 +36,20 @@ $randomValue = rand(1000, 9999);
             <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
             <h3 class="text-lg font-bold text-yellow-800 mb-2">Crear Nuevo Alumno:</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div>
-                    <label for="new_ci_pasapote" class="block text-gray-700 text-sm font-bold mb-2">CI/Pasaporte:</label>
-                    <input type="text" id="new_ci_pasapote" name="ci_pasapote" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <div class="flex gap-2 items-end">
+                    <div>
+                        <label for="new_tipo_documento" class="block text-gray-700 text-sm font-bold mb-2">Tipo:</label>
+                        <select id="new_tipo_documento" name="tipo_documento" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-20">
+                            <option value="V" selected>V</option>
+                            <option value="E">E</option>
+                            <option value="P">P</option>
+                            <option value="J">J</option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <label for="new_ci_pasapote" class="block text-gray-700 text-sm font-bold mb-2">CI/Pasaporte:</label>
+                        <input type="text" id="new_ci_pasapote" name="ci_pasapote" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    </div>
                 </div>
                 <div>
                     <label for="new_primer_nombre" class="block text-gray-700 text-sm font-bold mb-2">Primer Nombre:</label>

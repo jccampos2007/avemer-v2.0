@@ -14,9 +14,27 @@ $(document).ready(function () {
         // Desactivar la validación nativa del navegador para evitar errores con campos ocultos
         formMensajes.attr('novalidate', true);
 
+        // Inicializar CKEditor para el campo mensaje
+        let mensajeEditor;
+        ClassicEditor
+            .create(document.querySelector('#mensaje'), {
+                language: 'es',
+                toolbar: CKEDITOR_TOOLBAR_OPTIONS
+            })
+            .then(editor => {
+                mensajeEditor = editor;
+                const currentMensaje = formMensajes.data('mensaje');
+                if (currentMensaje) {
+                    editor.setData(currentMensaje);
+                }
+            })
+            .catch(error => {
+                console.error('Error al inicializar el editor de mensaje:', error);
+            });
+
         // Manejo del envío del formulario
         formMensajes.on('submit', function (event) {
-            const mensajeContent = $('#mensaje').val().trim();
+            const mensajeContent = mensajeEditor ? mensajeEditor.getData().trim() : '';
             const tituloVal = $('#titulo').val().trim();
 
             if (tituloVal === '' || mensajeContent === '') {

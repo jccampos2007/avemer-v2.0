@@ -35,18 +35,15 @@ $buscar_mensajes_val = $correo_data['mensaje_id'] ?? '';
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
-                <label for="oferta_academica_id" class="block text-gray-700 text-sm font-bold mb-2"></label>
-                <select id="oferta_academica_id" name="oferta_academica_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    <option value="">Seleccione</option>
-                    <!-- Opciones se llenarán dinámicamente con JS -->
-                </select>
+                <label for="oferta_academica_nombre" class="block text-gray-700 text-sm font-bold mb-2">Oferta Académica (Apertura):</label>
+                <input type="text" id="oferta_academica_nombre" placeholder="Busque una oferta académica" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" autocomplete="off">
+                <input type="hidden" id="oferta_academica_id" name="oferta_academica_id">
             </div>
- 
+
             <div>
                 <label for="buscar_mensajes" class="block text-gray-700 text-sm font-bold mb-2">Mensaje</label>
                 <select id="mensaje_id" name="buscar_mensajes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                     <option value="">Seleccione</option>
-                    <!-- Opciones se llenarán dinámicamente con JS -->
                 </select>
             </div>
         </div>

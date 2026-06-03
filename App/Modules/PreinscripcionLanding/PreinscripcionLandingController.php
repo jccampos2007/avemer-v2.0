@@ -58,11 +58,12 @@ class PreinscripcionLandingController extends Controller
         
         $pdo = \App\Core\Database::getInstance()->getConnection();
         try {
-            $sql = "INSERT INTO alumno (ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_celular, estatus_activo_id) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
+            $sql = "INSERT INTO alumno (ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo, tlf_habitacion, tlf_celular, estatus_activo_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 $this->sanitizeInput($_POST['new_ci_pasapote'] ?? ''),
+                $_POST['new_tipo_documento'] ?? 'V',
                 $this->sanitizeInput($_POST['new_primer_nombre'] ?? ''),
                 $this->sanitizeInput($_POST['new_segundo_nombre'] ?? ''),
                 $this->sanitizeInput($_POST['new_primer_apellido'] ?? ''),

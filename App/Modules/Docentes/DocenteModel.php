@@ -17,7 +17,7 @@ class DocenteModel
     public function getAll(): array
     {
         // Se eliminan los campos calle_avenida, casa_apartamento, nombre_universidad, nombre_especialidad
-        $stmt = $this->pdo->query("SELECT id, ci_pasapote, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM docente ORDER BY id DESC");
+        $stmt = $this->pdo->query("SELECT id, ci_pasapote, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM docente ORDER BY id DESC");
         return $stmt->fetchAll();
     }
 
