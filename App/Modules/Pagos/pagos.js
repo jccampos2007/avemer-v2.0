@@ -29,7 +29,7 @@ $(document).ready(function () {
 
         if (typeof setupAutocomplete === 'function') {
             setupAutocomplete('alumno_autocomplete', 'alumno_id', 'alumno', 3, {
-                displayColumn: "CONCAT(primer_nombre, ' ', primer_apellido, ', C.I:', ci_pasapote)"
+                displayColumn: "CONCAT(primer_nombre, ' ', primer_apellido, ', CI:', COALESCE(tipo_documento,''), ci_pasapote)"
             });
         }
 
@@ -94,7 +94,7 @@ $(document).ready(function () {
                     text: '<i class="fas fa-file-excel"></i><span class="export-label"> Exportar a Excel</span>',
                     className: 'buttons-excel',
                     title: 'Listado de Pagos',
-                    exportOptions: { columns: [1, 2, 3, 4, 5, 6, 7, 8] },
+                    exportOptions: { columns: [1, 2, 3, 4, 5, 6, 7] },
                     action: newExportAction
                 },
                 {
@@ -102,10 +102,10 @@ $(document).ready(function () {
                     text: '<i class="fas fa-file-pdf"></i><span class="export-label"> Exportar a PDF</span>',
                     className: 'buttons-pdf',
                     title: 'Listado de Pagos',
-                    exportOptions: { columns: [1, 2, 3, 4, 5, 6, 7, 8] },
+                    exportOptions: { columns: [1, 2, 3, 4, 5, 6, 7] },
                     action: newExportAction,
                     customize: function (doc) {
-                        doc.content[1].table.widths = ['12%', '20%', '15%', '12%', '12%', '15%', '14%'];
+                        doc.content[1].table.widths = ['18%', '14%', '18%', '12%', '12%', '14%', '12%'];
                         doc.styles.tableHeader.fillColor = '#1e3a8a';
                         doc.styles.tableHeader.color = '#ffffff';
                     }
@@ -118,14 +118,57 @@ $(document).ready(function () {
             },
             columns: [
                 { data: 0, visible: false, searchable: false },
-                { data: 1 },
-                { data: 2 },
-                { data: 3 },
-                { data: 4 },
-                { data: 5 },
-                { data: 6, className: 'text-right font-semibold' },
                 {
-                    data: 7,
+                    data: null,
+                    render: function (data, type, row) {
+                        var nombre = row[1] || '';
+                        var ci = row[2] || '';
+                        var telefono = row[3] || '';
+                        var correo = row[4] || '';
+                        if (type === 'display') {
+                            var telHref = telefono.replace(/[^0-9+]/g, '');
+                            var copyText = nombre + '\nC.I.: ' + ci + '\nTel: ' + telefono + '\nEmail: ' + correo;
+                            var copyBtn = '<button class="btn-copy-alumno" data-copy="' + copyText.replace(/"/g, '&quot;') + '" title="Copiar datos" style="background:none;border:none;cursor:pointer;color:#6b7280;padding:0 4px;vertical-align:middle"><i class="fas fa-copy"></i></button>';
+                            var html = '<div class="alumno-info" style="line-height:1.8">';
+                            html += '<span class="font-bold">' + nombre + '</span> ' + copyBtn + '<br>';
+                            html += 'C.I.: ' + ci + '<br>';
+                            if (telefono && telefono !== 'N/A') {
+                                html += '<a href="tel:' + telHref + '" style="text-decoration:none;color:#2563eb">' + telefono + '</a><br>';
+                            } else {
+                                html += telefono + '<br>';
+                            }
+                            if (correo && correo !== 'N/A') {
+                                html += '<a href="mailto:' + encodeURIComponent(correo) + '" style="text-decoration:none;color:#2563eb">' + correo + '</a>';
+                            } else {
+                                html += correo;
+                            }
+                            html += '</div>';
+                            return html;
+                        }
+                        return nombre;
+                    }
+                },
+                {
+                    data: 5,
+                    render: function (data, type) {
+                        if (type === 'display' && data) {
+                            return data.split(' - ').join('<br>');
+                        }
+                        return data || '';
+                    }
+                },
+                {
+                    data: 6,
+                    render: function (data, type) {
+                        if (type === 'display' && data) {
+                            return data.split(' · ').join('<br>');
+                        }
+                        return data || '';
+                    }
+                },
+                { data: 7, className: 'text-right font-semibold' },
+                {
+                    data: 8,
                     render: function (data, type) {
                         if (type === 'display' && data) {
                             return data.split('-').reverse().join('/');
@@ -134,7 +177,7 @@ $(document).ready(function () {
                     }
                 },
                 {
-                    data: 8,
+                    data: 9,
                     orderable: true,
                     searchable: false,
                     className: 'text-center',
@@ -152,7 +195,7 @@ $(document).ready(function () {
                     width: '1%',
                     className: 'actions-column',
                     render: function (data, type, row) {
-                        const estatus = row[8];
+                        const estatus = row[9];
                         let btns = '';
                         if (estatus === 'POR CONFIRMAR') {
                             if (PAGO_PERMISSIONS.modificar) {

@@ -180,7 +180,7 @@ class EventoAbiertoModel
         $sql = "SELECT 
                     ie.id AS inscripcion_id,
                     ie.fecha AS fecha_inscripcion,
-                    a.ci_pasapote,
+                    a.ci_pasapote, a.tipo_documento,
                     CONCAT(a.primer_nombre, ' ', COALESCE(a.segundo_nombre, ''), ' ', a.primer_apellido, ' ', COALESCE(a.segundo_apellido, '')) AS alumno_nombre,
                     a.correo,
                     ei.nombre AS estatus_inscripcion

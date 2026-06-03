@@ -27,20 +27,25 @@ class PagoModel
             0 => 'p.id',
             1 => 'a.primer_nombre',
             2 => 'c.nombre',
-            3 => 'fp.nombre',
-            4 => 'b.nombre',
-            5 => 'p.numero_control',
-            6 => 'p.monto',
-            7 => 'p.fecha',
-            8 => 'ep.nombre',
+            3 => 'p.monto',
+            4 => 'p.fecha',
+            5 => 'ep.nombre',
         ];
 
-        $sql = "SELECT p.id, a.primer_nombre, a.primer_apellido, a.ci_pasapote,
+        $sql = "SELECT p.id, a.primer_nombre, a.primer_apellido, a.ci_pasapote, a.tipo_documento,
+                       a.tlf_celular, a.correo,
                        c.nombre AS cuota_nombre, fp.nombre AS forma_pago_nombre,
                        b.nombre AS banco_nombre, p.numero_control, p.monto, p.fecha,
                        p.alumno_id, p.cuota_id, p.forma_pago_id, p.banco_id, p.estatus_pago_id,
                        ep.nombre AS estatus_pago_nombre,
-                       CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo
+                       CONCAT(a.primer_nombre, ' ', a.primer_apellido) AS alumno_nombre_completo,
+                       CASE c.tipo_oferta_academica_id
+                           WHEN 1 THEN (SELECT cur.nombre FROM curso_abierto ca JOIN curso cur ON ca.curso_id = cur.id WHERE ca.id = c.oferta_academica_id)
+                           WHEN 2 THEN (SELECT dip.nombre FROM diplomado_abierto da JOIN diplomado dip ON da.diplomado_id = dip.id WHERE da.id = c.oferta_academica_id)
+                           WHEN 3 THEN (SELECT ev.nombre FROM evento_abierto ea JOIN evento ev ON ea.evento_id = ev.id WHERE ea.id = c.oferta_academica_id)
+                           WHEN 4 THEN (SELECT mae.nombre FROM maestria_abierto ma JOIN maestria mae ON ma.maestria_id = mae.id WHERE ma.id = c.oferta_academica_id)
+                       END AS oferta_nombre,
+                       (SELECT cap.nombre FROM diplomado_control dc JOIN capitulo cap ON dc.capitulo_id = cap.id WHERE dc.id = c.diplomado_control_id) AS capitulo_nombre
                 FROM {$this->table} p
                 JOIN alumno a ON p.alumno_id = a.id
                 JOIN cuota c ON p.cuota_id = c.id
@@ -54,11 +59,14 @@ class PagoModel
 
         if (!empty($searchValue)) {
             $where[] = "(a.primer_nombre LIKE :search OR a.primer_apellido LIKE :search2
+                        OR a.ci_pasapote LIKE :search_ci OR a.correo LIKE :search_correo
                         OR c.nombre LIKE :search3 OR fp.nombre LIKE :search4
                         OR COALESCE(b.nombre, '') LIKE :search5 OR COALESCE(p.numero_control, '') LIKE :search6)";
             $like = '%' . $searchValue . '%';
             $queryParams[':search'] = $like;
             $queryParams[':search2'] = $like;
+            $queryParams[':search_ci'] = $like;
+            $queryParams[':search_correo'] = $like;
             $queryParams[':search3'] = $like;
             $queryParams[':search4'] = $like;
             $queryParams[':search5'] = $like;
@@ -95,13 +103,23 @@ class PagoModel
 
         $formattedData = [];
         foreach ($data as $row) {
+            $pagoDetail = trim(
+                ($row['forma_pago_nombre'] ?? '')
+                . ($row['banco_nombre'] ? ' · ' . $row['banco_nombre'] : '')
+                . ($row['numero_control'] ? ' · ' . $row['numero_control'] : '')
+            );
             $formattedData[] = [
                 $row['id'],
                 htmlspecialchars($row['alumno_nombre_completo'] ?? ''),
-                htmlspecialchars($row['cuota_nombre'] ?? ''),
-                htmlspecialchars($row['forma_pago_nombre'] ?? ''),
-                htmlspecialchars($row['banco_nombre'] ?? ''),
-                htmlspecialchars($row['numero_control'] ?? ''),
+                ($row['tipo_documento'] ?? '') . $row['ci_pasapote'],
+                htmlspecialchars($row['tlf_celular'] ?? ''),
+                htmlspecialchars($row['correo'] ?? ''),
+                htmlspecialchars(trim(
+                    ($row['oferta_nombre'] ?? '')
+                    . ($row['capitulo_nombre'] ? ' - Cap. ' . $row['capitulo_nombre'] : '')
+                    . ' - ' . ($row['cuota_nombre'] ?? '')
+                )),
+                htmlspecialchars($pagoDetail),
                 number_format((float)$row['monto'], 2),
                 htmlspecialchars($row['fecha'] ?? ''),
                 htmlspecialchars($row['estatus_pago_nombre'] ?? ''),
@@ -281,7 +299,7 @@ class PagoModel
 
     public function getAlumnos(): array
     {
-        $sql = "SELECT a.id, CONCAT(a.primer_nombre, ' ', a.primer_apellido, ' - CI: ', a.ci_pasapote) AS nombre_completo
+        $sql = "SELECT a.id, CONCAT(a.primer_nombre, ' ', a.primer_apellido, ' - CI: ', COALESCE(a.tipo_documento,''), a.ci_pasapote) AS nombre_completo
                 FROM alumno a ORDER BY a.primer_nombre ASC";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

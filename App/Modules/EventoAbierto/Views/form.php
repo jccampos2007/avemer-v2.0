@@ -149,7 +149,7 @@ $inicial_val = htmlspecialchars($evento_abierto_data['inicial'] ?? '0.00');
                             <?php foreach ($inscritos as $ins): ?>
                                 <tr class="hover:bg-gray-50 transition duration-100">
                                     <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
-                                        <p class="text-gray-900 font-medium"><?php echo htmlspecialchars($ins['ci_pasapote']); ?></p>
+                                        <p class="text-gray-900 font-medium"><?php echo htmlspecialchars(($ins['tipo_documento'] ?? '') . $ins['ci_pasapote']); ?></p>
                                     </td>
                                     <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
                                         <p class="text-gray-900"><?php echo htmlspecialchars($ins['alumno_nombre']); ?></p>
