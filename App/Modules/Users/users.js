@@ -35,10 +35,11 @@ $(document).ready(function () {
                     visible: false,
                     searchable: false
                 }, // Columna 0: ID
-                { "data": 1 }, // Columna 2: C.I./Pasaporte
-                { "data": 2 }, // Columna 3: Nombre Completo
-                { "data": 3 }, // Columna 4: Usuario
-                { "data": 4 }, // Columna 4: Tipo
+                { "data": 1 }, // Columna 1: Cédula
+                { "data": 2 }, // Columna 2: Nombre Completo
+                { "data": 3 }, // Columna 3: Usuario
+                { "data": 4 }, // Columna 4: Correo
+                { "data": 5 }, // Columna 5: Grupo
                 {
                     data: null,
                     orderable: false,

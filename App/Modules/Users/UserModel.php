@@ -41,14 +41,14 @@ class UserModel
         $columnMap = [
             0 => 'u.usuario_id',
             1 => 'u.usuario_cedula',
-            2 => 'u.usuario_nombre', // Se usará para búsqueda combinada de nombre completo
+            2 => 'u.usuario_nombre',
             3 => 'u.usuario_apellido',
             4 => 'u.usuario_user',
-            5 => 'g.nombre_grupo'
+            5 => 'u.correo',
+            6 => 'g.nombre_grupo'
         ];
 
-        // Construir la consulta base
-        $sql = "SELECT u.usuario_id, u.usuario_cedula, u.usuario_nombre, u.usuario_apellido, u.usuario_user, u.grupo_id, g.nombre_grupo FROM usuario u LEFT JOIN grupo g ON u.grupo_id = g.grupo_id";
+        $sql = "SELECT u.usuario_id, u.usuario_cedula, u.usuario_nombre, u.usuario_apellido, u.usuario_user, u.correo, u.grupo_id, g.nombre_grupo FROM usuario u LEFT JOIN grupo g ON u.grupo_id = g.grupo_id";
         $countSql = "SELECT COUNT(*) FROM usuario u LEFT JOIN grupo g ON u.grupo_id = g.grupo_id";
         $where = [];
         $queryParams = [];
@@ -108,6 +108,7 @@ class UserModel
                 $row['usuario_cedula'],
                 htmlspecialchars($row['usuario_nombre']  . ' ' . $row['usuario_apellido']),
                 $row['usuario_user'],
+                htmlspecialchars($row['correo'] ?? ''),
                 $row['nombre_grupo'] ?? 'Sin Grupo',
                 ''
             ];
@@ -147,14 +148,15 @@ class UserModel
 
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO usuario (usuario_cedula, usuario_nombre, usuario_apellido, usuario_user, usuario_pws, estatus_activo_id, grupo_id, usuario_idreg, usuario_fechareg, id_persona) VALUES (:cedula, :nombre, :apellido, :user, :pws, :estatus_id, :grupo_id, :idreg, :fechareg, :id_persona)";
+        $sql = "INSERT INTO usuario (usuario_cedula, usuario_nombre, usuario_apellido, usuario_user, correo, usuario_pws, estatus_activo_id, grupo_id, usuario_idreg, usuario_fechareg, id_persona) VALUES (:cedula, :nombre, :apellido, :user, :correo, :pws, :estatus_id, :grupo_id, :idreg, :fechareg, :id_persona)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'cedula' => $data['usuario_cedula'],
             'nombre' => $data['usuario_nombre'],
             'apellido' => $data['usuario_apellido'],
             'user' => $data['usuario_user'],
-            'pws' => $data['usuario_pws'], // Ya debe venir hasheada
+            'correo' => $data['correo'] ?? null,
+            'pws' => $data['usuario_pws'],
             'estatus_id' => $data['estatus_activo_id'] ?? 1,
             'grupo_id' => $data['grupo_id'],
             'idreg' => $data['usuario_idreg'],
@@ -165,13 +167,14 @@ class UserModel
 
     public function update(int $id, array $data): bool
     {
-        $sql = "UPDATE usuario SET usuario_cedula = :cedula, usuario_nombre = :nombre, usuario_apellido = :apellido, usuario_user = :user, estatus_activo_id = :estatus_id, grupo_id = :grupo_id, id_persona = :id_persona WHERE usuario_id = :id";
+        $sql = "UPDATE usuario SET usuario_cedula = :cedula, usuario_nombre = :nombre, usuario_apellido = :apellido, usuario_user = :user, correo = :correo, estatus_activo_id = :estatus_id, grupo_id = :grupo_id, id_persona = :id_persona WHERE usuario_id = :id";
         $stmt = $this->pdo->prepare($sql);
         $result = $stmt->execute([
             'cedula' => $data['usuario_cedula'],
             'nombre' => $data['usuario_nombre'],
             'apellido' => $data['usuario_apellido'],
             'user' => $data['usuario_user'],
+            'correo' => $data['correo'] ?? null,
             'estatus_id' => $data['estatus_activo_id'],
             'grupo_id' => $data['grupo_id'],
             'id_persona' => $data['id_persona'],
@@ -194,5 +197,35 @@ class UserModel
     {
         $stmt = $this->pdo->prepare("DELETE FROM usuario WHERE usuario_id = :id");
         return $stmt->execute(['id' => $id]);
+    }
+
+    public function findByUsernameOrEmail(string $input): ?array
+    {
+        $sql = "SELECT u.*, g.nombre_grupo 
+                FROM usuario u 
+                LEFT JOIN grupo g ON u.grupo_id = g.grupo_id 
+                WHERE u.usuario_user = :input OR u.correo = :input2";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['input' => $input, 'input2' => $input]);
+        $user = $stmt->fetch();
+        return $user ?: null;
+    }
+
+    public function saveResetToken(int $userId, string $token): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE usuario SET token = :token WHERE usuario_id = :id");
+        return $stmt->execute(['token' => $token, 'id' => $userId]);
+    }
+
+    public function clearResetToken(int $userId): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE usuario SET token = NULL WHERE usuario_id = :id");
+        return $stmt->execute(['id' => $userId]);
+    }
+
+    public function updatePassword(int $userId, string $hashedPassword): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE usuario SET usuario_pws = :pws WHERE usuario_id = :id");
+        return $stmt->execute(['pws' => $hashedPassword, 'id' => $userId]);
     }
 }

@@ -24,6 +24,10 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
                 <label for="usuario_user" class="block text-gray-700 text-sm font-bold mb-2">Usuario (Login):</label>
                 <input type="text" id="usuario_user" name="usuario_user" value="<?php echo htmlspecialchars($user_data['usuario_user'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
+            <div>
+                <label for="correo" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico:</label>
+                <input type="email" id="correo" name="correo" value="<?php echo htmlspecialchars($user_data['correo'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
             <div class="lg:col-span-4 md:col-span-2">
                 <label for="usuario_pws" class="block text-gray-700 text-sm font-bold mb-2">Contraseña: <?php echo ($is_edit) ? '(Dejar en blanco para no cambiar)' : ''; ?></label>
                 <input type="password" id="usuario_pws" name="usuario_pws" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" <?php echo ($is_edit) ? '' : 'required'; ?>>
@@ -33,7 +37,7 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
                 <select id="estatus_activo_id" name="estatus_activo_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="">Seleccione una opción</option>
                 </select>
-                <input type="hidden" name="estatus_activo_current" id="estatus_activo_current" value="<?php echo $alumno_data['estatus_activo_id'] ?? ''; ?>">
+                <input type="hidden" name="estatus_activo_current" id="estatus_activo_current" value="<?php echo $user_data['estatus_activo_id'] ?? ''; ?>">
             </div>
             <div>
                 <label for="grupo_id" class="block text-gray-700 text-sm font-bold mb-2">Grupo:</label>

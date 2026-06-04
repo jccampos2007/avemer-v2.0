@@ -62,6 +62,12 @@ $router->add('GET', '/asset/js/{module}/{file}', AssetController::class . '@serv
 $router->add('GET', '/login', AuthController::class . '@showLogin');
 $router->add('POST', '/login', AuthController::class . '@processLogin');
 $router->add('GET', '/logout', AuthController::class . '@logout');
+$router->add('GET', '/forgot-password', AuthController::class . '@showForgotPassword');
+$router->add('POST', '/forgot-password', AuthController::class . '@processForgotPassword');
+$router->add('GET', '/verify-otp', AuthController::class . '@showVerifyOtp');
+$router->add('POST', '/verify-otp', AuthController::class . '@processVerifyOtp');
+$router->add('GET', '/reset-password', AuthController::class . '@showResetPassword');
+$router->add('POST', '/reset-password', AuthController::class . '@processResetPassword');
 $router->add('GET', '/dashboard', DashboardController::class . '@index');
 
 // ==========================================
