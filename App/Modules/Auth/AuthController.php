@@ -125,7 +125,7 @@ class AuthController extends Controller
         $body = "
             <div style='font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;'>
                 <div style='text-align: center; padding: 20px 0;'>
-                    <img src='" . BASE_URL . "image/logo-grupo-avemer.webp' alt='Grupo Avemer' style='height:50px;'>
+                    <img src='https://app.grupoavemer.net/image/logo-grupo-avemer.webp' alt='Grupo Avemer' style='height:50px;'>
                 </div>
                 <h2 style='color: #1e3a5f; text-align: center;'>Recuperación de Contraseña</h2>
                 <p style='color: #333;'>Hola <strong>" . htmlspecialchars($user['usuario_nombre']) . "</strong>,</p>
