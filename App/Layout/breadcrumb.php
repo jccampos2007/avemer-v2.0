@@ -63,11 +63,13 @@ function generateBreadcrumbs(): array
     // 1. Inicio → link a dashboard
     $crumbs[] = ['label' => 'Inicio', 'url' => BASE_URL . 'dashboard'];
 
-    // 2. Módulo (solo con link si no estamos en su listado)
+    // 2. Módulo (solo con link si no estamos en su listado y existe list.php)
     $moduleLabel = $moduleLabels[$module] ?? ucfirst(str_replace('_', ' ', $module));
+    $moduleViewDir = MODULES_PATH . ucfirst($module) . '/Views';
+    $hasListView = file_exists($moduleViewDir . '/list.php');
     $crumbs[] = [
         'label' => $moduleLabel,
-        'url'   => ($action === 'index') ? null : BASE_URL . $module,
+        'url'   => ($action === 'index' || !$hasListView) ? null : BASE_URL . $module,
     ];
 
     // 3. Acción (create / edit)

@@ -29,11 +29,11 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
 
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Tipo de Oferta:</label>
-                <div class="flex border-b border-gray-200">
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="1">Curso / Taller</button>
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="2">Diplomado</button>
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="3">Evento</button>
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="4">Maestría</button>
+                <div class="flex flex-wrap gap-1 border-b border-gray-200">
+                    <button type="button" class="tab-button px-2 md:px-4 py-2 text-xs md:text-sm font-medium focus:outline-none" data-tab-id="1">Curso / Taller</button>
+                    <button type="button" class="tab-button px-2 md:px-4 py-2 text-xs md:text-sm font-medium focus:outline-none" data-tab-id="2">Diplomado</button>
+                    <button type="button" class="tab-button px-2 md:px-4 py-2 text-xs md:text-sm font-medium focus:outline-none" data-tab-id="3">Evento</button>
+                    <button type="button" class="tab-button px-2 md:px-4 py-2 text-xs md:text-sm font-medium focus:outline-none" data-tab-id="4">Maestría</button>
                 </div>
                 <input type="hidden" id="tipo_oferta_academica_id" name="tipo_oferta_academica_id" value="<?php echo $tipo_oferta_academica_id_val; ?>">
             </div>
@@ -103,16 +103,16 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
         <div class="bg-blue-50 rounded-lg p-4 mb-6 border border-blue-200">
             <h4 class="text-lg font-bold text-gray-700 mb-4">Datos de la Cuota</h4>
 
-            <div class="flex gap-4 mb-4">
-                <div class="w-1/2">
+            <div class="flex flex-col md:flex-row gap-4 mb-4">
+                <div class="w-full md:w-1/2">
                     <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre de la Cuota:</label>
                     <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="32">
                 </div>
-                <div class="w-1/4">
+                <div class="w-full md:w-1/4">
                     <label for="monto" class="block text-gray-700 text-sm font-bold mb-2">Monto ($):</label>
                     <input type="number" step="0.01" id="monto" name="monto" value="<?php echo $monto_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
                 </div>
-                <div class="w-1/4">
+                <div class="w-full md:w-1/4">
                     <label for="fecha_vencimiento" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Vencimiento:</label>
                     <input type="text" id="fecha_vencimiento" name="fecha_vencimiento" value="<?php echo $fecha_vencimiento_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>

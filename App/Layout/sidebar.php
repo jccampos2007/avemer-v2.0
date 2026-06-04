@@ -409,7 +409,7 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
 
     <!-- Área de contenido con scroll seguro para tablas responsivas -->
     <main class="flex-1 p-4 md:p-8 overflow-y-auto bg-gray-100">
-        <div class="container mx-auto">
+        <div class="container mx-auto pb-8">
 
 <?php
 require __DIR__ . '/breadcrumb.php';

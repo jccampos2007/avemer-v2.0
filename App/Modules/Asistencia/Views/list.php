@@ -12,11 +12,11 @@
 
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Tipo de Oferta:</label>
-                <div class="flex border-b border-gray-200">
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="1">Curso / Taller</button>
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="2">Diplomado</button>
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="3">Evento</button>
-                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium focus:outline-none" data-tab-id="4">Maestría</button>
+                <div class="flex flex-wrap gap-1 border-b border-gray-200">
+                    <button type="button" class="tab-button px-2 md:px-4 py-2 text-xs md:text-sm font-medium focus:outline-none" data-tab-id="1">Curso / Taller</button>
+                    <button type="button" class="tab-button px-2 md:px-4 py-2 text-xs md:text-sm font-medium focus:outline-none" data-tab-id="2">Diplomado</button>
+                    <button type="button" class="tab-button px-2 md:px-4 py-2 text-xs md:text-sm font-medium focus:outline-none" data-tab-id="3">Evento</button>
+                    <button type="button" class="tab-button px-2 md:px-4 py-2 text-xs md:text-sm font-medium focus:outline-none" data-tab-id="4">Maestría</button>
                 </div>
                 <input type="hidden" id="tipo_oferta_academica_id" name="tipo_oferta_academica_id" value="1">
             </div>
