@@ -17,7 +17,7 @@ $greeting = $greeting_user ?? null;
             <input type="hidden" name="username" value="<?php echo htmlspecialchars($greeting['username']); ?>">
             <div class="mb-4">
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
-                <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required autofocus>
+                <input type="password" id="password" name="password" class="input-form focus:outline-none focus:shadow-outline" required autofocus>
             </div>
             <div class="flex items-center mb-4">
                 <input type="checkbox" id="remember_user" name="remember_user" class="mr-2 rounded border-gray-300" checked>
@@ -26,11 +26,11 @@ $greeting = $greeting_user ?? null;
             <?php else: ?>
             <div class="mb-4">
                 <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Usuario:</label>
-                <input type="text" id="username" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required autofocus>
+                <input type="text" id="username" name="username" class="input-form focus:outline-none focus:shadow-outline" required autofocus>
             </div>
             <div class="mb-4">
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
-                <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input type="password" id="password" name="password" class="input-form focus:outline-none focus:shadow-outline" required>
             </div>
             <div class="flex items-center mb-4">
                 <input type="checkbox" id="remember_user" name="remember_user" class="mr-2 rounded border-gray-300">

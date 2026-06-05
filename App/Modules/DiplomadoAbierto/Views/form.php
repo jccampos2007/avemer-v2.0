@@ -54,18 +54,18 @@ $inicial_val = htmlspecialchars($diplomado_abierto_data['inicial'] ?? '0.00');
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="numero" class="block text-gray-700 text-sm font-bold mb-2">Número:</label>
-                    <input type="text" id="numero" name="numero" value="<?php echo $numero_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="50">
+                    <input type="text" id="numero" name="numero" value="<?php echo $numero_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="50">
                 </div>
 
                 <div>
                     <label for="diplomado_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Diplomado:</label>
-                    <input type="text" id="diplomado_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar diplomado..." value="<?php echo $diplomado_nombre_val; ?>" required>
+                    <input type="text" id="diplomado_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Buscar diplomado..." value="<?php echo $diplomado_nombre_val; ?>" required>
                     <input type="hidden" name="diplomado_id" id="diplomado_id" value="<?php echo $diplomado_id_val; ?>">
                 </div>
 
                 <div>
                     <label for="sede_id" class="block text-gray-700 text-sm font-bold mb-2">Sede:</label>
-                    <select id="sede_id" name="sede_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <select id="sede_id" name="sede_id" class="input-form focus:outline-none focus:shadow-outline" required>
                         <option value="">Seleccione una Sede</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
@@ -74,7 +74,7 @@ $inicial_val = htmlspecialchars($diplomado_abierto_data['inicial'] ?? '0.00');
 
                 <div>
                     <label for="estatus_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus:</label>
-                    <select id="estatus_id" name="estatus_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <select id="estatus_id" name="estatus_id" class="input-form focus:outline-none focus:shadow-outline" required>
                         <option value="">Seleccione un Estatus</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
@@ -83,24 +83,24 @@ $inicial_val = htmlspecialchars($diplomado_abierto_data['inicial'] ?? '0.00');
 
                 <div>
                     <label for="fecha_inicio" class="block text-gray-700 text-sm font-bold mb-2">Fecha Inicio:</label>
-                    <input type="text" id="fecha_inicio" name="fecha_inicio" value="<?php echo $fecha_inicio_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input type="text" id="fecha_inicio" name="fecha_inicio" value="<?php echo $fecha_inicio_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div>
                     <label for="fecha_fin" class="block text-gray-700 text-sm font-bold mb-2">Fecha Fin:</label>
-                    <input type="text" id="fecha_fin" name="fecha_fin" value="<?php echo $fecha_fin_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input type="text" id="fecha_fin" name="fecha_fin" value="<?php echo $fecha_fin_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div>
                     <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo:</label>
-                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $costo_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
+                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $costo_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required min="0">
                 </div>
                 <div>
                     <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial:</label>
-                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo $inicial_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
+                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo $inicial_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required min="0">
                 </div>
 
                 <div class="lg:col-span-4 md:col-span-2">
                     <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
-                    <textarea id="nombre_carta" name="nombre_carta" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5"><?php echo $nombre_carta_val; ?></textarea>
+                    <textarea id="nombre_carta" name="nombre_carta" class="input-form focus:outline-none focus:shadow-outline" rows="5"><?php echo $nombre_carta_val; ?></textarea>
                 </div>
             </div>
 

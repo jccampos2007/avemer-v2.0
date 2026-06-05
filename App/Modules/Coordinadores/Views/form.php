@@ -11,7 +11,7 @@ $is_edit = isset($coordinador_data['id']) && !empty($coordinador_data['id']);
             <div>
                 <label for="ci_pasaporte" class="label-form">C.I. / Pasaporte:</label>
                 <div class="flex gap-2">
-                    <select id="tipo_documento" name="tipo_documento" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-20">
+                    <select id="tipo_documento" name="tipo_documento" class="shadow appearance-none border rounded py-1.5 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-20">
                         <option value="V" <?= ($coordinador_data['tipo_documento'] ?? 'V') == 'V' ? 'selected' : '' ?>>V</option>
                         <option value="E" <?= ($coordinador_data['tipo_documento'] ?? '') == 'E' ? 'selected' : '' ?>>E</option>
                         <option value="P" <?= ($coordinador_data['tipo_documento'] ?? '') == 'P' ? 'selected' : '' ?>>P</option>

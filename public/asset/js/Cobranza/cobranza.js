@@ -125,16 +125,13 @@
                     render: function (data, type, row) {
                         if (type !== 'display') return data;
                         var alumnoId = row[12];
-                        var cuotaId = row[13];
-                        var nombre = row[2] || '';
                         var correo = row[5] || '';
 
                         var buttons = '<div class="flex gap-1 justify-center">';
-                        buttons += '<button class="btn-copy-alumno" data-copy="' + (nombre + '\nC.I.: ' + (row[3] || '') + '\nTel: ' + (row[4] || '') + '\nEmail: ' + correo).replace(/"/g, '&quot;') + '" title="Copiar datos del alumno" style="background:none;border:none;cursor:pointer;color:#6b7280;padding:2px 6px"><i class="fas fa-copy"></i></button>';
                         if (correo) {
-                            buttons += '<a href="mailto:' + encodeURIComponent(correo) + '?subject=Recordatorio de pago pendiente" title="Enviar correo" style="color:#2563eb;padding:2px 6px"><i class="fas fa-envelope"></i></a>';
+                            buttons += '<a href="mailto:' + encodeURIComponent(correo) + '?subject=Recordatorio de pago pendiente" class="btn-action btn-action-email" title="Enviar correo"><i class="fas fa-envelope"></i></a>';
                         }
-                        buttons += '<a href="' + BASE_URL_JS + 'pago?alumno_id=' + alumnoId + '" title="Ver pagos del alumno" style="color:#059669;padding:2px 6px"><i class="fas fa-search-dollar"></i></a>';
+                        buttons += '<a href="' + BASE_URL_JS + 'pago?alumno_id=' + alumnoId + '" class="btn-action btn-action-view" title="Ver pagos del alumno"><i class="fas fa-search-dollar"></i></a>';
                         buttons += '</div>';
                         return buttons;
                     }
@@ -143,37 +140,7 @@
             language: {
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
             },
-            drawCallback: function () {
-                $('.btn-copy-alumno').off('click').on('click', function () {
-                    var text = $(this).data('copy');
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        navigator.clipboard.writeText(text).then(function () {
-                            Swal.fire({ icon: 'success', title: 'Copiado', text: 'Datos del alumno copiados al portapapeles.', timer: 1500, showConfirmButton: false });
-                        }).catch(function () {
-                            fallbackCopy(text);
-                        });
-                    } else {
-                        fallbackCopy(text);
-                    }
-                });
-            }
         });
+        setupAlumnoCopyHandler('#cobranzaTable');
     });
-
-    function fallbackCopy(text) {
-        var textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-            document.execCommand('copy');
-            Swal.fire({ icon: 'success', title: 'Copiado', text: 'Datos del alumno copiados al portapapeles.', timer: 1500, showConfirmButton: false });
-        } catch (e) {
-            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo copiar al portapapeles.' });
-        }
-        document.body.removeChild(textarea);
-    }
-
 })(jQuery);

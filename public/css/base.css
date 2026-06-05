@@ -176,6 +176,39 @@ table.dataTable td.actions-column {
     color: #ea580c !important;
 }
 
+.btn-action-email {
+    color: #6366f1 !important;
+    border-color: #c7d2fe !important;
+}
+
+.btn-action-email:hover {
+    background-color: #eef2ff !important;
+    border-color: #a5b4fc !important;
+    color: #4f46e5 !important;
+}
+
+.btn-action-view {
+    color: #059669 !important;
+    border-color: #a7f3d0 !important;
+}
+
+.btn-action-view:hover {
+    background-color: #ecfdf5 !important;
+    border-color: #6ee7b7 !important;
+    color: #047857 !important;
+}
+
+.btn-action-copy {
+    color: #6b7280 !important;
+    border-color: #d1d5db !important;
+}
+
+.btn-action-copy:hover {
+    background-color: #f9fafb !important;
+    border-color: #9ca3af !important;
+    color: #4b5563 !important;
+}
+
 /* === Botones Exportar (responsive: ocultar texto en mobile) === */
 .export-label {
     display: inline;

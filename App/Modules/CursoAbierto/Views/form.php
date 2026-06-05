@@ -19,51 +19,51 @@ $inicial_val = htmlspecialchars($curso_abierto_data['inicial'] ?? '0.00');
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="numero" class="block text-gray-700 text-sm font-bold mb-2">Número:</label>
-                    <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($curso_abierto_data['numero'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($curso_abierto_data['numero'] ?? ''); ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                 </div>
                 <div>
                     <label for="curso_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Taller / Curso:</label>
-                    <input type="text" id="curso_autocomplete" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar por número o nombre..." value="<?php echo htmlspecialchars($curso_abierto_data['curso_nombre'] ?? ''); ?>" required>
+                    <input type="text" id="curso_autocomplete" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar por número o nombre..." value="<?php echo htmlspecialchars($curso_abierto_data['curso_nombre'] ?? ''); ?>" required>
                     <input type="hidden" name="curso_id" id="curso_id" value="<?php echo $curso_abierto_data['curso_id'] ?? ''; ?>">
                 </div>
                 <div>
                     <label for="sede_id" class="block text-gray-700 text-sm font-bold mb-2">Sede:</label>
-                    <select id="sede_id" name="sede_id" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    <select id="sede_id" name="sede_id" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         <option value="">Seleccione una Sede</option>
                     </select>
                     <input type="hidden" name="sede_current" id="sede_current" value="<?php echo $curso_abierto_data['sede_id'] ?? ''; ?>">
                 </div>
                 <div>
                     <label for="estatus_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus:</label>
-                    <select id="estatus_id" name="estatus_id" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    <select id="estatus_id" name="estatus_id" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         <option value="">Seleccione un Estatus</option>
                     </select>
                     <input type="hidden" name="estatus_current" id="estatus_current" value="<?php echo $curso_abierto_data['estatus_id'] ?? ''; ?>">
                 </div>
                 <div>
                     <label for="docente_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Instructor:</label>
-                    <input type="text" id="docente_autocomplete" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar instructor..." value="<?php echo htmlspecialchars($curso_abierto_data['docente_nombre'] ?? ''); ?>" required>
+                    <input type="text" id="docente_autocomplete" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar instructor..." value="<?php echo htmlspecialchars($curso_abierto_data['docente_nombre'] ?? ''); ?>" required>
                     <input type="hidden" name="docente_id" id="docente_id" value="<?php echo $curso_abierto_data['docente_id'] ?? ''; ?>">
                 </div>
                 <div>
                     <label for="fecha" class="block text-gray-700 text-sm font-bold mb-2">Fecha:</label>
-                    <input type="text" id="fecha" name="fecha" value="<?php echo htmlspecialchars($curso_abierto_data['fecha'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="YYYY-MM-DD" required>
+                    <input type="text" id="fecha" name="fecha" value="<?php echo htmlspecialchars($curso_abierto_data['fecha'] ?? ''); ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="YYYY-MM-DD" required>
                 </div>
                 <div>
                     <label for="convenio" class="block text-gray-700 text-sm font-bold mb-2">Convenio:</label>
-                    <input type="text" id="convenio" name="convenio" value="<?php echo htmlspecialchars($curso_abierto_data['convenio'] ?? ''); ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <input type="text" id="convenio" name="convenio" value="<?php echo htmlspecialchars($curso_abierto_data['convenio'] ?? ''); ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
                 <div>
                     <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo:</label>
-                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $costo_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
+                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $costo_val; ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
                 </div>
                 <div>
                     <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial:</label>
-                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo $inicial_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
+                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo $inicial_val; ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
                 </div>
                 <div class="lg:col-span-4 md:col-span-2">
                     <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
-                    <textarea id="nombre_carta" name="nombre_carta" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3"><?php echo htmlspecialchars($curso_abierto_data['nombre_carta'] ?? ''); ?></textarea>
+                    <textarea id="nombre_carta" name="nombre_carta" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3"><?php echo htmlspecialchars($curso_abierto_data['nombre_carta'] ?? ''); ?></textarea>
                 </div>
             </div>
 

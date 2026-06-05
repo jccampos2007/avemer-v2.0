@@ -56,18 +56,18 @@ $inicial_val = htmlspecialchars($evento_abierto_data['inicial'] ?? '0.00');
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="numero" class="block text-gray-700 text-sm font-bold mb-2">Número:</label>
-                    <input type="text" id="numero" name="numero" value="<?php echo $numero_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="10">
+                    <input type="text" id="numero" name="numero" value="<?php echo $numero_val; ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="10">
                 </div>
 
                 <div>
                     <label for="evento_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Evento:</label>
-                    <input type="text" id="evento_autocomplete" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar evento..." value="<?php echo $evento_nombre_val; ?>" required>
+                    <input type="text" id="evento_autocomplete" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar evento..." value="<?php echo $evento_nombre_val; ?>" required>
                     <input type="hidden" name="evento_id" id="evento_id" value="<?php echo $evento_id_val; ?>">
                 </div>
 
                 <div>
                     <label for="sede_id" class="block text-gray-700 text-sm font-bold mb-2">Sede:</label>
-                    <select id="sede_id" name="sede_id" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    <select id="sede_id" name="sede_id" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         <option value="">Seleccione una Sede</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
@@ -76,7 +76,7 @@ $inicial_val = htmlspecialchars($evento_abierto_data['inicial'] ?? '0.00');
 
                 <div>
                     <label for="estatus_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus:</label>
-                    <select id="estatus_id" name="estatus_id" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    <select id="estatus_id" name="estatus_id" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         <option value="">Seleccione un Estatus</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
@@ -85,30 +85,30 @@ $inicial_val = htmlspecialchars($evento_abierto_data['inicial'] ?? '0.00');
 
                 <div>
                     <label for="docente_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Instructor:</label>
-                    <input type="text" id="docente_autocomplete" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar instructor..." value="<?php echo $docente_nombre_val; ?>">
+                    <input type="text" id="docente_autocomplete" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar instructor..." value="<?php echo $docente_nombre_val; ?>">
                     <input type="hidden" name="docente_id" id="docente_id" value="<?php echo $docente_id_val; ?>">
                 </div>
 
                 <div>
                     <label for="fecha_inicio" class="block text-gray-700 text-sm font-bold mb-2">Fecha Inicio:</label>
-                    <input type="text" id="fecha_inicio" name="fecha_inicio" value="<?php echo $fecha_inicio_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required placeholder="YYYY-MM-DD">
+                    <input type="text" id="fecha_inicio" name="fecha_inicio" value="<?php echo $fecha_inicio_val; ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required placeholder="YYYY-MM-DD">
                 </div>
                 <div>
                     <label for="fecha_fin" class="block text-gray-700 text-sm font-bold mb-2">Fecha Fin:</label>
-                    <input type="text" id="fecha_fin" name="fecha_fin" value="<?php echo $fecha_fin_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required placeholder="YYYY-MM-DD">
+                    <input type="text" id="fecha_fin" name="fecha_fin" value="<?php echo $fecha_fin_val; ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required placeholder="YYYY-MM-DD">
                 </div>
                 <div>
                     <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo:</label>
-                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $costo_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
+                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo $costo_val; ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
                 </div>
                 <div>
                     <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial:</label>
-                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo $inicial_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
+                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo $inicial_val; ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required min="0">
                 </div>
 
                 <div class="lg:col-span-4 md:col-span-2">
                     <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
-                    <textarea id="nombre_carta" name="nombre_carta" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="5"><?php echo $nombre_carta_val; ?></textarea>
+                    <textarea id="nombre_carta" name="nombre_carta" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="5"><?php echo $nombre_carta_val; ?></textarea>
                     <!-- NOTA: No uses 'required' en el textarea si usas CKEditor.
                              La validación de contenido vacío debe hacerse en JS, como en curso_abierto.js -->
                 </div>

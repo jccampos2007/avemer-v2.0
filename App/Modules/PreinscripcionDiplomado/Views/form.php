@@ -15,7 +15,7 @@ $randomValue = rand(1000, 9999);
             <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
             <label for="ci_pasaporte_search" class="block text-gray-700 text-sm font-bold mb-2">Buscar Alumno por CI/Pasaporte:</label>
             <div class="flex">
-                <input type="text" id="ci_pasaporte_search" name="ci_pasaporte_search" class="shadow appearance-none border rounded-l w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej. 12345678" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <input type="text" id="ci_pasaporte_search" name="ci_pasaporte_search" class="shadow appearance-none border rounded-l w-full py-1.5 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej. 12345678" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r focus:outline-none focus:shadow-outline">Buscar</button>
             </div>
             <p id="search_result_message" class="mt-2 text-sm"></p>
@@ -39,7 +39,7 @@ $randomValue = rand(1000, 9999);
                 <div class="flex gap-2 items-end">
                     <div>
                         <label for="new_tipo_documento" class="block text-gray-700 text-sm font-bold mb-2">Tipo:</label>
-                        <select id="new_tipo_documento" name="tipo_documento" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-20">
+                        <select id="new_tipo_documento" name="tipo_documento" class="shadow appearance-none border rounded py-1.5 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-20">
                             <option value="V" selected>V</option>
                             <option value="E">E</option>
                             <option value="P">P</option>
@@ -48,40 +48,40 @@ $randomValue = rand(1000, 9999);
                     </div>
                     <div class="flex-1">
                         <label for="new_ci_pasaporte" class="block text-gray-700 text-sm font-bold mb-2">CI/Pasaporte:</label>
-                        <input type="text" id="new_ci_pasaporte" name="ci_pasaporte" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <input type="text" id="new_ci_pasaporte" name="ci_pasaporte" class="input-form focus:outline-none focus:shadow-outline" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                 </div>
                 <div>
                     <label for="new_primer_nombre" class="block text-gray-700 text-sm font-bold mb-2">Primer Nombre:</label>
-                    <input type="text" id="new_primer_nombre" name="primer_nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input type="text" id="new_primer_nombre" name="primer_nombre" class="input-form focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div>
                     <label for="new_segundo_nombre" class="block text-gray-700 text-sm font-bold mb-2">Segundo Nombre:</label>
-                    <input type="text" id="new_segundo_nombre" name="segundo_nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <input type="text" id="new_segundo_nombre" name="segundo_nombre" class="input-form focus:outline-none focus:shadow-outline">
                 </div>
                 <div>
                     <label for="new_primer_apellido" class="block text-gray-700 text-sm font-bold mb-2">Primer Apellido:</label>
-                    <input type="text" id="new_primer_apellido" name="primer_apellido" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input type="text" id="new_primer_apellido" name="primer_apellido" class="input-form focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div>
                     <label for="new_segundo_apellido" class="block text-gray-700 text-sm font-bold mb-2">Segundo Apellido:</label>
-                    <input type="text" id="new_segundo_apellido" name="segundo_apellido" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <input type="text" id="new_segundo_apellido" name="segundo_apellido" class="input-form focus:outline-none focus:shadow-outline">
                 </div>
                 <div>
                     <label for="new_correo" class="block text-gray-700 text-sm font-bold mb-2">Correo:</label>
-                    <input type="email" id="new_correo" name="correo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <input type="email" id="new_correo" name="correo" class="input-form focus:outline-none focus:shadow-outline">
                 </div>
                 <div>
                     <label for="new_tlf_habitacion" class="block text-gray-700 text-sm font-bold mb-2">Teléfono Habitación:</label>
-                    <input type="text" id="new_tlf_habitacion" name="tlf_habitacion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <input type="text" id="new_tlf_habitacion" name="tlf_habitacion" class="input-form focus:outline-none focus:shadow-outline">
                 </div>
                 <div>
                     <label for="new_tlf_trabajo" class="block text-gray-700 text-sm font-bold mb-2">Teléfono Trabajo:</label>
-                    <input type="text" id="new_tlf_trabajo" name="tlf_trabajo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <input type="text" id="new_tlf_trabajo" name="tlf_trabajo" class="input-form focus:outline-none focus:shadow-outline">
                 </div>
                 <div>
                     <label for="new_tlf_celular" class="block text-gray-700 text-sm font-bold mb-2">Teléfono Celular:</label>
-                    <input type="text" id="new_tlf_celular" name="tlf_celular" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <input type="text" id="new_tlf_celular" name="tlf_celular" class="input-form focus:outline-none focus:shadow-outline">
                 </div>
             </div>
             <div class="flex items-center justify-between mt-4">

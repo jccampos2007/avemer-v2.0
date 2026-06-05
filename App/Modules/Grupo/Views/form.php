@@ -13,11 +13,11 @@ $is_edit = isset($grupo_data['grupo_id']) && !empty($grupo_data['grupo_id']);
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div>
                 <label for="nombre_grupo" class="block text-gray-700 text-sm font-bold mb-2">Nombre del Grupo:</label>
-                <input type="text" id="nombre_grupo" name="nombre_grupo" value="<?php echo htmlspecialchars($grupo_data['nombre_grupo'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input type="text" id="nombre_grupo" name="nombre_grupo" value="<?php echo htmlspecialchars($grupo_data['nombre_grupo'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required>
             </div>
             <div>
                 <label for="descripcion_grupo" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
-                <input type="text" id="descripcion_grupo" name="descripcion_grupo" value="<?php echo htmlspecialchars($grupo_data['descripcion_grupo'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="text" id="descripcion_grupo" name="descripcion_grupo" value="<?php echo htmlspecialchars($grupo_data['descripcion_grupo'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline">
             </div>
         </div>
 

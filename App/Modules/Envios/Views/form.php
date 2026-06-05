@@ -21,13 +21,13 @@ $mensaje_val = htmlspecialchars($envios_data['mensaje'] ?? '');
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
                 <label for="titulo" class="block text-gray-700 text-sm font-bold mb-2">titulo:</label>
-                <input type="text" id="titulo" name="titulo" value="<?php echo $titulo_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="128">
+                <input type="text" id="titulo" name="titulo" value="<?php echo $titulo_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="128">
             </div>
 
             <div class="lg:col-span-4 md:col-span-2">
                 <label for="mensaje" class="block text-gray-700 text-sm font-bold mb-2">Mensaje:</label>
-                <!-- <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="256" src="../../../index.php"></textarea> -->
-                <textarea id="mensaje" name="mensaje" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="256"><?= isset($envios_data['mensaje']) ? htmlspecialchars($envios_data['mensaje']) : '' ?></textarea>
+                <!-- <textarea id="mensaje" name="mensaje" class="input-form focus:outline-none focus:shadow-outline" maxlength="256" src="../../../index.php"></textarea> -->
+                <textarea id="mensaje" name="mensaje" class="input-form focus:outline-none focus:shadow-outline" maxlength="256"><?= isset($envios_data['mensaje']) ? htmlspecialchars($envios_data['mensaje']) : '' ?></textarea>
             </div>
         </div>
 

@@ -221,6 +221,8 @@ $(document).ready(function () {
             order: [[0, 'desc']]
         });
 
+        setupAlumnoCopyHandler('#pagosTable');
+
         pagosTable.on('click', '.btn-action-confirm', function (e) {
             e.preventDefault();
             const id = $(this).data('id');

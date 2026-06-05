@@ -17,3 +17,28 @@ $('#inputId').on('autocompleteselect', function (event, ui) {
     // ui.item.id, ui.item.value, ui.item.label
 });
 ```
+
+### `setupAlumnoCopyHandler(tableSelector)`
+Usar esta función para habilitar el botón de copiar datos del alumno en tablas DataTable. Recibe el selector de la tabla. Llamar después de inicializar el DataTable:
+```js
+setupAlumnoCopyHandler('#miTabla');
+```
+
+## Botones de acción en listas (DataTables)
+
+Todos los botones de acciones en columnas de tablas deben usar las clases `btn-action` + `btn-action-{tipo}` definidas en `/var/www/html/php_mvc_app/public/css/base.css`, **nunca estilos inline**. Las clases disponibles son:
+
+| Clase | Uso | Color |
+|-------|-----|-------|
+| `btn-action-edit` | Editar/Modificar | Azul |
+| `btn-action-delete` | Eliminar | Rojo |
+| `btn-action-generar` | Generar deuda | Naranja |
+| `btn-action-email` | Enviar correo | Índigo |
+| `btn-action-view` | Ver/Consultar | Verde |
+| `btn-action-copy` | Copiar datos | Gris |
+
+Ejemplo correcto:
+```js
+buttons += '<a href="..." class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>';
+buttons += '<button class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>';
+```

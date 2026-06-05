@@ -24,7 +24,7 @@
     </div>
     <div class="mb-4 px-4">
         <label for="diplomado_filter_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Seleccionar Diplomado:</label>
-        <input type="text" id="diplomado_filter_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar diplomado...">
+        <input type="text" id="diplomado_filter_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Buscar diplomado...">
         <input type="hidden" id="diplomado_filter_id" name="diplomado_filter_id" value="">
     </div>
     <table id="capituloTable" class="min-w-full leading-normal display responsive nowrap" style="width:100%">

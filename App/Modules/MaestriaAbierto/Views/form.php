@@ -54,18 +54,18 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div>
                     <label for="numero" class="block text-gray-700 text-sm font-bold mb-2">Número:</label>
-                    <input type="text" id="numero" name="numero" value="<?php echo $numero_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="16">
+                    <input type="text" id="numero" name="numero" value="<?php echo $numero_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="16">
                 </div>
 
                 <div>
                     <label for="maestria_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Maestría:</label>
-                    <input type="text" id="maestria_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar maestría..." value="<?php echo $maestria_nombre_val; ?>" required>
+                    <input type="text" id="maestria_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Buscar maestría..." value="<?php echo $maestria_nombre_val; ?>" required>
                     <input type="hidden" name="maestria_id" id="maestria_id" value="<?php echo $maestria_id_val; ?>">
                 </div>
 
                 <div>
                     <label for="sede_id" class="block text-gray-700 text-sm font-bold mb-2">Sede:</label>
-                    <select id="sede_id" name="sede_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <select id="sede_id" name="sede_id" class="input-form focus:outline-none focus:shadow-outline" required>
                         <option value="">Seleccione una Sede</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
@@ -74,7 +74,7 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
 
                 <div>
                     <label for="estatus_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus:</label>
-                    <select id="estatus_id" name="estatus_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <select id="estatus_id" name="estatus_id" class="input-form focus:outline-none focus:shadow-outline" required>
                         <option value="">Seleccione un Estatus</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
@@ -83,33 +83,33 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
 
                 <div>
                     <label for="docente_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Instructor:</label>
-                    <input type="text" id="docente_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar instructor..." value="<?php echo htmlspecialchars($maestria_abierto_data['docente_nombre'] ?? ''); ?>" required>
+                    <input type="text" id="docente_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Buscar instructor..." value="<?php echo htmlspecialchars($maestria_abierto_data['docente_nombre'] ?? ''); ?>" required>
                     <input type="hidden" name="docente_id" id="docente_id" value="<?php echo $docente_id_val; ?>">
                 </div>
 
                 <div>
                     <label for="fecha" class="block text-gray-700 text-sm font-bold mb-2">Fecha:</label>
-                    <input type="text" id="fecha" name="fecha" value="<?php echo $fecha_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input type="text" id="fecha" name="fecha" value="<?php echo $fecha_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required>
                 </div>
 
                 <div>
                     <label for="convenio" class="block text-gray-700 text-sm font-bold mb-2">Convenio:</label>
-                    <input type="text" id="convenio" name="convenio" value="<?php echo $convenio_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="32">
+                    <input type="text" id="convenio" name="convenio" value="<?php echo $convenio_val; ?>" class="input-form focus:outline-none focus:shadow-outline" maxlength="32">
                 </div>
 
                 <div>
                     <label for="costo" class="block text-gray-700 text-sm font-bold mb-2">Costo:</label>
-                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo htmlspecialchars($maestria_abierto_data['costo'] ?? '0'); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="0">
+                    <input type="number" step="0.01" id="costo" name="costo" value="<?php echo htmlspecialchars($maestria_abierto_data['costo'] ?? '0'); ?>" class="input-form focus:outline-none focus:shadow-outline" min="0">
                 </div>
 
                 <div>
                     <label for="inicial" class="block text-gray-700 text-sm font-bold mb-2">Inicial:</label>
-                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo htmlspecialchars($maestria_abierto_data['inicial'] ?? '0'); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="0">
+                    <input type="number" step="0.01" id="inicial" name="inicial" value="<?php echo htmlspecialchars($maestria_abierto_data['inicial'] ?? '0'); ?>" class="input-form focus:outline-none focus:shadow-outline" min="0">
                 </div>
 
                 <div class="lg:col-span-4 md:col-span-2">
                     <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
-                    <textarea id="nombre_carta" name="nombre_carta" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5"><?php echo $nombre_carta_val; ?></textarea>
+                    <textarea id="nombre_carta" name="nombre_carta" class="input-form focus:outline-none focus:shadow-outline" rows="5"><?php echo $nombre_carta_val; ?></textarea>
                 </div>
             </div>
 

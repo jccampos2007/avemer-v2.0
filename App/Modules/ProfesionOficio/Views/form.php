@@ -9,7 +9,7 @@ $is_edit = isset($profesion_data['id']) && !empty($profesion_data['id']);
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
                 <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre de la Profesión u Oficio:</label>
-                <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($profesion_data['nombre'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="43">
+                <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($profesion_data['nombre'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="43">
             </div>
         </div>
 

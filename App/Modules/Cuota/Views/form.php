@@ -40,7 +40,7 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
 
             <div class="mb-4">
                 <label for="oferta_academica_nombre" class="block text-gray-700 text-sm font-bold mb-2">Oferta Académica (Apertura):</label>
-                <input type="text" id="oferta_academica_nombre" placeholder="Busque una oferta académica" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" autocomplete="off">
+                <input type="text" id="oferta_academica_nombre" placeholder="Busque una oferta académica" class="input-form focus:outline-none focus:shadow-outline" autocomplete="off">
                 <input type="hidden" id="oferta_academica_id" name="oferta_academica_id">
             </div>
 
@@ -66,7 +66,7 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
 
             <div class="mb-4">
                 <label for="diplomado_control_id" class="block text-gray-700 text-sm font-bold mb-2">Control / Capítulo:</label>
-                <select id="diplomado_control_id" name="diplomado_control_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <select id="diplomado_control_id" name="diplomado_control_id" class="input-form focus:outline-none focus:shadow-outline">
                     <option value="">Seleccione un control</option>
                 </select>
             </div>
@@ -106,15 +106,15 @@ $diplomado_control_id_val = $cuota_data['diplomado_control_id'] ?? '';
             <div class="flex flex-col md:flex-row gap-4 mb-4">
                 <div class="w-full md:w-1/2">
                     <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre de la Cuota:</label>
-                    <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="32">
+                    <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="32">
                 </div>
                 <div class="w-full md:w-1/4">
                     <label for="monto" class="block text-gray-700 text-sm font-bold mb-2">Monto ($):</label>
-                    <input type="number" step="0.01" id="monto" name="monto" value="<?php echo $monto_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
+                    <input type="number" step="0.01" id="monto" name="monto" value="<?php echo $monto_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required min="0">
                 </div>
                 <div class="w-full md:w-1/4">
                     <label for="fecha_vencimiento" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Vencimiento:</label>
-                    <input type="text" id="fecha_vencimiento" name="fecha_vencimiento" value="<?php echo $fecha_vencimiento_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input type="text" id="fecha_vencimiento" name="fecha_vencimiento" value="<?php echo $fecha_vencimiento_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required>
                 </div>
             </div>
         </div>

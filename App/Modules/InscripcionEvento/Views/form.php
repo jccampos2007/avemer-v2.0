@@ -25,19 +25,19 @@ $alumno_nombre_current = $inscripcion_evento_data['alumno_nombre_completo'] ?? '
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div class="lg:col-span-2">
                 <label for="evento_abierto_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Evento Abierto:</label>
-                <input type="text" id="evento_abierto_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar evento abierto..." value="<?php echo $evento_abierto_nombre_val; ?>" required>
+                <input type="text" id="evento_abierto_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Buscar evento abierto..." value="<?php echo $evento_abierto_nombre_val; ?>" required>
                 <input type="hidden" name="evento_abierto_id" id="evento_abierto_id" value="<?php echo $evento_abierto_id_val; ?>">
             </div>
 
             <div>
                 <label for="alumno_id" class="block text-gray-700 text-sm font-bold mb-2">Alumno:</label>
-                <input id="alumno_autocomplete" value="<?php echo $alumno_nombre_current; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input id="alumno_autocomplete" value="<?php echo $alumno_nombre_current; ?>" class="input-form focus:outline-none focus:shadow-outline">
                 <input type="hidden" id="alumno_id" name="alumno_id" value="<?php echo $alumno_id_val; ?>">
             </div>
 
             <div>
                 <label for="estatus_inscripcion_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus de Inscripción:</label>
-                <select id="estatus_inscripcion_id" name="estatus_inscripcion_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <select id="estatus_inscripcion_id" name="estatus_inscripcion_id" class="input-form focus:outline-none focus:shadow-outline" required>
                     <option value="">Seleccione un Estatus</option>
                     <!-- Opciones se llenarán con JS -->
                 </select>

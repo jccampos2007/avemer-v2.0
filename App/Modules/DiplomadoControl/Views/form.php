@@ -22,7 +22,7 @@
                         </div>
                         <input type="hidden" name="diplomado_abierto_id" id="diplomado_abierto_id" value="<?php echo $diplomadoAbierto['id']; ?>">
                     <?php else: ?>
-                        <input type="text" id="diplomado_abierto_autocomplete" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar oferta de diplomado..." required>
+                        <input type="text" id="diplomado_abierto_autocomplete" class="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Buscar oferta de diplomado..." required>
                         <input type="hidden" name="diplomado_abierto_id" id="diplomado_abierto_id" value="">
                     <?php endif; ?>
                 </div>
@@ -31,9 +31,9 @@
                 <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2">Asignación Masiva (Opcional):</label>
                     <div class="flex space-x-2">
-                        <input type="text" id="bulk_docente_autocomplete" class="w-1/2 px-3 py-2 border border-gray-200 rounded-md text-sm" placeholder="Elegir Instructor...">
+                        <input type="text" id="bulk_docente_autocomplete" class="w-1/2 px-3 py-1.5 border border-gray-200 rounded-md text-sm" placeholder="Elegir Instructor...">
                         <input type="hidden" id="bulk_docente">
-                        <input type="number" id="bulk_mensualidad" placeholder="Mensualidad" class="w-1/3 px-3 py-2 border border-gray-200 rounded-md text-sm" min="0">
+                        <input type="number" id="bulk_mensualidad" placeholder="Mensualidad" class="w-1/3 px-3 py-1.5 border border-gray-200 rounded-md text-sm" min="0">
                         <button type="button" id="btnApplyBulk" class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-md border transition">
                             Aplicar
                         </button>

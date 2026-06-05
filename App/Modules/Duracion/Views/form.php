@@ -9,7 +9,7 @@ $is_edit = isset($duracion_data['id']) && !empty($duracion_data['id']);
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
                 <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre de la Duración:</label>
-                <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($duracion_data['nombre'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="16">
+                <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($duracion_data['nombre'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="16">
             </div>
         </div>
 

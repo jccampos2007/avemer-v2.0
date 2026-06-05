@@ -10,38 +10,38 @@ $is_edit = isset($user_data['usuario_id']) && !empty($user_data['usuario_id']);
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div>
                 <label for="usuario_cedula" class="block text-gray-700 text-sm font-bold mb-2">Cédula:</label>
-                <input type="text" id="usuario_cedula" name="usuario_cedula" value="<?php echo htmlspecialchars($user_data['usuario_cedula'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input type="text" id="usuario_cedula" name="usuario_cedula" value="<?php echo htmlspecialchars($user_data['usuario_cedula'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required>
             </div>
             <div>
                 <label for="usuario_nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                <input type="text" id="usuario_nombre" name="usuario_nombre" value="<?php echo htmlspecialchars($user_data['usuario_nombre'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input type="text" id="usuario_nombre" name="usuario_nombre" value="<?php echo htmlspecialchars($user_data['usuario_nombre'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required>
             </div>
             <div>
                 <label for="usuario_apellido" class="block text-gray-700 text-sm font-bold mb-2">Apellido:</label>
-                <input type="text" id="usuario_apellido" name="usuario_apellido" value="<?php echo htmlspecialchars($user_data['usuario_apellido'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input type="text" id="usuario_apellido" name="usuario_apellido" value="<?php echo htmlspecialchars($user_data['usuario_apellido'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required>
             </div>
             <div>
                 <label for="usuario_user" class="block text-gray-700 text-sm font-bold mb-2">Usuario (Login):</label>
-                <input type="text" id="usuario_user" name="usuario_user" value="<?php echo htmlspecialchars($user_data['usuario_user'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input type="text" id="usuario_user" name="usuario_user" value="<?php echo htmlspecialchars($user_data['usuario_user'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required>
             </div>
             <div>
                 <label for="correo" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico:</label>
-                <input type="email" id="correo" name="correo" value="<?php echo htmlspecialchars($user_data['correo'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="email" id="correo" name="correo" value="<?php echo htmlspecialchars($user_data['correo'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline">
             </div>
             <div class="lg:col-span-4 md:col-span-2">
                 <label for="usuario_pws" class="block text-gray-700 text-sm font-bold mb-2">Contraseña: <?php echo ($is_edit) ? '(Dejar en blanco para no cambiar)' : ''; ?></label>
-                <input type="password" id="usuario_pws" name="usuario_pws" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" <?php echo ($is_edit) ? '' : 'required'; ?>>
+                <input type="password" id="usuario_pws" name="usuario_pws" class="input-form focus:outline-none focus:shadow-outline" <?php echo ($is_edit) ? '' : 'required'; ?>>
             </div>
             <div>
                 <label for="estatus_activo_id" class="block text-gray-700 text-sm font-bold mb-2">Estatus Activo:</label>
-                <select id="estatus_activo_id" name="estatus_activo_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <select id="estatus_activo_id" name="estatus_activo_id" class="input-form focus:outline-none focus:shadow-outline">
                     <option value="">Seleccione una opción</option>
                 </select>
                 <input type="hidden" name="estatus_activo_current" id="estatus_activo_current" value="<?php echo $user_data['estatus_activo_id'] ?? ''; ?>">
             </div>
             <div>
                 <label for="grupo_id" class="block text-gray-700 text-sm font-bold mb-2">Grupo:</label>
-                <select id="grupo_id" name="grupo_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <select id="grupo_id" name="grupo_id" class="input-form focus:outline-none focus:shadow-outline" required>
                     <option value="">Seleccione un grupo</option>
                     <?php if (isset($grupos) && is_array($grupos)): ?>
                         <?php foreach ($grupos as $grupo): ?>

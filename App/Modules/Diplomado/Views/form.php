@@ -37,7 +37,7 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 <div>
                     <label for="duracion_id" class="block text-gray-700 text-sm font-bold mb-2">Duración:</label>
-                    <select id="duracion_id" name="duracion_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <select id="duracion_id" name="duracion_id" class="input-form focus:outline-none focus:shadow-outline" required>
                         <option value="">Seleccione una Duración</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
@@ -46,17 +46,17 @@ $form_action = $is_edit ? BASE_URL . 'diplomado/edit/' . $diplomado_data['id'] :
 
                 <div>
                     <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($diplomado_data['nombre'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="128">
+                    <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($diplomado_data['nombre'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="128">
                 </div>
 
                 <div>
                     <label for="siglas" class="block text-gray-700 text-sm font-bold mb-2">Siglas:</label>
-                    <input type="text" id="siglas" name="siglas" value="<?php echo htmlspecialchars($diplomado_data['siglas'] ?? ''); ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="8">
+                    <input type="text" id="siglas" name="siglas" value="<?php echo htmlspecialchars($diplomado_data['siglas'] ?? ''); ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="8">
                 </div>
 
                 <div class="lg:col-span-3 md:col-span-2">
                     <label for="descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
-                    <textarea id="descripcion" name="descripcion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5"><?php echo $diplomado_data['descripcion'] ?? ''; ?></textarea>
+                    <textarea id="descripcion" name="descripcion" class="input-form focus:outline-none focus:shadow-outline" rows="5"><?php echo $diplomado_data['descripcion'] ?? ''; ?></textarea>
                 </div>
             </div>
 

@@ -46,7 +46,7 @@ $inicial_val = htmlspecialchars($evento_data['inicial'] ?? '0.00');
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                     <label for="duracion_id" class="block text-gray-700 text-sm font-bold mb-2">Duración:</label>
-                    <select id="duracion_id" name="duracion_id" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    <select id="duracion_id" name="duracion_id" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         <option value="">Seleccione una Duración</option>
                         <!-- Opciones se llenarán con JS -->
                     </select>
@@ -56,17 +56,17 @@ $inicial_val = htmlspecialchars($evento_data['inicial'] ?? '0.00');
 
                 <div>
                     <label for="siglas" class="block text-gray-700 text-sm font-bold mb-2">Siglas:</label>
-                    <input type="text" id="siglas" name="siglas" value="<?php echo $siglas_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="8">
+                    <input type="text" id="siglas" name="siglas" value="<?php echo $siglas_val; ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="8">
                 </div>
 
                 <div class="md:col-span-2">
                     <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="64">
+                    <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="64">
                 </div>
 
                 <div class="md:col-span-2">
                     <label for="descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
-                    <textarea id="descripcion" name="descripcion" class="input-form w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="4" required><?php echo $descripcion_val; ?></textarea>
+                    <textarea id="descripcion" name="descripcion" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="4" required><?php echo $descripcion_val; ?></textarea>
                 </div>
             </div>
 

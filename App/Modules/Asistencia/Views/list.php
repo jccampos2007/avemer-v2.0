@@ -23,7 +23,7 @@
 
             <div class="mb-4">
                 <label for="oferta_academica_nombre" class="block text-gray-700 text-sm font-bold mb-2">Oferta Académica (Apertura):</label>
-                <input type="text" id="oferta_academica_nombre" placeholder="Busque una oferta académica" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" autocomplete="off">
+                <input type="text" id="oferta_academica_nombre" placeholder="Busque una oferta académica" class="input-form focus:outline-none focus:shadow-outline" autocomplete="off">
                 <input type="hidden" id="oferta_academica_id" name="oferta_academica_id">
             </div>
 
@@ -66,7 +66,7 @@
 
             <div class="mb-4">
                 <label for="observacion" class="block text-gray-700 text-sm font-bold mb-2">Observación:</label>
-                <textarea id="observacion" name="observacion" rows="2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" maxlength="255" placeholder="Opcional"></textarea>
+                <textarea id="observacion" name="observacion" rows="2" class="input-form focus:outline-none focus:shadow-outline" maxlength="255" placeholder="Opcional"></textarea>
             </div>
 
             <div class="flex items-center gap-4">

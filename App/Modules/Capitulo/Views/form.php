@@ -26,33 +26,33 @@ $orden_val = htmlspecialchars($capitulo_data['orden'] ?? '');
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div class="lg:col-span-4 md:col-span-2">
                 <label for="diplomado_autocomplete" class="block text-gray-700 text-sm font-bold mb-2">Diplomado:</label>
-                <input type="text" id="diplomado_autocomplete" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Buscar diplomado..." value="<?php echo $diplomado_nombre_val; ?>" required>
+                <input type="text" id="diplomado_autocomplete" class="input-form focus:outline-none focus:shadow-outline" placeholder="Buscar diplomado..." value="<?php echo $diplomado_nombre_val; ?>" required>
                 <input type="hidden" name="diplomado_id" id="diplomado_id" value="<?php echo $diplomado_id_val; ?>">
             </div>
 
             <div>
                 <label for="numero" class="block text-gray-700 text-sm font-bold mb-2">Número:</label>
-                <input type="text" id="numero" name="numero" value="<?php echo $numero_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="10">
+                <input type="text" id="numero" name="numero" value="<?php echo $numero_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="10">
             </div>
 
             <div class="lg:col-span-2">
                 <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required maxlength="64">
+                <input type="text" id="nombre" name="nombre" value="<?php echo $nombre_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required maxlength="64">
             </div>
 
             <div>
                 <label for="orden" class="block text-gray-700 text-sm font-bold mb-2">Orden:</label>
-                <input type="number" id="orden" name="orden" value="<?php echo $orden_val; ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required min="0">
+                <input type="number" id="orden" name="orden" value="<?php echo $orden_val; ?>" class="input-form focus:outline-none focus:shadow-outline" required min="0">
             </div>
 
             <div class="lg:col-span-4 md:col-span-2">
                 <label for="descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
-                <textarea id="descripcion" name="descripcion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5"><?php echo $descripcion_val; ?></textarea>
+                <textarea id="descripcion" name="descripcion" class="input-form focus:outline-none focus:shadow-outline" rows="5"><?php echo $descripcion_val; ?></textarea>
             </div>
 
             <div>
                 <label for="activo" class="block text-gray-700 text-sm font-bold mb-2">Activo:</label>
-                <select id="activo" name="activo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <select id="activo" name="activo" class="input-form focus:outline-none focus:shadow-outline">
                     <option value="1" <?php echo ($activo_val == 1) ? 'selected' : ''; ?>>Sí</option>
                     <option value="0" <?php echo ($activo_val == 0) ? 'selected' : ''; ?>>No</option>
                 </select>
