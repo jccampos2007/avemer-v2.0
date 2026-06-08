@@ -99,7 +99,7 @@ trait EnviaNotificacionTrait
 
             require_once APP_ROOT . '/App/Modules/Correo/enviar.php';
             $subject = "Inscripción confirmada - {$programType}: {$nombreProgram}";
-            correo($subject, $emailBody, 'grupoavemer@gmail.com');
+            correo($subject, $emailBody, $alumnoCorreo);
 
         } catch (\Exception $e) {
             error_log('Error al enviar correo de inscripción: ' . $e->getMessage());
