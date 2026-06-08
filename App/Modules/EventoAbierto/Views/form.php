@@ -107,7 +107,9 @@ $inicial_val = htmlspecialchars($evento_abierto_data['inicial'] ?? '0.00');
                 </div>
 
                 <div class="lg:col-span-4 md:col-span-2">
-                    <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
+                    <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:
+                            <button type="button" class="toggle-html-btn text-xs ml-2 text-blue-600 hover:text-blue-800 font-medium">Ver HTML</button>
+                        </label>
                     <div class="mb-2">
                         <div class="flex flex-wrap gap-1 placeholder-container">
                             <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{alumnoName}}">{{alumnoName}}</span>

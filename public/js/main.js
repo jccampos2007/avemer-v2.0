@@ -70,6 +70,38 @@ $(document).ready(function () {
         }
     });
 
+    // Toggle entre CKEditor y textarea HTML
+    $(document).on('click', '.toggle-html-btn', function () {
+        const textarea = document.getElementById('nombre_carta');
+        const editor = window.nombreCartaEditor;
+        if (!editor || !textarea) return;
+
+        if ($(this).text().trim() === 'Ver HTML') {
+            textarea.value = editor.getData();
+            $(textarea).show();
+            if (editor.ui && editor.ui.view && editor.ui.view.element) {
+                $(editor.ui.view.element).hide();
+            }
+            $(this).text('Ocultar HTML');
+        } else {
+            editor.setData(textarea.value);
+            $(textarea).hide();
+            if (editor.ui && editor.ui.view && editor.ui.view.element) {
+                $(editor.ui.view.element).show();
+            }
+            $(this).text('Ver HTML');
+        }
+    });
+
+    // Sincronizar textarea → editor antes de cualquier submit si el textarea está visible
+    $(document).on('submit', 'form', function () {
+        const textarea = document.getElementById('nombre_carta');
+        const editor = window.nombreCartaEditor;
+        if (textarea && editor && $(textarea).is(':visible')) {
+            editor.setData(textarea.value);
+        }
+    });
+
 });
 
 // Función reusable para llenar un select
