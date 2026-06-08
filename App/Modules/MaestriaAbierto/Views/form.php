@@ -110,7 +110,6 @@ $convenio_val = htmlspecialchars($maestria_abierto_data['convenio'] ?? '');
                 <div class="lg:col-span-4 md:col-span-2">
                     <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
                     <div class="mb-2">
-                        <label class="block text-gray-700 text-xs font-bold mb-1">Variables:</label>
                         <div class="flex flex-wrap gap-1 placeholder-container">
                             <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{alumnoName}}">{{alumnoName}}</span>
                             <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{ci}}">{{ci}}</span>

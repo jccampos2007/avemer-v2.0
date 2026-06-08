@@ -21,7 +21,7 @@
                     extend: 'excelHtml5',
                     text: '<i class="fas fa-file-excel"></i><span class="export-label"> Exportar a Excel</span>',
                     className: 'buttons-excel',
-                    title: 'Cobranza - Cuotas Vencidas',
+                    title: 'Cobranza - Deudas Pendientes',
                     exportOptions: { columns: [1, 2, 3, 4, 5, 6, 7] },
                     action: newExportAction
                 },
@@ -29,7 +29,7 @@
                     extend: 'pdfHtml5',
                     text: '<i class="fas fa-file-pdf"></i><span class="export-label"> Exportar a PDF</span>',
                     className: 'buttons-pdf',
-                    title: 'Cobranza - Cuotas Vencidas',
+                    title: 'Cobranza - Deudas Pendientes',
                     exportOptions: { columns: [1, 2, 3, 4, 5, 6, 7] },
                     action: newExportAction,
                     customize: function (doc) {
@@ -90,13 +90,14 @@
                 },
                 {
                     data: 10,
-                    render: function (data, type) {
+                    render: function (data, type, row) {
                         if (type === 'display') {
                             var val = parseFloat(data);
-                            if (val > 0) {
+                            var dias = Number(row[11]);
+                            if (val > 0 && dias > 0) {
                                 return '<span class="text-red-600 font-bold">$ ' + data + '</span>';
                             }
-                            return '<span class="text-gray-500">$ ' + data + '</span>';
+                            return '<span class="text-gray-700">$ ' + data + '</span>';
                         }
                         return data;
                     }
@@ -105,17 +106,28 @@
                     data: 11,
                     render: function (data, type) {
                         if (type === 'display') {
-                            var days = parseInt(data);
-                            if (days >= 30) {
-                                return '<span class="text-red-700 font-bold bg-red-100 px-2 py-1 rounded">' + days + ' días</span>';
-                            } else if (days >= 15) {
-                                return '<span class="text-orange-600 font-bold bg-orange-100 px-2 py-1 rounded">' + days + ' días</span>';
-                            } else if (days >= 1) {
-                                return '<span class="text-yellow-600 font-bold bg-yellow-100 px-2 py-1 rounded">' + days + ' días</span>';
+                            var days = Number(data);
+                            if (days > 0) {
+                                // Vencida
+                                if (days >= 30) {
+                                    return '<span class="text-red-700 font-bold bg-red-100 px-2 py-1 rounded">' + days + ' días vencido</span>';
+                                } else if (days >= 15) {
+                                    return '<span class="text-orange-600 font-bold bg-orange-100 px-2 py-1 rounded">' + days + ' días vencido</span>';
+                                } else {
+                                    return '<span class="text-yellow-600 font-bold bg-yellow-100 px-2 py-1 rounded">' + days + ' días vencido</span>';
+                                }
+                            } else if (days === 0) {
+                                return '<span class="text-orange-500 font-bold bg-orange-50 px-2 py-1 rounded">Vence hoy</span>';
+                            } else {
+                                // Aún no vencida — mostrar días restantes sin signo negativo
+                                var remaining = Math.abs(days);
+                                if (remaining <= 7) {
+                                    return '<span class="text-yellow-600 font-semibold bg-yellow-50 px-2 py-1 rounded">' + remaining + ' días restantes</span>';
+                                }
+                                return '<span class="text-green-600 font-semibold bg-green-50 px-2 py-1 rounded">' + remaining + ' días restantes</span>';
                             }
-                            return days + ' días';
                         }
-                        return data;
+                        return Math.abs(Number(data));
                     }
                 },
                 {
@@ -139,7 +151,7 @@
             ],
             language: {
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
-            },
+            }
         });
         setupAlumnoCopyHandler('#cobranzaTable');
     });

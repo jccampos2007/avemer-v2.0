@@ -65,8 +65,7 @@ class CobranzaModel
                 ) pag ON pag.cuota_id = c.id AND pag.alumno_id = a.id
                 WHERE t.tipo = 1
                   AND t.estatus = 1
-                  AND c.fecha_vencimiento < CURDATE()
-                  AND (pag.total_pagado IS NULL OR pag.total_pagado < c.monto)";
+                  AND (c.monto - COALESCE(pag.total_pagado, 0)) > 0";
 
         $countSql = "SELECT COUNT(*) FROM transaccion t
                      JOIN cuota c ON t.cuota_id = c.id
@@ -77,8 +76,7 @@ class CobranzaModel
                         GROUP BY cuota_id, alumno_id
                      ) pag ON pag.cuota_id = c.id AND pag.alumno_id = a.id
                      WHERE t.tipo = 1 AND t.estatus = 1
-                       AND c.fecha_vencimiento < CURDATE()
-                       AND (pag.total_pagado IS NULL OR pag.total_pagado < c.monto)";
+                       AND (c.monto - COALESCE(pag.total_pagado, 0)) > 0";
 
         $where = [];
         $queryParams = [];
@@ -166,8 +164,7 @@ class CobranzaModel
                     GROUP BY cuota_id, alumno_id
                 ) pag ON pag.cuota_id = c.id AND pag.alumno_id = a.id
                 WHERE t.tipo = 1 AND t.estatus = 1
-                  AND c.fecha_vencimiento < CURDATE()
-                  AND (pag.total_pagado IS NULL OR pag.total_pagado < c.monto)";
+                  AND (c.monto - COALESCE(pag.total_pagado, 0)) > 0";
         $stmt = $this->pdo->query($sql);
         return (int)$stmt->fetchColumn();
     }
