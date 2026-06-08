@@ -158,14 +158,14 @@ $(document).ready(function () {
         }
 
         // Inicializar CKEditor para el campo nombre_carta
-        let nombreCartaEditor; // Variable para almacenar la instancia del editor
+        window.nombreCartaEditor = null; // Variable global para el editor
         ClassicEditor
             .create(document.querySelector('#nombre_carta'), {
                 language: 'es',
                 toolbar: CKEDITOR_TOOLBAR_OPTIONS
             })
             .then(editor => {
-                nombreCartaEditor = editor;
+                window.nombreCartaEditor = editor;
                 // Si estamos en modo edición, pre-llenar CKEditor
                 const currentNombreCarta = formEventoAbierto.data('nombre-carta');
                 if (currentNombreCarta) {
@@ -198,7 +198,7 @@ $(document).ready(function () {
             const estatusId = $('#estatus_id').val();
             const fechaInicio = $('#fecha_inicio').val().trim();
             const fechaFin = $('#fecha_fin').val().trim();
-            const nombreCartaContent = nombreCartaEditor ? nombreCartaEditor.getData().trim() : ''; // Obtener contenido de CKEditor
+            const nombreCartaContent = window.nombreCartaEditor ? window.nombreCartaEditor.getData().trim() : ''; // Obtener contenido de CKEditor
 
             if (nombreCartaContent === '') {
                 event.preventDefault();
@@ -217,4 +217,5 @@ $(document).ready(function () {
             }
         });
     }
+
 });

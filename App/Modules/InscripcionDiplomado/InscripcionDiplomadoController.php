@@ -5,9 +5,12 @@ namespace App\Modules\InscripcionDiplomado;
 use App\Core\Controller;
 use App\Core\Auth;
 use App\Modules\InscripcionDiplomado\InscripcionDiplomadoModel;
+use App\Modules\Inscripcion\EnviaNotificacionTrait;
 
 class InscripcionDiplomadoController extends Controller
 {
+    use EnviaNotificacionTrait;
+
     private $inscripcionDiplomadoModel;
 
     public function __construct()
@@ -180,6 +183,9 @@ class InscripcionDiplomadoController extends Controller
             }
 
             if ($success) {
+                if ($id === null) {
+                    $this->sendInscripcionEmail((int)$data['alumno_id'], (int)$data['diplomado_abierto_id'], 2);
+                }
                 Auth::setFlashMessage('success', $message);
                 $this->redirect('inscripcion_diplomado'); // Redirigir a la lista
             } else {

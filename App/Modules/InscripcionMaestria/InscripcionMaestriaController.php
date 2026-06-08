@@ -6,10 +6,13 @@ use App\Core\Controller; // Asume que Controller provee los helpers (sanitizeInp
 use App\Core\Auth;
 use App\Core\Database; // Necesario para obtener la conexión PDO
 use App\Modules\InscripcionMaestria\InscripcionMaestriaModel;
+use App\Modules\Inscripcion\EnviaNotificacionTrait;
 use PDO;
 
 class InscripcionMaestriaController extends Controller
 {
+    use EnviaNotificacionTrait;
+
     private $inscripcionMaestriaModel;
 
     public function __construct()
@@ -184,6 +187,9 @@ class InscripcionMaestriaController extends Controller
             }
 
             if ($success) {
+                if ($id === null) {
+                    $this->sendInscripcionEmail((int)$data['alumno_id'], (int)$data['maestria_abierto_id'], 4);
+                }
                 Auth::setFlashMessage('success', $message);
                 $this->redirect('inscripcion_maestria'); // Redireccionar a la lista
             } else {

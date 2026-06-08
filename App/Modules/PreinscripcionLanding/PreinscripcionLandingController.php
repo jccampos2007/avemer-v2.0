@@ -277,76 +277,94 @@ class PreinscripcionLandingController extends Controller
                        $nombreProgram = htmlspecialchars($offerInfo['nombre'] ?? '');
                        $sedeProgram = htmlspecialchars($offerInfo['sede_nombre'] ?? '');
 
-                       // HTML Template
-                       $emailBody = '
-                       <!DOCTYPE html>
-                       <html lang="es">
-                       <head>
-                           <meta charset="UTF-8">
-                           <title>Nueva Preinscripción</title>
-                       </head>
-                       <body style="font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; -webkit-font-smoothing: antialiased;">
-                           <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border-collapse: collapse;">
-                               <tr>
-                                   <td style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 30px; text-align: center;">
-                                       <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 0.5px;">Nueva Pre-inscripción Registrada</h1>
-                                       <p style="color: #dbeafe; margin: 5px 0 0 0; font-size: 14px;">Landing Page - Sistema de Gestión</p>
-                                   </td>
-                               </tr>
-                               <tr>
-                                   <td style="padding: 30px; color: #334155; font-size: 16px; line-height: 1.6;">
-                                       <p style="margin-top: 0; font-size: 16px; font-weight: bold; color: #1e293b;">Detalles del Alumno:</p>
-                                       <table width="100%" style="border-collapse: collapse; margin-bottom: 25px; background-color: #f8fafc; border-radius: 6px; overflow: hidden;">
-                                           <tr>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b; width: 35%;">CI / Pasaporte:</td>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $ci . '</td>
-                                           </tr>
-                                           <tr>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Nombre Completo:</td>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $alumnoName . '</td>
-                                           </tr>
-                                           <tr>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Correo:</td>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $alumnoCorreo . '</td>
-                                           </tr>
-                                           <tr>
-                                               <td style="padding: 12px 15px; font-weight: 600; color: #64748b;">Celular:</td>
-                                               <td style="padding: 12px 15px; color: #0f172a;">' . $alumnoTlf . '</td>
-                                           </tr>
-                                       </table>
+                       $templateModel = new PreinscripcionLandingModel();
+                       $template = $templateModel->getTemplateByTitle('Preinscripción');
 
-                                       <p style="font-size: 16px; font-weight: bold; color: #1e293b; margin-top: 20px;">Programa Seleccionado:</p>
-                                       <table width="100%" style="border-collapse: collapse; background-color: #f8fafc; border-radius: 6px; overflow: hidden;">
-                                           <tr>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b; width: 35%;">Tipo:</td>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">' . $programType . '</td>
-                                           </tr>
-                                           <tr>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Número:</td>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $numeroProgram . '</td>
-                                           </tr>
-                                           <tr>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Nombre:</td>
-                                               <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $nombreProgram . '</td>
-                                           </tr>
-                                           <tr>
-                                               <td style="padding: 12px 15px; font-weight: 600; color: #64748b;">Sede:</td>
-                                               <td style="padding: 12px 15px; color: #0f172a;">' . $sedeProgram . '</td>
-                                           </tr>
-                                       </table>
-                                   </td>
-                               </tr>
-                               <tr>
-                                   <td style="background-color: #f1f5f9; padding: 20px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0;">
-                                       <p style="margin: 0;">Este es un mensaje automático del Sistema de Registro Avemer.</p>
-                                       <p style="margin: 5px 0 0 0;">&copy; ' . date('Y') . ' Grupo Avemer. Todos los derechos reservados.</p>
-                                   </td>
-                               </tr>
-                           </table>
-                       </body>
-                       </html>';
+                       $replaces = [
+                           '{{alumnoName}}'    => $alumnoName,
+                           '{{ci}}'            => $ci,
+                           '{{correo}}'        => $alumnoCorreo,
+                           '{{tlf}}'           => $alumnoTlf,
+                           '{{programType}}'   => $programType,
+                           '{{programaNumero}}'=> $numeroProgram,
+                           '{{programaNombre}}'=> $nombreProgram,
+                           '{{sede}}'          => $sedeProgram,
+                           '{{year}}'          => date('Y'),
+                       ];
 
-                       $subject = "Nueva preinscripción de " . $alumnoName . " en " . $programType;
+                       if ($template) {
+                           $emailBody = str_replace(array_keys($replaces), array_values($replaces), $template['mensaje']);
+                           $subject = str_replace(array_keys($replaces), array_values($replaces), $template['titulo']);
+                       } else {
+                           $emailBody = '
+                           <!DOCTYPE html>
+                           <html lang="es">
+                           <head>
+                               <meta charset="UTF-8">
+                               <title>Nueva Preinscripción</title>
+                           </head>
+                           <body style="font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; -webkit-font-smoothing: antialiased;">
+                               <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border-collapse: collapse;">
+                                   <tr>
+                                       <td style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 30px; text-align: center;">
+                                           <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 0.5px;">Nueva Pre-inscripción Registrada</h1>
+                                           <p style="color: #dbeafe; margin: 5px 0 0 0; font-size: 14px;">Landing Page - Sistema de Gestión</p>
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td style="padding: 30px; color: #334155; font-size: 16px; line-height: 1.6;">
+                                           <p style="margin-top: 0; font-size: 16px; font-weight: bold; color: #1e293b;">Detalles del Alumno:</p>
+                                           <table width="100%" style="border-collapse: collapse; margin-bottom: 25px; background-color: #f8fafc; border-radius: 6px; overflow: hidden;">
+                                               <tr>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b; width: 35%;">CI / Pasaporte:</td>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $ci . '</td>
+                                               </tr>
+                                               <tr>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Nombre Completo:</td>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $alumnoName . '</td>
+                                               </tr>
+                                               <tr>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Correo:</td>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $alumnoCorreo . '</td>
+                                               </tr>
+                                               <tr>
+                                                   <td style="padding: 12px 15px; font-weight: 600; color: #64748b;">Celular:</td>
+                                                   <td style="padding: 12px 15px; color: #0f172a;">' . $alumnoTlf . '</td>
+                                               </tr>
+                                           </table>
+
+                                           <p style="font-size: 16px; font-weight: bold; color: #1e293b; margin-top: 20px;">Programa Seleccionado:</p>
+                                           <table width="100%" style="border-collapse: collapse; background-color: #f8fafc; border-radius: 6px; overflow: hidden;">
+                                               <tr>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b; width: 35%;">Tipo:</td>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">' . $programType . '</td>
+                                               </tr>
+                                               <tr>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Número:</td>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $numeroProgram . '</td>
+                                               </tr>
+                                               <tr>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Nombre:</td>
+                                                   <td style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; color: #0f172a;">' . $nombreProgram . '</td>
+                                               </tr>
+                                               <tr>
+                                                   <td style="padding: 12px 15px; font-weight: 600; color: #64748b;">Sede:</td>
+                                                   <td style="padding: 12px 15px; color: #0f172a;">' . $sedeProgram . '</td>
+                                               </tr>
+                                           </table>
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td style="background-color: #f1f5f9; padding: 20px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0;">
+                                           <p style="margin: 0;">Este es un mensaje automático del Sistema de Registro Avemer.</p>
+                                           <p style="margin: 5px 0 0 0;">&copy; ' . date('Y') . ' Grupo Avemer. Todos los derechos reservados.</p>
+                                       </td>
+                                   </tr>
+                               </table>
+                           </body>
+                           </html>';
+                           $subject = "Nueva preinscripción de " . $alumnoName . " en " . $programType;
+                       }
                        correo($subject, $emailBody, 'grupoavemer@gmail.com');
                     }
                 } catch (\Exception $emailEx) {
@@ -361,6 +379,24 @@ class PreinscripcionLandingController extends Controller
         } catch (\Exception $e) {
             error_log('Error en processPreinscripcion (PreinscripcionLanding): ' . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Error al procesar: ' . $e->getMessage()]);
+        }
+        exit();
+    }
+
+    public function seedTemplates(): void
+    {
+        header('Content-Type: application/json');
+        try {
+            $model = new PreinscripcionLandingModel();
+            $inserted = $model->seedTemplates();
+            if ($inserted) {
+                echo json_encode(['success' => true, 'message' => 'Templates insertados: ' . implode(', ', $inserted)]);
+            } else {
+                echo json_encode(['success' => true, 'message' => 'Los templates ya existen en la base de datos.']);
+            }
+        } catch (\Exception $e) {
+            error_log('Error en seedTemplates: ' . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Error al insertar templates.']);
         }
         exit();
     }

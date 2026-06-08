@@ -58,6 +58,18 @@ $(document).ready(function () {
     // Se activa automáticamente en cualquier módulo que tenga los IDs requeridos
     initFormToggle();
 
+    // Click en placeholder badge para insertar en CKEditor
+    $(document).on('click', '.placeholder-badge', function () {
+        const text = $(this).data('placeholder');
+        const editor = window.nombreCartaEditor;
+        if (editor) {
+            editor.model.change(writer => {
+                writer.insertText(text, editor.model.document.selection.getFirstPosition());
+            });
+            editor.editing.view.focus();
+        }
+    });
+
 });
 
 // Función reusable para llenar un select

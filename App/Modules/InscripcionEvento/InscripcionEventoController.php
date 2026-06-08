@@ -5,9 +5,12 @@ namespace App\Modules\InscripcionEvento;
 use App\Core\Controller;
 use App\Core\Auth;
 use App\Modules\InscripcionEvento\InscripcionEventoModel;
+use App\Modules\Inscripcion\EnviaNotificacionTrait;
 
 class InscripcionEventoController extends Controller
 {
+    use EnviaNotificacionTrait;
+
     private $inscripcionEventoModel;
 
     public function __construct()
@@ -182,6 +185,9 @@ class InscripcionEventoController extends Controller
             }
 
             if ($success) {
+                if ($id === null) {
+                    $this->sendInscripcionEmail((int)$data['alumno_id'], (int)$data['evento_abierto_id'], 3);
+                }
                 Auth::setFlashMessage('success', $message);
                 $this->redirect('inscripcion_evento'); // Redirecionar para a lista
             } else {

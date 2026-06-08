@@ -108,6 +108,20 @@ $inicial_val = htmlspecialchars($evento_abierto_data['inicial'] ?? '0.00');
 
                 <div class="lg:col-span-4 md:col-span-2">
                     <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Nombre Carta:</label>
+                    <div class="mb-2">
+                        <label class="block text-gray-700 text-xs font-bold mb-1">Variables:</label>
+                        <div class="flex flex-wrap gap-1 placeholder-container">
+                            <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{alumnoName}}">{{alumnoName}}</span>
+                            <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{ci}}">{{ci}}</span>
+                            <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{correo}}">{{correo}}</span>
+                            <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{tlf}}">{{tlf}}</span>
+                            <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{programType}}">{{programType}}</span>
+                            <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{programaNumero}}">{{programaNumero}}</span>
+                            <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{programaNombre}}">{{programaNombre}}</span>
+                            <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{sede}}">{{sede}}</span>
+                            <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{year}}">{{year}}</span>
+                        </div>
+                    </div>
                     <textarea id="nombre_carta" name="nombre_carta" class="input-form rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="5"><?php echo $nombre_carta_val; ?></textarea>
                     <!-- NOTA: No uses 'required' en el textarea si usas CKEditor.
                              La validación de contenido vacío debe hacerse en JS, como en curso_abierto.js -->

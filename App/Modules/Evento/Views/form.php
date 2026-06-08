@@ -10,8 +10,6 @@ $duracion_id_val = $evento_data['duracion_id'] ?? '';
 $nombre_val = htmlspecialchars($evento_data['nombre'] ?? '');
 $descripcion_val = htmlspecialchars($evento_data['descripcion'] ?? '');
 $siglas_val = htmlspecialchars($evento_data['siglas'] ?? '');
-$costo_val = htmlspecialchars($evento_data['costo'] ?? '0.00');
-$inicial_val = htmlspecialchars($evento_data['inicial'] ?? '0.00');
 ?>
 <div class="w-full space-y-6">
 

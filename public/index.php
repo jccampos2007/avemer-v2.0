@@ -371,6 +371,7 @@ $router->add('POST', '/preinscripcionlanding/search_alumno', PreinscripcionLandi
 $router->add('POST', '/preinscripcionlanding/create_alumno', PreinscripcionLandingController::class . '@createAlumno');
 $router->add('POST', '/preinscripcionlanding/get_ofertas_abiertas', PreinscripcionLandingController::class . '@getOfertasAbiertas');
 $router->add('POST', '/preinscripcionlanding/process_preinscripcion', PreinscripcionLandingController::class . '@processPreinscripcion');
+$router->add('POST', '/preinscripcionlanding/seed_templates', PreinscripcionLandingController::class . '@seedTemplates');
 
 // ==========================================
 // DESPACHO DE SOLICITUDES
