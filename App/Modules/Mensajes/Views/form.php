@@ -12,7 +12,7 @@ $mensaje_val = htmlspecialchars($mensajes_data['mensaje'] ?? '');
 ?>
 <div class="bg-white p-8 rounded-lg shadow-md w-full">
     <h3 class="text-2xl font-bold text-gray-800 mb-6"><?php echo $page_title; ?></h3>
-    <form id="formmensajes" action="<?php echo $form_action; ?>" method="POST" data-mensaje="<?= $mensaje_val ?>">
+    <form id="formmensajes" action="<?php echo $form_action; ?>" method="POST" data-nombre-carta="<?= $mensaje_val ?>">
         <input type="hidden" name="csrf_token" value="<?= \App\Core\Auth::generateCsrfToken() ?>">
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?php echo $mensajes_data['id']; ?>">
@@ -25,8 +25,23 @@ $mensaje_val = htmlspecialchars($mensajes_data['mensaje'] ?? '');
             </div>
 
             <div class="lg:col-span-4 md:col-span-2">
-                <label for="mensaje" class="block text-gray-700 text-sm font-bold mb-2">Mensaje:</label>
-                <textarea id="mensaje" name="mensaje" class="input-form focus:outline-none focus:shadow-outline" rows="10"><?= isset($mensajes_data['mensaje']) ? htmlspecialchars($mensajes_data['mensaje']) : '' ?></textarea>
+                <label for="nombre_carta" class="block text-gray-700 text-sm font-bold mb-2">Mensaje:
+                    <button type="button" class="toggle-html-btn text-xs ml-2 text-blue-600 hover:text-blue-800 font-medium">Ver HTML</button>
+                </label>
+                <div class="mb-2">
+                    <div class="flex flex-wrap gap-1 placeholder-container">
+                        <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{alumnoName}}">{{alumnoName}}</span>
+                        <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{ci}}">{{ci}}</span>
+                        <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{correo}}">{{correo}}</span>
+                        <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{tlf}}">{{tlf}}</span>
+                        <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{programType}}">{{programType}}</span>
+                        <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{programaNumero}}">{{programaNumero}}</span>
+                        <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{programaNombre}}">{{programaNombre}}</span>
+                        <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{sede}}">{{sede}}</span>
+                        <span class="placeholder-badge cursor-pointer bg-gray-200 hover:bg-blue-200 text-gray-700 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded transition" data-placeholder="{{year}}">{{year}}</span>
+                    </div>
+                </div>
+                <textarea id="nombre_carta" name="mensaje" class="input-form focus:outline-none focus:shadow-outline" rows="10"><?= isset($mensajes_data['mensaje']) ? htmlspecialchars($mensajes_data['mensaje']) : '' ?></textarea>
             </div>
         </div>
 

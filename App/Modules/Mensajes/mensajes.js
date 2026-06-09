@@ -14,16 +14,16 @@ $(document).ready(function () {
         // Desactivar la validación nativa del navegador para evitar errores con campos ocultos
         formMensajes.attr('novalidate', true);
 
-        // Inicializar CKEditor para el campo mensaje
-        let mensajeEditor;
+        // Inicializar CKEditor para el campo nombre_carta
+        window.nombreCartaEditor = null;
         ClassicEditor
-            .create(document.querySelector('#mensaje'), {
+            .create(document.querySelector('#nombre_carta'), {
                 language: 'es',
                 toolbar: CKEDITOR_TOOLBAR_OPTIONS
             })
             .then(editor => {
-                mensajeEditor = editor;
-                const currentMensaje = formMensajes.data('mensaje');
+                window.nombreCartaEditor = editor;
+                const currentMensaje = formMensajes.data('nombre-carta');
                 if (currentMensaje) {
                     editor.setData(currentMensaje);
                 }
@@ -34,7 +34,7 @@ $(document).ready(function () {
 
         // Manejo del envío del formulario
         formMensajes.on('submit', function (event) {
-            const mensajeContent = mensajeEditor ? mensajeEditor.getData().trim() : '';
+            const mensajeContent = window.nombreCartaEditor ? window.nombreCartaEditor.getData().trim() : '';
             const tituloVal = $('#titulo').val().trim();
 
             if (tituloVal === '' || mensajeContent === '') {
