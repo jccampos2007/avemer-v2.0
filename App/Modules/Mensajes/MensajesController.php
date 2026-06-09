@@ -62,13 +62,11 @@ class MensajesController extends Controller
             // Por lo tanto, necesitamos añadir las acciones aquí para cada fila
             $formattedData = [];
             foreach ($data['data'] as $row) {
-                // Los nombres de las columnas aquí deben coincidir con los de la consulta SQL del modelo
+                $protegido = !empty($row['protegido']);
                 $formattedData[] = [
                     $row['id'],
                     htmlspecialchars($row['titulo']),
-                    // htmlspecialchars($row['mensaje']),
-                    // Columna para acciones (editar/eliminar) - será renderizada en el JS
-                    ''
+                    $protegido ? 1 : 0
                 ];
             }
             $data['data'] = $formattedData; // Asigna los datos formateados de vuelta al array de DataTables
@@ -184,6 +182,18 @@ class MensajesController extends Controller
      */
     public function delete(int $id): void
     {
+        if ($this->MensajesModel->isProtected($id)) {
+            $msg = 'Este mensaje está protegido y no puede ser eliminado.';
+            if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                echo json_encode(['success' => false, 'message' => $msg]);
+                exit();
+            } else {
+                Auth::setFlashMessage('error', $msg);
+                $this->redirect('mensajes');
+            }
+            return;
+        }
+
         // Para solicitudes AJAX de eliminación, responder con JSON
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
             try {

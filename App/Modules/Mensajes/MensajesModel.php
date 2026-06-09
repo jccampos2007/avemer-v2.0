@@ -134,15 +134,30 @@ class MensajesModel
     }
 
     /**
+     * Verifica si un mensaje está protegido contra eliminación.
+     * @param int $id El ID del registro.
+     * @return bool True si está protegido, false en caso contrario.
+     */
+    public function isProtected(int $id): bool
+    {
+        $sql = "SELECT protegido FROM {$this->table} WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return (bool)$stmt->fetchColumn();
+    }
+
+    /**
      * Elimina un registro de maestría.
      * @param int $id El ID del registro a eliminar.
      * @return bool True si se eliminó correctamente, false en caso contrario.
      */
     public function delete(int $id): bool
     {
-        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        $sql = "DELETE FROM {$this->table} WHERE id = :id AND protegido = 0";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
     }
 }

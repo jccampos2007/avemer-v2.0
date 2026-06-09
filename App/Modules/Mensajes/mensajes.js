@@ -105,16 +105,25 @@ $(document).ready(function () {
                 }, // ID
                 { "data": 1 }, // Título
                 {
+                    data: 2,
+                    visible: false,
+                    searchable: false
+                }, // protegido
+                {
                     "data": null,
                     "orderable": false,
                     "searchable": false,
                     "width": "1%",
                     "className": "actions-column",
                     "render": function (data, type, row) {
-                        // Añadimos una clase 'btn-delete' para identificar el botón de borrar
+                        const protegido = row[2] == 1;
+                        const id = row[0];
+                        const deleteBtn = protegido
+                            ? '<span class="text-gray-300 cursor-not-allowed" title="Mensaje protegido"><i class="fas fa-trash-alt"></i></span>'
+                            : '<a href="mensajes/delete/' + id + '" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>';
                         return `
-                        <a href="mensajes/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
-                        <a href="mensajes/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                        <a href="mensajes/edit/` + id + `" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                        ` + deleteBtn + `
                     `;
                     }
                 }

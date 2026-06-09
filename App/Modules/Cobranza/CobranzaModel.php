@@ -70,6 +70,7 @@ class CobranzaModel
         $countSql = "SELECT COUNT(*) FROM transaccion t
                      JOIN cuota c ON t.cuota_id = c.id
                      JOIN alumno a ON t.alumno_id = a.id
+                     JOIN tipo_oferta_academica toa ON c.tipo_oferta_academica_id = toa.id
                      LEFT JOIN (
                         SELECT cuota_id, alumno_id, SUM(monto) AS total_pagado
                         FROM pago WHERE estatus_pago_id = 2
@@ -85,13 +86,29 @@ class CobranzaModel
             $where[] = "(a.primer_nombre LIKE :search OR a.primer_apellido LIKE :search2
                         OR CONCAT(COALESCE(a.tipo_documento,''), a.ci_pasaporte) LIKE :search_ci
                         OR c.nombre LIKE :search3
-                        OR toa.nombre LIKE :search4)";
+                        OR toa.nombre LIKE :search4
+                        OR COALESCE(
+                            (SELECT ca.numero FROM curso_abierto ca WHERE ca.id = c.oferta_academica_id AND c.tipo_oferta_academica_id = 1),
+                            (SELECT da.numero FROM diplomado_abierto da WHERE da.id = c.oferta_academica_id AND c.tipo_oferta_academica_id = 2),
+                            (SELECT ea.numero FROM evento_abierto ea WHERE ea.id = c.oferta_academica_id AND c.tipo_oferta_academica_id = 3),
+                            (SELECT ma.numero FROM maestria_abierto ma WHERE ma.id = c.oferta_academica_id AND c.tipo_oferta_academica_id = 4),
+                            ''
+                        ) LIKE :search5
+                        OR COALESCE(
+                            (SELECT cur.nombre FROM curso_abierto ca JOIN curso cur ON ca.curso_id = cur.id WHERE ca.id = c.oferta_academica_id AND c.tipo_oferta_academica_id = 1),
+                            (SELECT dip.nombre FROM diplomado_abierto da JOIN diplomado dip ON da.diplomado_id = dip.id WHERE da.id = c.oferta_academica_id AND c.tipo_oferta_academica_id = 2),
+                            (SELECT ev.nombre FROM evento_abierto ea JOIN evento ev ON ea.evento_id = ev.id WHERE ea.id = c.oferta_academica_id AND c.tipo_oferta_academica_id = 3),
+                            (SELECT mae.nombre FROM maestria_abierto ma JOIN maestria mae ON ma.maestria_id = mae.id WHERE ma.id = c.oferta_academica_id AND c.tipo_oferta_academica_id = 4),
+                            ''
+                        ) LIKE :search6)";
             $like = '%' . $searchValue . '%';
             $queryParams[':search'] = $like;
             $queryParams[':search2'] = $like;
             $queryParams[':search_ci'] = $like;
             $queryParams[':search3'] = $like;
             $queryParams[':search4'] = $like;
+            $queryParams[':search5'] = $like;
+            $queryParams[':search6'] = $like;
         }
 
         if (!empty($where)) {
