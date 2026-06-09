@@ -46,8 +46,8 @@ class AlumnoModel
         ];
 
         // Construir la consulta base
-        $sql = "SELECT id, foto, ci_pasaporte, tipo_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, correo FROM {$this->table}";
-        $countSql = "SELECT COUNT(*) FROM alumno";
+        $sql = "SELECT a.id, a.foto, a.ci_pasaporte, a.tipo_documento, a.primer_nombre, a.segundo_nombre, a.primer_apellido, a.segundo_apellido, a.correo, (SELECT COUNT(*) FROM alumno_auth WHERE alumno_id = a.id) AS has_auth FROM {$this->table} a";
+        $countSql = "SELECT COUNT(*) FROM alumno a";
         $where = [];
         $queryParams = [];
 
@@ -131,7 +131,8 @@ class AlumnoModel
                 ($row['tipo_documento'] ?? '') . $row['ci_pasaporte'],
                 htmlspecialchars($row['primer_nombre'] . ' ' . $row['segundo_nombre'] . ' ' . $row['primer_apellido'] . ' ' . $row['segundo_apellido']),
                 $row['correo'],
-                ''
+                '',
+                (int) $row['has_auth']
             ];
         }
 
@@ -346,6 +347,42 @@ class AlumnoModel
     {
         $stmt = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = :id");
         return $stmt->execute(['id' => $id]);
+    }
+
+    public function createAuth(int $alumnoId, string $passwordHash): bool
+    {
+        $sql = "INSERT INTO alumno_auth (alumno_id, password_hash) VALUES (:alumno_id, :password_hash)";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':alumno_id' => $alumnoId,
+            ':password_hash' => $passwordHash,
+        ]);
+    }
+
+    public function hasAuth(int $alumnoId): bool
+    {
+        $sql = "SELECT COUNT(*) FROM alumno_auth WHERE alumno_id = :alumno_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':alumno_id' => $alumnoId]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function getAuthByAlumnoId(int $alumnoId): array|false
+    {
+        $sql = "SELECT * FROM alumno_auth WHERE alumno_id = :alumno_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':alumno_id' => $alumnoId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updatePassword(int $alumnoId, string $passwordHash): bool
+    {
+        $sql = "UPDATE alumno_auth SET password_hash = :password_hash WHERE alumno_id = :alumno_id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':alumno_id' => $alumnoId,
+            ':password_hash' => $passwordHash,
+        ]);
     }
 
     private function validateUnique(array $data, ?int $excludeId = null): void

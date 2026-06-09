@@ -96,6 +96,11 @@ $(document).ready(function () {
                 { "data": 3 }, // Columna 3: Nombre Completo
                 { "data": 4 }, // Columna 4: Correo
                 {
+                    data: 6,
+                    visible: false,
+                    searchable: false
+                }, // Columna 5: Auth (oculta)
+                {
                     data: null,
                     orderable: false,
                     searchable: false,
@@ -103,6 +108,7 @@ $(document).ready(function () {
                     "className": "actions-column",
                     render: function (data, type, row) {
                         let actions = '<div class="flex gap-2 justify-center">';
+                        const hasAuth = row[6];
                         
                         if (typeof ALUMNO_PERMISSIONS !== 'undefined') {
                             if (ALUMNO_PERMISSIONS.modificar) {
@@ -112,11 +118,16 @@ $(document).ready(function () {
                                 actions += `<a href="alumnos/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>`;
                             }
                         } else {
-                            // Fallback por si la variable no está definida
                             actions += `
                                 <a href="alumnos/edit/${row[0]}" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>
                                 <a href="alumnos/delete/${row[0]}" class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
                             `;
+                        }
+
+                        if (hasAuth > 0) {
+                            actions += `<button onclick="enviarCredenciales(${row[0]})" class="btn-action btn-action-email" title="Enviar Credenciales"><i class="fas fa-envelope"></i></button>`;
+                        } else {
+                            actions += `<button onclick="crearUsuarioApp(${row[0]})" class="btn-action btn-action-user" title="Crear Usuario App"><i class="fas fa-user-plus"></i></button>`;
                         }
                         
                         actions += '</div>';
@@ -171,3 +182,43 @@ $(document).ready(function () {
     }
 
 });
+
+function crearUsuarioApp(alumnoId) {
+    $.post(`${BASE_URL_JS}alumnos/createUserApp/${alumnoId}`, function (res) {
+        if (res.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Usuario Creado',
+                html: `Contraseña: <strong style="font-size:1.5em;letter-spacing:2px">${res.password}</strong>
+                       <p class="mt-2 text-sm text-gray-500">Guarda esta contraseña. No se mostrará de nuevo.</p>`,
+                confirmButtonText: 'Copiar y Cerrar',
+            }).then(() => {
+                navigator.clipboard.writeText(res.password);
+                $('#alumnosTable').DataTable().ajax.reload(null, false);
+            });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Error', text: res.message });
+        }
+    }, 'json');
+}
+
+function enviarCredenciales(alumnoId) {
+    Swal.fire({
+        title: '¿Enviar credenciales?',
+        text: 'Se enviará un correo al alumno con sus datos de acceso.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, enviar',
+        cancelButtonText: 'Cancelar',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post(`${BASE_URL_JS}alumnos/sendCredentials/${alumnoId}`, function (res) {
+                if (res.success) {
+                    Swal.fire({ icon: 'success', title: 'Enviado', text: res.message });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: res.message });
+                }
+            }, 'json');
+        }
+    });
+}

@@ -220,4 +220,85 @@ class AlumnoController extends Controller
             $this->redirect('alumnos');
         }
     }
+
+    public function createUserApp(int $id): void
+    {
+        header('Content-Type: application/json');
+        try {
+            $alumno = $this->alumnoModel->findById($id);
+            if (!$alumno) {
+                echo json_encode(['success' => false, 'message' => 'Alumno no encontrado.']);
+                exit();
+            }
+            if ($this->alumnoModel->hasAuth($id)) {
+                echo json_encode(['success' => false, 'message' => 'Este alumno ya tiene un usuario de app.']);
+                exit();
+            }
+
+            $password = substr(bin2hex(random_bytes(4)), 0, 8);
+            $hash = password_hash($password, PASSWORD_BCRYPT);
+
+            if ($this->alumnoModel->createAuth($id, $hash)) {
+                echo json_encode([
+                    'success' => true,
+                    'password' => $password,
+                    'message' => 'Usuario de app creado con éxito.',
+                ]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error al crear el usuario de app.']);
+            }
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+        exit();
+    }
+
+    public function sendCredentials(int $id): void
+    {
+        header('Content-Type: application/json');
+        try {
+            $alumno = $this->alumnoModel->findById($id);
+            if (!$alumno) {
+                echo json_encode(['success' => false, 'message' => 'Alumno no encontrado.']);
+                exit();
+            }
+            if (!$this->alumnoModel->hasAuth($id)) {
+                echo json_encode(['success' => false, 'message' => 'Este alumno no tiene usuario de app. Créelo primero.']);
+                exit();
+            }
+
+            $password = substr(bin2hex(random_bytes(4)), 0, 8);
+            $hash = password_hash($password, PASSWORD_BCRYPT);
+            $this->alumnoModel->updatePassword($id, $hash);
+
+            $alumnoName = trim($alumno['primer_nombre'] . ' ' . $alumno['primer_apellido']);
+            $alumnoCorreo = $alumno['correo'];
+
+            require_once APP_ROOT . '/App/Modules/Correo/enviar.php';
+
+            $templateModel = new \App\Modules\PreinscripcionLanding\PreinscripcionLandingModel();
+            $template = $templateModel->getTemplateByTitle('Credenciales App');
+
+            $replaces = [
+                '{{alumnoName}}' => $alumnoName,
+                '{{correo}}'     => $alumnoCorreo,
+                '{{password}}'   => $password,
+                '{{year}}'       => date('Y'),
+            ];
+
+            if ($template) {
+                $emailBody = str_replace(array_keys($replaces), array_values($replaces), $template['mensaje']);
+                $subject = 'Credenciales de acceso - App Avemer';
+            } else {
+                $emailBody = '<p>Hola ' . $alumnoName . ', tus credenciales están activas.</p>';
+                $subject = 'Credenciales de acceso - App Avemer';
+            }
+
+            correo($subject, $emailBody, $alumnoCorreo);
+            echo json_encode(['success' => true, 'message' => 'Credenciales enviadas a ' . $alumnoCorreo]);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+        exit();
+    }
 }

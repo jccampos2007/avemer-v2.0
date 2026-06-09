@@ -102,6 +102,8 @@ $router->add('GET', '/alumnos/edit/{id}', AlumnoController::class . '@edit');
 $router->add('POST', '/alumnos/edit/{id}', AlumnoController::class . '@edit');
 $router->add('GET', '/alumnos/delete/{id}', AlumnoController::class . '@delete');
 $router->add('POST', '/alumnos/data', AlumnoController::class . '@getAlumnosData');
+$router->add('POST', '/alumnos/createUserApp/{id}', AlumnoController::class . '@createUserApp');
+$router->add('POST', '/alumnos/sendCredentials/{id}', AlumnoController::class . '@sendCredentials');
 
 // Docentes (Instructores)
 $router->add('GET', '/docentes', DocenteController::class . '@index');

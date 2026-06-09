@@ -187,6 +187,17 @@ table.dataTable td.actions-column {
     color: #4f46e5 !important;
 }
 
+.btn-action-user {
+    color: #7c3aed !important;
+    border-color: #ddd6fe !important;
+}
+
+.btn-action-user:hover {
+    background-color: #f5f3ff !important;
+    border-color: #c4b5fd !important;
+    color: #6d28d9 !important;
+}
+
 .btn-action-view {
     color: #059669 !important;
     border-color: #a7f3d0 !important;
