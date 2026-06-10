@@ -74,6 +74,7 @@ class AuthController extends Controller
     public function logout(): void
     {
         Auth::logout();
+        $this->clearRememberCookie();
         Auth::setFlashMessage('success', 'Has cerrado sesión correctamente.');
         $this->redirect('login');
     }

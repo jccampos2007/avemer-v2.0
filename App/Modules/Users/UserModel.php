@@ -228,4 +228,35 @@ class UserModel
         $stmt = $this->pdo->prepare("UPDATE usuario SET usuario_pws = :pws WHERE usuario_id = :id");
         return $stmt->execute(['pws' => $hashedPassword, 'id' => $userId]);
     }
+
+    public function updateProfile(int $userId, array $data): bool
+    {
+        $fields = [];
+        $params = ['id' => $userId];
+
+        if (isset($data['usuario_nombre'])) {
+            $fields[] = "usuario_nombre = :nombre";
+            $params['nombre'] = $data['usuario_nombre'];
+        }
+        if (isset($data['usuario_apellido'])) {
+            $fields[] = "usuario_apellido = :apellido";
+            $params['apellido'] = $data['usuario_apellido'];
+        }
+        if (isset($data['correo'])) {
+            $fields[] = "correo = :correo";
+            $params['correo'] = $data['correo'];
+        }
+        if (array_key_exists('profile_image', $data)) {
+            $fields[] = "profile_image = :profile_image";
+            $params['profile_image'] = $data['profile_image'];
+        }
+
+        if (empty($fields)) {
+            return false;
+        }
+
+        $sql = "UPDATE usuario SET " . implode(', ', $fields) . " WHERE usuario_id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($params);
+    }
 }

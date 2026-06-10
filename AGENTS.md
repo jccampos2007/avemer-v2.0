@@ -42,3 +42,27 @@ Ejemplo correcto:
 buttons += '<a href="..." class="btn-action btn-action-edit" title="Editar"><i class="fas fa-edit"></i></a>';
 buttons += '<button class="btn-action btn-action-delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>';
 ```
+
+## Módulo de Perfil de Usuario
+
+El módulo `Profile` (`App/Modules/Profile/`) permite al usuario logueado editar sus propios datos.
+
+### Rutas
+| Método | Ruta | Controlador |
+|--------|------|-------------|
+| GET | `/profile` | `ProfileController@index` |
+| POST | `/profile/update` | `ProfileController@update` |
+| POST | `/profile/change-password` | `ProfileController@changePassword` |
+
+### Funcionalidades
+- **Campos editables**: nombre, apellido, correo (NO username, grupo, cédula, estatus)
+- **Foto de perfil**: se sube con Cropper.js (recorte cuadrado, 400x400), se convierte a WebP (quality 80) en servidor y se guarda en `public/uploads/avatars/` como `user_{id}_{timestamp}.webp`
+- **Cambio de contraseña**: requiere verificación de contraseña actual
+
+### Sesión
+- `$_SESSION['profile_image']` se setea en `Auth::login()` y se refresca al actualizar perfil
+- `$_SESSION['user_name']` se refresca al actualizar perfil
+
+### Sidebar
+- El avatar en sidebar y mobile header es clickeable hacia `/profile`
+- Link "Mi Perfil" (icono `fa-user-cog`) aparece en el área de usuario antes de "Salir"

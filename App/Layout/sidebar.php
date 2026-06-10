@@ -363,9 +363,11 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
     ?>
     <div class="mt-8 pt-4 border-t border-gray-700">
         <div class="flex flex-col items-center mb-4">
-            <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-600 flex items-center justify-center flex-shrink-0">
-                <img src="<?php echo $avatarPath; ?>" alt="User Avatar" class="w-full h-full object-cover" />
-            </div>
+            <a href="<?php echo BASE_URL; ?>profile" class="block">
+                <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-600 flex items-center justify-center flex-shrink-0 hover:ring-2 hover:ring-blue-400 transition">
+                    <img src="<?php echo $avatarPath; ?>" alt="User Avatar" class="w-full h-full object-cover" />
+                </div>
+            </a>
             
             <div class="mt-2 text-center w-full px-2">
                 <p class="text-sm font-medium text-white truncate"><?php echo htmlspecialchars(\App\Core\Auth::user('user_name') ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
@@ -373,6 +375,10 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
             </div>
         </div>
         
+        <a href="<?php echo BASE_URL; ?>profile"
+            class="block w-full py-2 px-4 rounded bg-gray-600 hover:bg-gray-700 text-center text-white text-sm mb-2 transition duration-200">
+            <i class="fa fa-user-cog mr-1"></i> Mi Perfil
+        </a>
         <a href="<?php echo BASE_URL; ?>logout"
             class="block w-full py-2 px-4 rounded bg-red-600 hover:bg-red-700 text-center text-white text-sm transition duration-200">
             <i class="fa fa-sign-out-alt mr-1"></i> Salir
@@ -402,9 +408,9 @@ $isSeguridadActive = in_array($module, ['users', 'grupo']);
             <i class="fa-solid fa-bars text-xl"></i>
         </button>
         <span class="font-semibold text-sm tracking-wide">AVEMER - Académico</span>
-        <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-600 border border-gray-600">
+        <a href="<?php echo BASE_URL; ?>profile" class="w-8 h-8 rounded-full overflow-hidden bg-gray-600 border border-gray-600">
             <img src="<?php echo $avatarPath; ?>" alt="Avatar" class="w-full h-full object-cover">
-        </div>
+        </a>
     </header>
 
     <!-- Área de contenido con scroll seguro para tablas responsivas -->

@@ -73,6 +73,28 @@ class Controller
         $this->redirect($_SERVER['HTTP_REFERER'] ?? 'dashboard');
     }
 
+    protected function imageToWebP(string $sourcePath, int $quality = 80): ?string
+    {
+        $info = @getimagesize($sourcePath);
+        if ($info === false) return null;
+
+        $image = match ($info[2]) {
+            IMAGETYPE_JPEG => @imagecreatefromjpeg($sourcePath),
+            IMAGETYPE_PNG  => @imagecreatefrompng($sourcePath),
+            IMAGETYPE_GIF  => @imagecreatefromgif($sourcePath),
+            IMAGETYPE_WEBP => @imagecreatefromwebp($sourcePath),
+            default => null,
+        };
+        if ($image === null) return null;
+
+        ob_start();
+        imagewebp($image, null, $quality);
+        $webpData = ob_get_clean();
+        imagedestroy($image);
+
+        return $webpData !== false ? $webpData : null;
+    }
+
     protected function renderLanding(string $viewPath): void
     {
         // Construimos la ruta hacia App/Views/

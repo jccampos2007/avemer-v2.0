@@ -154,12 +154,22 @@ class AlumnoController extends Controller
             return;
         }
 
-        // Manejo de archivos BLOB (foto, imagen) para actualización
+        // Manejo de archivos BLOB (foto, imagen) con conversión a WebP
         if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-            $data['foto'] = file_get_contents($_FILES['foto']['tmp_name']);
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mime = $finfo->file($_FILES['foto']['tmp_name']);
+            if (str_starts_with($mime, 'image/')) {
+                $data['foto'] = $this->imageToWebP($_FILES['foto']['tmp_name'])
+                             ?? file_get_contents($_FILES['foto']['tmp_name']);
+            }
         }
         if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-            $data['imagen'] = file_get_contents($_FILES['imagen']['tmp_name']);
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mime = $finfo->file($_FILES['imagen']['tmp_name']);
+            if (str_starts_with($mime, 'image/')) {
+                $data['imagen'] = $this->imageToWebP($_FILES['imagen']['tmp_name'])
+                              ?? file_get_contents($_FILES['imagen']['tmp_name']);
+            }
         }
 
         try {

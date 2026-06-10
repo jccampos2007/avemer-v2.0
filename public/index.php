@@ -43,6 +43,7 @@ use App\Modules\Asistencia\AsistenciaController;
 use App\Modules\Cobranza\CobranzaController;
 use App\Modules\PreinscripcionDiplomado\PreinscripcionDiplomadoController;
 use App\Modules\PreinscripcionLanding\PreinscripcionLandingController;
+use App\Modules\Profile\ProfileController;
 use App\Modules\ProfesionOficio\ProfesionOficioController;
 use App\Modules\Sede\SedeController;
 use App\Modules\Users\UserController;
@@ -374,6 +375,13 @@ $router->add('POST', '/preinscripcionlanding/create_alumno', PreinscripcionLandi
 $router->add('POST', '/preinscripcionlanding/get_ofertas_abiertas', PreinscripcionLandingController::class . '@getOfertasAbiertas');
 $router->add('POST', '/preinscripcionlanding/process_preinscripcion', PreinscripcionLandingController::class . '@processPreinscripcion');
 $router->add('POST', '/preinscripcionlanding/seed_templates', PreinscripcionLandingController::class . '@seedTemplates');
+
+// ==========================================
+// 13. PERFIL DE USUARIO (CONFIGURACIÓN PERSONAL)
+// ==========================================
+$router->add('GET', '/profile', ProfileController::class . '@index');
+$router->add('POST', '/profile/update', ProfileController::class . '@update');
+$router->add('POST', '/profile/change-password', ProfileController::class . '@changePassword');
 
 // ==========================================
 // DESPACHO DE SOLICITUDES

@@ -21,6 +21,7 @@ class Auth
             $_SESSION['user_type'] = $user['tipo_usuario'];
             $_SESSION['grupo_id'] = $user['grupo_id'];
             $_SESSION['nombre_grupo'] = $user['nombre_grupo'] ?? 'Sin Grupo';
+            $_SESSION['profile_image'] = $user['profile_image'] ?? null;
             
             // Load permissions into session
             self::loadPermissions($user['grupo_id']);

@@ -19,10 +19,6 @@ $greeting = $greeting_user ?? null;
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
                 <input type="password" id="password" name="password" class="input-form focus:outline-none focus:shadow-outline" required autofocus>
             </div>
-            <div class="flex items-center mb-4">
-                <input type="checkbox" id="remember_user" name="remember_user" class="mr-2 rounded border-gray-300" checked>
-                <label for="remember_user" class="text-sm text-gray-600">Recordar usuario</label>
-            </div>
             <?php else: ?>
             <div class="mb-4">
                 <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Usuario:</label>
