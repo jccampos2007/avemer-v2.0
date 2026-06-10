@@ -65,7 +65,16 @@ function generateBreadcrumbs(): array
 
     // 2. Módulo (solo con link si no estamos en su listado y existe list.php)
     $moduleLabel = $moduleLabels[$module] ?? ucfirst(str_replace('_', ' ', $module));
-    $moduleViewDir = MODULES_PATH . ucfirst($module) . '/Views';
+    $moduleDirMap = [
+        'cursos_abiertos' => 'CursoAbierto',
+        'pago' => 'Pagos',
+        'diplomadocontrol' => 'DiplomadoControl',
+        'listaenvio' => 'Envios',
+        'listacorreo' => 'Correo',
+        'preinscripcionlanding' => 'PreinscripcionLanding',
+    ];
+    $moduleDirName = $moduleDirMap[$module] ?? implode('', array_map('ucfirst', explode('_', $module)));
+    $moduleViewDir = MODULES_PATH . $moduleDirName . '/Views';
     $hasListView = file_exists($moduleViewDir . '/list.php');
     $crumbs[] = [
         'label' => $moduleLabel,
