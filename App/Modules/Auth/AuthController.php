@@ -55,7 +55,7 @@ class AuthController extends Controller
             }
 
             if (Auth::login($username, $password)) {
-                if (!empty($_POST['remember_user'])) {
+                if (!empty($_POST['remember_user']) || isset($_COOKIE[self::REMEMBER_COOKIE])) {
                     $this->setRememberCookie($username, Auth::user('user_name'));
                 } else {
                     $this->clearRememberCookie();
@@ -74,7 +74,6 @@ class AuthController extends Controller
     public function logout(): void
     {
         Auth::logout();
-        $this->clearRememberCookie();
         Auth::setFlashMessage('success', 'Has cerrado sesión correctamente.');
         $this->redirect('login');
     }
