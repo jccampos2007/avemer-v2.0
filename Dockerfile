@@ -13,8 +13,15 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 # 2. Instalar dependencias del sistema y PHP
 RUN apt-get update && apt-get install -y \
-    libpq-dev libzip-dev zip unzip \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip
+    libpq-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip gd
 
 # 3. Configurar Apache para usar la nueva ruta
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
