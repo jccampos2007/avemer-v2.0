@@ -88,11 +88,15 @@ class Controller
         if ($image === null) return null;
 
         ob_start();
-        imagewebp($image, null, $quality);
-        $webpData = ob_get_clean();
+        if (function_exists('imagewebp')) {
+            imagewebp($image, null, $quality);
+        } else {
+            imagejpeg($image, null, $quality);
+        }
+        $data = ob_get_clean();
         imagedestroy($image);
 
-        return $webpData !== false ? $webpData : null;
+        return $data !== false ? $data : null;
     }
 
     protected function renderLanding(string $viewPath): void
